@@ -1,0 +1,296 @@
+2012-05-22T13:53:07+01:00 INFO (6): Log initialised
+2012-05-22T13:53:07+01:00 INFO (6): Added new companyId 67112 (rowId 1)
+2012-05-22T13:54:25+01:00 INFO (6): Log initialised
+2012-05-22T13:54:25+01:00 INFO (6): Added new companyId 67113 (rowId 1)
+2012-05-22T13:56:04+01:00 INFO (6): Log initialised
+2012-05-22T13:56:04+01:00 INFO (6): Added new companyId 67114 (rowId 1)
+2012-05-22T13:56:48+01:00 INFO (6): Log initialised
+2012-05-22T13:56:49+01:00 INFO (6): Added new companyId 67115 (rowId 1)
+2012-05-22T13:57:31+01:00 INFO (6): Log initialised
+2012-05-22T13:57:31+01:00 INFO (6): Added new companyId 67116 (rowId 1)
+2012-05-22T13:57:49+01:00 INFO (6): Log initialised
+2012-05-22T13:57:49+01:00 INFO (6): Added new companyId 67117 (rowId 1)
+2012-05-22T13:57:53+01:00 INFO (6): Log initialised
+2012-05-22T13:57:53+01:00 INFO (6): Added new companyId 67118 (rowId 1)
+2012-05-22T13:57:53+01:00 INFO (6): Added new siteId 61781 for companyId 67118 (rowId 1)
+2012-05-22T13:57:53+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67118and tiered_characteristic_id: 533
+2012-05-22T13:57:53+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67118and tiered_characteristic_id: 582
+2012-05-22T13:57:53+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T13:57:53+01:00 INFO (6): Added new company tag id 41208 for tag_id: 264349
+2012-05-22T13:57:53+01:00 INFO (6): Added new postId 188310 for companyId 67118 (rowId 1)
+2012-05-22T13:57:53+01:00 INFO (6): Added new contactId 291832 for postId 188310 (rowId 1)
+2012-05-22T13:57:53+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:00:06+01:00 INFO (6): Log initialised
+2012-05-22T14:00:06+01:00 INFO (6): Added new companyId 67119 (rowId 1)
+2012-05-22T14:00:06+01:00 INFO (6): Added new siteId 61782 for companyId 67119 (rowId 1)
+2012-05-22T14:00:06+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67119and tiered_characteristic_id: 533
+2012-05-22T14:00:06+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67119and tiered_characteristic_id: 582
+2012-05-22T14:00:06+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:00:06+01:00 INFO (6): Added new company tag id 41209 for tag_id: 264349
+2012-05-22T14:00:06+01:00 INFO (6): Added new postId 188311 for companyId 67119 (rowId 1)
+2012-05-22T14:00:06+01:00 INFO (6): Added new contactId 291833 for postId 188311 (rowId 1)
+2012-05-22T14:00:06+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:00:39+01:00 INFO (6): Log initialised
+2012-05-22T14:00:39+01:00 INFO (6): Added new companyId 67120 (rowId 1)
+2012-05-22T14:00:39+01:00 INFO (6): Added new siteId 61783 for companyId 67120 (rowId 1)
+2012-05-22T14:00:39+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67120and tiered_characteristic_id: 533
+2012-05-22T14:00:39+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67120and tiered_characteristic_id: 582
+2012-05-22T14:00:39+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:00:39+01:00 INFO (6): Added new company tag id 41210 for tag_id: 264349
+2012-05-22T14:00:39+01:00 INFO (6): Added new postId 188312 for companyId 67120 (rowId 1)
+2012-05-22T14:00:39+01:00 INFO (6): Added new contactId 291834 for postId 188312 (rowId 1)
+2012-05-22T14:00:39+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:01:20+01:00 INFO (6): Log initialised
+2012-05-22T14:01:20+01:00 INFO (6): Added new companyId 67121 (rowId 1)
+2012-05-22T14:01:20+01:00 INFO (6): Added new siteId 61784 for companyId 67121 (rowId 1)
+2012-05-22T14:01:20+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67121and tiered_characteristic_id: 533
+2012-05-22T14:01:20+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67121and tiered_characteristic_id: 582
+2012-05-22T14:01:20+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:01:20+01:00 INFO (6): Added new company tag id 41211 for tag_id: 264349
+2012-05-22T14:01:20+01:00 INFO (6): Added new postId 188313 for companyId 67121 (rowId 1)
+2012-05-22T14:01:20+01:00 INFO (6): Added new contactId 291835 for postId 188313 (rowId 1)
+2012-05-22T14:01:20+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:01:20+01:00 INFO (6): Added new postInitiative tag id 353713 for tag_id: 264350
+2012-05-22T14:02:08+01:00 INFO (6): Log initialised
+2012-05-22T14:02:08+01:00 INFO (6): Added new companyId 67122 (rowId 1)
+2012-05-22T14:02:08+01:00 INFO (6): Added new siteId 61785 for companyId 67122 (rowId 1)
+2012-05-22T14:02:08+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67122and tiered_characteristic_id: 533
+2012-05-22T14:02:08+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67122and tiered_characteristic_id: 582
+2012-05-22T14:02:08+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:02:08+01:00 INFO (6): Added new company tag id 41212 for tag_id: 264349
+2012-05-22T14:02:08+01:00 INFO (6): Added new postId 188314 for companyId 67122 (rowId 1)
+2012-05-22T14:02:08+01:00 INFO (6): Added new contactId 291836 for postId 188314 (rowId 1)
+2012-05-22T14:02:08+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:02:12+01:00 INFO (6): Log initialised
+2012-05-22T14:02:12+01:00 INFO (6): Added new companyId 67123 (rowId 1)
+2012-05-22T14:02:12+01:00 INFO (6): Added new siteId 61786 for companyId 67123 (rowId 1)
+2012-05-22T14:02:12+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67123and tiered_characteristic_id: 533
+2012-05-22T14:02:12+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67123and tiered_characteristic_id: 582
+2012-05-22T14:02:12+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:02:12+01:00 INFO (6): Added new company tag id 41213 for tag_id: 264349
+2012-05-22T14:02:12+01:00 INFO (6): Added new postId 188315 for companyId 67123 (rowId 1)
+2012-05-22T14:02:12+01:00 INFO (6): Added new contactId 291837 for postId 188315 (rowId 1)
+2012-05-22T14:02:12+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:07:20+01:00 INFO (6): Log initialised
+2012-05-22T14:07:20+01:00 INFO (6): Added new companyId 67124 (rowId 1)
+2012-05-22T14:07:20+01:00 INFO (6): Added new siteId 61787 for companyId 67124 (rowId 1)
+2012-05-22T14:07:20+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67124and tiered_characteristic_id: 533
+2012-05-22T14:07:20+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67124and tiered_characteristic_id: 582
+2012-05-22T14:07:20+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:07:20+01:00 INFO (6): Added new company tag id 41214 for tag_id: 264349
+2012-05-22T14:07:20+01:00 INFO (6): Added new postId 188316 for companyId 67124 (rowId 1)
+2012-05-22T14:07:20+01:00 INFO (6): Added new contactId 291838 for postId 188316 (rowId 1)
+2012-05-22T14:07:20+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:11:43+01:00 INFO (6): Log initialised
+2012-05-22T14:11:44+01:00 INFO (6): Added new companyId 67125 (rowId 1)
+2012-05-22T14:11:44+01:00 INFO (6): Added new siteId 61788 for companyId 67125 (rowId 1)
+2012-05-22T14:11:44+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67125and tiered_characteristic_id: 533
+2012-05-22T14:11:44+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67125and tiered_characteristic_id: 582
+2012-05-22T14:11:44+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:11:44+01:00 INFO (6): Added new company tag id 41215 for tag_id: 264349
+2012-05-22T14:11:44+01:00 INFO (6): Added new postId 188317 for companyId 67125 (rowId 1)
+2012-05-22T14:11:44+01:00 INFO (6): Added new contactId 291839 for postId 188317 (rowId 1)
+2012-05-22T14:11:44+01:00 INFO (6): Completed importPost 188317 (rowId )
+2012-05-22T14:11:44+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:13:35+01:00 INFO (6): Log initialised
+2012-05-22T14:13:35+01:00 INFO (6): Added new companyId 67126 (rowId 1)
+2012-05-22T14:13:35+01:00 INFO (6): Added new siteId 61789 for companyId 67126 (rowId 1)
+2012-05-22T14:13:35+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67126and tiered_characteristic_id: 533
+2012-05-22T14:13:35+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67126and tiered_characteristic_id: 582
+2012-05-22T14:13:35+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:13:35+01:00 INFO (6): Added new company tag id 41216 for tag_id: 264349
+2012-05-22T14:13:35+01:00 INFO (6): Added new postId 188318 for companyId 67126 (rowId 1)
+2012-05-22T14:13:35+01:00 INFO (6): Added new contactId 291840 for postId 188318 (rowId 1)
+2012-05-22T14:13:35+01:00 INFO (6): Completed importPost 188318 (rowId 1)
+2012-05-22T14:13:35+01:00 INFO (6): Completed adding tag  for postId 188318 (rowId 1)
+2012-05-22T14:13:36+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:15:13+01:00 INFO (6): Log initialised
+2012-05-22T14:15:13+01:00 INFO (6): Added new companyId 67127 (rowId 1)
+2012-05-22T14:15:13+01:00 INFO (6): Added new siteId 61790 for companyId 67127 (rowId 1)
+2012-05-22T14:15:13+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67127and tiered_characteristic_id: 533
+2012-05-22T14:15:14+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67127and tiered_characteristic_id: 582
+2012-05-22T14:15:14+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:15:14+01:00 INFO (6): Added new company tag id 41217 for tag_id: 264349
+2012-05-22T14:15:14+01:00 INFO (6): Added new postId 188319 for companyId 67127 (rowId 1)
+2012-05-22T14:15:14+01:00 INFO (6): Added new contactId 291841 for postId 188319 (rowId 1)
+2012-05-22T14:15:14+01:00 INFO (6): Completed importPost 188319 (rowId 1)
+2012-05-22T14:15:14+01:00 INFO (6): Completed adding tag  for postId 188319 (rowId 1)
+2012-05-22T14:15:14+01:00 INFO (6): Found PostInitiativeId  for postId 188319 and initiativeId 759
+2012-05-22T14:15:14+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:16:39+01:00 INFO (6): Log initialised
+2012-05-22T14:16:39+01:00 INFO (6): Added new companyId 67128 (rowId 1)
+2012-05-22T14:16:39+01:00 INFO (6): Added new siteId 61791 for companyId 67128 (rowId 1)
+2012-05-22T14:16:39+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67128and tiered_characteristic_id: 533
+2012-05-22T14:16:39+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67128and tiered_characteristic_id: 582
+2012-05-22T14:16:39+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:16:39+01:00 INFO (6): Added new company tag id 41218 for tag_id: 264349
+2012-05-22T14:16:39+01:00 INFO (6): Added new postId 188320 for companyId 67128 (rowId 1)
+2012-05-22T14:16:39+01:00 INFO (6): Added new contactId 291842 for postId 188320 (rowId 1)
+2012-05-22T14:16:39+01:00 INFO (6): Completed importPost 188320 (rowId 1)
+2012-05-22T14:16:39+01:00 INFO (6): Completed adding tag  for postId 188320 (rowId 1)
+2012-05-22T14:16:39+01:00 INFO (6): Found PostInitiativeId  for postId 188320 and initiativeId 759
+2012-05-22T14:16:39+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:17:40+01:00 INFO (6): Log initialised
+2012-05-22T14:17:40+01:00 INFO (6): Added new companyId 67129 (rowId 1)
+2012-05-22T14:17:40+01:00 INFO (6): Added new siteId 61792 for companyId 67129 (rowId 1)
+2012-05-22T14:17:40+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67129and tiered_characteristic_id: 533
+2012-05-22T14:17:40+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67129and tiered_characteristic_id: 582
+2012-05-22T14:17:40+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:17:40+01:00 INFO (6): Added new company tag id 41219 for tag_id: 264349
+2012-05-22T14:17:40+01:00 INFO (6): Added new postId 188321 for companyId 67129 (rowId 1)
+2012-05-22T14:17:40+01:00 INFO (6): Added new contactId 291843 for postId 188321 (rowId 1)
+2012-05-22T14:17:40+01:00 INFO (6): Completed importPost 188321 (rowId 1)
+2012-05-22T14:17:40+01:00 INFO (6): Completed adding tag  for postId 188321 (rowId 1)
+2012-05-22T14:18:21+01:00 INFO (6): Log initialised
+2012-05-22T14:18:22+01:00 INFO (6): Added new companyId 67130 (rowId 1)
+2012-05-22T14:18:22+01:00 INFO (6): Added new siteId 61793 for companyId 67130 (rowId 1)
+2012-05-22T14:18:22+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67130and tiered_characteristic_id: 533
+2012-05-22T14:18:22+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67130and tiered_characteristic_id: 582
+2012-05-22T14:18:22+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:18:22+01:00 INFO (6): Added new company tag id 41220 for tag_id: 264349
+2012-05-22T14:18:22+01:00 INFO (6): Added new postId 188322 for companyId 67130 (rowId 1)
+2012-05-22T14:18:22+01:00 INFO (6): Added new contactId 291844 for postId 188322 (rowId 1)
+2012-05-22T14:18:22+01:00 INFO (6): Completed importPost 188322 (rowId 1)
+2012-05-22T14:18:22+01:00 INFO (6): Completed adding tag  for postId 188322 (rowId 1)
+2012-05-22T14:18:22+01:00 INFO (6): Found PostInitiativeId  for postId 188322 and initiativeId 759
+2012-05-22T14:18:22+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:07+01:00 INFO (6): Log initialised
+2012-05-22T14:19:07+01:00 INFO (6): Added new companyId 67131 (rowId 1)
+2012-05-22T14:19:07+01:00 INFO (6): Added new siteId 61794 for companyId 67131 (rowId 1)
+2012-05-22T14:19:07+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67131and tiered_characteristic_id: 533
+2012-05-22T14:19:07+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67131and tiered_characteristic_id: 582
+2012-05-22T14:19:07+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:07+01:00 INFO (6): Added new company tag id 41221 for tag_id: 264349
+2012-05-22T14:19:07+01:00 INFO (6): Added new postId 188323 for companyId 67131 (rowId 1)
+2012-05-22T14:19:07+01:00 INFO (6): Added new contactId 291845 for postId 188323 (rowId 1)
+2012-05-22T14:19:07+01:00 INFO (6): Completed importPost 188323 (rowId 1)
+2012-05-22T14:19:07+01:00 INFO (6): Completed adding tag  for postId 188323 (rowId 1)
+2012-05-22T14:19:07+01:00 INFO (6): Found PostInitiativeId  for postId 188323 and initiativeId 759
+2012-05-22T14:19:07+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:10+01:00 INFO (6): Log initialised
+2012-05-22T14:19:10+01:00 INFO (6): Added new companyId 67132 (rowId 1)
+2012-05-22T14:19:10+01:00 INFO (6): Added new siteId 61795 for companyId 67132 (rowId 1)
+2012-05-22T14:19:10+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67132and tiered_characteristic_id: 533
+2012-05-22T14:19:10+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67132and tiered_characteristic_id: 582
+2012-05-22T14:19:10+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:10+01:00 INFO (6): Added new company tag id 41222 for tag_id: 264349
+2012-05-22T14:19:10+01:00 INFO (6): Added new postId 188324 for companyId 67132 (rowId 1)
+2012-05-22T14:19:10+01:00 INFO (6): Added new contactId 291846 for postId 188324 (rowId 1)
+2012-05-22T14:19:10+01:00 INFO (6): Completed importPost 188324 (rowId 1)
+2012-05-22T14:19:10+01:00 INFO (6): Completed adding tag  for postId 188324 (rowId 1)
+2012-05-22T14:19:26+01:00 INFO (6): Log initialised
+2012-05-22T14:19:27+01:00 INFO (6): Added new companyId 67133 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added new siteId 61796 for companyId 67133 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67133and tiered_characteristic_id: 533
+2012-05-22T14:19:27+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67133and tiered_characteristic_id: 582
+2012-05-22T14:19:27+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:27+01:00 INFO (6): Added new company tag id 41223 for tag_id: 264349
+2012-05-22T14:19:27+01:00 INFO (6): Added new postId 188325 for companyId 67133 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added new contactId 291847 for postId 188325 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Completed importPost 188325 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Completed adding tag  for postId 188325 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added PostInitiativeId 635841 for postId 188325 and initiativeId 
+2012-05-22T14:19:27+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:27+01:00 INFO (6): Added new postInitiative tag id 353714 for tag_id: 264350
+2012-05-22T14:19:27+01:00 INFO (6): Added new companyId 67134 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added new siteId 61797 for companyId 67134 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67134and tiered_characteristic_id: 533
+2012-05-22T14:19:27+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67134and tiered_characteristic_id: 582
+2012-05-22T14:19:27+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:27+01:00 INFO (6): Added new company tag id 41224 for tag_id: 264349
+2012-05-22T14:19:27+01:00 INFO (6): Added new postId 188326 for companyId 67134 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added new contactId 291848 for postId 188326 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Completed importPost 188326 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Completed adding tag  for postId 188326 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added PostInitiativeId 635842 for postId 188326 and initiativeId 
+2012-05-22T14:19:27+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:27+01:00 INFO (6): Added new postInitiative tag id 353715 for tag_id: 264350
+2012-05-22T14:19:27+01:00 INFO (6): Added new companyId 67135 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added new siteId 61798 for companyId 67135 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67135and tiered_characteristic_id: 533
+2012-05-22T14:19:27+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67135and tiered_characteristic_id: 582
+2012-05-22T14:19:27+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:27+01:00 INFO (6): Added new company tag id 41225 for tag_id: 264349
+2012-05-22T14:19:27+01:00 INFO (6): Added new postId 188327 for companyId 67135 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added new contactId 291849 for postId 188327 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Completed importPost 188327 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Completed adding tag  for postId 188327 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added PostInitiativeId 635843 for postId 188327 and initiativeId 
+2012-05-22T14:19:27+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:27+01:00 INFO (6): Added new postInitiative tag id 353716 for tag_id: 264350
+2012-05-22T14:19:27+01:00 INFO (6): Added new companyId 67136 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added new siteId 61799 for companyId 67136 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67136and tiered_characteristic_id: 533
+2012-05-22T14:19:27+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67136and tiered_characteristic_id: 582
+2012-05-22T14:19:27+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:27+01:00 INFO (6): Added new company tag id 41226 for tag_id: 264349
+2012-05-22T14:19:27+01:00 INFO (6): Added new postId 188328 for companyId 67136 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added new contactId 291850 for postId 188328 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Completed importPost 188328 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Completed adding tag  for postId 188328 (rowId 1)
+2012-05-22T14:19:27+01:00 INFO (6): Added PostInitiativeId 635844 for postId 188328 and initiativeId 
+2012-05-22T14:19:27+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:27+01:00 INFO (6): Added new postInitiative tag id 353717 for tag_id: 264350
+2012-05-22T14:19:28+01:00 INFO (6): Added new companyId 67137 (rowId 5)
+2012-05-22T14:19:28+01:00 INFO (6): Added new siteId 61800 for companyId 67137 (rowId 5)
+2012-05-22T14:19:28+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67137and tiered_characteristic_id: 533
+2012-05-22T14:19:28+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67137and tiered_characteristic_id: 582
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new company tag id 41227 for tag_id: 264349
+2012-05-22T14:19:28+01:00 INFO (6): Added new postId 188329 for companyId 67137 (rowId 5)
+2012-05-22T14:19:28+01:00 INFO (6): Added new contactId 291851 for postId 188329 (rowId 5)
+2012-05-22T14:19:28+01:00 INFO (6): Completed importPost 188329 (rowId 5)
+2012-05-22T14:19:28+01:00 INFO (6): Completed adding tag  for postId 188329 (rowId 5)
+2012-05-22T14:19:28+01:00 INFO (6): Added PostInitiativeId 635845 for postId 188329 and initiativeId 
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new postInitiative tag id 353718 for tag_id: 264350
+2012-05-22T14:19:28+01:00 INFO (6): Added new companyId 67138 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Added new siteId 61801 for companyId 67138 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67138and tiered_characteristic_id: 533
+2012-05-22T14:19:28+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67138and tiered_characteristic_id: 582
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new company tag id 41228 for tag_id: 264349
+2012-05-22T14:19:28+01:00 INFO (6): Added new postId 188330 for companyId 67138 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Added new contactId 291852 for postId 188330 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Completed importPost 188330 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Completed adding tag  for postId 188330 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Added PostInitiativeId 635846 for postId 188330 and initiativeId 
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new postInitiative tag id 353719 for tag_id: 264350
+2012-05-22T14:19:28+01:00 INFO (6): Added new companyId 67139 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Added new siteId 61802 for companyId 67139 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67139and tiered_characteristic_id: 533
+2012-05-22T14:19:28+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67139and tiered_characteristic_id: 582
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new company tag id 41229 for tag_id: 264349
+2012-05-22T14:19:28+01:00 INFO (6): Added new postId 188331 for companyId 67139 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Added new contactId 291853 for postId 188331 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Completed importPost 188331 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Completed adding tag  for postId 188331 (rowId 6)
+2012-05-22T14:19:28+01:00 INFO (6): Added PostInitiativeId 635847 for postId 188331 and initiativeId 
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new postInitiative tag id 353720 for tag_id: 264350
+2012-05-22T14:19:28+01:00 INFO (6): Added new companyId 67140 (rowId 8)
+2012-05-22T14:19:28+01:00 INFO (6): Added new siteId 61803 for companyId 67140 (rowId 8)
+2012-05-22T14:19:28+01:00 INFO (6): Add new company tiered characteristic id 1 for companyId: 67140and tiered_characteristic_id: 533
+2012-05-22T14:19:28+01:00 INFO (6): Add new company sub-cat tiered characteristic id 1 for companyId: 67140and tiered_characteristic_id: 582
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new company tag id 41230 for tag_id: 264349
+2012-05-22T14:19:28+01:00 INFO (6): Added new postId 188332 for companyId 67140 (rowId 8)
+2012-05-22T14:19:28+01:00 INFO (6): Added new contactId 291854 for postId 188332 (rowId 8)
+2012-05-22T14:19:28+01:00 INFO (6): Completed importPost 188332 (rowId 8)
+2012-05-22T14:19:28+01:00 INFO (6): Completed adding tag  for postId 188332 (rowId 8)
+2012-05-22T14:19:28+01:00 INFO (6): Added PostInitiativeId 635848 for postId 188332 and initiativeId 
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new postInitiative tag id 353721 for tag_id: 264350
+2012-05-22T14:19:28+01:00 INFO (6): Found existing company_id  (rowId 9)
+2012-05-22T14:19:28+01:00 INFO (6): Add new company sub-cat tiered characteristic id  for companyId: 37389and tiered_characteristic_id: 582
+2012-05-22T14:19:28+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:28+01:00 INFO (6): Added new company tag id 41231 for tag_id: 264349
+2012-05-22T14:19:28+01:00 INFO (6): Completed importPost 127945 (rowId 9)
+2012-05-22T14:19:28+01:00 INFO (6): Completed adding tag  for postId 127945 (rowId 9)
+2012-05-22T14:19:28+01:00 INFO (6): Added PostInitiativeId 635849 for postId 127945 and initiativeId 
+2012-05-22T14:19:29+01:00 INFO (6): Found existing tag id 264350 for value: Coverdale Commercial Property Developers Import
+2012-05-22T14:19:29+01:00 INFO (6): Added new postInitiative tag id 353722 for tag_id: 264350
+2012-05-22T14:19:29+01:00 INFO (6): Found existing company_id  (rowId 9)
+2012-05-22T14:19:29+01:00 INFO (6): Found existing tag id 264349 for value: Coverdale Commercial Property Developers Import

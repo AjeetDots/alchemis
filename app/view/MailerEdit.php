@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * Defines the app_view_MailerEdit class.
+ * @author    David Carter <david.carter@illumen.co.uk>
+ * @copyright 2010 Illumen Ltd
+ * @package   Alchemis
+ * @version   SVN: $Id$
+ */
+
+require_once('app/view/ManipulationView.php');
+
+/**
+ * @package Alchemis
+ */
+class app_view_MailerEdit extends app_view_ManipulationView
+{
+	protected function doExecute()
+	{
+		// Init
+		$this->smarty->assign('id', $this->request->getProperty('id'));
+		$this->smarty->assign('name', $this->request->getProperty('name'));
+		$this->smarty->assign('description', $this->request->getProperty('description'));
+		$this->smarty->assign('client_initiatives', $this->request->getObject('client_initiatives'));
+		$this->smarty->assign('client_initiatives_selected', $this->request->getObject('client_initiatives_selected'));
+		$this->smarty->assign('mailer_types', $this->request->getObject('mailer_types'));
+		$this->smarty->assign('mailer_types_selected', $this->request->getObject('mailer_types_selected'));
+		$this->smarty->assign('mailer_response_groups', $this->request->getObject('mailer_response_groups'));
+        $this->smarty->assign('mailer_response_groups_selected', $this->request->getObject('mailer_response_groups_selected'));
+        $this->smarty->assign('archived', $this->request->getProperty('archived'));
+
+//		$this->smarty->assign('new_mailer', $this->request->getObject('new_mailer'));
+
+		// Get any feedback
+		$this->smarty->assign('feedback', $this->request->getFeedbackString('</li><li>'));
+
+		// Handle any validation errors
+		if ($this->request->isValidationError())
+		{
+			// Ensure validation errors are assigned to smarty
+			$this->handleValidationErrors();
+
+			// Ensure field values are made sticky
+			$this->handleStickyFields();
+		}
+
+		$this->smarty->display('MailerEdit.tpl');
+	}
+}
+
+?>

@@ -1,0 +1,173 @@
+body
+{
+	background-color: #FFF;
+	color: #333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#wrapper
+{
+	border: 0px;
+    margin: 0px;
+	margin-left: auto;
+    margin-right: auto;
+    padding: 0px;
+}
+
+#break
+{
+	height: 30px;
+}
+
+form
+{
+	margin: 0px;
+}
+
+.button
+{
+	border: solid 1px #7F7F7F;
+	background: #ccc5b8;
+	color: #7F7F7F;
+	font-weight: bold;
+	font-size: 11px;
+	padding: 4px 6px;
+}
+
+.login
+{
+	background: #EDEDED;
+	border: 1px solid #7F7F7F;
+	margin-top: 6em;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 15px;
+	width: 429px;
+}
+
+.login p
+{
+	padding: 0 1em 0 1em;
+}
+	
+.error, .confirmation
+{
+	background: #EDEDED;
+	border: 1px solid #7F7F7F;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 3em;
+	margin-bottom: -3em;
+	padding: 15px;
+	width: 429px;
+}
+
+.error p, .error ul
+{
+	color: #CC0000;
+	padding: 0 1em 0 1em;
+}
+
+.confirmation p, .confirmation ul
+{
+	color: #000000;
+	padding: 0 1em 0 1em;
+}
+
+.confirmation a
+{
+	color: #000000;
+}
+
+.confirmation a:hover
+{
+	color: #00AA00;
+}
+
+.form-block
+{
+/*	background-color: #999;*/
+	background-color: #036;
+	border: 1px solid #7F7F7F;
+	padding: 15px 10px 10px 10px;
+}
+
+.login-form
+{
+	float: right;
+	text-align: left;
+	width: 60%;
+}
+
+span.logintitle
+{
+/*	color: #999;*/
+	color: #036;
+	font-size: 24px;
+	display: block;
+	margin-bottom: 3px;
+}
+
+.login-text
+{
+	float: left;
+	text-align: left;
+	width: 40%;
+}
+
+.inputlabel
+{
+	color: white;
+	font-weight: bold;
+	text-align: left;
+}
+
+.inputbox
+{
+	border: 1px solid #7F7F7F;
+	width: 200px;
+	margin: 0 0 1em 0;
+}
+
+.clr
+{
+	clear: both;
+}
+
+.ctr
+{
+	text-align: center;
+}
+
+.version
+{
+	font-size: 0.8em;
+}
+
+.footer a
+{
+	color: #000;
+}
+
+.footer a:hover
+{
+	color: #999;
+}
+
+ul
+{
+	text-align: left;
+}
+
+a
+{
+	color: #000;
+}
+
+a:hover
+{
+	color: #0A0;
+}

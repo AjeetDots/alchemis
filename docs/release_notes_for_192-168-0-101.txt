@@ -1,0 +1,42 @@
+cd /var/www/
+ 
+sudo mv ./alchemis ./alchemis-release_0.0.3_old
+
+sudo mv ./20070702_alchemis.zip ./20070702_alchemis.gz
+
+sudo gunzip ./20070702_alchemis.gz
+
+sudo mv ./20070702_alchemis ./20070702_alchemis.sql
+
+sudo gzip ./20070301_alchemis.sql
+
+sudo cp -Rf /home/vmadmin/release-0.0.4/ /var/www/
+ 
+sudo mv ./release-0.0.4/ ./alchemis
+
+sudo cp ./alchemis-release_0.0.3_old/index.php ./alchemis
+
+sudo cp ./alchemis-release_0.0.3_old/app/view/ViewHelper.php ./alchemis/app/view
+
+sudo cp ./alchemis-release_0.0.3_old/app/ajax/js/ajaxClient.js ./alchemis/app/ajax/js/
+
+sudo chmod -Rf 775 ./alchemis
+
+sudo chown -Rf vmadmin:www-data ./alchemis
+
+--- Database stuff
+add stored functions from /data/tables.sql
+
+clear sessions  - delete from tbl_rbac_sessions;
+
+
+
+
+
+--------------------------------------------------------------------
+
+
+commands from 22/06/07
+sudo cp ./alchemis_old_2/index.php ./alchemis
+sudo cp ./alchemis_old_2/app/view/ViewHelper.php ./alchemis/app/view
+sudo cp ./alchemis_old_2/app/ajax/js/ajaxClient.js ./alchemis/app/ajax/js/

@@ -1,0 +1,89 @@
+.tableListings
+{
+	width: 100%;
+	border: 1px solid #455678;
+	margin: 0px;
+	padding: 0px;
+}
+
+.tableDate {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	width: 180px;
+	text-align: left;
+	vertical-align: middle;
+	font-weight: normal;
+	padding: 2px;
+}
+
+.tableListings .tableTitle
+{
+	background-color: #FFFDF2;
+/*	color: #455678;
+	color: #313E56;*/
+	color: #111456;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+/*	font-weight: bold;*/
+	padding: 2px;
+	text-align: left;
+	vertical-align: top;
+/*	width: 500px;*/
+}
+
+.tableCategory
+{
+	margin: 0;
+	padding: 0;
+	width: 8px;
+}
+
+.tableTime {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #295569;
+	font-weight: normal;
+}
+.newDate {color: #FFFFFF; font-weight: bold; font-size: 12px; }
+.newTime {color: #CCCCCC; font-weight: bold; font-size: 12px; }
+
+.notes,
+.reminder
+{
+	color: #383838;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.reminder
+{
+	color: #cc3838;
+	font-style: italic;
+}
+
+.completed
+{
+	text-decoration: line-through;
+}
+
+.meeting_status,
+.entry_edit
+{
+	background-color: #FFFDF2;
+	color: #111456;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	padding: 2px;
+	text-align: center;
+	vertical-align: top;
+	width: 1%;
+}
+
+.meeting_status
+{
+	text-align: left;
+}

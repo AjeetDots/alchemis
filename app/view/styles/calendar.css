@@ -1,0 +1,466 @@
+.sDefault {background-color: #455678; width: 8px;}
+
+/*
+.s21, .event   {background-color: #F2BFBF; width: 8px;}
+.s22, .meeting {background-color: #A4CAE6; width: 8px;}
+.s23, .info    {background-color: #CCFF00; width: 8px;}
+.s24, .action  {background-color: #FBF484; width: 8px;}
+
+.s21, .event   {background-color: #F2C45A; width: 8px;}
+.s22, .meeting {background-color: #BFB35A; width: 8px;}
+.s23, .info    {background-color: #88A65E; width: 8px;}
+.s24, .action  {background-color: #5E8C6A; width: 8px;}
+*/
+/*
+.s21, .action  {background-color: #F2C45A; width: 8px;}
+.s22, .event   {background-color: #BFB35A; width: 8px;}
+.s23, .meeting {background-color: #88A65E; width: 8px;}
+.s24, .info    {background-color: #5E8C6A; width: 8px;}
+*/
+
+/*.s24, .action  {background-color: #8C2318; width: 8px;}*/
+
+/*
+ * http://www.colourlovers.com/palette/110225/Vintage_Modern
+ *
+ * 8C2318
+ * 5E8C6A
+ * 88A65E
+ * BFB35A
+ * F2C45A
+ */
+.s21, .action                  {background-color: #8C2318; width: 8px;}
+.s21, .post_initiative_action  {background-color: #550645; width: 8px;}
+.s22, .event                   {background-color: #88A65E; width: 8px;}
+.s23, .meeting                 {background-color: #F2C45A; width: 8px;}
+.s24, .info                    {background-color: #BFB35A; width: 8px;}
+
+
+
+
+
+
+.s29999 {background-color: #FFC18A;}
+
+.events {background-color: #455678;}
+
+
+
+
+.mainTableTOC {
+	background-color: #FFFFFF;
+	border: 1px solid red;
+	width: 705px;
+	border-collapse: collapse;
+/*	table-layout: fixed;*/
+ }
+
+.mainTableTOC td
+{
+	border: 1px solid #999;
+	padding: 0;
+}
+
+td.monthYearRowTOC td
+{
+	border: none;
+}
+
+.entry td
+{
+	border: none;
+}
+
+
+.navTableTextTOC {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 9px; 
+	font-weight: Normal;
+	text-decoration: none;
+	color: #003366;
+	}
+
+/* Month and Year Row Setup */
+.monthYearRowTOC {
+    height: 32px;
+	background-color: #FEFFFE;
+	text-align: left;
+	vertical-align: middle;
+    margin: 0px;
+    padding: 6px;
+	}
+
+/* Month and Year Text Setup */
+.monthYearTextTOC {
+	font-family: Verdana, Arial, sans-serif;
+/*	font-size: 18px;*/
+	font-weight: Bold;
+	color: #355881;
+	}
+
+/* Day Names Row Setup */
+.dayNamesRowTOC {
+    height: 20px;
+	background-color: #455678;
+	text-align: center;
+	vertical-align: middle;
+	}
+
+/* Day Name Setup */
+.dayNamesTextTOC {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px; 
+	font-weight: Bold; 
+	color: #FFFFFF;
+	}
+
+/* Alignments, Font Face, Size and Color for Date Numbers and Row Height */
+.rowsTOC {
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 10px;
+	color: #433D27;
+	text-align: left;
+	vertical-align: top;
+	height: 88px;
+	height: 50px;
+	}
+
+/* Color of Today's Date */
+.today
+{
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 11px;
+	font-weight: Bold; 
+	color: #FFFF00;
+	color: #FFF;
+	background-color: #31528E;
+	background-color: #EA9800;
+	
+	text-align: left;
+	vertical-align: top;
+    padding: 2px;
+    margin: 0px;
+/*	border: 1px solid #FFFF00;
+	border: 1px solid #EA9800;*/
+}
+
+.highlighted
+{
+	border: 2px solid red;
+/*	height: 50px;*/
+}
+
+.entry
+{
+/*	border: 1px solid purple;*/
+	margin: 0px;
+	overflow: hidden;
+/*	padding: 1px;*/
+	text-overflow: ellipsis;
+/*	white-space: nowrap;*/
+}
+
+.bank_holiday
+{
+	background-color: #D4CDB1;
+}
+
+.current_month_day
+{
+	background-color: #A2A3AE;
+	color: #FBFCEF;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0;
+	padding: 2px;
+	text-align: left;
+	vertical-align: top;
+}
+
+.current_month_day:hover
+{
+	cursor: pointer;
+	background-color: red;
+}
+
+.prev_month_day,
+.next_month_day
+{
+	background-color: #D0D0D0;
+	color: #FFF;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 11px;
+	margin: 0;
+	padding: 2px;
+	text-align: left;
+	vertical-align: top;
+}
+
+.formElements {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.formButtons
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.formButtons:hover
+{
+	cursor: pointer;
+}
+
+.prev_month,
+.next_month
+{
+    background-color: #EEEEEE;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;
+	color: #BBBBBB;
+}
+
+.s20TOC,
+.weekday
+{
+	background-color: #F7F7F7;
+	height: 50px;
+	width: 14%;
+}
+
+.s20TOC0,
+.weekend
+{
+	background-color: #D4D4D4;
+	height: 50px;
+	width: 14%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Main Table Setup Incluidng Date Number Fonts, Size and Color */
+.mainTable {
+	background-color: #FFFFFF;
+	border: 1px solid #003366;
+	width: 175px;
+ }
+
+.navTable {
+	background-color: #FFFFFF;
+	border: 0px solid #FFFFFF;
+	width: 175px;
+ }
+
+.navTableText {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 9px; 
+	font-weight: Normal;
+	text-decoration: none;
+	color: #003366;
+	}
+
+/* Month and Year Row Setup */
+.monthYearRow {
+	background-image:   url("monthBg.gif");
+    line-height: 17pt;
+	background-color: #D8E2EC;
+	text-align: center;
+	vertical-align: middle;
+	}
+
+/* Month and Year Text Setup */
+.monthYearText {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 13px;
+	font-weight: Bold;
+	color: #252216;
+	}
+
+/* Day Names Row Setup */
+.dayNamesRow {
+    line-height: 11pt;
+	background-color: #F5F4D3;
+	text-align: center;
+	vertical-align: middle;
+	}
+
+/* Day Name Setup */
+.dayNamesText {
+	background-image:   url("dayBg.gif");
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px; 
+	font-weight: Bold; 
+	color: #433D27;
+	}
+
+/* Alignments, Font Face, Size and Color for Date Numbers and Row Height */
+.rows {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;
+	color: #433D27;
+    line-height: 15pt;
+	text-align: center;
+	vertical-align: middle;
+	}
+
+/* Color of Today's Date */
+/*
+.today
+{
+	border: 1px solid #CF0000;
+	color: #CF0000;
+	border: 1px solid green;
+	color: green;
+}
+*/
+
+/* Pop-up Events Setup */
+.popupDate {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-align: left;
+	background-color: #336699;
+	}
+
+.popupEventTitle {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;
+	color: #000000;
+	font-weight: bold;
+	padding: 2px;
+	vertical-align: middle;
+}
+
+.popupEventTime {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px; 
+	color: #000000;
+	font-weight: normal;
+	background-color: #F4F4F4;
+	border: 1px dotted #EFEFEF;
+	padding: 1px;
+}
+
+.popupEventDescription {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px; 
+	color: #000000;
+	font-weight: normal;
+	background-color: #FFFFFF;
+	border: 1px solid #EAEAEA;
+	padding: 2px;
+}
+
+
+.popupEventDate {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px; 
+	color: #446B93;
+	text-align: center;
+	vertical-align: middle;
+	background-color: #F7F8F9;
+	border: 1px solid #FFFFFF;
+	padding: 1px;
+	}
+
+.popupEnd {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px; 
+	color: #A4A4A4;
+	}
+
+.popupClose {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px;
+	color: #FFFFFF;
+	text-align: right;
+	background-color: #336699;
+	}
+
+.popupCloseBrackets {
+    font-family: Verdana, Arial, sans-serif; 
+	font-size: 10px; 
+	color: #000000;
+	text-align: right;
+	background-color: #336699;
+	}
+/*
+---------------------------------------------------------------------------
+The classes below determine how the calendar background markings will look.
+---------------------------------------------------------------------------
+
+/* Normal Cell Background (date number with no event markings) */
+.s2 {
+	background-color: #E0E0E0;
+	}
+/* Empty Cell Background (empty cells with no date numbers) */
+.s20 {
+	background-color: #EBEBEB;
+	}
+
+/* Show dates from other months */
+.sOther {
+    background-color: #EEEEEE;
+/*	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;*/
+	color: #BBBBBB;
+	}
+/* Weekend Cell Background (date number with no event markings) */
+.s200 {
+	background-color: #D0D0D0;
+	}
+
+
+.categoryName {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #666666;
+}
+.categorySelection {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: normal;
+	color: #777777;
+}
+.categoryDiv {
+	background-color: #FCF5EF;
+}
+
+
+
+div#legend
+{
+	border: 1px solid #999;
+	margin-top: 5px;
+	padding: 2px;
+}
+
+div#legend span
+{
+	margin-left: 20px;
+}
+
+.entry .tableTitle
+{
+	color: #111456;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	padding: 2px;
+	text-align: left;
+	vertical-align: top;
+}

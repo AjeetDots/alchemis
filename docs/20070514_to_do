@@ -1,0 +1,3 @@
+1. enable meeting edit and information request edit screens to handle info from the session rather than just directly from database
+
+2. need to consider what happens when a user leaves the communication screeen

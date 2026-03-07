@@ -1,0 +1,21 @@
+body
+{
+	background-color: #FFFFFF;
+	color: #000000;
+	font: 12px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+	margin: 0px 0px 0px 0px;
+}
+
+.msgError
+{
+	/*background: #fff url(../images/icons/off.gif) no-repeat 10px 11px;*/
+	border: 2px solid #cc0000;
+	margin: 10px;
+	padding: 10px 32px;
+}
+
+.msgError .title
+{
+	color: #cc0000;
+	font-weight: bold;
+}

@@ -1,0 +1,213 @@
+To do
+-----
+
+CRITICAL
+********
+
+Actions and calendars:
+
+Calling:
+
+Campaign:
+
+Data migration:
+DONE - Change existing communication status' in new biz db to new status'
+DONE - Check that sub-cat tiers are being imported
+DONE - Don't add tiers to top level cats - added as 0
+DONE - Use cleaned counties and countries
+Use existing regions?
+Wins/Briefs
+Add company characteristics for T/O and Employee bandings
+DONE - For any non-current clients, ensure that no NBMs have access rights assigned
+DONE - Remove any *NP* project refs (these are blank)
+DONE - Import information requests as post initiative actions
+DONE - Use new targeting information
+
+Disciplines:
+
+Filters:
+Add existing filter fields as per current filter builder (Information requests?, Post return date, Lead source))
+
+Hardware:
+Check all machines can display correct resolution - Rob to talk to Octopus about 3 graphics cards to display at 
+
+Information Requests:
+
+Misc:
+RBAC
+Propensity calculations - overnight and on communication log
+Status re-calculations - overnight
+
+Meetings:
+Printed meeting notes
+Change meeting note font to Georgia
+
+Reports:
+
+Searches:
+
+Workspace:
+Can't add new characteristics to a company or a post
+When editing a post we should refresh details on post screen
+Can't see a characteristic which is element_boolean - eg company turnover
+
+NON-CRITICAL
+************
+
+Delete last call
+CTI
+Data import/export facility
+Linked companies
+Post mergers
+Dedupe posts
+Delete client
+Bulk project ref'ing - from filter and searches
+Prospect geographic proximity
+
+Check if post vacations are adding notes to post_initiative_notes and post_notes tables
+
+
+Look at improving filter statistics response for very large filters
+Company disciplines (calculated from post disciplines)
+Filters - add field for incumbent agency name
+Export from searches and filters
+Need to check why when adding an additional 12 months to campaign targets, the twelth month is labelled as 11 (11 is correctly created)
+Document library
+Mailing from db
+Reminder pop-ups
+
+Searches:
+Incumbent Agency - search by agency name
+Characteristics
+
+Workspace:
+'Show all notes' for a company button should show for the initiative_id in the currently selected post_initiative_id screen, not the 
+	default initiative list (currently not working - hangs on return from Ajax call)
+
+COMPLETED:
+**********
+
+Campaign:
+Company Do Not Call list
+Targets - need to record history
+Create clients/campaigns
+Add initiatives to campaigns
+Campaign NBMs - change deactivated date references
+NBM monthly planner - add to second tab
+Action resources need to be recorded
+
+Calling:
+Next action
+Non-eff call - check next action by updates to last selected - not just Alchemis
+Standard notes
+Check that can't have a Fresh Lead with an effective
+
+Disciplines:
+Add validation on disciplines grid for review date (so that the user has to complete both parts of the date)
+
+Filters:
+Add DM options (per discpline?)
+Add category info
+Performance - need to be faster. Remove additional call stats
+Need to be able to save against a client record - ie so all NBMS for that client can see it
+Global and client and personal
+Edit name on filter builder page
+Save As only if user didn't create filter
+Additional results view for Company/Post
+Additional information on client/initiative view - see notes from meeting with Dave
+Add scroll bars to parameters section - otherwise they drop off bottom of screen and can't be accessed
+Add new filters to top of list
+Validation on brackets
+Results formats not being retained (on create)
+Check results formats allow access to correct post_initiative record
+Add 'Today's date' field
+
+
+
+Information requests:
+Creating information requests
+Add action check to communication screen
+
+Meetings:
+Meeting feedback score & NBM prediction score
+Add meeting action checks to communication screen
+Add location field - confirm with Dave what options should be - or just plain text?
+Confirmation actions - need to be able to mark as completed on the edit page
+
+Misc:
+NBM client access rights (see note on filter building in discussion area below)
+Post Update Notes
+Post Notes
+Add Non-Effective call buttons
+Project ref'ing
+Decision Maker info
+Post disciplines
+Post agency user - relates to post disciplines
+Review dates - relates to post disciplines
+Post agencies - need consider data import options - how do we match?
+User admin
+
+Reports:
+Client reports
+Amanda report
+
+Searches:
+Project ref
+Brand - by brand name?
+Contact searches - check - need First name starts with, but this could be covered by full name starts
+	with - check if OK. Was OK - but full_names not populated in database
+Client/Company
+
+Workspace:
+Edit post intiative notes - needs to be done via separate screen in info pane - NO. InLine editor OK.
+Edit post intiative comments
+Ability to add 'manual note' to client records
+Add number of notes for company and post next to revelant icon in menu bars
+Make sure FilterWorkspace.tpl has same changes as SearchWorkspace.tpl
+
+
+---------------------
+To ask Ian
+---------------------
+Use of apostrophes in Javascript eg callFunction('David's', 123); will produce a JS error. Is there a SMARTY
+way round this? Couldn't immediately see one.
+
+Post Incumbent Agency - deletions don't seem to be going through to shadow table. Inserts are OK.
+
+Questions
+---------
+* Should campaign target sectors be at 'top' level or at 'sub-cat' level?
+* Do we need a research front-end??
+
+To discuss
+----------
+* When a filter is built using any post initiative fields then the results need to be restricted to those clients/posts to whom the NBM has access rights.
+If a filter is only built using company and post information then we don't need to apply the same access rights since the filter parameters are not specific 
+to any one client.
+
+* Have set up campaign targets from 2007/01. We need to agree on what date we should start the campaign information from. Suggest make it 200701 and we will 
+curtail the tbl_data_statistic table to only report data from that period. Need list of any client which have been (or were) current since 200701 - and the targets
+for each of them. It might be easier to populate this information using the test system rather than producing spreadsheets (we can capture the information at some 
+point before going live).
+
+* How do we present merger notes?
+
+* Need to get a list of lead sources
+
+Agreed
+------
+* If a client has more than one discipline, when logging a call, is it OK to have just one DM checkbox, or do we need one for each discipline? 
+If we have more than one, against each discipline should we have a dropdown for DM ('yes', 'no' and 'don't know', followed by a dropdown for agency user 
+(with same options)? ANSWER - done as part of the disciplines grid in
+the call screen
+
+* Do we need to have agency name selection made during the call - would be easier to have it done outside the call. This is because its going to be a more
+complex process than just typing a name - the user will be selecting a prospect company from the Alchemis database (or adding a new one if none exist). 
+Again, if a client has more than one displine, do we need to repeat this process for each discipline? ANSWER - done as part of the disciplines grid in
+the call screen
+
+* Does the log non-effective call button need to allow the user to change status? No. Agreed with Dave N.
+
+
+
+

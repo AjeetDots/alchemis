@@ -1,0 +1,5 @@
+suites:
+
+  alchemis_suite:
+
+    src_path: app/lib

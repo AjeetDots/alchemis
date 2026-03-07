@@ -1,0 +1,6 @@
+
+related tables:
+
+tbl_post_initiatives
+tbl_post_tags
+tbl_post_site

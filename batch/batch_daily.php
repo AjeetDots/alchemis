@@ -1,0 +1,720 @@
+<?php
+try {
+	// Record the time taken to run this script
+	$timeStart    = gettimeofday();
+	$timeStart_uS = $timeStart['usec'];
+	$timeStart_S  = $timeStart['sec'];
+
+	// Set no maximum execution time
+	set_time_limit(0);
+
+	// Clear buffer
+	ob_flush();
+
+	//require_once('/applications/MAMP/htdocs/alchemis-trunk/include/EasySql/EasySql.class.php');
+	require_once('/var/www/html/include/Utils/Utils.class.php');
+	require_once('/var/www/html/include/EasySql/EasySql.class.php');
+	//require_once('/var/www/html/include/EasySql/EasySql.class.php');
+
+	define('DB_HOST',     'alchemis-mysql.cswhqpuhwywg.eu-west-1.rds.amazonaws.com');
+	define('DB_NAME',     'alchemis');
+	define('DB_USER',     'alchemis_app');
+	define('DB_PASSWORD', 'rYT4maP7');
+
+	$db = new EasySql(DB_USER, DB_PASSWORD, DB_NAME, DB_HOST);
+	$db->debug_all = false;
+
+	// Aim will be to work this out dynamically and do an incremental update each night
+	$start_date = '2007-01-01 00:00:00';
+	//$end_date   = date('Y-m-d H:i:s');
+
+	// Calculate end date as end of current month plus one year (add year first in case of leap year)
+	$month = date('n');
+	$year = date('Y') + 1;
+
+	// Calculating the days of the month
+	$first_of_month = mktime(0, 0, 0, $month, 1, $year);
+	$days_in_month = date('t', $first_of_month);
+	$last_second_of_month = mktime(23, 59, 59, $month, $days_in_month, $year);
+	$end_date = date('Y-m-d H:i:s', $last_second_of_month);
+
+	echo "<h2>Processing for the period $start_date to $end_date</h2>";
+	flush();
+
+	// create temporary copy of tbl_meetings_shadow to use in batch queries.
+	// We need to do this to avoid the problem of meetings set before 01/01/2007 which were attended after 01/01/2007. These meets would not be included
+	// in the meeting set count, but would be included in the meeting attended count - thus making it impossible to reconcile meets set to meets attended/live/lapsed.
+	// Solution is to create a temporary copy of tbl_meetings_shadow and in this copy to alter meeting set date to '01/01/2007' where meeting set date is < '01/01/2007'
+	// and meeting attended date (date of the meeting) is >= '01/01/2007'
+
+	$sql = 'DROP TABLE IF EXISTS `tbl_meetings_shadow_temp`;';
+	$db->query($sql);
+	echo "<p>$sql</p>";
+
+	$sql = "CREATE TABLE `tbl_meetings_shadow_temp` ( " .
+		"`shadow_id` int(11) NOT NULL auto_increment, " .
+		"`shadow_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP, " .
+		"`shadow_updated_by` int(11) NOT NULL, " .
+		"`shadow_type` char(1) default NULL, " .
+		"`id` int(11) NOT NULL default '0', " .
+		"`post_initiative_id` int(11) NOT NULL, " .
+		"`communication_id` int(11) default NULL, " .
+		"`is_current` tinyint(1) NOT NULL default '0', " .
+		"`status_id` int(11) NOT NULL, " .
+		"`type_id` int(11) NOT NULL, " .
+		"`date` datetime NOT NULL, " .
+		"`reminder_date` datetime default NULL, " .
+		"`notes` varchar(255) default '', " .
+		"`created_at` datetime NOT NULL, " .
+		"`created_by` int(11) NOT NULL, " .
+		"`location_id` int(11) default NULL, " .
+		"`nbm_predicted_rating` int(11) default NULL, " .
+		"`feedback_rating` int(11) default NULL, " .
+		"`feedback_decision_maker` tinyint(1) default '0', " .
+		"`feedback_agency_user` tinyint(1) default '0', " .
+		"`feedback_budget_available` tinyint(1) default '0', " .
+		"`feedback_receptive` tinyint(1) default '0', " .
+		"`feedback_targeting` tinyint(1) default '0', " .
+		"`feedback_meeting_length` int(11) default '0', " .
+		"`feedback_comments` text, " .
+		"`feedback_next_steps` text, " .
+		"PRIMARY KEY  (`shadow_id`), " .
+		"KEY `ix_tbl_meetings_temp_shadow_shadow_type` (`shadow_type`), " .
+		"KEY `ix_tbl_meetings_temp_shadow_shadow_updated_by` (`shadow_updated_by`), " .
+		"KEY `ix_tbl_meetings_temp_shadow_shadow_timestamp` (`shadow_timestamp`), " .
+		"KEY `ix_tbl_meetings_temp_shadow_date` (`date`), " .
+		"KEY `ix_tbl_meetings_temp_shadow_created_by` (`created_by`), " .
+		"KEY `ix_tbl_meetings_temp_shadow_created_at` (`created_at`), " .
+		"KEY `ix_tbl_meetings_temp_shadow_id` (`id`) " .
+		") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;";
+	$db->query($sql);
+	echo "<p>$sql</p>";
+
+	$sql = 'insert into tbl_meetings_shadow_temp select ' .
+		'`shadow_id`, ' .
+		'`shadow_timestamp` , ' .
+		'`shadow_updated_by` , ' .
+		'`shadow_type` , ' .
+		'`id` , ' .
+		'`post_initiative_id` , ' .
+		'`communication_id` , ' .
+		'`is_current` , ' .
+		'`status_id` , ' .
+		'`type_id` , ' .
+		'`date` , ' .
+		'`reminder_date` , ' .
+		'`notes` , ' .
+		'`created_at` , ' .
+		'`created_by` , ' .
+		'`location_id` , ' .
+		'`nbm_predicted_rating` , ' .
+		'`feedback_rating` , ' .
+		'`feedback_decision_maker` , ' .
+		'`feedback_agency_user` , ' .
+		'`feedback_budget_available`, ' .
+		'`feedback_receptive` , ' .
+		'`feedback_targeting` , ' .
+		'`feedback_meeting_length` , ' .
+		'`feedback_comments` , ' .
+		'`feedback_next_steps` ' .
+		'from tbl_meetings_shadow ' .
+		'order by shadow_id';
+	$db->query($sql);
+	echo "<p>$sql</p>";
+
+	$sql = "update tbl_meetings_shadow_temp " .
+		"set created_at = '2007-01-01 00:00:00' " .
+		"where created_at < '2007-01-01 00:00:00' " .
+		"and date >= '2007-01-01 00:00:00'";
+	$db->query($sql);
+	echo "<p>$sql</p>";
+
+
+
+	$re_populate_day_range = true; // set to true if we need to recreate all the lines in tbl_data_statistics_daily
+
+	if ($re_populate_day_range) {
+		//
+		// populate tbl_data_statistics_daily with one row for each user_id, campaign_id, date combination
+		//
+		// echo "<p>Populating tbl_data_statistics_daily</p>";
+		// flush();
+		// $sql = 'DROP TABLE IF EXISTS `tbl_data_statistics_daily`';
+		// $db->query($sql);
+
+		// $sql =	'CREATE TABLE `tbl_data_statistics_daily` ( ' .
+		// 	'`id` int(11) NOT NULL auto_increment, ' .
+		// 	'`row_key` varchar(50) NOT NULL default \'\', ' .
+		// 	'`campaign_id` int(11) NOT NULL default \'0\', ' .
+		// 	'`user_id` int(11) NOT NULL default \'0\', ' .
+		// 	"`date` date NOT NULL default '0000-00-00', " .
+		// 	'`call_count` int(11) NOT NULL default \'0\', ' .
+		// 	'`call_effective_count` int(11) NOT NULL default \'0\', ' .
+		// 	//		'`access_rate` int(11) NOT NULL default \'0\', ' .
+		// 	"`call_ote_count` int(11) NOT NULL default '0', " .
+		// 	"`meeting_set_count` int(11) NOT NULL default '0', " .
+		// 	//		"`meeting_set_rate` int(11) NOT NULL default '0', " .
+		// 	//		"`meeting_attended_rate` int(11) NOT NULL default '0'," .
+		// 	'`meeting_category_unknown_count` int(11) NOT NULL default \'0\', ' .
+		// 	"`meeting_category_attended_count_by_meeting_date` int(11) NOT NULL default '0', " .
+		// 	"`meeting_attended_count` int(11) NOT NULL default '0', " .
+		// 	"`meeting_category_attended_count` int(11) NOT NULL default '0', " .
+		// 	"`meeting_category_cancelled_count` int(11) NOT NULL default '0', " .
+		// 	"`meeting_category_tbr_count` int(11) NOT NULL default '0', " .
+		// 	"`information_request_count` int(11) NOT NULL default '0', " .
+		// 	"`information_request_converted_count` int(11) NOT NULL default '0', " .
+		// 	'PRIMARY KEY  (`id`)' .
+		// 	//			'KEY `ix_tbl_data_statistics_daily_campaign_id` (`campaign_id`), ' .
+		// 	//			'KEY `ix_tbl_data_statistics_daily_user_id` (`user_id`), ' .
+		// 	//			'KEY `ix_tbl_data_statistics_daily_date` (`date`) ' .
+		// 	') ENGINE=InnoDB DEFAULT CHARSET=latin1';
+		// echo "<p>$sql</p>";
+		// $db->query($sql);
+
+
+		// echo '<p>Adding indexes</p>';
+		// flush();
+		// $sql = 'ALTER TABLE tbl_data_statistics_daily ADD INDEX `ix_tbl_data_statistics_daily_row_key` (`row_key`)';
+		// echo "<p>$sql</p>";
+		// $db->query($sql);
+		// $sql = 'ALTER TABLE tbl_data_statistics_daily ADD INDEX `ix_tbl_data_statistics_daily_campaign_id` (`campaign_id`)';
+		// echo "<p>$sql</p>";
+		// $db->query($sql);
+		// $sql = 'ALTER TABLE tbl_data_statistics_daily ADD INDEX `ix_tbl_data_statistics_daily_user_id` (`user_id`)';
+		// echo "<p>$sql</p>";
+		// $db->query($sql);
+		// $sql = 'ALTER TABLE tbl_data_statistics_daily ADD INDEX `ix_tbl_data_statistics_daily_date` (`date`)';
+		// echo "<p>$sql</p>";
+		// $db->query($sql);
+		// echo '<p>Added indexes</p>';
+		// flush();
+
+		$sql = 'SELECT campaign_id, user_id, id ' .
+			'FROM tbl_campaign_nbms AS cnbm ' .
+			'WHERE daily_report_status = 0 ' .
+			'ORDER by campaign_id, user_id ';
+
+
+		echo "<p>$sql</p>";
+		$results = $db->getResults($sql);
+
+		$totalInsert = 0;
+		foreach ($results as $result) {
+			//echo 'Creating dates for user_id/campaign_id: ' . $result->user_id . '/'. $result->campaign_id . '<br />';
+
+			$sql = 'INSERT INTO tbl_data_statistics_daily (`row_key`, `campaign_id`, `user_id`, `date`) VALUES ';
+
+			$temp_date = substr($start_date, 0, 10);
+			$queryInserted = 0;
+			while ($temp_date <= $end_date) {
+				$sql .= '(\'' .  $result->campaign_id . '-' . $result->user_id . '-' . $temp_date . '\', ' .
+					$result->campaign_id . ', ' .
+					$result->user_id . ', ' .
+					'\'' . $temp_date . '\'),';
+				//			echo $sql . '<br />';
+				$temp_date = Utils::dateAdd($temp_date, 'day', 1);
+				$totalInsert++;
+				$queryInserted++;
+				//			echo $temp_date . '<br />';
+			}
+			echo "Query inserted records $queryInserted";
+			//trim trailing ,
+			$sql = substr($sql, 0, -1);
+			// echo $sql . '<br />';
+
+			$db->query($sql);
+
+			$sql = "UPDATE `tbl_campaign_nbms` SET `daily_report_status` = '1' WHERE `tbl_campaign_nbms`.`id` = ".$result->id;
+			$db->query($sql);
+
+			flush();
+		}
+		echo "Total inserted records $totalInsert";
+	} else {
+		echo "<p>Resetting tbl_data_statistics_daily</p>";
+		$sql = 'UPDATE tbl_data_statistics_daily SET ' .
+			'`call_count` = 0, ' .
+			'`call_effective_count` = 0, ' .
+			'`call_ote_count` = 0, ' .
+			'`meeting_set_count` = 0, ' .
+			'`meeting_category_unknown_count` = 0, ' .
+			'`meeting_attended_count` = 0, ' .
+			'`meeting_category_attended_count` = 0, ' .
+			'`meeting_category_attended_count_by_meeting_date` = 0, ' .
+			'`meeting_category_cancelled_count` = 0, ' .
+			'`meeting_category_tbr_count` = 0, ' .
+			'`information_request_count` = 0, ' .
+			'`information_request_converted_count` = 0';
+		echo "<p>$sql</p>";
+
+		$db->query($sql);
+	}
+
+	echo '<p>Completed populating tbl_data_statistics_daily</p>';
+	flush();
+
+	//
+	// Telephone call count
+	//
+	echo "<h2>Telephone call count</h2>";
+	makeTemporaryTable($db);
+
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', comm.user_id, \'-\', DATE(comm.communication_date)), ' .
+		'i.campaign_id, comm.user_id, ' .
+		'DATE(comm.communication_date), ' .
+		'COUNT(comm.id) ' .
+		'FROM tbl_communications AS comm ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = comm.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		"WHERE comm.communication_date >= '$start_date' " .
+		"AND comm.communication_date <= '$end_date' " .
+		'AND comm.type_id = 1 ' .
+		'GROUP BY i.campaign_id, ' .
+		'comm.user_id, ' .
+		'DATE(comm.communication_date)';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	//$sql = 'INSERT INTO tbl_data_statistics_daily (`id`, `campaign_id`, `user_id`, `date`, `call_count`) SELECT * FROM tbl_data_statistics_daily_temp';
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	//		'SET ds.call_count = ds_temp.`value`';
+
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET ds.call_count = ds_temp.`value`';
+
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+	flush();
+	//exit();
+	//
+	// Telephone effectives count
+	//
+	echo '<h2>Telephone effectives count</h2>';
+	makeTemporaryTable($db);
+
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', comm.user_id, \'-\', DATE(comm.communication_date)), ' .
+		'i.campaign_id, comm.user_id, DATE(comm.communication_date), COUNT(comm.id) ' .
+		'FROM tbl_communications AS comm ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = comm.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		"WHERE comm.communication_date >= '$start_date' " .
+		"AND comm.communication_date <= '$end_date' " .
+		'AND comm.type_id = 1 ' .
+		'AND comm.is_effective = 1 ' .
+		'GROUP BY i.campaign_id, ' .
+		'comm.user_id, ' .
+		'DATE(comm.communication_date)';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET ds.call_effective_count = ds_temp.`value`';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+	flush();
+
+
+	echo "<hr /><h2>Telephone On target effectives count</h2>";
+	makeTemporaryTable($db);
+
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', comm.user_id, \'-\', DATE(communication_date)), ' .
+		'i.campaign_id, comm.user_id, ' .
+		'DATE(communication_date), ' .
+		'count(comm.id) ' .
+		'from tbl_communications comm ' .
+		'join tbl_post_initiatives pi on pi.id = comm.post_initiative_id ' .
+		'join tbl_initiatives i on pi.initiative_id = i.id ' .
+		'where communication_date >= \'' . $start_date . '\' ' .
+		'and communication_date <= \'' . $end_date . '\' ' .
+		'and type_id = 1 ' .
+		'and ote = 1 ' .
+		'group by i.campaign_id, ' .
+		'comm.user_id, ' .
+		'DATE(communication_date);';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+	//$sql = 'UPDATE tbl_data_statistics_daily ds JOIN tbl_data_statistics_daily_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET call_ote_count = ds_temp.`value`;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+
+
+	//
+	// Meeting set count (meetings set on date)
+	//
+	echo '<h2>Meeting set count (meetings set on day)</h2>';
+	makeTemporaryTable($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', m_sh.created_by, \'-\', DATE(m_sh.created_at)), ' .
+		'i.campaign_id, m_sh.created_by, ' .
+		'DATE(m_sh.created_at), ' .
+		'count(m_sh.id) ' .
+		'from tbl_meetings_shadow m_sh ' .
+		'join tbl_post_initiatives pi on pi.id = m_sh.post_initiative_id ' .
+		'join tbl_initiatives i on pi.initiative_id = i.id ' .
+		'where m_sh.created_at >= \'' . $start_date . '\' ' .
+		'and m_sh.created_at <= \'' . $end_date . '\' ' .
+		'and m_sh.shadow_type = \'i\' ' .
+		'AND m_sh.status_id in (12 , 13) ' .
+		'group by i.campaign_id, ' .
+		'm_sh.created_by, ' .
+		'DATE(m_sh.created_at);';
+
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET ds.meeting_set_count = ds_temp.`value`';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+
+	//
+	// Meeting category is 'unknown' - (meetings set in period where the status is current (12,13,18,19) but meeting date has passed)
+	//
+	echo "<hr /><h2>Meeting category is 'unknown' - (meetings set in period where the status is current (12,13,18,19) but meeting date has passed)</h2>";
+	makeTemporaryTable_1($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.created_at >= \'' . $start_date . '\' ' .
+		'AND m_sh.created_at <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type in (\'i\', \'u\') ' .
+		'GROUP BY m_sh.id;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	makeTemporaryTable($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', m_sh.created_by, \'-\', DATE(m_sh.created_at)), ' .
+		'i.campaign_id, m_sh.created_by, DATE(m_sh.created_at), COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_daily_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id in (12,13,18,19) ' .
+		"AND m_sh.date < concat(current_date(), ' 00:00:00') " .
+		'GROUP BY i.campaign_id, m_sh.created_by, DATE(m_sh.created_at);';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET meeting_category_unknown_count = ds_temp.`value`;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+
+	//
+	// Meeting attended count (meetings set in period where the status is currently 'meeting attended: xxx')
+	//
+	echo "<h2>Meeting attended count (meetings set in period where the status is currently 'meeting attended: xxx')</h2>";
+	makeTemporaryTable($db);
+
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', m.created_by, \'-\', DATE(m.created_at)), ' .
+		'i.campaign_id, m.created_by, DATE(m.created_at), COUNT(m.id) ' .
+		'FROM tbl_meetings AS m ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m.created_at >= \'' . $start_date . '\' ' .
+		'AND m.created_at <= \'' . $end_date . '\' ' .
+		'AND m.status_id in (24, 25, 26, 27) ' .
+		'GROUP BY i.campaign_id, m.created_by, DATE(m.created_at)';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET ds.meeting_attended_count = ds_temp.`value`';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+
+	//
+	// Meeting category attended count (meetings set in period where the status has been 'meeting attended: xxx' at some point - ie the meeting has been attended)
+	//
+	echo '<hr /><h2>Meeting category attended count (meetings where the status has been `meeting attended: xxx` at some point - ie the meeting has been attended)</h2>';
+	makeTemporaryTable_1($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.created_at >= \'' . $start_date . '\' ' .
+		'AND m_sh.created_at <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type = \'u\' ' .
+		'GROUP BY m_sh.id;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	makeTemporaryTable($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', m_sh.created_by, \'-\', DATE(m_sh.created_at)), ' .
+		'i.campaign_id, m_sh.created_by, DATE(m_sh.created_at), COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_daily_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id >= 24 ' .
+		'GROUP BY i.campaign_id, m_sh.created_by, DATE(m_sh.created_at);';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds ' .
+	//		'JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET meeting_category_attended_count = ds_temp.`value`;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	//
+	// Meeting category attended count based on meeting date (meetings attended in period (regardless of when set) where the status has been set to 'meeting attended: xxx' at some point, for meetings with meeting date in query period)
+	//
+	echo '<hr /><h2>Meeting category attended count based on meeting date (all meetings (regardless of when set) where the status has been "meeting attended: xxx" at some point, for meetings with meeting date in query period)</h2>';
+	makeTemporaryTable_1($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.created_at >= \'' . $start_date . '\' ' .
+		'AND m_sh.created_at <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type = \'u\' ' .
+		'GROUP BY m_sh.id;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	makeTemporaryTable($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', m_sh.created_by, \'-\', DATE(m_sh.created_at)), ' .
+		'i.campaign_id, m_sh.created_by, DATE(m_sh.date), COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_daily_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id >= 24 ' .
+		'GROUP BY i.campaign_id, m_sh.created_by, DATE(m_sh.created_at);';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds ' .
+	//		'JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET meeting_category_attended_count_by_meeting_date = ds_temp.`value`;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+
+	//
+	// Meeting category cancelled count (meetings set in period which have been cancelled)
+	//
+	echo '<hr /><h2>Meeting cancelled count</h2>';
+	makeTemporaryTable_1($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.created_at >= \'' . $start_date . '\' ' .
+		'AND m_sh.created_at <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type = \'u\' ' .
+		'GROUP BY m_sh.id;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	makeTemporaryTable($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', m_sh.created_by, \'-\', DATE(m_sh.created_at)), ' .
+		'i.campaign_id, m_sh.created_by, m_sh.created_at, COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_daily_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id in (20,21,22,23) ' .
+		'GROUP BY i.campaign_id, m_sh.created_by, m_sh.created_at;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds ' .
+	//		'JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET meeting_category_cancelled_count = ds_temp.`value`;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+
+	//
+	// Meeting category tbr count (meetings set in period and which are now tbr)
+	//
+	echo '<hr /><h2>Meeting tbr count</h2>';
+	makeTemporaryTable_1($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.created_at >= \'' . $start_date . '\' ' .
+		'AND m_sh.created_at <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type = \'u\' ' .
+		'GROUP BY m_sh.id;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	makeTemporaryTable($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', m_sh.created_by, \'-\', DATE(m_sh.created_at)), ' .
+		'i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.created_at), COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_daily_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id in (14,15,16,17) ' .
+		'GROUP BY i.campaign_id, m_sh.created_by, m_sh.created_at;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds ' .
+	//		'JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.date = ds_temp.date ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET meeting_category_tbr_count = ds_temp.`value`;';
+	echo "<p>$sql</p>";
+	flush();
+	$db->query($sql);
+
+	//
+	// Information Requests Count
+	//
+	echo '<hr /><h2>Information Requests Count</h2>';
+	makeTemporaryTable($db);
+
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', ir.user_id, \'-\', DATE(ir.due_date)), ' .
+		'i.campaign_id, ir.user_id, DATE(ir.due_date), COUNT(ir.id) ' .
+		'FROM tbl_actions AS ir ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON pi.id = ir.post_initiative_id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE ir.type_id = 2 ' .
+		"AND ir.due_date >= '$start_date' " .
+		"AND ir.due_date <= '$end_date' " .
+		'GROUP BY i.campaign_id, ir.user_id, DATE(ir.due_date)';
+	echo "<p>$sql</p>";
+
+	$db->query($sql);
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET ds.information_request_count = ds_temp.`value`';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+
+	//
+	// Information Requests Converted Count
+	//
+	// An information request is counted as converted if a meeting is set on the next effective call.
+	//
+	echo '<hr /><h2>Information Requests Converted Count</h2>';
+
+	// Get the next effective communication for post initiatives which occur after an information request
+	$sql = 'CREATE TEMPORARY TABLE t1 ' .
+		'SELECT MIN(comm.id) AS id ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN tbl_actions AS a ON comm.post_initiative_id = a.post_initiative_id AND comm.communication_date > a.created_at ' .
+		'WHERE a.type_id = 2 ' .
+		"AND a.created_at  >= '$start_date' " .
+		'AND comm.is_effective = 1';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+
+	// Count those for which the status is a meeting set one
+	makeTemporaryTable($db);
+	$sql = 'INSERT INTO tbl_data_statistics_daily_temp (row_key, campaign_id, user_id, `date`, `value`) ' .
+		'SELECT concat(i.campaign_id, \'-\', comm.user_id, \'-\', DATE(comm.communication_date)), ' .
+		'i.campaign_id, comm.user_id, DATE(comm.communication_date), COUNT(comm.id) ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN t1 ON comm.id = t1.id ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON comm.post_initiative_id = pi.id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE comm.status_id IN (12, 13, 18, 19) ' .
+		'GROUP BY i.campaign_id, comm.user_id, DATE(comm.communication_date)';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+
+	// Drop temporary tables
+	$db->query('DROP TEMPORARY TABLE t1');
+
+	// Update tbl_data_statistics
+	//$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.`date` = ds_temp.`date` ' .
+	$sql = 'UPDATE tbl_data_statistics_daily AS ds JOIN tbl_data_statistics_daily_temp AS ds_temp ON ds.row_key = ds_temp.row_key ' .
+		'SET ds.information_request_converted_count = ds_temp.`value`';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+
+	//
+	// Finish up
+	//
+	echo "<p>Done.</p>";
+	$timeEnd    = gettimeofday();
+	$timeEnd_uS = $timeEnd["usec"];
+	$timeEnd_S  = $timeEnd["sec"];
+	$ExecTime_S = ($timeEnd_S + ($timeEnd_uS / 1000000)) - ($timeStart_S + ($timeStart_uS / 1000000));
+	echo '<div style="text-align: center; padding-bottom: 5px">Execution Time: ' . round($ExecTime_S, 3) . ' seconds</div>';
+} catch (Exception $e) {
+	print_r($e);
+}
+
+function makeTemporaryTable($db)
+{
+	$sql =	'DROP TABLE IF EXISTS `tbl_data_statistics_daily_temp`; ';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+
+	$sql = 	'CREATE TEMPORARY TABLE `tbl_data_statistics_daily_temp` ( ' .
+		'`id` int(11) NOT NULL auto_increment, ' .
+		'`row_key` varchar(50) NOT NULL default \'\', ' .
+		'`campaign_id` int(11) NOT NULL default \'0\', ' .
+		'`user_id` int(11) NOT NULL default \'0\', ' .
+		"`date` date NOT NULL default '0000-00-00', " .
+		'`value` int(11), ' .
+		'PRIMARY KEY  (`id`), ' .
+		'KEY `row_key` (`row_key`), ' .
+		'KEY `campaign_id` (`campaign_id`), ' .
+		'KEY `user_id` (`user_id`), ' .
+		'KEY `date` (`date`) ' .
+		');';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+}
+
+function makeTemporaryTable_1($db)
+{
+	$sql =	'DROP TABLE IF EXISTS `tbl_data_statistics_daily_temp_1`; ';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+
+	$sql = 	'CREATE TEMPORARY TABLE `tbl_data_statistics_daily_temp_1` ( ' .
+		'`id` int(11) NOT NULL auto_increment, ' .
+		'`value` int(11), ' .
+		'PRIMARY KEY  (`id`) ' .
+		');';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+}

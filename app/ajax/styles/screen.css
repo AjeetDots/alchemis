@@ -1,0 +1,6121 @@
+/*-------------------------------------------------
+PAGE BODY
+-------------------------------------------------*/
+
+body {
+	margin: 0 auto;
+	padding: 0;
+	font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif;
+	color: #333;
+	background-color: #e5e5e5;
+	text-align: center;
+}
+
+/* Make sure the table cells show the right font */
+td { font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif; }
+
+
+/*-------------------------------------------------
+GLOBALS & GENERAL CASES
+-------------------------------------------------*/
+
+input { padding: 3px; }
+
+span.help {
+  font-size: 10px;
+  color: #666;
+}
+
+a {text-decoration: underline; padding: 1px; }
+a:link { color: #03c; }
+a:visited { color: #03c; }
+a:hover { color: #fff; background-color: #30c; text-decoration: none; }
+
+
+a.image:link, a.image:visited, a.image:hover {
+	background: none;
+	padding: 0;
+}
+
+a.image img {
+	border: none;
+}
+
+span.admin {
+	color: #999;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+a.admin:link, a.admin:visited {
+	color: #f00;
+	font-family: verdana;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+a.adminfull:link, a.adminfull:visited {
+	color: #f00;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+a.admin:hover, a.adminfull:hover { color: #fff; background: #f00; }
+
+a.black:link, a.black:visited {
+	color: #000;
+}
+
+a.black:hover {
+	color: #fff;
+	background: #000;
+}
+
+a.anchor:link, a.anchor:visited, a.anchor:hover {
+	color: #fff;
+	background: #fff;
+	font-size: 0px;
+	text-decoration: none;
+	padding: 0;
+}
+
+form {
+	margin: 0;
+	padding: 0;
+}
+
+p {
+	font-size: 12px;
+	line-height: 16px;
+}
+
+p.submit,
+div.submit {
+  color: #666;
+  font-size: 11px;
+}
+
+p.submit input {
+  vertical-align: middle;
+}
+
+div.submit {
+  border-top: 2px solid #000;
+  padding: 8px 0 12px 0;
+  text-align: center;
+}
+
+div.submit input {
+  font-size: 14px;
+}
+
+small {
+	font-size: 10px;
+	line-height: 13px;
+	}
+
+x-small {
+	font-size: 9px;
+	line-height: 11px;
+	}
+
+blockquote {
+	font-size: 11px;
+	color: #666;
+	margin: 20px;
+}
+
+ol, ul, li {
+	margin: 0;
+	padding: 0;
+}
+
+ul li {
+	list-style-type: none;
+}
+
+
+li {
+	font-size: 11px;
+	line-height: 13px;
+	padding: 3px 0;
+}
+
+li img {
+	padding-right: 3px;
+}
+
+h1 {
+	font-family: "Lucida Grande", arial, sans-serif;
+	padding: 0;
+	border-bottom: 0;
+	margin: 0;
+	color: #333;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+h1.blankslate {
+	background: #ff6;
+	color: #000;
+	margin-bottom: 10px;
+	padding: 5px;
+	margin-left: -5px;
+}
+
+h1.blankslate a {
+	color: #f00;
+}
+
+h1.blankslate a:hover {
+	background-color: #000;
+	color: #fff;
+}
+
+p.blankslate {
+  font-size: 14px;
+  color: #000;
+  padding: 5px;
+  margin: 0 0 10px 0;
+}
+
+p.blankslate strong {
+  background: #ff6;
+}
+
+h2 {
+	font-family: "Lucida Grande", arial, sans-serif;
+	margin: 20px 0 5px 0px;
+	color: #333;
+	font-size: 14px;
+	padding: 0;
+}
+
+h2.subheader {
+	padding: 0 0 2px 0;
+	margin: 15px 0 5px 0;
+	font-size: 12px;
+	border-bottom: 1px solid #000;
+	color: #000;
+}
+
+h3 {
+	margin: 20px 0 0 0;
+	color: #666;
+	font-family: "Lucida Grande", arial, sans-serif;
+	font-size: 14px;
+	padding: 0;
+}
+
+.smallnote {
+	font-size: 10px;
+	color: #999;
+	font-weight: normal;	
+}
+
+.light {
+	font-weight: normal;
+}
+
+.lightgray {
+	font-weight: normal;
+	color: #666;
+	font-size: 9px;
+}
+
+.lightgray a:link, .lightgray a:visited {
+	color: #999;
+	background: inherit;
+	text-decoration: underline;
+}
+
+.lightgray a:hover {
+	color: #fff;
+	background: #000;
+}
+
+.smallgray {
+  font-weight: normal;
+  color: #666;
+  font-size: 10px;
+}
+
+.smallgray a:link, .smallgray a:visited {
+  color: #666;
+  background: inherit;
+  text-decoration: underline;
+}
+
+.smallgray a:hover {
+  color: #fff;
+  background: #000;
+}
+
+.highlight {
+	background-color: #ffc;
+}
+
+td, th {
+	padding: 3px;
+	text-align: left;
+}
+
+.bigger {
+	font-size: 12px;
+}
+
+.red {
+	color: #c00;
+}
+
+.blue {
+	color: #06c;
+	}
+	
+.green {
+	color: #390;
+	}
+
+code, pre	{
+	font-family: "Bitstream Vera Sans Mono", monaco, "Courier New", courier, monospace;
+	background: inherit;
+	color: #333;
+	font-size: 80%
+	}
+
+pre {
+  width: 100%;
+  overflow: hidden;
+}
+
+	/*  Work around IE/Win code size bug - courtesy Jesper, waffle.wootest.net  */
+
+* html code	{
+	font-size : 105%; 
+	}
+
+.PrivateMessage, .Privatetodo, .PrivateWriteboard {
+	padding: 0px 0px 3px 0px;
+	margin-bottom: 20px;
+}
+
+.PrivateMessage, .PrivateWriteboard {
+	background: url(/images/private-back-red.gif) #fff;
+}
+
+.PrivateWriteboard {
+  margin-bottom: 0;
+  padding: 10px;
+	border-left: 5px solid #BC0001;
+}
+
+.ClientMessage {
+	padding: 0px 0px 3px 0px;
+	margin-bottom: 20px;
+}
+
+div.ClientMessage div.Post {
+	margin-bottom: 0;
+  margin-left: 0;
+	padding-bottom: 0;
+	padding-left: 10px;
+	border-left: 5px solid green;
+}
+
+.Privatetodo {
+	padding-top: 2px;
+	padding-bottom: 10px;
+	margin-top: 15px;
+	padding-left: 10px;
+	border-left: 5px solid #BC0001;
+	background: url(/images/private-back-red.gif) #fff;
+}
+
+div.PrivateMessage div.Post,
+body.files div.PrivateMessage div.Post {
+	margin-bottom: 0;
+  margin-left: 0;
+	padding-bottom: 0;
+	padding-left: 10px;
+	border-left: 5px solid #BC0001;
+}
+
+body.files div.PrivateMessage {
+  margin-bottom: 12px;
+}
+
+body.files div.PrivateMessage div.Post {
+  padding-left: 5px;
+}
+
+img.privatebug {
+	padding: 5px;
+}
+
+
+/*-------------------------------------------------
+STRUCTURE
+-------------------------------------------------*/
+
+div#Wrapper {
+  padding: 0 23px 0 30px;
+  margin: 0 auto;
+}
+
+.Container {
+	margin: 12px auto 0 auto;
+	text-align: center;
+	min-width: 750px;
+	}
+
+.ClearAll {
+	padding: 0px;
+	clear: both;
+	font-size: 0px;
+	}
+
+#ContentFrame, #DashContentFrame, .ContentFrame {
+	margin: 0;
+	padding: 0px 0;
+	width: 100%;
+	text-align: left;
+	/*position: relative;*/
+	float: left;
+}
+
+table.layout {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table.layout td.left,
+table.layout td.right {
+  vertical-align: top;
+  padding: 0;
+}
+
+table.layout td.left {
+  width: 70%;
+}
+
+table.layout td.right {
+  width: 30%;
+}
+
+div.Left {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	width: 70%;
+	float: left;
+	}
+
+div.Right {
+	margin: 0px 0 0 0;
+	padding: 0;
+	text-align: left;
+	/*position: absolute;*/
+	float: left;
+	width: 30%;
+	}
+
+table.layout td.left div.Left,
+table.layout td.right div.Right {
+  width: auto;
+  float: none;
+}
+
+
+#Footer {
+	clear: left;
+	font-size: 9px;
+	color: #666;
+	margin: 4px 0 20px 20px;
+	text-align: left;
+	padding-bottom: 15px;
+}
+
+#Footer a:link, #Footer a:visited {
+	color: #666;
+}
+
+#Footer a:hover {
+	color: #fff;
+	background: #666;
+}
+
+/*-------------------------------------------------
+PRIMER
+-------------------------------------------------*/
+
+div#primer {
+  padding: 13px;
+  background-color: #fff;
+  border: 10px solid #dcdcdc;
+  margin: 20px 0 30px 0;
+  text-align: left;
+}
+
+div#primer h1 {
+  margin: 0 0 3px 0; padding: 0;
+  font-size: 18px;
+  color: #393;
+}
+
+div#primer h2 {
+  margin: 0 0 2px 0; padding: 0;
+  font-size: 14px;
+  color: #000;
+}
+
+div#primer p {
+  margin: 0 0 10px 0; padding: 0;
+  font-size: 12px;
+  width: 550px;
+}
+
+div#primer strong {
+  color: #333;
+}
+
+div#primer div.morehelp {
+  float: right;
+  border-left: 1px solid #ccc;
+  padding-left: 13px;
+  width: 200px;
+}
+
+div#primer div.morehelp p {
+  font-size: 11px;
+  width: auto;
+  line-height: 14px;
+}
+
+div#primer div.morehelp h2 {
+  font-size: 11px;
+  color: #000;
+}
+
+div#primer div#hideprimer {
+  border-top: 1px solid #ccc;
+  padding-top: 8px;
+  font-size: 12px;
+}
+
+/*-------------------------------------------------
+PROJECT-TO-PROJECT SWITCHING
+-------------------------------------------------*/
+
+#P2P_selector {
+	padding: 7px;
+	font-size: 11px;
+  color: #fff;
+}
+
+#Header h3 #P2P_selector span.light {
+	color: #999;
+	font-size: 11px;
+}
+
+#Header h3 #P2P_selector a:link,
+#Header h3 #P2P_selector a:visited {
+  color: red;
+  background: #f0f0f0;
+  padding: 3px;
+  font-weight: bold;
+}
+
+#Header h3 #P2P_selector a:hover {
+  color: white;
+  background: red;
+}
+
+/*-------------------------------------------------
+HEADER
+-------------------------------------------------*/
+
+#Header {
+	/*width: 100%;*/
+	background: #036;
+	padding: 1px 0 0 0;
+	margin: 0;
+	text-align: left;
+  position: relative;
+	}	
+
+#Header h1 /* client name */ {
+	padding: 0 0 10px 0;
+	margin: 7px 0 0 30px;
+	font-size: 24px;
+	font-weight: normal;
+	color: #fc0;
+	text-align: left;
+	}	
+
+#Header h1 span /* project name */ {
+	/*padding: 0 0 7px 0;
+	margin: 0 0 5px 32px;*/
+	font-size: 16px;
+	font-weight: normal;
+	color: #fff;
+	border: none;
+	font-family: "Lucida Grande", arial, sans-serif;
+	}	
+
+#Header h3 {
+	padding: 0 30px 0 32px;
+	margin: 7px 0 0 0;
+	font-size: 9px;
+	font-weight: normal;
+	font-family: verdana;
+	text-align: left;
+}
+
+#Header h3.global {
+  position: relative;
+  float: right;
+  text-align: right;
+  width: 300px;
+}
+
+#Header h3 span#floatright {
+  text-align: right;
+  width: 300px;
+  position: relative;
+  float: right;
+}
+
+#Header h3 span.pipe {
+  opacity: 0.6;
+  filter: alpha(opacity=60);
+}
+
+#Header h3 a.current {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#fresh_all h2 {
+	padding: 0 0 2px 0;
+	margin: 0;
+	border-bottom: 1px dotted #ccc;
+}
+
+/*-------------------------------------------------
+TABS
+-------------------------------------------------*/
+
+#Tabs {
+	margin: 0 0 0 30px;
+	height: 25px;
+	padding: 0;
+}
+
+#Tabs ul {
+	margin: 0; padding: 0;
+}
+
+#Tabs li {
+	margin: 0; padding: 0;
+	display: inline;
+	list-style: none;
+	border: none;
+}
+
+#Tabs ul#MainTabs {
+}
+
+div#Tabs a:link,
+div#Tabs a:visited {
+  text-decoration: none;
+}
+
+#Tabs a:hover {
+	color: #fff;
+	background: #333;
+}
+
+#Tabs ul#MainTabs a:link, #Tabs ul#MainTabs a:visited {
+  float: left; /* for IE6 */
+	font-size: 12px;
+	font-weight: normal;
+	padding: 4px 8px 6px 8px;
+	margin: 0;
+}
+
+#Tabs ul#MainTabs a:link.current, #Tabs ul#MainTabs a:visited.current {
+	background: #e5e5e5 url(/images/tab-bg.gif) top repeat-x;
+	border-bottom: 1px solid #e5e5e5;
+	color: #222;
+	font-weight: bold;
+	text-decoration: none;
+  margin: 0;
+}
+
+
+/*-------------------------------------------------
+MESSAGE CATEGORY LINKS
+-------------------------------------------------*/
+
+div#CategoryList {
+	margin-top: 10px;
+	font-size: 12px;
+}
+
+div#CategoryList a:link.category_link,
+div#CategoryList a:visited.category_link {
+  position: relative;
+  display: block;
+  margin: 0 0 1px 0;
+  padding: 4px;
+  line-height: 16px;
+}
+
+div#CategoryList div.category div.operations {
+  position: relative;
+  margin: 0 0 1px 0;
+  width: 75px;
+  padding: 4px 0;
+  line-height: 16px;
+  text-align: right;
+  float: right;
+  display: none;
+}
+
+div#CategoryList div.category img.spinner {
+  padding-top: 6px;
+}
+
+div#CategoryList div.category img {
+  vertical-align: middle;
+}
+
+div#CategoryList.editing div.category {
+  border-top: 1px solid #ccc;
+}
+
+div#CategoryList.editing a:link.category_link,
+div#CategoryList.editing a:visited.category_link {
+  margin-right: 80px;
+}
+
+div#CategoryList.editing div.category div.operations {
+  display: block;
+}
+
+div#CategoryList a.current:link, 
+div#CategoryList a.current:visited, 
+div#CategoryList a.current:hover {
+	font-weight: bold;
+	color: #000;
+	text-decoration: none;
+	font-size: 13px;
+	background: #fff;
+}
+
+
+/*-------------------------------------------------
+SECTION HEADER
+-------------------------------------------------*/
+
+.SectionHeader {
+  padding-top: 0px;
+	margin: 0 0 30px 0;
+}
+
+div.Left .SectionHeader,
+div.Full .SectionHeader {
+  text-align: center;
+}
+
+.dashboard .Left .SectionHeader { /* latest activity */
+  margin: 10px 0;
+}
+
+.dashboard .Left .SectionHeader h1 { 
+  font-size: 12px;
+}
+
+.dashboard .Left .col,
+.overview .Left .col {
+	padding-right: 28px;
+}
+
+.dashboard .Right .SectionHeader { /* Your Projects */
+  margin-bottom: 20px;
+}
+
+span.SectionDescription {
+	font-weight: normal;
+	color: #666;
+}
+
+.SectionHeader h1,
+.Right .SectionHeader h1 {
+	padding-bottom: 2px;
+	border-bottom: 1px solid #666;
+	margin: 0;
+	font-size: 16px;
+	color: #000;
+}
+
+
+.ContextHeader {
+  text-align: center;
+  margin: 0 0 15px 0;
+}
+
+.ContextHeader h1 {
+  margin: 0;
+	padding-bottom: 2px;
+	border-bottom: 1px solid #666;
+	font-size: 16px;
+	color: #000;
+  font-size: 12px;
+}
+
+.ContextHeader h1 span.private {
+  color: #fff;
+	background: #BC0000;
+  font-weight: normal;
+  padding: 0 3px;
+}
+
+.ContextHeader h1 a {
+  font-weight: normal;
+  font-style: italic;
+}
+
+.SectionHeader h3,
+.ContextHeader h3 {
+	font-family: verdana;
+	padding: 2px 0 0 0;
+	margin: 0;
+	font-size: 10px;
+	font-weight: normal;
+	color: #666;
+}
+
+.SectionHeader h3 img {
+  vertical-align: middle;
+}
+
+.SectionHeader div.ActionButton {
+	background: #fff;
+	border-top: none;
+	float: right;
+	padding: 3px 0 0 0;
+	margin: 0;
+}
+
+.SectionHeader div.ActionButton {
+	font-size: 10px;
+}
+
+/*-------------------------------------------------
+INDIVIDUAL POSTS
+-------------------------------------------------*/
+
+.Post {
+	margin: 0 0 10px 10px;
+	padding: 0 0 20px 0;
+}
+
+.Post p {
+	padding: 0;
+	margin: 3px 0 10px 0;
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.Post h1 {
+	padding-top: 5px;
+	color: #000;
+}
+
+.Post h1 a {
+	color: #000;
+	text-decoration: none;
+}
+
+.Post h1 a:hover {
+	background: #fff;
+	color: #000;
+	text-decoration: underline;
+}	
+
+h2.date /* the date */ {
+	padding: 0 0 0 0;
+  text-align: left;
+	margin: 0 0 2px 0;
+	color: #666;
+	font-size: 10px;
+	font-weight: normal;
+	font-style: italic;
+	line-height: 12px;
+	border-bottom: 1px solid #ccc;
+}
+
+.Post h2.subhead {
+	padding: 0;
+	margin: 15px 0 0 0;
+	color: #000;
+	font-size: 12px;
+	font-weight: bold;
+	font-style: normal;
+	line-height: 12px;
+}
+
+.Post h3 /* the post details, formerly p.whenwho */ {
+	padding: 0 0 0 0;
+	margin: 0 0 5px 0;
+	color: #666; /* #393; */
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: normal;
+	line-height: 14px;
+	text-align: left;
+}
+
+.Post h3 a {
+	color: #666;
+}
+
+.Post h3 a:hover {
+	color: #fff;
+	background-color: #666;
+}
+
+.Post h3 span.pipe {
+  color: #999;
+}
+
+.Post h3 a.commentlink:link {
+	font-weight: bold;
+	color: #000;
+}
+
+.Post h3 a.commentlink:hover {
+	color: #fff;
+	background: #333;
+}
+
+.Post ol, .Post ul {
+	margin: 3px 0 10px 0;
+	padding: 0;
+}
+
+.Post li {
+	margin-left: 30px;
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.Post ul li {
+	list-style-type: square;
+}
+
+.Post table {
+	background: #dcdcdc;
+}
+
+.Post td {
+	background: #fff;
+	padding: 5px;
+	font-size: 12px;
+}
+
+
+/*-------------------------------------------------
+LINK BOXEN
+-------------------------------------------------*/
+
+.Links {
+	padding-bottom: 15px;
+	display: none;
+}
+
+.LinkBox, .LinkBoxWithFile {
+	width: 75%;
+	padding: 4px;
+	margin-top: -1px; /* stacked fileboxes share a border */
+	background: url(/images/back_ystripes.gif) #fff;
+	border-top: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	color: #666;
+	font-size: 10px;
+	line-height: 16px;
+}
+
+.LinkBoxWithFile img {
+	padding: 0 3px 20px 0;
+}
+
+.LinkBox a, .LinkBoxWithFile a {
+	font-size: 12px;
+}
+
+
+
+/*-------------------------------------------------
+DASHCAL
+-------------------------------------------------*/
+
+table.Dashcal,
+table.sortable
+{
+	margin-bottom: 15px;
+	background: #e1e0e0;
+	width: 90%;
+	/* box model hack */
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	width: 100%;
+	}
+
+table.Dashcal th,
+table.sortable th {
+	color: #666;
+	background: none;
+	padding: 3px;
+	font-size: 10px;
+	text-align: left;
+}
+
+
+
+table.Dashcal td,
+table.sortable td
+{
+	background: #f0f0f0;
+	padding: 3px;
+	color: #ccc;
+/*	font-size: 9px;
+	vertical-align: top;*/
+	font-size: 11px;
+	vertical-align: middle;
+	padding: 6px 3px;
+}
+
+table.Dashcal td.with,
+table.sortable td.with
+{
+	background: #fff;
+	color: #333;
+	border: 1px solid #000;
+	font-weight: bold;
+}
+
+table.Dashcal td#today,
+table.sortable td#today
+{
+	background: #ffc;
+	color: #000;
+	border: 2px solid #fc6;
+}
+
+table.Dashcal ul,
+table.sortable ul
+{
+	padding: 0;
+	margin: 3px 0 0 0;
+}
+/*
+table.Dashcal li,
+table.sortable li
+{
+	font-weight: normal;
+	font-size: 10px;
+	line-height: 11px;
+	padding: 3px 0 0 0;
+	margin-bottom: 5px;
+}
+*/
+
+
+
+
+
+/*-----------------------------------------------
+FULLCAL
+-------------------------------------------------*/
+
+table.Fullcal {
+	margin-bottom: 15px;
+	background: #e1e0e0;
+	width: 100%;
+	}
+
+table.Fullcal th {
+	color: #666;
+	background: none;
+	padding: 3px;
+	font-size: 10px;
+	text-align: left;
+}
+
+table.Fullcal th.month {
+	background: #fff;
+	color: #000;
+	width: 1%;
+	padding-right: 5px;
+	font-weight: bold;
+	font-size: 14px;
+	text-align: center;
+	vertical-align: top;
+}
+
+table.Fullcal td.blank {
+	background: none;
+}
+
+table.Fullcal td {
+	background: #f0f0f0;
+	vertical-align: top;
+	padding: 3px;
+	color: #bbb;
+	font-size: 9px;
+}
+
+table.Fullcal td.with {
+	background: #fff;
+	color: #333;
+	border: 1px solid #000;
+	font-weight: bold;
+}
+
+table.Fullcal td#today {
+	background: #ffc;
+	color: #333;
+	border: 2px solid #fc6;
+}
+
+
+table.Fullcal ul {
+	padding: 0;
+	margin: 3px 0 0 0;
+}
+
+table.Fullcal li {
+	font-weight: normal;
+	font-size: 10px;
+	line-height: 11px;
+	padding: 3px 0 0 0;
+	margin-bottom: 5px;
+}
+
+
+
+/*-------------------------------------------------
+SIDEBAR
+-------------------------------------------------*/
+
+.Right h1, .Right h1.late {
+	padding: 4px 0 2px 0;
+	border-bottom: 1px solid #666;
+	margin: 0 0 5px 0;
+	font-size: 12px;
+	color: #000;
+}
+
+.Right p {
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.Right h1.late {
+	padding-top: 0;
+	border-bottom: 1px solid #c00;
+	color: #c00;
+}
+
+.Right p.incategory {
+	margin-top: 0;
+	background: #ececec;
+	padding: 4px;
+}
+
+.Right p.incategory a {
+	display: block;
+}
+
+.Right h2, .Right h2.border {
+	font-family: "Lucida Grande", arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333;
+	margin: 20px 0 3px 0;
+	padding: 0;
+	border: none;
+}
+
+.Right h2.border {
+	border-bottom: 1px solid #d5d5d5;
+}
+
+.SidebarPosts li {
+	font-size: 10px;
+	color: #666;
+  margin-bottom: 4px;
+}
+
+.SidebarPosts h1 {
+	color: #333;
+	font-size: 11px;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 2px;
+	border: none;
+}
+
+.SidebarPosts h2 {
+	color: #666;
+	font-size: 11px;
+	margin-bottom: 5px;
+}
+
+.SidebarPosts h3 {
+	color: #999;
+	font-weight: normal;
+	font-size: 10px;
+	margin: 0;
+}
+
+.SidebarOriginal {
+	padding-top: 20px;
+}
+
+.SidebarOriginal h1 {
+	font-size: 10px;
+	border-bottom: none;
+	color: #333;
+}
+
+.SidebarOriginal p {
+	font-size: 10px;
+}
+
+.SidebarContact {
+	font-size: 10px;
+	line-height: 14px;
+	color: #333;
+	margin: 10px 0 20px 0;
+}
+
+.SidebarContact h3 {
+	color: #000;
+	margin: 0;
+	font-size: 10px;
+}
+
+#Poster {
+	margin-bottom: 30px;
+}
+
+.Right ol {
+	padding-left: 20px;
+}
+
+
+.Right ul li {
+	list-style: none;
+	padding: 0 0 3px 0;
+	margin-left: 0;
+}
+
+
+
+/*-------------------------------------------------
+COMMENTS
+-------------------------------------------------*/
+
+.Comments h4 {
+	margin: 0 0 10px 0;
+	font-size: 10px;
+	color: #666;
+	padding: 3px 0;
+	font-weight: normal;
+	border-bottom: 1px solid #d5d5d5;
+}
+
+.Comments h2 {
+	padding: 2px 4px;
+	color: #fff;
+	background: #888;
+	font-size: 11px;
+	border-bottom: 1px solid #666;
+	margin: 0;
+
+}
+
+.Comments div.Post {
+	background: #f9f9f9;
+	border-bottom: 1px solid #efefef;
+	margin: 0 0 5px 0;
+	clear: left;
+	color: #333;
+	padding: 5px;
+}
+
+.Comments div.Post:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+/* Hides form IE-mac \*/
+* html .Comments div.Post {height: 1%;}
+/* End hide from IE-mac */
+
+.Comments #OriginalPost {
+	padding: 0 0 30px 0;
+	background: #fff;
+	border-bottom: none;
+}
+
+.Post#Preview {
+	border: 2px solid #ef9c00;
+	padding: 0;
+}
+
+.Post#Preview h2 {
+	margin: 0;
+	padding: 5px 10px;
+	background: #ff6;
+	border: none;
+	color: #000;
+}
+
+.Post#Preview #PreviewBody {
+	padding: 10px;
+}
+
+.Post#Preview #PreviewButtons {
+	text-align: left;
+	background: #ffc;
+	margin: 0;
+	padding: 5px 10px;
+}
+
+div.Comments img.avatar {
+  margin: 0 10px 10px 0;
+  width: 48px;
+  float: left;
+  padding-left: 5px;
+}
+
+div.Comments div.Post ul,
+div.Comments div.Post ol {
+  clear: left;
+}
+
+div.Comments div.Post ol li,
+div.Comments div.Post ul li {
+}
+
+div#your_comment div.Post {
+  margin-bottom: 0;
+}
+
+/*-------------------------------------------------
+RETURN LINK
+-------------------------------------------------*/
+
+.return, .returnborder {
+	padding-bottom: 2px;
+	margin: 0 0 15px 0;
+	font-size: 11px;
+	color: #666;
+	font-weight: normal;
+	border: none;
+}
+
+.returnborder {
+	border-bottom: 1px solid #d5d5d5;
+}
+
+.return a, .returnborder a {
+	color: #666;
+}
+
+.return a:hover, .returnborder a:hover {
+	background-color: #666;
+	color: #fff;
+}
+
+
+/*-------------------------------------------------
+FORM STUFF (MORE BELOW)
+-------------------------------------------------*/
+
+table.NewLink th {
+	text-align: left;
+	font-size: 10px;
+}
+
+span.formoptions /* small text inside an h2 */ {
+	font-family: verdana;
+	font-size: 10px;
+	font-weight: normal;
+}
+
+span.formoptions a {
+	padding: 4px;
+}
+
+.ButtonGroup {
+	font-size: 11px;
+	text-align: right;
+	margin: 15px 0 3px 0;
+}
+
+.error {
+	background-color: red;
+	padding: 2px;
+}
+
+.field_with_errors {
+  padding: 4px 0 4px 2px;
+  display: inline;
+  border-left: 8px solid red;
+  margin-left: 3px;
+}
+
+.general_error_box {
+  border: 1px solid #c99;
+	background: url(/images/alertbad_icon.gif) #c00 5px 10px no-repeat;
+	color: #fff;
+  padding: 10px 10px 10px 37px;
+  margin-bottom: 20px;
+}
+
+.general_error_box h2 {
+  color: #fff;
+  margin-top: 0;
+  line-height: 140%;
+}
+
+.general_error_box p {
+  color: #fff;
+  margin-bottom: 0;
+  margin-top: 5px;
+}
+
+.general_error_box a:link,
+.general_error_box a:visited {
+  color: #fff;
+}
+
+#ErrorExplanation,
+#errorExplanation {
+	border: 2px solid red;
+	padding: 7px;
+	padding-bottom: 12px;
+	margin-bottom: 20px;
+	background-color: #f0f0f0;
+}
+
+#ErrorExplanation h2,
+#errorExplanation h2 {
+	text-align: left;
+	font-weight: bold;
+	padding: 5px 5px 5px 27px;
+	font-size: 12px;
+	margin: -7px;
+	background: url(/images/alertbad_icon.gif) #c00 left no-repeat;
+	color: #fff;
+}
+
+#ErrorExplanation p,
+#errorExplanation p {
+	color: #333;
+	margin-bottom: 0;
+	padding: 5px;
+}
+
+#ErrorExplanation ul,
+#errorExplanation ul {
+	margin-left: 30px;
+}
+
+#ErrorExplanation ul li,
+#errorExplanation ul li {
+	font-size: 12px;
+	list-style: square;
+}
+
+
+/*-------------------------------------------------
+OVERVIEW
+-------------------------------------------------*/
+
+body.overview div.announcement {
+	margin: 0 0 20px 0;
+}
+
+body.overview div.announcement p {
+	font-size: 14px;
+	line-height: 18px;
+}
+
+
+/*-------------------------------------------------
+MILESTONES
+-------------------------------------------------*/
+
+.LateBlock, .UpcomingBlock, .CompletedBlock {
+	margin-bottom: 25px;
+}
+
+.LateBlock {
+	border-left: 1px solid #c00;
+}
+
+.UpcomingBlock {
+	border-left: 1px solid #fc0;
+}
+
+.CompletedBlock {
+	border-left: 1px solid #090;
+}
+
+.Milestone {
+	border-bottom: 1px solid #e0e0e0;
+	padding: 8px 0 8px 5px;
+}
+
+.Milestone ul {
+	margin: 3px 0 8px 30px;
+}
+
+.Milestone li {
+	color: #ccc;
+	border: none;
+	list-style: square;
+	padding: 2px 0 0 0;
+}
+
+.Milestone li a {
+	color: #666;
+}
+
+.Milestone li a:hover {
+	color: #fff;
+	background: #666;
+}
+
+h1.LateMilestones, h1.UpcomingMilestones, h1.CompletedMilestones {
+	font-family: verdana;
+	font-size: 10px;
+	padding: 3px;
+	/* background-color: #c00; */
+	background-color: #fc0;
+	/* color: #fff; */
+	color: #000;
+	margin: 0;
+	text-align: left;
+	/* border-bottom: 1px solid #c00; */
+	border-bottom: 1px solid #fc0;
+}
+
+h1.LateMilestones {
+	background-color: #c00;
+	border-bottom: 1px solid #c00;
+	color: #fff;
+}
+
+h1.CompletedMilestones {
+	background-color: #090;
+	border-bottom: 1px solid #090;
+	color: #fff;
+}
+
+.Milestone h2 /* the date */ {
+	font-family: verdana;
+	padding: 0 0 3px 0;
+	margin: 0;
+	color: #c00; /* future by default */
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.Milestone .showhide h2 {
+  color: #333;
+}
+
+.Milestone .showhide .submit {
+  margin-top: 10px;
+  padding-top: 5px;
+  border-top: 1px dotted #999;
+  text-align: right;
+}
+
+.Milestone h2.complete {
+	color: #090;
+}
+
+.Milestone h2.upcoming {
+	color: #c93;
+}
+
+.Milestone h3 /* the name */ {
+	padding: 0;
+	border-bottom: 0;
+	margin: 0;
+	color: #333;
+	font-size: 14px;
+	font-family: "Lucida Grande", arial, sans-serif;
+	font-weight: bold;
+}
+
+.day {
+	font-weight: normal;
+}
+
+.responsibility {
+	font-size: 10px;
+	color: #666;
+	font-weight: normal;	
+}
+
+/* MILESTONE DIALOG */
+
+.Milestone div.DialogHeader {
+	background-color: #333;
+	padding: 3px 0 3px 10px;
+	text-align: left;
+	border: 1px solid #333;
+	border-bottom: none;
+	margin: 0;
+}
+
+.Milestone div.DialogHeader h1 {
+	padding: 0;
+	margin: 0;
+	font-size: 11px;
+	color: #fff;
+}
+
+.Milestone div.DialogBody {
+	width: auto;
+	background: #f0f0f0;
+	border: 1px solid #d5d5d5;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	padding: 0 12px 8px 15px;
+	margin: 0;
+}
+
+.Milestone div.PrimaryAction {
+	font-size: 10px;
+	margin: 10px 0 0 0;
+	padding: 5px 0 0 0;
+	border-top: 1px dotted #999;
+	text-align: right;
+}
+
+#NewMilestone {
+	background: none;
+	padding: 0 0 20px 0;
+}
+
+/* ADD MORE MILESTONES */
+
+#basic_form table#AddManyMilestones {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#basic_form table#AddManyMilestones th {
+	text-align: left;
+	font-size: 12px;
+	font-weight: bold;
+	color: #000;
+	border-bottom: 1px solid #d5d5d5;
+}
+
+#basic_form table#AddManyMilestones tr.shaded {
+	background-color: #efefef;
+	}
+
+#basic_form table#AddManyMilestones td {
+	padding: 8px 4px;
+}
+
+.AddTheseMilestones {
+	text-align: right;
+}
+
+h2.ForReference {
+	margin-left: 0;
+}
+
+/* MILESTONE  */
+
+table.Calendar {
+	font-size: 10px;
+	text-align: center;
+	color: #333;
+}
+
+table.Calendar th {
+	color: #666;
+	border-bottom: 1px solid #ccc;
+	background: #f2f2f2;
+}
+
+table.Calendar th.month {
+	text-align: right;
+	color: #333;
+}
+
+table.Calendar td.past, table.Calendar td#today, table.Calendar td.future_today, table.Calendar td.past_today, table.Calendar td.past_future, table.Calendar td.past_future_today, table.Calendar td.future, table.Calendar td.late {
+	border-left: 1px solid #fff;
+	border-top: 1px solid #fff;
+	color: #fff;
+}
+
+table.Calendar td.past {
+	background: #393;
+	color: #fff;
+}
+
+table.Calendar td.late {
+	background: #c00;
+	color: #fff;
+}
+
+table.Calendar td#today {
+	/* background: #fc0; */
+	background: #9cf;
+	color: #000;
+}
+
+table.Calendar td.future_today {
+	color: #69c;
+	background: #fc0;
+	font-weight: bold;
+}
+
+table.Calendar td.past_today {
+	color: #9ff;
+	background: #393;
+	font-weight: bold;
+}
+
+table.Calendar td.past_future {
+	background-image: url(/images/milestone_future_past.gif);
+	background-position: center;
+	color: #fff;
+}
+
+table.Calendar td.past_future_today {
+	background-image: url(/images/milestone_future_past.gif);
+	background-position: center;
+	color: #9ff;
+	font-weight: bold;
+}
+
+table.Calendar td.weekend {
+	color: #999;
+}
+
+table.Calendar td.future {
+	/* background: #c00; */
+	background: #fc0;
+	color: #000;
+}
+
+table.Calendar tr.pastmonth {
+	display: none;
+}
+
+
+/*-------------------------------------------------
+CONTACTS
+-------------------------------------------------*/
+
+
+.Contacts {
+	padding: 0;
+	margin: 0 0 25px 0;
+	text-align: left;
+	width: 100%;
+  border-collapse: collapse;
+	border-left: 1px solid #efefef;
+	}	
+
+.Contacts p.admin {
+  color: #999;
+}
+
+.Contacts a.admin {
+  font-size: 10px;
+}
+
+.popup_add_dialog {
+  background: #f0f0f0;
+  padding: 10px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.popup_add_dialog h1 {
+  font-size: 12px;
+  border-bottom: 1px dotted #ccc;
+}
+
+.popup_add_dialog select,
+.popup_add_dialog input {
+  font-size: 14px;
+}
+
+.popup_add_dialog select,
+.popup_add_dialog input.text {
+  width: 225px;
+}
+
+
+.popup_add_dialog table {
+  margin: 10px 0 5px 0;
+}
+
+.popup_add_dialog td {
+  font-size: 12px;
+  padding: 0 20px 0 0;
+}
+
+.Contacts td {
+	text-align: left;
+	width: 33%;
+	padding: 5px 5px 5px 10px;
+	background-color: #fff;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+  vertical-align: top;
+	}	
+
+.Contacts td.nopeople {
+  background: #ffc;
+  width: 66%;
+}
+
+.Contacts td.nopeople p,
+.Contacts td.nopeople p a {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.Contacts tr.top td {
+  border-top: 1px solid #efefef;
+}
+
+.Contacts td.blank,
+.Contacts tr.top td.blank {
+  background: #fff;
+  border: none;
+}
+
+.Contacts td.company {
+  background: #f0f0f0;
+}
+
+.Contacts td.person div {
+  margin-left: 55px;
+}
+
+.Contacts td.person div.noavatar {
+  margin-left: 0;
+}
+
+.Contacts td.person div.avatar {
+  margin: 0;
+  width: 48px;
+  float: left;
+}
+
+.Contacts td h1,
+.Contacts td h2 {
+	color: #000;
+	padding: 0;
+	margin: 0;
+	font-size: 14px;
+  margin-bottom: 2px;
+	font-weight: bold;
+	border: none;
+	}	
+
+.Contacts td h3 {
+	font-family: verdana;
+	padding: 0;
+	margin: 0;
+	font-size: 10px;
+	font-weight: normal;
+	border: none;
+	color: #000;
+	}	
+
+.Contacts td p {
+	padding: 0;
+	margin: 0 0 3px 0;
+	font-size: 10px;
+  line-height: 12px;
+	color: #000;
+	font-weight: normal;
+	}	
+
+.Contacts span.item {
+  margin-right: 5px;
+  white-space: nowrap;
+}
+
+.Contacts span.label {
+	font-size: 10px;
+	color: #666;
+	font-weight: normal;	
+}
+
+/*-------------------------------------------------
+DASHBOARD / PROJECTS PAGE
+-------------------------------------------------*/
+
+.EmailExample {
+	padding: 7px;
+	border: 1px dashed #ccc;
+	font-family: monospace;
+	font-size: 10px;
+	background-color: #FDFAE0;
+	}
+
+.ActiveClients {
+	margin-bottom: 10px;
+}
+
+.ClientViewActiveProjects {
+  margin-bottom: 15px;
+}
+
+.InactiveClients {
+}
+
+.DashTabs {
+	background-color: #333;
+	text-align: left;
+	padding: 5px 0 0 0;
+}
+
+.DashTabs ul#Tabs {
+	margin: 0px;
+	padding-left: 20px;
+}
+
+.Client {
+	margin: 0;
+	padding: 0 0 5px 0;
+}
+
+.Right .Client h1,
+.Right .InactiveClients h1 {
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0;
+	padding: 2px;
+	color: #000;
+  border-bottom: none;
+  display: inline;
+}
+
+.Right .InactiveClients h1 {
+	color: #666;
+  background: none;
+}
+
+.Client div.Project, .Client div.InactiveProjects {
+	margin: 4px 0 0 0;
+	padding: 0 0 7px 0;
+}
+
+.Project a, .InactiveProjects a {
+	margin: 1px 0 0 0;
+	padding: 1px 1px 1px 8px;
+	border-bottom: none;
+	font-size: 11px;
+	font-weight: normal;
+	display: block;
+}
+
+.Client .InactiveProjects a {
+	color: #666;
+	font-size: 10px;
+	font-weight: normal;
+}
+
+.ClientViewActiveProjects .Project a {
+  font-size: 14px;
+  margin: 0 0 8px 0;
+}
+
+.InactiveProjects a {
+	color: #666;
+}
+
+.InactiveProjects a:hover {
+	color: #fff;
+	background-color: #666;
+}
+
+.Right h2.dashstatus {
+	padding: 0 0 2px 0;
+	margin: 0 0 5px 0;
+	color: #999;
+	font-size: 10px;
+	font-weight: normal;
+	font-style: italic;
+	line-height: 12px;
+	border-bottom: 1px solid #ccc;
+}
+
+h2.dashheader {
+	color: #666;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+p.fixed10 {
+	font-family: courier, monospace;
+	font-size: 10px;
+	line-height: 12px;
+}
+
+div.dashannouncement {
+	border-top: 3px solid #fc0;
+	border-bottom: 3px solid #fc0;
+	font-size: 11px;
+	color: #000;
+	padding: 7px;
+	background-color: #fcfce1;
+	margin-bottom: 15px;
+}
+
+div.dashannouncement h1 {
+	font-size: 12px;
+	text-align: center;
+	margin: 0 0 10px 0;
+	padding: 0 0 2px 0;
+}
+
+div.latemilestones {
+	background-color: #fcc;
+	padding: 5px;
+	margin-bottom: 10px;
+}
+
+div.latemilestones h1 {
+	padding: 0 0 2px 0;
+	margin: 0 0 5px 0;
+	font-size: 12px;
+	border-bottom: 1px solid #c00;
+	color: #c00;
+}
+
+div.latemilestones ul li strong {
+	color: #c00;
+}
+
+div.latemilestones ul {
+	margin-bottom: 0;
+}
+
+div#LogoBox {
+  margin-bottom: 15px;
+}
+
+div#LogoBox img {
+  padding: 5px 0 0 0;
+}
+
+div#LogoBox.white img {
+  background: #fff;
+  padding: 10px;
+}
+
+
+div.rssbox {
+  font-size: 11px;
+  border-top: 1px solid #dcdcdc;
+  padding: 5px 0;
+  margin-top: 10px;
+  line-height: 15px;
+}
+
+
+/*-------------------------------------------------
+NEW PROJECT PROCESS
+-------------------------------------------------*/
+
+.fauxdivtop {
+	border-top: 1px solid #ccc;
+	padding-top: 8px;
+}
+
+.fauxdivbottom {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 8px;
+}
+
+table.NewPerson td, table.NewPerson th {
+	font-size: 10px;
+}
+
+table.NewPerson th {
+	font-weight: normal;
+	text-align: right;
+}
+
+.StepGroup, .StepSubGroup {
+	background: url(/images/back_gstripes.gif);
+	border: 1px solid #d5d5d5;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	padding: 10px 0 15px 15px;
+	margin: 5px 0 30px 15px;
+}
+
+.StepSubGroup {
+	margin-top: -31px;
+}
+
+#LastStepGroup {
+	margin-bottom: 0;
+}
+
+.StepHelp {
+	font-size: 10px;
+	color: #666;
+	padding: 5px 0 0 0;
+	margin: 10px 15px 0 0;
+	border-top: 1px solid #ccc;
+}
+
+p.longurl {
+	line-height: 18px;
+}
+
+p.longurl a {
+	font-size: 10px;
+}
+
+p.Checkbox /* a checkbox and label after */ {
+	margin: 5px 0;
+}
+
+.StepButtons {
+	font-size: 11px;
+	margin: 15px 0 3px 15px;
+	text-align: left;
+}
+
+.InsideButton /* like "save and add another" */ {
+	margin: 10px 10px 0 0;
+	padding: 5px;
+}
+
+.SidebarSteps {
+	margin-bottom: 25px;
+}
+
+.SidebarSteps p {
+	margin-top: 3px;
+}
+
+.SidebarTip {
+	margin-bottom: 25px;
+}
+
+.SidebarTip p {
+	margin-top: 3px;
+}
+
+.SidebarTip h1 {
+	margin-bottom: 0;
+}
+
+
+/*-------------------------------------------------
+FLASHES
+-------------------------------------------------*/
+
+#Flash {
+	text-align: left;
+	border: 1px solid #ccc;
+	padding: 5px 5px 5px 30px;
+	font-size: 14px;
+	margin: 0 auto 12px auto;
+  margin-right: 7px;
+}
+
+.login #Flash {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+#Flash.good {
+	border-color: #9c9;
+	color: #060;
+	background: url(/images/alertgood_icon.gif) #E2F9E3 left no-repeat;
+}
+
+#Flash.bad {
+	border-color: #c99;
+	color: #fff;
+	background: url(/images/alertbad_icon.gif) #c00 left no-repeat;
+}
+
+/*-------------------------------------------------
+DIALOG BOX
+-------------------------------------------------*/
+
+.DialogBody {
+	margin: 0;
+	padding: 10px;
+	text-align: left;
+	border: 1px solid #ccc;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	background-color: #fff;
+	}
+
+.DialogBody td {
+	font-size: 11px;
+}
+
+.DialogHeader {
+	background-color: #333;
+	padding: 0;
+	margin: 0;
+	text-align: left;
+	border-top: 1px solid #333;
+	border-left: 1px solid #333;
+	border-right: 1px solid #333;
+	}	
+
+.DialogHeader h1 {
+	font-family: verdana;
+	margin: 0;
+	padding: 3px 0 3px 10px;
+	font-size: 10px;
+	color: #fff;
+	}	
+
+.DialogBody h1 {
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0;
+	color: #f00;
+	}
+
+.DialogBody p.noundo {
+	font-size: 10px;
+	font-weight: normal;
+	color: #666;
+	}
+
+.ThePost {
+	margin: 10px 0 10px 0;
+	padding: 10px 10px 0 10px;
+	border-top: 1px solid #999;
+	border-bottom: 1px solid #999;
+	}
+
+.ThePost h1 {
+	padding: 0;
+	margin: 0;
+	color: #000;
+	font-size: 12px;
+	font-weight: bold;
+	}
+
+.additional {
+	color: #999;
+	font-size: 10px;
+	}
+
+.PrimaryAction {
+	font-size: 10px; /* <-- added by rjs */
+	margin: 10px 0 0 0;
+	padding: 5px 0 0 0;
+	border-top: 1px dotted #999;
+	text-align: right;
+	}
+
+.PrimaryAction input {
+	font-size: 12px;
+}
+
+/*-------------------------------------------------
+LOGIN DIALOG BOX
+-------------------------------------------------*/
+
+#loginFirstTime {
+	text-align: left;
+}
+
+#loginFirstTime h1 {
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: green;
+    border-bottom: 1px solid #ccc;
+}
+
+#loginFirstTime h2 {
+    font-size: 12px;
+    margin: 0;
+    padding: 0 0 1px 0;
+}
+
+#loginFirstTime p {
+    font-size: 11px;
+    margin: 0 0 15px 0;
+    padding: 0;
+    line-height: 14px;
+}
+
+/*-------------------------------------------------
+LINK LISTS --- replace LinkBoxes
+-------------------------------------------------*/
+
+ul.LinkList {
+	padding: 0 0 0 10px;
+	margin: -5px 0 10px 15px;
+	border-left: #e0e0e0;
+	border-width: 0 0 0 1px;
+	border-style: none none none solid;
+}
+
+ul.LinkList li {
+	font-size: 11px;
+	border: none;
+	color: #888;
+	list-style: none;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+
+/*-------------------------------------------------
+ARCHIVE STYLES
+-------------------------------------------------*/
+
+/* a div.Archive is one major time division (eg: month) */
+
+.Archive {
+	margin-bottom: 25px; 
+}
+
+.Archive h1 { 
+	margin: 0 0 5px 0;
+	border-bottom: 1px solid #e0e0e0;
+	font-size: 13px;
+	color: #666;
+}
+
+.Archive ul {
+	margin: 0;
+	padding: 0;
+}
+
+.Archive li {
+	font-size: 11px;
+	font-family: verdana;
+	font-weight: normal;
+	margin: 0 0 5px 0;
+	padding: 0;
+	border: none;
+	color: #666;
+}
+
+.Archive li span.highlight {
+	color: #000;
+}
+
+li span.highlight {
+	color: #000;
+}
+
+
+.FormBlock table#items th,
+.FormBlock table#items td {
+	font-size: 11px;
+	text-align: left;
+	vertical-align: top;
+	padding: 0 3px 5px 0;
+}
+
+
+/*-------------------------------------------------
+NEW POST ATTACHMENTS
+-------------------------------------------------*/
+
+div#Listform ul li#UploadProgress {
+	background: #ffc;
+	color: #666;
+	font-size: 10px;
+	padding: 3px;
+}
+
+div#Listform ul li#UploadProgress strong {
+	color: #000;
+	font-size: 11px;
+}
+
+#Attached {
+	margin: 0 10px;
+	padding: 15px;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	background: url(/images/attached-bg.gif) repeat-x;
+}
+
+#Attached ul {
+	margin: 0;
+	padding: 0;
+}
+
+#Attached li {
+	color: #999;
+	border: none;
+	list-style: none;
+	font-size: 10px;
+	font-weight: normal;
+}
+
+#AttachFile table, #AttachLink table {
+	width: 100%;
+}
+
+#AttachFile {
+	background: #efefef;
+	padding: 5px 10px;
+	margin: 0 10px;
+	border-top: 1px dotted #ccc;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+}
+
+#AttachFile td {
+	font-size: 11px;
+	vertical-align: top;
+}
+
+#AttachFile td span.help {
+	font-size: 9px;
+}
+
+#AttachLink {
+	border-top: 1px dotted #ccc;
+	background: #efefef;
+	padding: 5px 10px;
+	margin: 0 10px;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+}
+
+#AttachLink td {
+	font-size: 11px;
+}
+
+#AttachLink td span.help {
+	font-size: 9px;
+}
+
+#AttachTabs {
+	margin: 0 10px 0 10px;
+	background: url(/images/attachtabs-bg.gif) top repeat-x;
+}
+
+#AttachTabs ul {
+	margin: 0;
+	padding: 0;
+}
+
+#AttachTabs ul li {
+	margin: 0;
+	padding: 0;
+	display: inline;
+	list-style-type: none;
+}
+
+#AttachTabs li a:link, #AttachTabs li a:visited {
+	float: left;
+	background: #999;
+	font-size: 11px;
+	font-weight: normal;
+	padding: 4px 6px;
+	margin: 0 1px 0 0;
+	border: 1px solid #999;
+	border-top: none;
+	text-decoration: underline;
+	color: #fff;
+}
+
+#AttachTabs a:link.current, #AttachTabs a:visited.current {
+	text-decoration: none;
+	background: #efefef;
+	color: #333;
+}
+
+#AttachTabs a:hover {
+	color: #000;
+	background: #ffc;
+}
+
+
+/*-------------------------------------------------
+SIGNUP
+-------------------------------------------------*/
+
+#Listform ol {
+	padding: 0;
+	margin: 0 0 0 20px;
+}
+
+#Listform ul {
+	padding: 0;
+	margin: 0 0 0 5px;
+}
+
+#Listform li {
+	border-top: none;
+	font-size: 13px;
+	font-family: "Lucida Grande", arial, sans-serif;
+	font-weight: bold;
+	padding: 0;
+	margin: 0 0 30px 0;
+	color: #090;
+}
+
+#Listform ol li {
+	list-style: decimal;
+}
+
+#Listform li div {
+	color: #333;
+	background: #f0f0f0;
+	margin: 0;
+	margin-top: 3px;
+	padding: 5px;
+	font-size: 11px;
+	font-weight: normal;
+	font-family: verdana;
+}
+
+#Listform li div.upgrade {
+	color: #333;
+	background: #ffc;
+	margin: 0;
+	margin-top: 3px;
+	padding: 5px;
+	font-size: 11px;
+	font-weight: normal;
+	font-family: verdana;
+}
+
+#Listform ul li div {
+	/* padding: 3px 3px 3px 0; */
+}
+
+#Listform li table th {
+	text-align: right;
+	font-weight: normal;
+}
+
+#Listform li div p {
+	margin: 0;
+	padding: 0;
+}
+
+#Listform li div p + p {
+	margin-top: 15px;
+}
+
+#Listform li div p + p.Checkbox {
+	margin: 5px 0;
+}
+
+#Listform li div.help {
+	color: #666;
+	background: #fff;
+	padding: 2px 0;
+}
+
+#Listform li div.helplong {
+	color: #666;
+	background: #fff;
+	width: 470px;
+	padding: 2px 0;
+}
+
+
+#Listform li table.NewLink th {
+	text-align: left;
+	font-weight: bold;
+}
+
+#Listform li table.NewLink td input.textfield {
+	width: 250px;
+}
+
+#Listform li h1 {
+	font-size: 14px;
+	color: #090;
+	margin-bottom: 0px;
+}
+
+#Listform li h2 {
+	font-size: 14px;
+	color: #333;
+	margin-bottom: 0px;
+	padding: 0;
+	margin: 0;
+}
+
+#Listform li.action {
+	border-top: 2px solid #000;
+	margin-bottom: 0;
+	text-align: right;
+	padding-top: 8px;
+	font-size: 12px;
+}
+
+#TextileHelp {
+	color: #666;
+}
+
+
+#TextileHelp table {
+	margin-bottom: 0;
+}
+
+#TextileHelp table+h3 {
+	margin-top: 10px;
+}
+
+#TextileHelp table td {
+	font-size: 11px;
+	padding: 3px;
+	vertical-align: top;
+	border-top: 1px dotted #ccc;
+}
+
+#TextileHelp table td.arrow {
+	padding-right: 5px;
+	padding-left: 10px;
+	color: #999;
+}
+
+#TextileHelp table td.label {
+	font-weight: bold;
+	white-space: nowrap;
+	font-size: 11px;
+	padding-right: 15px;
+	color: #000;
+}
+
+#TextileHelp h3 {
+	font-size: 13px;
+	font-weight: bold;
+	font-weight: normal;
+	margin: 0 0 5px 0;
+	padding: 5px 0 0 0;
+	color: #c00;
+}
+
+#TextileHelp p {
+	font-size: 10px;
+}
+
+#Listform li ul li {
+	font-size: 11px;
+	font-family: verdana;
+	color: #333;
+	font-weight: normal;
+	list-style: square;
+	margin: 0 0 5px 10px;
+}
+
+#Listform li ul li a.admin { /* hack to correct inheritence issue */
+	color: #f00;
+}
+
+
+/*-------------------------------------------------
+THINGS TO DO HELP BLOCK
+-------------------------------------------------*/
+
+.thingtodo {
+	width: 220px;
+	margin-right: 10px;
+	float: left;
+}
+
+#showhelp {
+	clear: left;
+	text-align: center;
+	margin: 20px 0 0 20px;
+	background: #ffc;
+	padding: 5px;
+	border: 1px solid #ccc;
+	font-size: 11px;
+	width: 132px;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	width: 120px;
+}
+
+
+/*-------------------------------------------------
+COMMENT EMAIL NOTIFICATION SIGNUP
+-------------------------------------------------*/
+
+div#notificationSignup {
+	margin-bottom: 20px;
+}
+
+div#notificationSignup p {
+	font-size: 11px;
+	line-height: 14px;
+	margin-top: 2px;
+}
+
+div#notificationSignup h3 {
+	font-size: 11px;
+	border-bottom: 1px dotted #ccc;
+	color: #333;
+	padding: 0;
+	margin: 0;
+}
+
+
+
+/*-------------------------------------------------
+EFFECTS
+-------------------------------------------------*/
+
+#fade {
+	background-color: #ffff99;
+}
+
+#zoomer {
+  position: absolute;
+  background: #ccc;
+  display: none;
+}
+
+.inactive {
+  opacity: 0.0;
+  filter: alpha(opacity: 0);
+}
+
+.active {
+  opacity: 1.0;
+  filter: alpha(opacity: 100);
+}
+
+/*-------------------------------------------------
+TO DO STUFF
+-------------------------------------------------*/
+
+h2.todo {
+	font-family: "Lucida Grande", arial, sans-serif;
+	color: #333;
+	font-size: 16px;
+	font-weight: bold;
+  padding: 0 0 0 7px;
+}
+
+h2.todo span.nubbin {
+  padding-left: 4px;
+}
+
+h2.todo a:link, h2.todo a:visited {
+	color: #000;
+}
+
+h2.todo a:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+h2.todo a.admin {
+	text-decoration: underline;
+	color: #f00;
+}
+
+h2.todo a.admin:hover {
+	text-decoration: none;
+	color: #fff;
+	background: #f00;
+}
+
+.Privatetodo h2.todo {
+	margin-top: 5px;
+}
+
+table.todolist { 
+  border-left: 1px solid #ccc; 
+  margin-left: 10px; 
+  width: 90%; 
+} 
+
+table.todolist td { 
+  vertical-align: top; 
+  font-size: 12px; 
+  padding: 2px 3px; 
+} 
+
+table.todolist td.todoitem { 
+  padding-left: 0; 
+} 
+
+table.todolist td.todocheckbox, 
+table.todolist td.todocheckboxwithtime { 
+  width: 1%; 
+  text-align: center; 
+  white-space: nowrap; 
+  vertical-align: top; 
+  padding-right: 4px; 
+} 
+
+table.todolist td.todocheckboxwithtime input { 
+  margin-right: 0; 
+} 
+
+table.todolist td.todocheckboxwithtime img { 
+  vertical-align: top; 
+  border: none; 
+} 
+
+table.todolist td.todocheckboxwithtime a { 
+  padding: 0; 
+  background: none; 
+} 
+
+
+table.todolist td.todolisttitle { 
+  text-align: right; 
+  padding-right: 5px; 
+  width: 30%; 
+  background: #eee; 
+} 
+
+table.todolist tr.firstofgroup td { 
+  border-top: 1px solid #ccc; 
+} 
+
+table.todolist tr.firstofgroupcompleted td { 
+  border-top: 1px dotted #ccc; 
+} 
+
+table.todolist tr.firstofgroupcompleted td, 
+table.todolist tr.completed td { 
+  font-size: 10px; 
+  color: #888; 
+} 
+
+table.todolist tr.firstofgroupcompleted td a, 
+table.todolist tr.completed td a { 
+  color: #666; 
+} 
+
+table.todolist tr.firstofgroupcompleted td a:hover, 
+table.todolist tr.completed td a:hover { 
+  color: #fff; 
+  background: #333; 
+} 
+
+table.todolist td.complete { 
+  vertical-align: top; 
+  font-size: 11px; 
+  color: #888; 
+  padding: 2px 0; 
+}
+
+table.todolist td.complete a { 
+  color: #444; 
+}
+
+table.todolist td.complete a:hover { 
+  color: #fff; 
+  background: #333; 
+}
+
+div.relatetomilestone, div.listdescription {
+	margin: 5px 0 15px 0px;
+	padding: 5px 0 5px 10px;
+	border-left: 7px solid #ccc;
+}
+
+div.listdescription {
+	border-bottom: 1px solid #ccc;
+	border-bottom: none;
+}
+
+div.relatetomilestone p, div.listdescription p {
+	font-size: 11px;
+	font-weight: normal;
+	line-height: 13px;
+	width: 425px;
+	margin: 0 0 10px 0;
+	padding: 0;
+}
+
+p.listdesc {
+  margin: 7px 0 7px 10px;
+  font-style: italic;
+}
+
+div.timewidget table td {
+	font-size: 11px;
+	vertical-align: middle;
+}
+
+select#change_responsible_party_selector {
+  width: 175px;
+}
+
+.dragger { cursor: move; }
+
+/*-------------------------------------------------
+HELP SECTION
+-------------------------------------------------*/
+
+div.topqs {
+	margin: 25px 0 25px 25px;
+}
+
+div.topqs li {
+	margin-bottom: 5px;
+	font-size: 12px;
+}
+
+ul.helpmenu1 {
+	padding: 3px 0 4px 0;
+}
+
+ul.helpmenu2 {
+	padding-bottom: 5px;
+	border-bottom: 1px solid #dcdcdc;
+	margin-bottom: 15px;
+}
+
+ul.helpmenu1 li,
+ul.helpmenu2 li {
+	font-family: "Lucida Grande", arial, sans-serif;
+	display: inline;
+	font-weight: bold;
+}
+
+ul.helpmenu1 li a:link,
+ul.helpmenu1 li a:visited,
+ul.helpmenu2 li a:link,
+ul.helpmenu2 li a:visited {
+	font-weight: normal;
+}
+
+ul.helpmenu1 li {
+	font-size: 14px;
+	padding-right: 10px;
+}
+
+ul.helpmenu2 li {
+	font-size: 12px;
+	padding-right: 10px;
+}
+
+p.screenshot img {
+	background: #fff;
+	margin-bottom: 10px;
+	border: 1px solid #dcdcdc;
+	padding: 5px;
+}
+
+img.screenshot {
+	padding: 5px;
+	border: 1px solid #dcdcdc;
+	background: #fff;
+}
+
+div.answer {
+	padding: 10px 10px 0px 10px;
+	border: 1px solid #ccc;
+	border-top: none;
+	margin-bottom: 20px;
+	display: none;
+	background: #efefef;
+}
+
+#otherquestions div.answer {
+	border: none;
+	margin-bottom: 20px;
+	padding-top: 4px;
+	display: none;
+	background: #fff;
+}
+
+div.closeanswer {
+	background: url(/images/closeanswer.gif) no-repeat left;
+	background: #666;
+	margin: 0 -10px;
+	padding: 3px 10px 3px 20px;
+	color: #fff;
+	font-size: 11px;
+}
+
+#otherquestions div.answer div.closeanswer {
+	background: #fff none;
+	color: #000;
+	font-size: 11px;
+}
+
+div.closeanswer a:link, div.closeanswer a:visited {
+	color: #fff;
+}
+
+div.closeanswer a:hover {
+	color: #fff;
+	background: #000;
+}
+
+#otherquestions div.answer div.closeanswer a:link, 
+#otherquestions div.answer div.closeanswer a:visited  {
+	color: #333;
+}
+
+#otherquestions div.answer div.closeanswer a:hover {
+	color: #fff;
+	background: #000;
+}
+
+h2.question {
+	font-size: 14px;
+	margin: 5px 0px 0px 0px;
+	padding: 5px 5px 5px 10px;
+	border: 1px solid #ccc;
+	background: #f0f0f0;
+}
+
+#otherquestions h2.question {
+	border: none;
+	font-size: 12px;
+}
+
+div.answer p {
+	margin: 0 0 10px 0;
+}
+
+body.help .Left h3 {
+	font-size: 16px;
+	color: #000;
+	margin: 0 0 3px 0; padding: 0;
+}
+
+body.help .Left h3 span {
+	color: #666;
+	font-weight: normal;
+}
+
+body.help .Left p {
+	margin: 0 0 20px 0;
+}
+
+/*-------------------------------------------------
+POPUP
+-------------------------------------------------*/
+
+#Popup {
+	text-align: left;
+}
+
+#Popup #Header {
+	border: none;
+	padding-left: 15px;;
+}
+
+#Popup #Header h2 {
+	font-size: 16px;
+	padding: 0;
+	margin: 0px;
+}
+
+#Popup p {
+	text-align: left;
+}
+
+#Popup #Body {
+	margin: 0 15px;
+}
+
+#Popup #close {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	background: #fff;
+	border-top: 1px solid #ccc;
+	padding: 10px 0;
+	text-align: center;
+}
+
+
+/*-------------------------------------------------
+DASHBOARD LOG
+-------------------------------------------------*/
+
+span.projectflag {
+	color: #666;
+	font-size: 9px;
+}
+
+span.projectflag span.client {
+	color: #000;
+}
+
+table.fresh {
+	margin-bottom: 10px;
+}
+
+table.fresh td {
+	font-size: 10px;
+	padding: 0;
+}
+
+table.fresh td.icon {
+	padding: 0 3px;
+}
+
+table.fresh td.title {
+	color: #666;
+	font-size: 9px;
+}
+
+
+table.fresh td.title a {
+	font-size: 10px;
+}
+
+table.fresh td.title img {
+	padding: 0 0 0 3px;
+}
+
+
+a.messagelink:link, a.messagelink:visited {
+	color: #000;
+	font-weight: bold;
+}
+
+a.messagelink:hover {
+	color: #fff;
+}
+
+table.fresh tr.shade td {
+	background: #e5e5e5;
+}
+
+table.fresh td.project {
+	padding-top: 5px;
+}
+
+
+/*-------------------------------------------------
+NEW DASHBOARD LOGS (August 24, 2004)
+-------------------------------------------------*/
+
+table.ProjectSummary {
+}
+
+table.ProjectSummary th {
+	font-size: 13px;
+	font-weight: bold;
+	color: #000;
+	background: #e9e9e9;
+	border-bottom: 1px solid #ddd;
+	border-top: 1px solid #fff;
+	text-align: left;
+	padding: 5px;
+}
+
+table.ProjectSummary th a {
+	color: #000;
+	text-decoration: none;
+  font-size: 12px;
+}
+
+table.ProjectSummary td {
+	padding: 3px 5px;
+	font-size: 10px;
+	white-space: nowrap;
+}
+
+table.ProjectSummary td.expander {
+	width: 100%;
+}
+
+table.ProjectSummary td.icon {
+	text-align: right;
+}
+
+table.projectSummary td.date {
+	text-align: left;
+	font-size: 9px;
+	color: #666;
+}
+
+table.ProjectSummary th a span.dash {
+  font-weight: normal;
+}
+
+table.ProjectSummary th a span {
+	color: #666;
+  font-size: 10px;
+}
+
+table.ProjectSummary th a:hover, table.ProjectSummary th a:hover span {
+	color: #fff;
+}
+
+table.ProjectSummary td.title {
+	font-size: 11px;
+}
+
+table.ProjectSummary td.action {
+	color: #999;
+  text-align: right;
+}
+
+table.ProjectSummary tr.rowblank td {
+}
+
+table.ProjectSummary tr.row1 td {
+	background: #f1f1f1;
+}
+
+table.ProjectSummary tr.row2 td {
+	background: #f4f4f4;
+}
+
+table.ProjectSummary tr.row3 td {
+	background: #f6f6f6;
+}
+
+table.ProjectSummary tr.row4 td {
+	background: #fcfcfc;
+}
+
+table.ProjectSummary tr.row5 td {
+}
+
+/*-------------------------------------------------
+PROJECT LOG
+-------------------------------------------------*/
+
+table.latest {
+	margin-bottom: 10px;
+	width: 100%;
+}
+
+table.latest td {
+	font-size: 12px;
+	padding: 3px 0 3px 0;
+	color: #000;
+	vertical-align: top;
+}
+
+table.latest td.icon {
+	padding: 5px 10px 0 10px;
+	font-size: 9px;
+	width: 40px;
+	color: #333;
+	text-align: right;
+}
+
+table.latest tr.shade td {
+	background: #e5e5e5;
+}
+
+table.latest span.prep {
+	font-size: 10px;
+	color: #999;
+}
+
+table.latest td.title span.late, table.latest td.title span.ontime {
+	color: #c00;
+	font-size: 9px;
+	padding: 1px 2px;
+	font-family: verdana;
+	font-weight: bold;
+}
+
+table.latest td.title span.ontime {
+	color: #390;
+}
+
+table.latest p {
+	font-size: 10px;
+	color: #666;
+	margin: 0;
+	padding: 0;
+	line-height: 12px;
+}
+
+table.latest td blockquote {
+	margin: 0;
+	padding: 0;
+	color: #333;
+}
+
+table.latest p.excerpt {
+	color: #666;
+	margin: 3px 0 3px 0px;
+}
+
+table.latest p.responsible {
+	color: #666;
+}
+
+table.latest td.title span.list, table.latest td.title span.list a {
+	font-size: 10px;
+	color: #999;
+}
+
+
+/*-------------------------------------------------
+SEARCH STUFF
+-------------------------------------------------*/
+
+strong.searchterm {
+	background: #fc3;
+	color: #000;
+	font-weight: inherit;
+	text-decoration: none;
+	padding: 0 2px;
+}
+
+li a:link strong.searchterm, li a:visited strong.searchterm, li a:hover strong.searchterm {
+	padding: 1px 4px;
+}
+
+div#SearchWrapper div.Post a.commentlink { font-weight: normal; }
+
+div#SearchWrapper div.Post h1.commentresult { font-size: 13px; }
+
+div#SearchWrapper div.Post h1 span { color: #999; }
+
+div#SearchWrapper div.Post h1 span.filename { font-size: 11px; font-weight: normal; }
+
+input#SearchField {
+	width: 300px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+#Notify table td p {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+
+/*-------------------------------------------------
+NEW NEW FORM (New Post styles, 6/4/2004)
+-------------------------------------------------*/
+
+.FormBlock {
+	border: 1px solid #ccc;
+	padding-left: 15px;
+	font-size: 12px;
+	margin-top: 20px;
+	background: #f0f0f0;
+	padding: 1px 0 15px 15px;
+}
+
+.FormBlock h2 {
+	font-size: 11px;
+	font-weight: bold;
+	margin: 10px 0 0px 0;
+}
+
+.FormBlock h2 span {
+	font-size: 10px;
+	font-weight: normal;
+	color: #999;
+}
+
+.FormBlock input {
+}
+
+.FormBlock input#post_title {
+  width: 450px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.FormBlock textarea {
+	margin-top: 3px;
+  width: 450px;
+  font-size: 14px;
+}
+
+.FormBlock span.makeprivate {
+	background: #ddd;
+	padding: 3px;
+}
+
+div.loadtemplate {
+	float: right;
+	font-size: 11px;
+	background: #fff;
+	padding: 8px 0 8px 8px;
+}
+
+.FormBlock div.formatting {
+	margin: 0 0 5px 0px;
+	padding-left: 5px;
+}
+
+.FormBlock div.formatting p {
+	font-size: 11px;
+	color: #666;
+	margin: 0;
+	font-weight: normal;
+}
+
+.FormBlock div.formatting span {
+	margin-left: 10px;
+}
+
+body.messages_form div.submit {
+  text-align: left;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+body.messages_form div.submit p {
+  margin: 0 0 8px 5px; padding: 0;
+}
+
+body.messages_form div.submit input {
+  font-size: 14px;
+}
+
+div.extra {
+	font-size: 12px;
+  margin: 15px 0 15px 15px;
+	border-left: 8px solid #d9d9d9;
+	padding: 5px 0 5px 10px;
+}
+
+.comments div.extra {
+  margin: 0 0 10px 10px;
+}
+
+.comments p.submit {
+  margin: 0 0 5px 5px;
+  color: #999;
+}
+
+div.extra p {
+  margin: 0;
+}
+
+div.extra,
+div.extra div.showhide_link,
+div.extra div.showhide {
+  height: 1%; /* make sure IE hasLayout */
+}
+
+div.extra div.showhide_link p {
+  margin: 0; padding: 0;
+}
+
+div.extra div.showhide {
+  margin: 10px 0;
+}
+
+div.extra h2 {
+  font-size: 14px;
+  margin: 0 0 2px 0;
+  padding: 0;
+}
+
+div.extra div#Attachments h2 span.upload_limit {
+  color: #777;
+  font-weight: normal;
+}
+
+div.extra p.upload_limit {
+  color: #777;
+  font-size: 11px;
+}
+
+div.extra div#AttachmentList {
+}
+
+div.extra div#AttachmentList ul {
+  margin-bottom: 10px;
+}
+
+
+/*-------------------------------------------------
+1-PROJECT FREE UPGRADE SIDEBAR
+-------------------------------------------------*/
+
+div#oneFreeUpgrade {
+	border: 1px solid #ccc;
+	padding: 5px;
+	background: url(/images/background-yellowdownfade.gif) #fff;
+	background-repeat: repeat-x;
+}
+
+div#oneFreeUpgrade h1 {
+	font-size: 12px;
+	color: #000;
+}
+
+div#oneFreeUpgrade h2 {
+	font-size: 12px;
+	border-bottom: 1px dotted #ccc;
+	margin: 0;
+	color: #000;
+}
+
+div#oneFreeUpgrade p {
+	font-size: 11px;
+	line-height: 13px;
+	margin: 3px 0 15px 0;
+}
+
+div#oneFreeUpgrade dt {
+	font-size: 11px;
+	font-weight: bold;
+}
+
+div#oneFreeUpgrade dd {
+	font-size: 11px;
+	margin: 0 0 15px 0;
+	padding: 0;
+	text-indent: none;
+}
+
+div#oneFreeUpgrade dl {
+	margin: 5px 0 15px 0;
+	padding: 0;
+}
+
+
+/*-------------------------------------------------
+PERMISSIONS
+-------------------------------------------------*/
+
+table.permissions {
+	width: 100%;
+}
+
+table.permissions tr.heading td {
+	font-size: 14px;
+	font-weight: bold;
+	padding: 3px 5px 5px 0px;
+	border-bottom: 1px solid #333;
+}
+
+table.permissions tr td {
+	border-bottom: 1px solid #efefef;
+	font-size: 10px;
+	padding: 3px;
+	white-space: nowrap;
+}
+
+table.permissions tr.grey td {
+	background-color: #efefef;
+}
+
+table.permissions tr.allonoff td {
+	border-top: 1px solid #999;
+}
+
+table.permissions td.name {
+	white-space: normal;
+	text-align: right;
+	font-size: 11px;
+	font-weight: bold;
+	padding-right: 10px;
+	border-right: 1px dotted #ccc;
+}
+
+table.permissions td.leftborder {
+	border-left: 1px solid #000;
+}
+
+table.permissions tr td.addedit {
+	font-size: 11px;
+	font-weight: bold;
+	padding: 0 0 0 5px;
+	border-left: 1px solid #000;
+}
+
+.notchecked {
+	color: #999;
+}
+
+/*-------------------------------------------------
+"LOCKED AND ARCHIVED" BAR
+-------------------------------------------------*/
+
+div#LockBar {
+	background: #000;
+	color: #ffc;
+	padding: 3px 20px;
+	font-size: 14px;
+	text-align: left;
+}
+
+div#LockBar span.reactivate {
+	font-size: 12px;
+}
+
+div#LockBar span.reactivate a:link,
+div#LockBar span.reactivate a:visited {
+	color: #fff;
+}
+
+/*-------------------------------------------------
+ACCOUNT CHART/PAGE
+-------------------------------------------------*/
+
+div#url_name_notice {
+	font-size: 12px;
+	color: red;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+table.accountchart {
+	margin: -15px 0 25px 0;
+	border-top: 10px solid #000;
+	border-bottom: 10px solid #000;
+}
+
+table.accountchart th.top {
+	border: none;
+	border-bottom: 1px solid #000;
+	font-size: 14px;
+	color: #333;
+	font-weight: bold;
+	text-align: left;
+	padding-left: 0;
+}
+
+table.accountchart th img {
+	margin-top: 3px;
+	background-color: #fff;
+	border: none;
+}
+
+table.accountchart th a:hover, table.accountchart th a {
+	background-color: #fff;
+	padding: 0;
+	margin: 0;
+}
+
+table.accountchart small {
+	color: #999;
+}
+
+table.accountchart th {
+	font-size: 16px;
+	padding: 3px 7px 3px 7px;
+	text-align: center;
+	vertical-align: top;
+	border-bottom: 1px solid #999;
+	border-right: 1px solid #E3DFDF;
+	border-left: 1px solid #E3DFDF;
+}
+
+table.accountchart th.activeprojects {
+	font-size: 10px;
+	color: #333;
+	text-align: left;
+	font-weight: normal;
+	padding-left: 0;
+	border-left: none;
+}
+
+table.accountchart th.current, table.accountchart td.current  {
+	background-color: #ffc;
+}
+
+table.accountchart td.select {
+	font-size: 10px;
+	font-weight: bold;
+	background-color: #ffc;
+}
+
+table.accountchart td.shaded {
+	background-color: #ffc;
+}
+
+table.accountchart td.projectnumber {
+	font-size: 14px;
+}
+
+table.accountchart td {
+	border-bottom: 1px solid #E3DFDF;
+	padding: 3px;
+	font-size: 9px;
+	border-right: 1px solid #E3DFDF;
+	border-left: 1px solid #E3DFDF;
+	text-align: center;
+}
+
+table.accountchart td.banner {
+	background-color: #333;
+	color: #fff;
+	font-size: 9px;
+	font-weight: bold;
+}
+
+table.accountchart td.notes {
+	font-size: 9px;
+	color: #666;
+	text-align: right;
+	border-left: none;
+	border-right: none;
+}
+
+table.accountchart td.plancatper, table.accountchart td.plancatbiz {
+	background-color: #fff;
+	font-size: 9px;
+	font-weight: bold;
+}
+
+table.accountchart h4 {
+	background-color: #390;
+	font-weight: bold;
+	color: #fff;
+	white-space: nowrap;
+	font-size: 10px;
+	padding: 2px;
+	margin: 5px 0 0 0;
+}
+
+table.accountchart td.item {
+	text-align: right;
+	vertical-align: top;
+	font-size: 11px;
+	border-right: 1px solid #ccc;
+	white-space: nowrap;
+}
+
+table.accountchart span.price {
+	font-size: 10px;
+	color: #f60;
+}
+
+#Listform li div.floatnote {
+	float: right;
+	padding: 0;
+	margin-left: 35px;
+	width: 300px;
+	font-size: 10px;
+}
+
+#Listform li div.floatnote strong {
+	color: #900;
+}
+
+/*-------------------------------------------------
+CUSTOM FORM ELEMENTS
+-------------------------------------------------*/
+
+/* Big text input for to-do list titles */
+input.big {
+	font-size: 16px;
+	font-weight: bold;
+	width: 485px;
+	padding: 3px;
+	margin: 0 0 10px 0;
+}
+
+input.todoitem {
+	padding: 3px;
+	font-size: 12px;
+	width: 485px;
+}
+
+textarea.todoitem {
+	padding: 3px;
+	font-size: 14px;
+	width: 485px;
+	margin: 0 5px 3px 0;
+}
+
+div.FormSubBlock textarea {
+	padding: 3px;
+	font-size: 12px;
+}
+
+.FormBlock table#items td select {
+	width: 150px;
+	margin-bottom: 5px;
+}
+
+.FormBlock table#items td a.admin {
+	font-size: 9px;
+}
+
+/*-------------------------------------------------
+SETTINGS TAB and SUBNAV
+-------------------------------------------------*/
+
+ul#Tabs li a#settings {
+	margin-left: 10px;
+}
+
+div.settingsnav {
+  text-align: center;
+	clear: both;
+	color: #999;
+	font-size: 12px;
+	margin: 0px 0 20px 0;
+}
+
+div.settingsnav strong {
+	color: #000;
+}
+
+
+/*-------------------------------------------------
+APPEARANCE
+-------------------------------------------------*/
+
+body.appearance div.SectionHeader {
+  margin-bottom: 20px;
+}
+
+span.swatches {
+  font-size: 16px;
+  padding: 3px 10px;
+}
+
+span.swatches span {
+  padding: 0px 10px;
+  font-size: 9px;
+}
+
+span.swatches span.client {
+  padding: 0 10px;
+}
+
+table#schemes_and_custom {
+  margin: 0 0 15px 0;
+}
+
+table#schemes_and_custom td {
+  vertical-align: top;
+  width: 33%;
+  padding: 0 15px;
+}
+
+table#schemes_and_custom td#hexplanation {
+  text-align: left;
+}
+
+table#schemes_and_custom td#hexplanation p {
+  font-size: 14px;
+}
+
+table#schemes_and_custom td#schemes {
+  white-space: nowrap;
+  padding-right: 25px;
+}
+
+table#schemes_and_custom td#custom {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.Preview {
+	background: #e5e5e5;
+	margin: 0 0 15px 0;
+  border: 1px solid #ccc;
+}
+
+.Preview .Header {
+  background: #ddd;
+	padding: 15px 0 0 15px;
+}
+
+p.FauxH1 {
+	font-family: "Lucida Grande", arial, sans-serif;
+	font-weight: normal;
+	padding: 0;
+	margin: 0 0 13px 0;
+	font-size: 24px;
+	color: #fff;
+}
+
+span.FauxH2 {
+	font-size: 16px;
+	font-weight: normal;
+	color: #fff;
+}
+
+.Preview ul {
+	margin: 0; padding: 0;
+	height: 24px;
+}
+
+.Preview li {
+	margin: 0; padding: 0;
+	display: inline;
+	list-style-type: none;
+	border: none;
+}
+	
+.Preview ul a:link, .Preview ul a:visited {
+  float: left; /* for IE6 */
+	font-size: 12px;
+	font-weight: normal;
+	padding: 4px 8px 6px 8px;
+	margin: 0;
+  text-decoration: none;
+  color: #fff;
+  background: #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.Preview ul a:link.current, .Preview ul a:visited.current {
+	background: #e5e5e5 url(/images/tab-bg.gif) top repeat-x;
+	border: 1px solid #e5e5e5;
+	color: #fff;
+	font-weight: bold;
+	text-decoration: none;
+  margin: 0 3px;
+}
+
+.Preview ul a:hover {
+	color: #fff; background: #fff;
+}
+
+.FauxPage {
+  background: #fff;
+  margin: 12px 0 0 17px;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.FauxPage span {
+  color: #fff;
+  text-decoration: underline;
+}
+
+
+/*-------------------------------------------------
+MINIDIALOG
+-------------------------------------------------*/
+
+div.minidialog {
+  padding: 15px;
+  border: 10px solid #ccc;
+  background-color: #fff;
+  width: 475px;
+  text-align: left;
+  margin: 20px;
+}
+
+div.minidialog h1 {
+  color: #393;
+  font-size: 14px;
+  margin: 0 0 15px 0;
+}
+
+div.minidialog h2 {
+  color: #000;
+  font-size: 9px;
+  margin: 0 0 2px 0;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+div.minidialog p {
+  margin: 0 0 15px 0;
+  padding: 0;
+}
+
+div.minidialog img {
+  margin: 0 0 15px 0;
+  padding: 0;
+}
+
+div.minidialog div.action {
+  padding: 5px;
+  background-color: #cfc;
+  margin-bottom: 0;
+}
+
+div.minidialog table {
+	font-size: 11px;
+}
+
+/*-------------------------------------------------
+NEW FOR PROPORTIONAL WIDTH VERSION 
+-------------------------------------------------*/
+
+.col {
+	padding: 0 20px;
+	text-align: left;
+}
+
+div.Left .col,
+div.Full .col {
+	padding: 15px 50px 10px 20px;
+  background: #fff url(/images/right-bg.gif) right repeat-y;
+  position: relative;
+}
+
+div.Full .col {
+	padding: 15px 30px 10px 20px;
+}
+
+div.Left .bottom,
+div.Full .bottom {
+  background: url(/images/bottom-bg.gif) top right no-repeat;
+  font-size: 8px;
+}
+
+div.Right .col {
+	min-width: 200px;
+	padding: 0 0 0 9px;
+}
+
+/*-------------------------------------------------
+TIME TRACKING
+-------------------------------------------------*/
+
+table.TimeTrack {
+	width: 100%;
+	margin-bottom: 20px;
+  border-collapse: collapse;
+}
+
+table.TimeTrack th {
+	font-size: 9px;
+	font-weight: normal;
+	text-transform: uppercase;
+	padding: 0 3px 3px 3px;
+}
+
+table.TimeTrack td {
+	font-size: 11px;
+	padding: 4px 10px 4px 3px;
+	border-bottom: 1px solid #ddd;
+	white-space: nowrap;
+}
+
+table.TimeTrack tr.shade td {
+	background: #f0f0f0;
+}
+
+table.TimeTrack th.date {
+	padding-left: 14px;
+}
+
+table.TimeTrack td.date {
+	padding-left: 14px;
+}
+
+table.TimeTrack td.action {
+	text-align: center;
+  color: #999;
+}
+
+table.TimeTrack td.action img {
+  vertical-align: middle;
+}
+
+table.TimeTrack td.action a.image {
+  margin-left: 3px;
+}
+
+table.TimeTrack td.hours {
+	text-align: center;
+	font-weight: bold;
+}
+
+table.TimeTrack td.desc {
+	font-size: 11px;
+	white-space: normal;
+	width: 100%;
+  line-height: 16px;
+}
+
+table.TimeTrack tr.AddTimeTrack td {
+	padding: 10px 10px 10px 0;
+	background: #ccc;
+}
+
+table.TimeTrack tr.AddTimeTrack td.date {
+	padding-left: 10px;
+}
+
+table.MakeReport {
+	margin: 10px 0 0 0;
+}
+
+table.MakeReport td {
+	padding-right: 5px;
+	font-size: 10px;
+}
+
+h1#reporttitle {
+  font-size: 18px;
+  margin-bottom: 5px;
+  padding-bottom: 7px;
+  border-bottom: 2px solid #000;
+}
+
+h1#reporttitle span {
+  font-size: 11px;
+  color: #999;
+  font-weight: normal;
+}
+
+
+/*-------------------------------------------------
+LOGIN SCREEN (.login is body class)
+-------------------------------------------------*/
+
+.login div.Container {
+	width: 500px;
+	margin: 60px auto 20px auto;
+	min-width: inherit;
+}
+
+.login h1 {
+	margin-bottom: 20px;
+}
+
+
+.login dl {
+	margin: 10px 0 0 0;
+}
+
+.login p {
+	margin: 10px 0 0 0;
+}
+
+.login dt {
+	float: left;
+	width: 80px;
+	font-size: 14px;
+	line-height: 24px;
+}
+
+.login dd {
+	margin: 0 0 5px 90px;
+	font-size: 11px;
+	line-height: 24px;
+	color: #666;
+	margin-left: 80px;
+}
+
+.login input {
+	font-size: 14px;
+}
+
+.login dd span {
+	color: #ccc;
+}
+
+.login input#username {
+	width: 300px;
+}
+
+.login input#password {
+	width: 150px;
+	margin-right: 5px;
+}
+
+.login input#emailpassword {
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.login div.AlertGood,
+.login div.AlertBad {
+	margin: 10px 0 20px 0;
+}
+
+.login div#Dialog {
+	border: 10px solid #ccc;
+	padding: 15px 20px 10px 20px;
+	text-align: left;
+	background: #fff;
+}
+
+
+/*-------------------------------------------------
+NEW MILESTONE CALENDAR SECTION
+-------------------------------------------------*/
+
+table.Fullcal .late,
+table.Fullcal .completed,
+table.Fullcal .upcoming {
+	padding: 3px;
+	color: #000;
+	margin-top: 2px;
+	clear: left;
+}
+
+table.Fullcal .late p,
+table.Fullcal .completed p,
+table.Fullcal .upcoming p {
+	margin: 0 0 0 20px;
+	line-height: 12px;
+	padding: 0;
+	font-size: 10px;
+}
+
+table.Fullcal .late input,
+table.Fullcal .completed input,
+table.Fullcal .upcoming input {
+	float: left;
+	margin: 0 5px 5px 2px;
+}
+
+table.Fullcal .late span,
+table.Fullcal .completed span,
+table.Fullcal .upcoming span {
+	color: #666;
+	font-size: 9px;
+	font-weight: normal;
+}
+
+table.Fullcal div.late {
+	background: #F8E1E1;
+	border: 1px solid #AA2B2B;
+	color: #900;
+}
+
+table.Fullcal div.completed {
+	background: #E2F3E8;
+	border: 1px solid #9ED8B1;
+	color: #070;
+	font-weight: normal;
+}
+
+table.Fullcal td.with div.late,
+table.Fullcal td.with div.completed {
+	border: none;
+}
+
+table.Fullcal div.upcoming {
+	background: #fff;
+}
+
+table.Fullcal span#todaystamp {
+	color: #d93;
+	font-weight: normal;
+}
+
+/*-------------------------------------------------
+BASIC FORM
+-------------------------------------------------*/
+
+#basic_form {
+  font-family: verdana, sans-serif;
+}
+
+#basic_form p.blockintro {
+	color: #666;
+	font-size: 11px;
+  line-height: 14px;
+  margin: 0;
+}
+
+#basic_form dl {}
+
+#basic_form dt {
+  width: 80px;
+  margin: 4px 8px 0 0; padding: 0;
+  text-align: right;
+  white-space: nowrap;
+  float: left;
+  clear: left;
+  position: relative;
+}
+
+#basic_form dd {
+  margin: 0 0 5px 0px;
+  font-size: 10px;
+}
+
+#basic_form dd div.field_with_errors {
+}
+
+.addacompany #basic_form dt,
+.editcompany #basic_form dt { width: 120px; }
+.editcompany #basic_form dt { width: 120px; }
+.newprojectnewclient #basic_form dt { width: 120px; }
+.newprojectnewclient #basic_form dt.newcompanyname { margin-top: 0;}
+.newprojectnewclient #basic_form dd.newcompanyname {
+   font-size: 11px;
+   margin-bottom: 10px;
+ }
+
+ .appearance #basic_form dt { width: 150px; }
+
+.file_upload_settings #basic_form dt { width: 90px; }
+.file_upload_settings #basic_form dd { margin-left: 98px; }
+.file_upload_settings #basic_form dl#protocol dt { width: 20px; margin: 0; }
+.file_upload_settings #basic_form dl#protocol dd { margin: 0 18px 10px 28px; }
+.file_upload_settings #basic_form dl#hostaddress dt { width: 40px; }
+.file_upload_settings #basic_form dl#hostaddress dd { margin-left: 0; }
+.file_upload_settings_verification #basic_form div.block {
+	font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif;
+  padding: 8px 5px;
+  margin-bottom: 0;
+}
+
+.chat_settings #basic_form dl#campfire_account dt { width: 170px; }
+.chat_settings #basic_form dl#campfire_account dd { margin-left: 170px; }
+
+.chat_settings div.SectionHeader {
+  margin-bottom: 10px;
+}
+
+div.chat_explanation {
+  border: 1px solid #fc3;
+  background: #ffc;
+  padding: 10px;
+  margin: 0 0 20px 0;
+}
+
+div.chat_explanation h2 {
+  margin-top: 0;
+}
+
+div.chat_explanation p {
+  margin-bottom: 0;
+}
+
+.chat div.chat_explanation p {
+  font-size: 14px;
+  line-height: 140%;
+}
+
+#basic_form dt.required {
+  font-weight: bold;
+}
+
+#basic_form dd input {
+  vertical-align: middle;
+}
+
+#basic_form table {}
+
+#basic_form table td {
+	font-size: 10px;
+}
+
+#basic_form table th {
+  font-size: 10px;
+	font-weight: normal;
+	text-align: right;
+}
+
+#basic_form table th.required {
+  font-weight: bold;
+}
+
+#basic_form div.block {
+	color: #333;
+	background: #f0f0f0;
+	margin: 3px 0 25px 0;
+	padding: 5px;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+#basic_form div.block input {
+  font-size: 12px;
+}
+
+#basic_form h2 {
+	font-size: 14px;
+	color: #333;
+	margin-bottom: 10px;
+	padding: 0;
+	margin: 0 0 5px 0;
+}
+
+#basic_form div.action, div.action {
+	border-top: 2px solid #000;
+	margin-bottom: 10px;
+	text-align: right;
+	padding-top: 8px;
+	font-size: 12px;
+}
+
+.pick_chat_room div.action { color: #999; }
+
+#basic_form div p {
+  margin: 0;
+}
+
+.settings #basic_form div.categories {
+  margin-bottom: 0;
+}
+
+.settings #basic_form div.categories li {
+  list-style: square;
+  margin-left: 15px;
+  font-size: 11px;
+}
+
+.settings #basic_form div.categories li span {
+  font-size: 10px;
+  color: #999;
+}
+
+.settings #basic_form div.addnewcategory p {
+  margin: 0;
+}
+
+#basic_form div#currentlogo {
+  background: #e5e5e5;
+  padding: 10px;
+  margin: 3px 0 0 0;
+}
+
+#basic_form div#currentlogo td {
+  vertical-align: middle;
+}
+
+#basic_form div#currentlogo div#LogoBox {
+  margin-bottom: 0;
+}
+
+#basic_form div#currentlogo td p {
+  margin: 0 0 3px 0;
+}
+
+#basic_form div#upload {
+  padding-left: 10px;
+}
+
+#basic_form div#upload p {
+  margin: 0 0 5px 0;
+}
+
+.settings #basic_form div#statusoptions p {
+  margin: 0 0 5px 0;
+}
+
+.settings #basic_form div#statusoptions p span {
+  font-size: 10px;
+  color: #666;
+}
+
+/*-------------------------------------------------
+FORMATTING GUIDE
+-------------------------------------------------*/
+
+div.formattingtips p {
+	font-size: 11px;
+	line-height: 14px;
+	margin: 0 0 10px 0;
+}
+
+.comments div.formattingtips {
+  padding-top: 5px;
+  border-top: 3px solid #dcdcdc;
+}
+
+
+div.markdownexamples p {
+	font-family: courier, "courier new";
+	font-size: 11px;
+}
+
+div#formatting_guide {
+  margin-right: 8px;
+}
+
+div#formatting_guide h2 {
+  font-size: 16px;
+  border: none;
+}
+
+div#formatting_guide table {
+  margin: 15px 0 15px 0;
+  background: #fff;
+  border-collapse: collapse;
+}
+
+div#formatting_guide table th {
+  text-align: left;
+  border: 1px solid #ddd;
+  padding: 6px;
+  font-weight: normal;
+  background: #666;
+  color: #fff;
+}
+
+div#formatting_guide table td {
+  border: 1px solid #ddd;
+  font-size: 12px;
+  padding: 6px;
+}
+
+div#formatting_guide table td ol,
+div#formatting_guide table td ul {
+  padding: 0;
+  margin: 5px 0 5px 20px;
+}
+
+div#formatting_guide table td ul li {
+  list-style-type: disc;
+}
+
+div#formatting_guide table td blockquote {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+div#formatting_guide table td h1 {
+  font-size: 130%;
+}
+
+div#formatting_guide table td h2 {
+  font-size: 100%;
+}
+
+div#formatting_guide table td h3 {
+  font-size: 100%;
+}
+
+
+/*-------------------------------------------------
+EMAIL NOTIFICATION
+-------------------------------------------------*/
+
+div.Right div.col .notify h2,
+.extra .notify h2 {
+  font-size: 14px;
+  margin: 0 0 2px 0;
+  padding: 0;
+}
+
+div.Right div.col .notify span,
+.extra .notify span {
+  font-size: 10px;
+  color: #666;
+}
+
+table#emailnotification td {
+  padding: 0 10px 0 0;
+  vertical-align: top;
+}
+
+table#emailnotification tr.additional_company td {
+  padding-top: 12px;
+}
+
+table#emailnotification td p {
+  margin: 0 0 5px 0;
+}
+
+div.Right div.col table#emailnotification td p {
+	font-size: 11px;
+	margin: 0 0 2px 0;
+	padding: 0;
+}
+
+
+/*-------------------------------------------------
+NEW TODOS (ala Backpack)
+-------------------------------------------------*/
+
+div.list div.inner { /* indent the list */
+  margin-left: 20px;
+}
+
+div.list h2 { /* title of list */
+  font-size: 16px;
+  position: relative;
+}
+
+div.list h2 img {
+  vertical-align: middle;
+  margin-left: 3px;
+}
+
+div.list h2 a.permalink:link,
+div.list h2 a.permalink:visited {
+  color: #000;
+}
+
+div.list h2 a.permalink:hover {
+  color: #fff;
+}
+
+div.list h2 a.admin:link, /* IE6 is stupid, so we'll say it again */
+div.list h2 a.admin:visited {
+  color: red;
+}
+
+div.list h2 a.admin:hover {
+  color: #fff;
+}
+ 
+div.list .showhidedialog input.additemfield {
+	font-size: 16px;
+	padding: 2px;
+	width: 400px;
+}
+
+div.list .showhidedialog .edit_textarea {
+  font-size: 14px;
+  width: 450px;
+}
+
+div.list div.additem { /* the link to add an item */
+	margin-top: 3px;
+	margin-left: 25px;
+  background: #efefef;
+  padding: 5px;
+}
+
+div.list_with_time div.additem {
+  margin-left: 45px;
+}
+
+div.list div.additem p {
+  margin: 0 0 5px 0;
+  font-size: 11px;
+}
+
+div.list div#additemdialog {
+	margin-top: 3px;
+	margin-left: 25px;
+}
+
+div.list ul.uncompleted_items {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+}
+
+div.list ul.completed_items {
+  margin: 3px 0 0 0;
+  padding: 0;
+  list-style-type: none;
+	color: #999;
+}
+
+div.list ul li {
+  clear: both;
+}
+
+div.list ul.completed_items li div.content_for_item {
+  padding-top: 2px;
+}
+
+div.list ul li img {
+	vertical-align: middle;
+}
+
+div.list ul.uncompleted_items li {
+  padding: 0;
+  margin: 0 0 2px 0;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+div.list ul.completed_items li {
+  padding: 0;
+  margin: 0 0 3px 0;
+  font-size: 11px;
+}
+
+div.list div.check_box_for_item,
+div.list_with_time div.check_box_for_item {
+  width: 17px;
+  float: left;
+  position: relative;
+}
+
+div.list_with_time div.check_box_for_item {
+  width: 47px;
+}
+
+div.list div.check_box_for_item_with_time img {
+  vertical-align: middle;
+}
+
+div.list div.content_for_item,
+div.list_with_time div.content_for_item {
+  padding-top: 1px;
+  margin-left: 22px;
+}
+
+div.list_with_time div.content_for_item {
+  margin-left: 45px;
+}
+
+div.list ul.completed_items li div.content_for_item {
+  padding-top: 3px;
+}
+
+div.list ul.completed_items li strong {
+  font-weight: normal;
+  color: #666;
+}
+
+div.list div.viewallcomplete {
+  margin-top: 3px;
+  margin-left: 22px;
+  font-size: 10px;
+}
+
+div.list div.viewallcomplete a:link,
+div.list div.viewallcomplete a:visited {
+  color: #999;
+}
+
+div.list div.viewallcomplete a:hover {
+  color: #fff;
+}
+
+div#new_list, div.edit_list {
+  background: #efefef;
+  padding: 10px 10px 0px 10px;
+}
+
+div.edit_list {
+  margin: 20px 0 5px 0;
+  padding-bottom: 10px;
+}
+
+
+div#new_list h2, div.edit_list h2 {
+  margin: 0 0 3px 0;
+  padding: 0;
+  font-size: 12px;
+}
+
+div#new_list p, div.edit_list p {
+  margin: 0 0 5px 0;
+}
+
+div#new_list p.submit, div.edit_list p.submit, div.list div.additem p.submit {
+  margin: 4px 0 0 0;
+  padding: 3px 0 0 0;
+  border-top: 1px solid #ccc;
+}
+
+div#new_list input.new_list_title, div.edit_list input.list_title {
+  font-size: 16px;
+  width: 400px;
+}
+
+div#new_list textarea, div.edit_list textarea {
+  font-size: 13px;
+  width: 400px;
+}
+
+div.list textarea.new_item_field {
+  font-size: 12px;
+  width: 380px;
+}
+
+div.edit_list input.list_title {
+  font-weight: bold;
+}
+
+a.donelink:link,
+a.donelink:visited,
+div.list a.donelink:link,
+div.list a.donelink:visited {
+  color: #000;
+  background: #fc3;
+  font-size: 12px;
+  padding: 0 2px;
+}
+
+a.donelink:hover,
+div.list a.donelink:hover {
+  text-decoration: underline;
+}
+
+a.showing:link,
+a.showing:visited {
+  color: black;
+  background: #bababa;
+	text-decoration: none;
+  font-weight: normal;
+}
+
+div.completed_lists h2 {
+  font-size: 11px;
+}
+
+div.completed_lists ul li a:link,
+div.completed_lists ul li a:visited {
+  color: #777;
+}
+
+div.completed_lists ul li a:hover {
+  color: #fff;
+  background: #666;
+}
+
+
+
+/*-------------------------------------------------
+TIME TRACKING TODO WIDGET
+-------------------------------------------------*/
+
+/* more time tracking stuff is inside the TODO sectin */
+
+div.list div.timewidget {
+  border: 2px solid #090;
+  color: #333;
+}
+
+div.list div.timewidget div.content { /* what used to be in content_for_item */
+  padding: 8px;
+}
+
+div.list div.timewidget div.total {
+  padding: 10px;
+  background: #D2E9D2;
+}
+
+div.list div.timewidget div.total strong {
+  font-size: 12px;
+  color: #fff;
+  background: #090;
+  padding: 2px 4px;
+}
+
+div.list div.timewidget div.total span {
+  color: #666; margin-left: 5px; font-size: 11px;
+}
+
+div.list div.timewidget div.form {
+  background: #efefef;
+  padding: 8px;
+}
+
+div.list div.timewidget div.form td {
+  color: #999;
+}
+
+/*-------------------------------------------------
+TIME TRACKING TAB
+-------------------------------------------------*/
+
+table.TimeTrack {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+table.TimeTrack th {
+	font-size: 9px;
+	font-weight: normal;
+	text-transform: uppercase;
+	padding: 0 3px 3px 3px;
+  border-bottom: 1px solid #999;
+}
+
+table.TimeTrack th.project {
+	font-size: 13px;
+	font-weight: bold;
+	color: #000;
+	background: #e9e9e9;
+	border-bottom: 1px solid #ddd;
+	border-top: 1px solid #fff;
+	text-align: left;
+	padding: 5px;
+	text-transform: none;
+	border-bottom: 1px solid #999;
+}
+
+table.TimeTrack th.project a {
+	color: #000;
+	text-decoration: none;
+  font-size: 12px;
+}
+
+table.TimeTrack th.project span.project_link {
+	color: #666;
+  font-size: 10px;
+}
+
+table.TimeTrack th.project span.project_link a {
+  color: red;
+  text-decoration: underline;
+	font-weight: normal;
+  font-size: 10px;
+}
+
+table.TimeTrack th.project span.project_link a:hover {
+  color: #fff;
+}
+
+table.TimeTrack th.project a span {
+	color: #666;
+  font-size: 10px;
+}
+
+table.TimeTrack th.project a:hover,
+table.TimeTrack th.project a:hover span {
+	color: #fff;
+}
+
+table.TimeTrack td {
+	font-size: 11px;
+	padding: 4px 10px 4px 3px;
+	border-bottom: 1px solid #ddd;
+	white-space: nowrap;
+}
+
+table.TimeTrack tr.shade td {
+	background: #f0f0f0;
+}
+
+table.TimeTrack th.date {
+	padding-left: 10px;
+}
+
+table.TimeTrack td.date {
+	padding-left: 14px;
+}
+
+table.TimeTrack td.action {
+	text-align: left;
+}
+
+table.TimeTrack td.action img {
+  vertical-align: middle;
+}
+
+table.TimeTrack td.action a.editlink {
+  margin-left: 20px;
+}
+
+table.TimeTrack td.hours {
+	text-align: left;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+table.TimeTrack td.desc {
+	font-size: 11px;
+	white-space: normal;
+	width: 100%;
+  line-height: 16px;
+}
+
+table.TimeTrack tr.AddTimeTrack td {
+	padding: 10px 10px 10px 0;
+	background: #efefef;
+  vertical-align: bottom;
+}
+
+table.TimeTrack tr.AddTimeTrack td.date {
+	padding-left: 10px;
+}
+
+table.TimeTrack tr.total td {
+  border-top: 2px solid #999;
+  border-bottom: none;
+}
+
+table.TimeTrack tr.total td.total {
+  text-align: right;
+  padding-left: 10px;
+  font-size: 13px;
+}
+
+table.TimeTrack tr.total td.hours {
+  font-size: 13px;
+}
+
+table.TimeTrack tr.total td.export {
+  font-size: 11px;
+  color: #666;
+  text-align: right;
+}
+
+div#new_time_report {
+  background: #efefef;
+  padding: 10px 10px 6px 10px;
+  margin-bottom: 20px;
+}
+
+div#new_time_report p {
+  margin: 0 0 5px 0;
+}
+
+div#new_time_report p.submit {
+  margin: 10px 0 0 0;
+  padding: 5px 0 0 0;
+  border-top: 1px solid #ccc;
+}
+
+/*-------------------------------------------------
+PAGINATION
+-------------------------------------------------*/
+
+div.pagination {
+  margin: 15px 0;
+  font-size: 13px;
+  text-align: right;
+}
+
+div.pagination a, div.pagination strong {
+  text-decoration: none;
+  padding: 1px 4px;
+  border: 1px solid #ccc;
+  margin-right: 3px;
+}
+
+div.pagination strong {
+  border: none;
+  color: #000;
+  padding: 1px 3px;
+  margin-right: 2px;
+}
+
+div.pagination span {
+  color: #666;
+  font-size: 12px;
+}
+
+/*-------------------------------------------------
+WRITEBOARDS
+-------------------------------------------------*/
+
+div.writeboards {
+	font-size: 14px;
+	color: #ccc;
+}
+
+div.writeboards ol {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+div.writeboards li {
+  position: relative;
+	margin: 0 0 5px 0;
+	font-size: 16px;
+  line-height: 16px;
+  font-weight: bold;
+}
+
+div.writeboards li span.detail { /* who's page is it? */
+  font-weight: normal;
+  font-size: 10px;
+  color: #999;
+  margin-left: 10px;
+}
+
+div.showhide {
+  background: #efefef;
+  padding: 10px 10px 1px 10px;
+  margin: 0 0 20px 0;
+  border: 2px solid #ccc;
+}
+
+div.showhide h2 {
+  margin: 0;
+  font-size: 12px;
+  border-bottom: 1px solid #ccc;
+}
+
+div.showhide p {
+  margin: 8px 0;
+  color: #000;
+  font-weight: normal;
+}
+
+input#writeboard_title {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 2px;
+  width: 400px;
+}
+
+div#limit_reached {
+	font-size: 12px;
+}
+
+table.form {
+  border-collapse: collapse;
+}
+
+table.form th {
+  text-align: right;
+  color: #555;
+  padding: 0px;
+  padding-right: 5px;
+  font-size: 12px;
+}
+
+table.form td {
+  text-align: left;
+  padding: 0px;
+}
+
+table.form td input {
+  width: 335px;
+  font-size: 14px;
+  padding: 2px;
+}
+
+table.form tr.url th  {
+  vertical-align: top;
+  line-height: 28px;
+}
+
+table.form tr.url td  {
+  line-height: 14px;
+  font-size: 11px;
+  padding-bottom: 5px;
+  color: #666;
+}
+
+table.form tr.password td input {
+  width: 200px;
+}
+
+table.form tr.submit td {
+  font-size: 11px;
+}
+
+table.form tr.submit td input {
+  width: auto;
+}
+
+/*-------------------------------------------------
+GENERAL BLANK SLATE (copied from BP)
+-------------------------------------------------*/
+
+div#blank_slate {
+  margin: 5px 0 20px 0;
+  text-align: left;
+}
+
+div#blank_slate h1 {
+	border-bottom: 0;
+}
+
+/*-------------------------------------------------
+GENERAL NUBBIN (adapted from BP)
+-------------------------------------------------*/
+
+span.nubbin_hover {
+  position: relative;
+  z-index: 2;
+}
+
+span.nubbin {
+  position: absolute;
+  background: url(/images/nubbin.gif) top left no-repeat;
+  width: 40px;
+  top: -6px;
+  left: -50px;
+  padding: 0 0 0 7px;
+  z-index: 1;
+}
+
+/* LIST nubbins */
+
+  div.list span.nubbin { left: -50px; }
+  div.list div.Privatetodo span.nubbin { left: -67px; }
+  div.list div.PrivatetodoIE span.nubbin { left: -67px; }
+
+  div.list div.content_for_item span.nubbin { left: -85px; }
+  div.list div.Privatetodo div.content_for_item span.nubbin { left: -105px; }
+  div.list div.PrivatetodoIE div.content_for_item span.nubbin { left: -105px; }
+
+  div.list_with_time div.content_for_item span.nubbin { left: -105px; }
+  div.list_with_time div.Privatetodo div.content_for_item span.nubbin { left: -127px; }
+  div.list_with_time div.PrivatetodoIE div.content_for_item span.nubbin { left: -127px; }
+
+li span.nubbin {
+  left: -75px;
+}
+
+span.nubbin img {
+  margin: 9px 0 6px 0;
+}
+
+/*-------------------------------------------------
+FIELDSET
+-------------------------------------------------*/
+
+fieldset {
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #999;
+}
+
+fieldset p {
+	font-size: 11px;
+	margin: 0 0 5px 0;
+	padding: 0;
+	color: #666;
+}
+
+fieldset legend {
+	font-size: 12px;
+	font-weight: bold;
+	color: #874c00;
+}
+
+fieldset legend span {
+	color: #666;
+	font-weight: normal;
+	font-size: 80%;
+}
+
+/*-------------------------------------------------
+FILE HOSTING
+-------------------------------------------------*/
+
+table.hostoption {
+	margin: 10px auto 30px auto;
+}
+
+table.hostoption p {
+	font-size: 12px;
+	line-height: 15px;
+	text-align: left;
+	margin: 0 0 15px 0;
+}
+
+table.hostoption td {
+	text-align: center;
+	font-size: 12px;
+}
+
+table.hostoption td.option {
+	border: 5px solid #ccc;
+	padding: 10px;
+	vertical-align: top;
+	width: 45%;
+}
+
+table.hostoption td.selected {
+	background-color: #ffc;
+}
+
+table.hostoption td.current {
+	background-color: #d89800;
+	font-weight: bold;
+	color: #fff;
+}
+
+table.hostoption td.notcurrent {
+	border: 1px solid #ccc;
+	border-bottom: 0;
+}
+
+table.hostoption td.option h2 {
+	margin: 0 0 10px 0;
+	font-size: 16px;
+	color: #000;
+}
+
+table.hostoption tr.actions td {
+	padding: 3px;
+}
+
+table.hostoption td.option h3 {
+	font-size: 11px;
+	text-align: left;
+	border-bottom: 1px solid #dcdcdc;
+	color: #000;
+	margin: 0 0 2px 0;
+}
+
+div.faq h3 {
+	color: #000;
+	margin: 0 0 2px 0;
+	padding: 0;
+}
+
+div.faq p {
+	margin: 0 0 15px 0;
+	width: 75%;
+}
+
+/*-------------------------------------------------
+AFFILIATE PROGRAM
+-------------------------------------------------*/
+
+body.affiliate h2 {
+	margin-bottom: 3px;
+	color: #900;
+	border-bottom: 1px solid #efefef;
+}
+
+body.affiliate h2 span, body.affiliate p span.highlight2 {
+	background-color: #ffc;
+	border: 1px solid #fc6;
+	padding: 3px;
+	font-family: courier, "Courier New", monospace;
+	letter-spacing: 1px;
+}
+
+body.affiliate div.Left p {
+	width: 80%;
+	font-size: 12px;
+	margin-top: 0;
+}
+
+body.affiliate h1 {
+	margin: 20px 0 15px 0;
+	color: #000;
+}
+
+body.affiliate div.col {
+	padding-bottom: 20px;
+}
+
+body.affiliate ol {
+	margin: 0 0 20px 40px;
+	width: 75%;
+}
+
+body.affiliate div.affiliatechart {
+	float: right;
+	margin: 0 0 25px 25px;
+	padding: 10px;
+	width: 200px;
+	background-color: #fff;
+	border: 2px solid #fc9;
+}
+
+body.affiliate div.affiliatechart table {
+	margin-bottom: 10px;
+}
+
+body.affiliate div.affiliatechart table, body.affiliate div.affiliatechart p {
+	width: 100%;
+	margin-top: 0;
+}
+
+body.affiliate div.affiliatechart table td {
+	font-size: 12px;
+	padding: 2px;
+	border-bottom: 1px solid #ccc;
+	width: 100%;
+	white-space: nowrap;
+}
+
+body.affiliate div.affiliatechart table th {
+	font-size: 10px;
+	text-align: center;
+	padding: 2px;
+	background-color: #333;
+	color: #fff;
+}
+
+body.affiliate table.affiliatecount td {
+	padding: 5px;
+	font-size: 12px;
+	border-bottom: 1px solid #ccc;
+}
+
+body.affiliate table.affiliatecount td.total {
+	border: 10px solid #ccc;
+	background-color: #9f9;
+	font-size: 11px;
+	text-align: center;
+}
+
+body.affiliate table.affiliatecount td.total strong {
+	font-size: 11px;
+}
+
+body.affiliate table.affiliatecount td.total h1 {
+	font-size: 20px;
+	margin: 0;
+}
+
+body.affiliate table.affiliatecount td small {
+	color: #999;
+}
+
+body.affiliate table.affiliatecount td strong {
+	font-size: 18px;
+}
+
+body.affiliate table.affiliatecount td.earned {
+	font-size: 18px;
+	font-weight: bold;
+	color: #000;
+	background-color: #cfc;
+	border-bottom: 0;
+}
+
+body.affiliate table.affiliatecount td.totals {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	width: 300px;
+}
+
+body.affiliate table.affiliatecount td.totals strong {
+	font-size: 12px;
+}
+
+body.affiliate table.affiliatecount th.earned {
+	background-color: #cfc;
+	color: #000;
+}
+
+body.affiliate table.affiliatecount th {
+	font-size: 11px;
+	text-align: left;
+	color: #fff;
+	padding: 5px;
+	background-color: #333;
+}
+
+body.affiliate textarea {
+	width: 400px;
+	height: 50px;
+	margin-bottom: 20px;
+}
+
+body.affiliate ol.easylist li {
+	font-size: 14px;
+	line-height: 17px;
+}
+
+body.affiliate textarea {
+	width: 468px;
+	height: 100px;
+}
+
+
+/*-------------------------------------------------
+FILES (Feb 2005 by rjs)
+-------------------------------------------------*/
+
+body.files div.date_group {
+  margin: 0 0 30px 0;
+}
+
+body.files a#upload_file_link.active { display: none; }
+
+body.files div.basic_form_wrapper {
+  padding-top: 5px;
+}
+
+body.files div.showhide {
+  background: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+body.files div.basic_form h2 span.upload_limit {
+  font-family: lucida grande, verdana, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  color: #777;
+}
+
+body.files div.basic_form p.upload_limit {
+  color: #777;
+  font-size: 11px;
+  margin-bottom: 0;
+}
+
+body.files div.showhide table#upload_layout {
+  width: 99%;
+  margin-bottom: 15px;
+}
+
+body.files div.showhide table#upload_layout td.choose_file {
+  width: 250px;
+  background: #fff;
+  border: 1px solid #ccc;
+  vertical-align: middle;
+}
+
+body.files div.showhide table#upload_layout td.choose_file input {
+  width: 95%;
+  margin-left: 5px;
+  font-size: 11px;
+}
+
+body.files div.showhide table#upload_layout td.meta {
+  padding-left: 10px;
+  white-space: nowrap;
+}
+
+body.files div.showhide table#upload_layout td.meta .smaller {
+  font-size: 11px;
+}
+
+body.files div.showhide table#upload_layout td.meta select {
+  font-size: 11px;
+  width: 150px;
+}
+
+body.files div.showhide table#upload_layout td.meta input.description {
+  font-size: 12px;
+  width: 95%;
+}
+
+body.files div.showhide table#upload_layout td.meta p {
+  margin-bottom: 7px;
+}
+
+body.files div.showhide table#upload_layout td hr {
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+body.files div.showhide table#upload_layout td p.add_another {
+  margin: 0 0 0 15px;
+}
+
+body.files div.notify_block {
+  margin: 0 0 15px 5px;
+}
+
+body.files div.notify_block h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+body.files div.notify_block div {
+  border-left: 6px solid #ddd;
+  padding-left: 5px;
+}
+
+body.files table#emailnotification {
+  margin: 0;
+}
+
+body.files table#emailnotification p {
+  font-size: 11px;
+}
+
+body.files table#emailnotification input {
+  width: auto;
+}
+
+body.files table#emailnotification p {
+  margin: 0;
+}
+
+body.files h2.date {
+  margin-bottom: 5px;
+  padding-left: 0;
+}
+
+body.files div.Post {
+  margin: 0 0 15px 10px;
+  padding-bottom: 0;
+  clear: left;
+}
+
+body.files div.Post h1 {
+  font-size: 14px;
+  margin: 0 0 3px 0;
+}
+
+body.files div.Post p {
+  margin-bottom: 3px;
+}
+
+body.files div.Post a.message_title {
+  font-weight: normal;
+  color: #666;
+}
+
+body.files div.Post a.message_title:hover {
+  color: #fff;
+}
+
+body.files div.Post h3 a.image:hover {
+  background: none;
+}
+
+body.files div.Post h3 a.image img {
+  vertical-align: bottom;
+}
+
+body.files div.Post div.file_icon {
+  float: left;
+  width: 32px;
+  position: relative; /* force layout */
+}
+
+body.files div.Post div.file_icon img {
+  width: 32px;
+  height: 32px;
+}
+
+body.files div.Post div.file_info {
+  margin-left: 40px;
+}
+
+body.files div.Post div.file_info span.dash {
+  color: #999;
+}
+
+body.files div.Post h1 {
+  padding-top: 0;
+}
+
+body.files div.Right p.sort_by {
+  font-size: 12px;
+}
+
+body.files div.edit_file {
+  background: #efefef;
+  border: 2px solid #ccc;
+  padding: 10px 10px 5px 10px;
+  margin-bottom: 30px;
+}
+
+body.files div.edit_file label {
+  float: left;
+  width: 70px;
+  margin-right: 8px;
+  text-align: right;
+  padding-top: 2px;
+  color: #666;
+}
+
+body.files div.edit_file div.file_icon {
+  float: left;
+  width: 32px;
+  position: relative; /* force layout */
+}
+
+body.files div.edit_file div.file_info {
+  margin-left: 45px;
+}
+
+body.files div.edit_file div.file_info label {
+  position: relative; /* force layout */
+}
+
+body.files div.edit_file p {
+  margin: 0 0 3px 0;
+  font-size: 11px;
+}
+
+body.files div.edit_file input.title {
+  width: 408px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+body.files div.edit_file input.description {
+  font-size: 12px;
+  width: 330px;
+}
+
+body.files div.edit_file select {
+  margin-right: 5px;
+}
+
+body.files div.edit_file p.submit {
+  margin: 5px 0 5px 0;
+  padding: 5px 0 0 75px;
+  border-top: 1px solid #ddd;
+}
+
+body.files div.edit_file p.submit img { /* spinner */
+  padding: 4px 0;
+}
+
+body.files div.edit_file div.attached p.submit {
+  padding-left: 0;
+}
+
+
+/*-------------------------------------------------
+BASIC FORM
+-------------------------------------------------*/
+
+div.basic_form_wrapper {
+  text-align: left;
+  padding: 0 0 20px 0;
+  position: relative;
+}
+
+div.basic_form {
+	background-color: #f5f5f5;
+	border-bottom: 1px solid #dcdcdc;
+  border: 2px solid #ccc;
+	margin: 0;
+	padding: 10px 20px 10px 10px;
+	font-size: 11px;
+}
+
+div.basic_form input.expanded,
+div.basic_form textarea.expanded {
+  width: 95%;
+}
+
+div.basic_form input, div.basic_form textarea {
+	width: 300px;
+	padding: 3px;
+}
+
+div.basic_form input.autosize {
+  width: auto;
+}
+
+div.basic_form input.big {
+	font-size: 18px;
+}
+
+div.basic_form textarea {
+	width: 300px;
+  font-size: 13px;
+	height: 75px;
+}
+
+div.basic_form h2 {
+	font-size: 14px;
+	margin: 0 0 5px 0;
+	border-bottom: 0px;
+}
+
+div.basic_form h3 {
+	font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif;
+  font-weight: bold;
+  color: #333;
+	font-size: 12px;
+	margin: 0 0 2px 0;
+	border: none;
+}
+
+div.basic_form h3.optional {
+  font-weight: normal;
+}
+
+div.basic_form h2 span {
+	font-family: georgia;
+	font-style: italic;
+	font-weight: normal;
+	color: #666;
+	font-size: 90%;
+}
+
+div.basic_form h1 {
+	font-size: 16px;
+	margin-bottom: 5px;
+}
+
+div.basic_form p {
+	font-size: 12px;
+  margin: 0 0 15px 0;
+}
+
+div.basic_form p.submit {
+  color: #999;
+  margin-bottom: 5px;
+}
+
+div.basic_form p.submit input {
+  width: auto;
+  font-size: 14px;
+}
+
+/*-------------------------------------------------
+CHAT
+-------------------------------------------------*/
+
+body.affiliate h1 {
+	margin-top: 0;
+}
+
+body.chat div.chatsetup {
+	border: 5px solid #fc9;
+	width: 225px;
+	font-size: 11px;
+}
+
+body.chat div.chatsetup h3 {
+	font-size: 12px;
+	color: #000;
+	margin: 10px 0 0 0;
+	padding: 0;
+}
+
+body.chat p	{
+	font-weight: normal;
+}
+
+.choose_room select.existing_rooms {
+  font-size: 14px;
+}
+
+.choose_room input.new_room {
+  font-size: 14px;
+  width: 250px;
+}
+
+body.loading {
+  padding-top: 50px;
+}
+
+
+/*-------------------------------------------------
+ROOM
+-------------------------------------------------*/
+
+
+div.room {
+  width: 35%;
+  text-align: center;
+	margin: 0 auto 20px auto;
+}
+
+div.room h2 {
+  font-family: helvetica, arial, sans-serif;
+  font-size: 24px;
+  letter-spacing: -1px;
+	margin: 0;
+	padding: 0;
+}
+
+div.room h2 a {
+  font-size: 24px;
+  letter-spacing: -1px;
+}
+
+body.lobby div.locked {
+  border-color: #999;
+}
+
+body.lobby div.locked h2 {
+  color: #999;
+  font-size: 24px;
+  letter-spacing: -1px;
+}
+
+
+div.room div.updated {
+  margin: 3px 0 8px 0;
+	font-size: 11px;
+	font-style: italic;
+	color: #666;
+	font-weight: normal;
+	font-family: georgia;
+}
+
+div.room div.updated span.active {
+  color: green;
+  font-weight: bold;
+}
+
+div.room p {
+  margin: 5px 0 5px 0;
+  font-size: 14px;
+}
+
+div.room ul {
+  margin: 8px 0 0 0; padding: 10px 0 0 0;
+  list-style-type: none;
+  border-top: 1px dotted #dcdcdc;
+}
+
+div.room li {
+	margin: 0 0 2px 0;
+	padding: 0;
+	font-size: 12px;
+}
+
+/*-------------------------------------------------
+WELCOME
+-------------------------------------------------*/
+
+body.welcome div.startBar {
+	text-align: center;
+	background-color: #ffc;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	padding: 7px;
+	margin-bottom: 25px;
+}
+
+body.welcome div.startBar h1 {
+	font-size: 22px;
+	margin: 0 0 3px 0;
+	padding: 0;
+}
+
+body.welcome div.startBar p {
+	margin: 0;
+	padding: 0;
+}
+
+body.welcome div.otherOptions h1 {
+	font-size: 14px;
+	margin: 0 0 15px 0;
+	padding: 0;
+	color: #900;
+	border-bottom: 1px dotted #ccc;
+}
+
+body.welcome div.otherOptions h2 {
+	font-size: 16px;
+	margin: 0 0 3px 0;
+	padding: 0;
+}
+
+body.welcome div.otherOptions p {
+	font-size: 14px;
+	margin: 0 0 15px 0;
+	padding: 0;
+}
+
+
+
+
+
+
+
+
+
+/*-------------------------------------------------
+DASHCAL
+-------------------------------------------------*/
+
+div.result
+{
+	color: green;
+	font-size: 11px;
+}
+
+/***********************************************/
+/*       Tabs                                  */
+/***********************************************/
+
+#MyTabs
+{
+	border: 1px solid red;
+	height: 23px;
+	margin: 0px;
+	padding: 0;
+}
+
+#MyTabs ul
+{
+	margin: 0;
+	padding: 0;
+}
+
+#MyTabs li
+{
+	border: 1px solid blue;
+	display: inline;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#MyTabs ul#SectionTabs {}
+
+div#MyTabs a:link,
+div#MyTabs a:visited
+{
+	text-decoration: none;
+}
+
+#MyTabs a:hover
+{
+	color: #fff;
+	background: #333;
+}
+
+#MyTabs ul#SectionTabs li
+{
+  float: left; /* for IE6 */
+	font-size: 11px;
+	font-weight: normal;
+	padding: 4px 8px 6px 8px;
+	margin: 0;
+}
+
+
+#MyTabs ul#SectionTabs a:link,
+#MyTabs ul#SectionTabs a:visited
+{
+  float: left; /* for IE6 */
+	font-size: 11px;
+	font-weight: normal;
+	padding: 4px 8px 6px 8px;
+	margin: 0;
+}
+
+#MyTabs ul#SectionTabs a:link.current,
+#MyTabs ul#SectionTabs a:visited.current {
+	background: #e5e5e5 url(/images/tab-bg.gif) top repeat-x;
+	border-bottom: 1px solid #e5e5e5;
+	color: #222;
+	font-weight: bold;
+	text-decoration: none;
+  margin: 0;
+}
+
+
+
+
+
+
+
+
+
+
+#container
+{
+	font-size: 11px;
+	color : #333;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	height: 25px;
+}
+
+#left
+{
+	color: #424242;
+	float: left;
+	margin: 0px;
+	padding: 0px;
+	width: 75%;
+}
+
+#right
+{
+	text-align: right;
+	float: right;
+	margin: 0px;
+	padding: 0px;
+	width: 25%;
+}
+
+
+
+
+
+  a:link, a:visited {
+    color: #03c;
+  }
+
+  a:hover {
+    color: #fff;
+    background-color: #03c;
+  }
+
+  #Header {
+    background-color: #900;
+  }
+
+  #Header h1 {
+    color: #FFF;
+  }
+
+  #P2P_selector {
+    border: 1px solid #BBB;
+    color: #FFF;
+  }
+
+  #Header h3, #Header h3 a:link, #Header h3 a:visited {
+    color: #BBB;
+  }
+
+  #Header h3 a:hover {
+    color: #fc0;
+    background-color: #600;
+  }
+
+  #Header h3 a.current:link, #Header h3 a.current:visited {
+    color: #FFF;
+  }
+
+  #Header h3 a.current:hover {
+    color: #FFF;
+    background-color: #900;
+  }
+
+  #Header h1 a:link, #Header h1 a:visited {
+    color: #FFF;
+    text-decoration: none;
+  }
+
+  #Header h1 a:hover {
+    color: #FFF;
+    background-color: #900;
+    text-decoration: underline;
+  }
+
+  #Header h1 span {
+    color: #BBB;
+  }
+
+  #Tabs a:link, #Tabs a:visited {
+    background-color: #c00;
+    color: #fff;
+    border: 1px solid #900;
+    border-bottom: 1px solid #c00;
+  }
+
+  #Tabs ul#MainTabs a:link.current, #Tabs ul#MainTabs a:visited.current,
+  div#CategoryList a.current:link, div#CategoryList a.current:visited {
+    color: #900;
+  }
+
+  #Tabs a:hover {
+    color: #fc0;
+    background-color: #600;
+    border-bottom: 1px solid #600;
+  }
+
+  #Tabs li#AdminTab a:link, #Tabs li#AdminTab a:visited {
+    color: #BBB;
+    background-color: #900;
+    border-bottom: 1px solid #900;
+    text-decoration: underline;
+  }
+
+  #Tabs li#AdminTab a:hover {
+    color: #FFF;
+  }
+
+  #Tabs li#AdminTab a.current {
+    color: #FFF;
+    text-decoration: none;
+  }

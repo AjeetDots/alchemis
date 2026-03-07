@@ -1,0 +1,948 @@
+<app-options>
+	<!-- Updated by ds: development = local Docker (host db, legacy_db); aws = live RDS. index.php defaults to aws when ALCHEMIS_ENV not set; Docker sets ALCHEMIS_ENV=development for local. -->
+
+	<environment>
+
+		<development>
+			<database>
+				<host>db</host>
+				<database>legacy_db</database>
+				<username>legacy_user</username>
+				<password>secret</password>
+			</database>
+			<url>/</url>
+			<log_directory>/var/www/html/logs/</log_directory>
+			<name>Alchemis Elixir Dev</name>
+			<description>Industry leading prospect relationship management software</description>
+			<developer>Sett</developer>
+			<version>2.0.2</version>
+			<locale>en-GB</locale>
+			<smarty_compile_check>true</smarty_compile_check>
+			<smarty_force_compile>true</smarty_force_compile>
+		</development>
+
+		<aws>
+			<!-- <database>
+				<host>alchemis-mysql-upgrade.cswhqpuhwywg.eu-west-1.rds.amazonaws.com</host>
+				<port>3306</port>
+				<database>alchemis</database>
+				<username>alchemis</username>
+				<password>rYT4maP7</password>
+			</database> -->
+			<database>
+                <host>alchemis-mysql.cswhqpuhwywg.eu-west-1.rds.amazonaws.com</host>
+                <database>alchemis</database>
+                <username>alchemis</username>
+                <password>rYT4maP7</password>
+            </database>
+			<url>/alchemis/</url>
+			<log_directory>/var/www/html/alchemis/logs/</log_directory>
+			<name>Alchemis Elixir</name>
+			<description>Industry leading prospect relationship management software</description>
+			<developer>Sett</developer>
+			<version>2.0.2</version>
+			<locale>en-GB</locale>
+			<smarty_compile_check>false</smarty_compile_check>
+			<smarty_force_compile>false</smarty_force_compile>
+		</aws>
+
+	</environment>
+
+	<client_ini_settings>
+		<action_subject_required>0</action_subject_required>
+		<action_notes_required>0</action_notes_required>
+		<action_due_date_required>0</action_due_date_required>
+		<action_reminder_date_required>0</action_reminder_date_required>
+		<action_communication_type_required>0</action_communication_type_required>
+		<action_default_communication_type>2</action_default_communication_type> <!-- email -->
+
+		<company_on_create_add_cleaned_date_characteristic>1</company_on_create_add_cleaned_date_characteristic>
+		<company_on_create_default_top_level_tiered_characteristic>0</company_on_create_default_top_level_tiered_characteristic>
+		<company_on_create_site_address_required>0</company_on_create_site_address_required>
+
+		<site_county_required>0</site_county_required>
+		<site_postcode_required>1</site_postcode_required>
+
+		<inbound_email_trapper_address>db@illumen.co.uk</inbound_email_trapper_address>
+		<inbound_email_trapper_administrator>davidn@alchemis.co.uk</inbound_email_trapper_administrator>
+
+		<!-- <campaign_monitor_api_key>fcf6863b19d2a2890c83c7bb2134b5aaef02b0c594a1023f</campaign_monitor_api_key> -->
+		<campaign_monitor_api_key>/EXp/DZuULyHR/b7fEE2yy3+LVtpn2IFqj2H1t1+uFPDss2gW3uO3P3EkAFn0DfR8abDJTqkvDJap7OiLZwFeqVq9CwRmgi3zZDHhuWZHsUQe9kV2XcdOMAx7qiiHgDnkQSI3/N+zpkK89ogiJZDig==</campaign_monitor_api_key>
+		<campaign_monitor_client_id>e0a15ea571e6d2790a0fc0e714b524fc</campaign_monitor_client_id>
+
+		<system_monitor_email>pete.cooper@settuk.com</system_monitor_email>
+
+	</client_ini_settings>
+
+	<control>
+
+		<view>main</view>
+		<view status="CMD_OK">main</view>
+		<view status="CMD_ERROR">error</view>
+
+		<command name="AjaxSetCompanyData">
+			<view>main</view>
+		</command>
+
+		<command name="AjaxClient">
+			<view>main</view>
+		</command>
+
+		<command name="AjaxUser">
+			<view>main</view>
+		</command>
+
+		<command name="Scoreboard">
+			<view>Scoreboard</view>
+		</command>
+
+		<command name="TimedCallBacks">
+			<view>TimedCallBacks</view>
+		</command>
+
+
+		<command name="Home">
+			<view>Home</view>
+		</command>
+
+	<!-- Dashboard -->
+
+		<command name="DashboardFrame">
+			<view>DashboardFrame</view>
+		</command>
+
+		<command name="ClientHomePage">
+			<view>ClientHomePage</view>
+		</command>
+
+		<command name="Dashboard">
+			<view>Dashboard</view>
+		</command>
+
+		<command name="DashboardActions">
+			<view>DashboardActions</view>
+		</command>
+
+		<command name="DashboardCallBacks">
+			<view>DashboardCallBacks</view>
+		</command>
+
+		<command name="DashboardEvents">
+			<view>DashboardEvents</view>
+		</command>
+
+		<!-- DashboardGraph1 outputs an image directly (no view class needed), -->
+		<!-- so we keep the command mapping but omit a view like other graph commands. -->
+		<command name="DashboardGraph1">
+		</command>
+
+		<command name="DashboardInformationRequests">
+			<view>DashboardInformationRequests</view>
+		</command>
+
+		<command name="DashboardMeetings">
+			<view>DashboardMeetings</view>
+		</command>
+
+		<command name="DashboardMessages">
+			<view>DashboardMessages</view>
+		</command>
+
+		<command name="DashboardNbms">
+			<view>DashboardNbms</view>
+		</command>
+
+		<command name="DashboardTeams">
+			<view>DashboardTeams</view>
+		</command>
+
+	<!-- /Dashboard -->
+
+	<!-- Documents -->
+
+		<command name="CampaignDocuments">
+			<view>CampaignDocuments</view>
+		</command>
+
+		<command name="CampaignSettings">
+			<view>CampaignSettings</view>
+		</command>
+
+		<command name="CampaignDocumentAdd">
+			<view>CampaignDocumentAdd</view>
+		</command>
+
+		<command name="CampaignDocumentDelete">
+			<view>CampaignDocumentDelete</view>
+		</command>
+
+	<!-- /Documents -->
+
+		<command name="MessageCreate">
+			<view>MessageCreate</view>
+		</command>
+
+		<command name="MessageDelete">
+			<view>MessageDelete</view>
+		</command>
+
+		<command name="Calendar">
+			<view>Calendar</view>
+		</command>
+
+		<command name="CalendarDay">
+			<view>CalendarDay</view>
+		</command>
+
+		<command name="MessageSummary">
+			<view>MessageSummary</view>
+		</command>
+
+		<command name="TaskSummary">
+			<view>TaskSummary</view>
+		</command>
+
+		<command name="NbmScoreboard">
+			<view>NbmScoreboard</view>
+		</command>
+
+		<command name="Administration">
+			<view>Administration</view>
+		</command>
+
+
+<!--
+		<command name="Characteristics">
+			<view>Characteristics</view>
+		</command>
+-->
+
+<!--
+		<command name="AdminCharacteristics">
+			<view>AdminCharacteristics</view>
+		</command>
+-->
+		<command name="CharacteristicList">
+			<view>CharacteristicList</view>
+		</command>
+
+		<command name="CharacteristicElements">
+			<view>CharacteristicElements</view>
+		</command>
+
+		<command name="CharacteristicEdit">
+			<view>CharacteristicEdit</view>
+		</command>
+
+		<command name="ObjectCharacteristics">
+			<view>ObjectCharacteristics</view>
+		</command>
+
+
+	<!-- Administration -->
+		<command name="AdminRegions">
+			<view>AdminRegions</view>
+		</command>
+
+		<command name="AdminRegionPostcodes">
+			<view>AdminRegionPostcodes</view>
+		</command>
+
+		<command name="AdminRegionsEdit">
+			<view>AdminRegionsEdit</view>
+		</command>
+
+		<command name="NbmMonthlyPlanner">
+			<view>NbmMonthlyPlanner</view>
+		</command>
+	<!-- Clients -->
+
+		<command name="ClientCreate">
+			<view>ClientCreate</view>
+			<status value="CMD_OK">
+				<forward>ClientList</forward>
+			</status>
+		</command>
+
+		<command name="ClientDetails">
+			<view>ClientDetails</view>
+		</command>
+
+		<command name="ClientDetailsEdit">
+			<view>ClientDetailsEdit</view>
+		</command>
+
+		<command name="ClientList">
+			<view>ClientList</view>
+		</command>
+
+		<command name="ClientView">
+			<view>ClientView</view>
+		</command>
+
+	<!-- /Clients -->
+
+	<!-- Sites -->
+
+		<command name="SiteCreate">
+			<view>SiteCreate</view>
+		</command>
+
+		<command name="SiteEdit">
+			<view>SiteEdit</view>
+		</command>
+
+	<!-- /Sites -->
+
+
+	<!-- Posts -->
+
+		<command name="PostCreate">
+			<view>PostCreate</view>
+		</command>
+
+		<command name="PostDisciplines">
+			<view>PostDisciplines</view>
+		</command>
+
+		<command name="PostIncumbentAgencies">
+			<view>PostIncumbentAgencies</view>
+		</command>
+
+		<command name="PostEdit">
+			<view>PostEdit</view>
+		</command>
+
+		<command name="PostEditLocation">
+			<view>PostEditLocation</view>
+		</command>
+
+		<command name="PostDelete">
+			<view>PostDelete</view>
+		</command>
+
+		<command name="PostNoteCreate">
+			<view>PostNoteCreate</view>
+		</command>
+
+		<command name="PostNotes">
+			<view>PostNotes</view>
+		</command>
+
+	<!-- /Posts -->
+
+	<!-- Post initiatives -->
+
+		<command name="PostInitiativeNote">
+			<view>PostInitiativeNote</view>
+		</command>
+
+		<command name="PostInitiativeNoteCreate">
+			<view>PostInitiativeNoteCreate</view>
+		</command>
+
+		<command name="PostInitiativeEdit">
+			<view>PostInitiativeEdit</view>
+		</command>
+
+	<!-- /Post initiatives -->
+
+	<!-- Campaigns -->
+
+		<command name="CampaignCreate">
+			<view>CampaignCreate</view>
+		</command>
+
+		<command name="CampaignDetailsEdit">
+			<view>CampaignDetailsEdit</view>
+		</command>
+
+		<command name="CampaignDetails">
+			<view>CampaignDetails</view>
+		</command>
+
+		<command name="CampaignHistory">
+			<view>CampaignHistory</view>
+		</command>
+
+		<command name="CampaignList">
+			<view>CampaignList</view>
+		</command>
+
+		<command name="CampaignView">
+			<view>CampaignView</view>
+		</command>
+
+		<command name="CampaignTargetCreate">
+			<view>CampaignTargetCreate</view>
+		</command>
+
+		<command name="CampaignReportSummaries">
+			<view>CampaignReportSummaries</view>
+		</command>
+
+		<command name="CampaignReportSummaryCreate">
+			<view>CampaignReportSummaryCreate</view>
+		</command>
+
+		<command name="CampaignReportSummaryEdit">
+			<view>CampaignReportSummaryEdit</view>
+		</command>
+
+	<!-- /Campaigns -->
+
+
+	<!-- Workspace -->
+
+		<command name="WorkspaceCompanyView">
+			<view>WorkspaceCompanyView</view>
+		</command>
+
+		<command name="WorkspaceCompany">
+			<view>WorkspaceCompany</view>
+		</command>
+
+		<command name="WorkspacePost">
+			<view>WorkspacePost</view>
+		</command>
+
+		<command name="WorkspacePostInitiative">
+			<view>WorkspacePostInitiative</view>
+		</command>
+
+		<command name="WorkspaceCompanyInitiatives">
+			<view>WorkspaceCompanyInitiatives</view>
+		</command>
+
+		<command name="WorkspaceNotes">
+			<view>WorkspaceNotes</view>
+		</command>
+
+	<!-- /Workspace -->
+
+	<!-- Workspace Info -->
+
+		<command name="WorkspaceCompanyBrands">
+			<view>WorkspaceCompanyBrands</view>
+		</command>
+
+		<command name="WorkspaceInfoSites">
+			<view>WorkspaceInfoSites</view>
+		</command>
+
+		<command name="WorkspaceInfoCompanyDetail">
+			<view>WorkspaceInfoCompanyDetail</view>
+		</command>
+
+		<command name="WorkspaceInfoPostDetail">
+			<view>WorkspaceInfoPostDetail</view>
+		</command>
+
+		<command name="WorkspaceInfoProspectDetail">
+			<view>WorkspaceInfoProspectDetail</view>
+		</command>
+
+		<command name="WorkspaceInfoClientTasks">
+			<view>WorkspaceInfoClientTasks</view>
+		</command>
+
+		<command name="WorkspaceTags">
+			<view>WorkspaceTags</view>
+		</command>
+
+		<command name="WorkspaceProjectRefTags">
+			<view>WorkspaceProjectRefTags</view>
+		</command>
+
+	<!-- /Workspace -->
+
+
+	<!-- Communication -->
+
+		<command name="Communication">
+			<view>Communication</view>
+		</command>
+
+		<command name="CommunicationCreate">
+			<view>CommunicationCreate</view>
+			<status value="CMD_SAVED">
+				<forward>CommunicationSaved</forward>
+			</status>
+		</command>
+
+		<command name="CommunicationSaved">
+			<view>CommunicationSaved</view>
+		</command>
+
+		<command name="CommunicationEdit">
+			<view>CommunicationEdit</view>
+		</command>
+
+		<command name="CommunicationEmailCreate">
+			<view>CommunicationEmailCreate</view>
+		</command>
+
+		<command name="CommunicationAttachments">
+			<view>CommunicationAttachments</view>
+		</command>
+
+	<!-- /Communication -->
+
+
+	<!-- Meetings -->
+
+		<command name="Meetings">
+			<view>Meetings</view>
+		</command>
+
+		<command name="MeetingEdit">
+			<view>MeetingEdit</view>
+		</command>
+
+		<command name="MeetingEmail">
+			<view>MeetingEmail</view>
+		</command>
+
+		<command name="MeetingHistory">
+			<view>MeetingHistory</view>
+		</command>
+
+		<command name="MeetingPrint">
+			<view>MeetingPrint</view>
+		</command>
+
+		<command name="MeetingSaved">
+			<view>MeetingSaved</view>
+		</command>
+
+	<!-- /Meetings -->
+
+
+	<!-- Information Requests -->
+
+		<command name="InformationRequestPrint">
+			<view>InformationRequestPrint</view>
+		</command>
+
+		<command name="InformationRequestEmail">
+			<view>InformationRequestEmail</view>
+		</command>
+
+	<!-- /Information Requests -->
+
+
+	<!-- Actions -->
+
+		<command name="ActionCreate">
+			<view>ActionCreate</view>
+		</command>
+
+		<command name="ActionDelete">
+			<view>ActionDelete</view>
+		</command>
+
+		<command name="ActionsFrame">
+			<view>ActionsFrame</view>
+		</command>
+
+		<command name="Actions">
+			<view>Actions</view>
+		</command>
+
+		<command name="PostInitiativeActions">
+			<view>PostInitiativeActions</view>
+		</command>
+
+		<command name="PostInitiativeActionCreate">
+			<view>PostInitiativeActionCreate</view>
+		</command>
+
+		<command name="PostInitiativeActionEdit">
+			<view>PostInitiativeActionEdit</view>
+		</command>
+
+		<command name="PostInitiativeActionSaved">
+			<view>PostInitiativeActionSaved</view>
+		</command>
+
+
+		<command name="NbmActions">
+			<view>NbmActions</view>
+		</command>
+
+
+	<!-- /Actions -->
+
+	<!-- Events -->
+
+		<command name="EventCreate">
+			<view>EventCreate</view>
+		</command>
+
+		<command name="EventDelete">
+			<view>EventDelete</view>
+		</command>
+
+	<!-- /Events -->
+
+	<!-- Tiered Characteristics -->
+
+		<command name="TieredCharacteristicEdit">
+			<view>TieredCharacteristicEdit</view>
+		</command>
+
+		<command name="TieredCharacteristicList">
+			<view>TieredCharacteristicList</view>
+		</command>
+
+		<command name="ObjectTieredCharacteristics">
+			<view>ObjectTieredCharacteristics</view>
+		</command>
+
+	<!-- /Tiered Characteristics -->
+
+	<!-- Search -->
+
+		<command name="WorkspaceSearch">
+			<view>WorkspaceSearch</view>
+		</command>
+
+		<command name="Search">
+			<view>Search</view>
+		</command>
+
+		<command name="SearchResults">
+			<view>SearchResults</view>
+		</command>
+
+	<!-- /Search -->
+
+	<!-- Filter -->
+
+		<command name="WorkspaceFilter">
+			<view>WorkspaceFilter</view>
+		</command>
+
+		<command name="AjaxFilterResults">
+			<view>AjaxFilterResults</view>
+		</command>
+
+		<command name="FilterResults">
+			<view>FilterResults</view>
+		</command>
+
+		<command name="FilterList">
+			<view>FilterList</view>
+		</command>
+
+		<command name="FilterExport">
+			<view>FilterExport</view>
+		</command>
+
+		<command name="FilterBuilder">
+			<view>FilterBuilder</view>
+		</command>
+
+		<command name="FilterBuilderCreate">
+			<view>FilterBuilderCreate</view>
+		</command>
+
+		<command name="FilterBuilderPrint">
+			<view>FilterBuilderPrint</view>
+		</command>
+
+	<!-- /Filter -->
+
+	<!-- Mailers -->
+
+		<command name="MailerList">
+			<view>MailerList</view>
+		</command>
+
+		<command name="MailerCreate">
+			<view>MailerCreate</view>
+		</command>
+
+		<command name="MailerEdit">
+			<view>MailerEdit</view>
+		</command>
+
+		<command name="MailerItemCreate">
+			<view>MailerItemCreate</view>
+		</command>
+
+		<command name="MailerItemList">
+			<view>MailerItemList</view>
+		</command>
+
+		<command name="MailerItemListBatch">
+			<view>MailerItemListBatch</view>
+		</command>
+
+		<command name="MailerExport">
+			<view>MailerExport</view>
+		</command>
+
+		<command name="MailerStatistics">
+			<view>MailerStatistics</view>
+		</command>
+
+		<command name="MailerStatisticsGraph1">
+		</command>
+
+		<command name="MailerStatisticsGraph2">
+		</command>
+
+		<command name="MailerStatisticsGraph3">
+		</command>
+
+	<!-- /Mailer -->
+
+	<!-- NBM Scoreboard -->
+
+		<command name="NbmScoreboard">
+			<view>NbmScoreboard</view>
+		</command>
+
+	<!-- /NBM Scoreboard -->
+
+	<!-- Help -->
+
+		<command name="HelpContents">
+			<view>HelpContents</view>
+		</command>
+
+		<command name="HelpRbac">
+			<view>HelpRbac</view>
+		</command>
+
+	<!-- /Help -->
+
+	<!-- Import -->
+
+        <!-- <command name="ImportCompany">
+            <view>ImportCompany</view>
+        </command> -->
+
+        <command name="ImportCompany1_1">
+            <view>ImportCompany1_1</view>
+        </command>
+
+        <command name="ImportCompany1_2">
+            <view>ImportCompany1_2</view>
+        </command>
+
+        <command name="ImportCompany1_3">
+            <view>ImportCompany1_3</view>
+        </command>
+
+        <command name="ImportCompany1_4">
+            <view>ImportCompany1_4</view>
+        </command>
+
+        <command name="ImportCompany2">
+            <view>ImportCompany2</view>
+        </command>
+
+         <command name="ImportCompany3">
+            <view>ImportCompany3</view>
+        </command>
+
+        <command name="ImportCompany4">
+            <view>ImportCompany4</view>
+        </command>
+
+        <command name="ImportCompany5">
+            <view>ImportCompany5</view>
+        </command>
+
+        <command name="ImportCompanyOnly">
+            <view>ImportCompanyOnly</view>
+        </command>
+
+       <!-- <command name="ImportCompanySingleAddressBlock">
+            <view>ImportCompanySingleAddressBlock</view>
+        </command> -->
+
+        <!-- <command name="ImportPost">
+            <view>ImportPost</view>
+        </command> -->
+
+        <command name="ImportPost1_1">
+            <view>ImportPost1_1</view>
+        </command>
+
+         <command name="ImportPost1_2">
+            <view>ImportPost1_2</view>
+        </command>
+
+        <command name="ImportPost2">
+            <view>ImportPost2</view>
+        </command>
+
+    <!-- /Help -->
+
+
+	<!-- Miscellaneous -->
+
+		<command name="About">
+			<view>About</view>
+		</command>
+
+		<command name="Preferences">
+			<view>Preferences</view>
+		</command>
+
+	<!-- /Miscellaneous -->
+
+
+	<!-- LiveUser -->
+
+		<command name="LiveUserUserCreate">
+			<view>LiveUserUserCreate</view>
+		</command>
+
+	<!-- /LiveUser -->
+
+
+	<!-- RBAC -->
+
+		<command name="Login">
+			<view>Login</view>
+		</command>
+
+		<command name="RbacCommandList">
+			<view>RbacCommandList</view>
+		</command>
+
+		<command name="RbacRoleList">
+			<view>RbacRoleList</view>
+		</command>
+
+		<command name="RbacRoleView">
+			<view>RbacRoleView</view>
+		</command>
+
+		<command name="RbacUserList">
+			<view>RbacUserList</view>
+		</command>
+
+		<command name="RbacUserView">
+			<view>RbacUserView</view>
+		</command>
+
+		<command name="RbacCommandView">
+			<view>RbacCommandView</view>
+		</command>
+
+	<!-- /RBAC -->
+
+
+	<!-- Email Trapper -->
+
+	<command name="EmailTrapper">
+		<view>EmailTrapper</view>
+	</command>
+
+	<!-- /EmailTrapper -->
+
+
+		<command name="CompanyCreate">
+			<view>CompanyCreate</view>
+			<status value="CMD_OK">
+				<forward>ListCompanies</forward>
+			</status>
+		</command>
+
+		<command name="CompanyDelete">
+			<view>CompanyDelete</view>
+		</command>
+
+		<command name="CompanyNotes">
+			<view>CompanyNotes</view>
+		</command>
+
+		<command name="CompanyNoteCreate">
+			<view>CompanyNoteCreate</view>
+		</command>
+
+		<command name="ListCompanies">
+			<view>ListCompanies</view>
+		</command>
+
+		<command name="BusinessIntelligenceHome">
+			<view>BusinessIntelligenceHome</view>
+		</command>
+
+		<command name="ClientServicesHome">
+			<view>ClientServicesHome</view>
+		</command>
+
+		<command name="DataMaintenanceHome">
+			<view>DataMaintenanceHome</view>
+		</command>
+
+		<command name="AdminReports">
+			<view>AdminReports</view>
+		</command>
+
+		<command name="Report1">
+		</command>
+
+		<command name="Report2">
+		</command>
+
+		<command name="Report3">
+		</command>
+
+		<command name="Report4">
+		</command>
+
+		<command name="Report5">
+		</command>
+
+		<command name="Report7">
+		</command>
+
+        <command name="Report10">
+        </command>
+
+        <command name="Report11">
+        </command>
+
+         <command name="Report12">
+        </command>
+
+         <command name="Report13">
+        </command>
+
+         <command name="Report14">
+        </command>
+
+		<command name="Reporting">
+			<view>Reporting</view>
+		</command>
+
+		<command name="ReportParams">
+			<view>ReportParams</view>
+		</command>
+
+		<command name="TeamCreate">
+			<view>TeamCreate</view>
+		</command>
+
+		<command name="TeamDelete">
+			<view>TeamDelete</view>
+		</command>
+
+		<command name="UserEdit">
+			<view>UserEdit</view>
+		</command>
+
+		<command name="UserList">
+			<view>UserList</view>
+		</command>
+
+	</control>
+
+</app-options>

@@ -1,0 +1,38 @@
+Communication screen:
+	* 	Agency user - does this information reflect the 'cumulative' total knowledge about this prospect, 
+		or just information that has been gathered on previous calls to this prospect for a given client/
+		How do we process agency user information? By batch job every so often?
+		
+To do:
+1.	Import related company information
+2. 	Import project refs -> tbl_tags
+3. 	Import information request info
+4.	Import call name info
+
+
+Meetings:
+	* Presume meetings can only be set via the communication screen, but can be edited without going via a communication
+	* What do we need for cancellation and attended options
+	* Not using re-arranged as this can be detected automatically - will flash a message to the user that there have been some changes to the meeting
+	* How flexible do we need to be on meeting status. Eg do we enforce the fact that can't go from an attended to cancelled (or some other illogical change)
+	
+Results screens for searches and filters
+* What info should we display? 
+	* Idea: could also show status/period/post initiative propensity/last effective date (ie info from company initiatives screen) where a spcific client is selected in the menu at the top? This would allow easier selection of candidates for calling? Could see those already contacts for a client and those not already contacted. I think this is what we try and do on the company screen with the dropdown list of posts, but there is a limit to how much information we can show in a drop down list.
+	
+Testing:
+* Suggest we have some user testing at end of April to confirm user interface and to see if there are any efficiencies that could be made.
+* This will include:
+	* Searches
+	* Navigation
+	* Call logging
+	* Meeting logging
+	* Info req logging
+	
+	
+Posts:
+Change location - is this moving to another site within the same organisation? If so, then we move the whole post, otherwise if moving to another organisation then we need to move only the contact and make the post holder blank. Do we put the contact who has moved into another/new post at the receiving company?
+
+Characteristics:
+Should characteristics be associated with a client or client initiative? If by client then will show up for all initiatives.
+Will we need to group characteristics by more than one client or client initiative? ie a characteristic can be viewed/amended by more than one client.

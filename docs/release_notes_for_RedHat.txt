@@ -1,0 +1,27 @@
+cd /var/www/html/
+ 
+mv ./alchemis ./alchemis-release_0.0.3
+
+mv /home/illumen/release-0.0.3/ ./release-0.0.3/
+
+//sudo gunzip ./20070512_alchemis_release.gz
+
+//sudo mv ./20070512_alchemis_release ./20070512_alchemis_release.sql
+
+//sudo gzip ./20070301_alchemis.sql
+
+//sudo mv /home/illumen/20070512_alchemis_release/ /var/www/html/
+ 
+sudo mv ./release-0.0.3/ ./alchemis
+
+NOTE: need to make template_c directory if excluded on export
+
+cp ./release_0.0.2/index.php ./alchemis
+
+cp ./release_0.0.2/app/view/ViewHelper.php ./alchemis/app/view
+
+cp ./release-0.0.2/app/ajax/js/ajaxClient.js ./alchemis/app/ajax/js/
+
+chmod -Rf 775 ./alchemis
+
+chown -Rf root:apache ./alchemis

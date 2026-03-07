@@ -1,0 +1,16 @@
+/vendor/
+/___alchemis/
+/___alchemis1/
+/app/view/templates_c/
+/app/view/templates_c1/
+/logs/*
+/logs1/*
+/logs/CommandTimer.log
+/phpmyadmin-new/tmp/
+/alchemis16jan.sql
+/info.php
+/batch/log
+/test1
+/.env
+/batch_old/
+/backup_live_*.sql

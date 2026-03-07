@@ -1,0 +1,39 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE tbl_characteristics;
+DROP TABLE tbl_characteristics_seq;
+DROP TABLE tbl_characteristics_shadow;
+
+DROP TABLE tbl_characteristic_elements;
+DROP TABLE tbl_characteristic_elements_seq;
+DROP TABLE tbl_characteristic_elements_shadow;
+
+DROP TABLE tbl_object_characteristics_boolean;
+DROP TABLE tbl_object_characteristics_boolean_seq;
+DROP TABLE tbl_object_characteristics_boolean_shadow;
+
+DROP TABLE tbl_object_characteristics_date;
+DROP TABLE tbl_object_characteristics_date_seq;
+DROP TABLE tbl_object_characteristics_date_shadow;
+
+DROP TABLE tbl_object_characteristics_text;
+DROP TABLE tbl_object_characteristics_text_seq;
+DROP TABLE tbl_object_characteristics_text_shadow;
+
+DROP TABLE tbl_object_characteristics;
+DROP TABLE tbl_object_characteristics_seq;
+DROP TABLE tbl_object_characteristics_shadow;
+
+DROP TABLE tbl_object_characteristic_elements_boolean;
+DROP TABLE tbl_object_characteristic_elements_boolean_seq;
+DROP TABLE tbl_object_characteristic_elements_boolean_shadow;
+
+DROP TABLE tbl_object_characteristic_elements_text;
+DROP TABLE tbl_object_characteristic_elements_text_seq;
+DROP TABLE tbl_object_characteristic_elements_text_shadow;
+
+DROP TABLE tbl_object_characteristic_elements_date;
+DROP TABLE tbl_object_characteristic_elements_date_seq;
+DROP TABLE tbl_object_characteristic_elements_date_shadow;
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -1,0 +1,20 @@
+{
+  "name": "alchemis",
+  "version": "0.0.0",
+  "authors": [
+    "petecoop <pete@petecoop.co.uk>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/view/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1",
+    "angular": "~1.3.15"
+  }
+}

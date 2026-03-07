@@ -1,0 +1,38 @@
+# Added by ds: reduce Docker build context so COPY step is fast. Excluded: vendor, test, docs, archive, etc.
+# Git
+.git
+.gitignore
+
+# Dependencies (will use host mount at runtime; keeps build small)
+vendor
+node_modules
+
+# IDE and OS
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs and cache
+logs
+*.log
+alchemis
+
+# Test/legacy (not needed to run main app)
+test
+
+# Docs and misc
+docs
+vagrant
+*.md
+spec
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.ddev
+
+# Large data if any
+archive

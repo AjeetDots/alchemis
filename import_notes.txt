@@ -1,0 +1,22 @@
+Notes for when building a general import tool...
+
+General process:
+- Create any tags needed to tag a site
+- Map fields in csv
+- CSV may have rows at the company/site level or post/contact level
+
+Company/Site level:
+- Loop through companies, check to see if matches existing site (fuzzy matching)
+- Create site and parent company if it doesn't exist
+- Add telephone/website fields if they are empty (don't overwrite existing)
+- Add the previously created tag to the site
+- May add brands to the site if in the data
+- May create and add additional tags, should check to see if tag already exists before creating
+- May set the companies industry - could be based off a mapping of a column in the data
+- May add an address to the company/site if available
+
+Post/Contact level:
+- Find a contact within the site based on matching their first/last name from the data
+- if no match create new post & contact
+- update email/phone only if didn't exist (don't overwrite)
+- add a tag to the post if required

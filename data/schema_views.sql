@@ -1,0 +1,16 @@
+DROP TABLE `vw_calendar_information_requests`;
+DROP TABLE `vw_calendar_meetings`;
+DROP TABLE `vw_client_initiatives`;
+DROP TABLE `vw_communication_max_date_by_post_initiative_id`;
+DROP TABLE `vw_communication_max_id_by_post_initiative_id`;
+DROP TABLE `vw_companies`;
+DROP TABLE `vw_companies_sites`;
+DROP TABLE `vw_contacts`;
+DROP TABLE `vw_nbm_meeting_count_between_dates`;
+DROP TABLE `vw_post_communication_stats`;
+DROP TABLE `vw_post_communication_stats_1`;
+DROP TABLE `vw_post_communication_stats_base`;
+DROP TABLE `vw_posts`;
+DROP TABLE `vw_posts_contacts`;
+DROP TABLE `vw_sites`;
+DROP TABLE `vw_tags_project_ref`;

@@ -1,0 +1,26 @@
+{
+  "name": "alchemis",
+  "version": "0.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@192.168.1.135/sett/alchemis.git"
+  },
+  "author": "petecoop <pete@petecoop.co.uk> (http://petecoop.co.uk/)",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "browserify": "~9.0.3",
+    "gulp": "~3.8.11",
+    "gulp-livereload": "^3.8.0",
+    "gulp-plumber": "~0.6.6",
+    "gulp-sass": "~1.3.3",
+    "vinyl-source-stream": "~1.0.0"
+  }
+}

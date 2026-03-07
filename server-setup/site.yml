@@ -1,0 +1,134 @@
+---
+- name: Configure server
+  hosts: "alchemis"
+  become: yes
+  tasks: 
+    - name: Ensure aptitude is installed
+      apt: pkg=aptitude state=present update_cache=yes cache_valid_time=900
+      
+    - name: Update system
+      apt: upgrade=yes
+
+    - name: Install packages
+      apt: pkg={{ item }} state=latest cache_valid_time=900 update_cache=yes
+      with_items:
+        - language-pack-en
+        - vim
+        - htop
+        - iotop
+        - screen
+        - build-essential
+        - update-notifier-common
+        - python-software-properties
+        - rsync
+        - wget
+        - nano
+        - less
+        - logrotate
+        - curl
+        - iftop
+        - bar
+        - php5-fpm
+        - php5-mcrypt
+        - php5-mysql
+        - php5-curl
+        - php5-sqlite
+        - php-pear
+        - php5-xcache 
+        - php5-gd 
+        - nginx
+        - mysql-client
+      notify:
+        - Restart nginx
+        - Restart php
+
+    - name: Add git repo
+      apt_repository: repo='ppa:git-core/ppa' 
+
+    - name: Install git
+      apt: pkg=git state=latest
+
+    - name: Get the new relic key
+      shell: wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -
+
+    - name: Add new relic repo
+      apt_repository: repo='deb http://apt.newrelic.com/debian/ newrelic non-free'
+    
+    - name: Install newrelic
+      apt: pkg=newrelic-sysmond,newrelic-php5 state=latest
+      notify:
+        - Restart newrelic
+        - Restart php
+
+    - name: Set newrelic license key
+      lineinfile: line="license_key=2d16fe54b93adcb82903b97d8b02518d9dcecb06" dest=/etc/newrelic/nrsysmond.cfg regexp="license_key=" backrefs=yes
+      notify:
+        - Restart newrelic
+
+    - name: Set newrelic php license key
+      lineinfile: "line='newrelic.license = \"2d16fe54b93adcb82903b97d8b02518d9dcecb06\"' dest=/etc/php5/mods-available/newrelic.ini regexp='newrelic.license =' backrefs=yes" 
+      notify:
+        - Restart php
+
+    - name: Configure nginx
+      copy: src=nginx dest=/etc/nginx/sites-available/default
+      notify:
+        - Restart nginx
+
+    - name: Configure php
+      copy: src=php dest=/etc/php5/fpm/pool.d/www.conf
+      notify:
+        - Restart php
+      tags: php
+
+    - name: Download composer installer
+      get_url: url=https://getcomposer.org/installer sha256sum=c1979149655506570df516f3fa2a43d6be43986894ed7767829c55aa740f3a80 dest=/root/composer-install mode=0700
+
+    - name: Run composer installer
+      command: php /root/composer-install --install-dir=/usr/local/bin --filename=composer creates=/usr/local/bin/composer
+
+    - name: Copy .my.cnf
+      copy: src=my.cnf dest=/root/.my.cnf owner=root group=root mode=0400
+
+    - name: Create alchemis web directory
+      file: state=directory dest=/var/www/html/alchemis
+
+    - name: Init git
+      command: git init chdir=/var/www/html/alchemis creates=/var/www/html/alchemis/.git
+
+    - name: Configure git repo updates 1
+      lineinfile: line="[receive]" dest=/var/www/html/alchemis/.git/config
+
+    - name: Configure git repo updates 2    
+      lineinfile: line="denyCurrentBranch = updateInstead" dest=/var/www/html/alchemis/.git/config insertafter="^\[receive\]"
+
+    - name: Enable root ssh access
+      copy: dest=/root/.ssh/authorized_keys content="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCtMbI8oPwNO1/CfDfdQKPGGHoe1ik1k7kLZwZn7V//1eWSrClnGQthao+3VigfcPc1G1j3jydPay9jREFTkabVDY+qBa/2EIyonkz9O9Vfs4DmbIbl5zjKc2cRdWwOypMh6Rv76wlUeMCB7PyDjw1lcgKS3nEkCFNzOn0dKof5dde2Ftnkr+kcCsH4lFju/iPNYIg0/Z0SDc4gBDbyViPe9Xz6QQSJiNkWkeKA6lqB4lJhTRF2K6L+H5XO5+VXzhP1XUifVPEE6ewNge8Fdrw9dDmEuifSWoEbKctxELfNBewth5sgj+Vxp+7dOsUuQSwDzyjknT7FkQxgkMOMHVt5uobhu0+O1Fvzo1VnIwsO+qNKFrcmF/XhcfnW+z2dkBqloQdTibSfaxKAE4HHxex0zMs8d+YXavQykIHYHwe1oJ6WrKXEHB/Z47MH3xZ6v0HjAN1Z6fttIbun/3Ntnc2J79KOs5YjFPp7RdLaM0E3IOwgmkSQ2cahQSI2+5b8qTp4nVq6f6+sqLgPAaAo5qjt1Mri/oIis45b/Ji4Q5XQ6he06bm/zYK+Bk7o0ezCBczsw+F/SdJWuKz6P/UBZiMm3599UUw2aMTsmcclpq4xY+im+Dgr/PESkui/y6B26HiKHKC29JYDdCbfik8PdVX9yunSm5OLzwd4bO2eFbkC7w== alchemis"
+    
+    - name: Copy Daily Cronjob
+      copy: src=../bin/alchemis_daily_cron.sh dest=/root/alchemis_daily_cron.sh
+      tags: cron
+    
+    - name: Setup Daily Cronjob
+      cron: name=daily minute=0 hour=1 job=/root/alchemis_daily_cron.sh
+      tags: cron
+    
+    - name: Setup Mailer Cronjob
+      cron: name=mailers minute=*/15 job="cd /var/www/html/alchemis && ./command run CampaignImport env:aws >/var/log/alchemis/mailer.html 2>&1"
+      tags: cron
+      
+    - name: Setup region postcode Cronjob
+      cron: name=region minute=0 hour=20 job="php -f /var/www/html/alchemis/batch/batch_region_postcode_update.php"
+      tags: cron
+
+  handlers: 
+    - name: Restart nginx
+      service: name=nginx state=restarted
+    
+    - name: Restart php
+      service: name=php5-fpm state=restarted
+    
+    - name: Restart newrelic 
+      service: name=newrelic-sysmond state=restarted
+
+

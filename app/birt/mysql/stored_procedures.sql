@@ -1,0 +1,13 @@
+source /var/www/html/alchemis/app/birt/mysql/f_get_site_address.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_3a_1.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_3a_2.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_3a_3_chart.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_3a_3.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_3b_4.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_5_1.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_5_2.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_5_3.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_5_4.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_detail_data.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_notes_detail.sql;
+source /var/www/html/alchemis/app/birt/mysql/sp_report_5_summary_data.sql;

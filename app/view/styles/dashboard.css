@@ -1,0 +1,50 @@
+table.dashboard
+{
+	width: 100%;
+}
+
+table.dashboard th
+{
+	font-weight: bold;
+	text-align: left;
+}
+
+table.dashboard td
+{
+	vertical-align: top;
+}
+
+
+.no_results
+{
+	color: #666;
+	font-style: italic;
+	text-align: center;
+}
+
+
+.highlight_positive
+{
+	color: green;
+}
+
+.highlight_negative
+{
+	color: red;
+}
+
+ul#meetings
+{
+	padding-left: 12px;
+}
+
+
+tr.highlight_positive td
+{
+	color: green;
+}
+
+tr.highlight_negative td
+{
+	color: red;
+}

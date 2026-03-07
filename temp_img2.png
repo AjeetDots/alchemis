@@ -1,0 +1,12 @@
+HTTP/1.1 302 Found
+Date: Fri, 06 Mar 2026 08:53:37 GMT
+Server: Apache/2.4.66 (Debian)
+X-Powered-By: PHP/8.4.18
+Set-Cookie: PHPSESSID=a7a834aad76092eccee6369447913a51; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Location: index.php?cmd=Login
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+

@@ -1,0 +1,1386 @@
+<?php
+
+// Record the time taken to run this script
+$timeStart    = gettimeofday();
+$timeStart_uS = $timeStart["usec"];
+$timeStart_S  = $timeStart["sec"];
+
+// Ensure the maximum execution time is at least 300 seconds
+// if (ini_get('max_execution_time') < 300)
+// {
+// 	set_time_limit(300);
+// }
+
+set_time_limit(0);
+
+//require_once('/applications/MAMP/htdocs/alchemis-trunk/include/EasySql/EasySql.class.php');
+require_once('/var/www/html/include/EasySql/EasySql.class.php');
+//require_once('/var/www/html/include/EasySql/EasySql.class.php');
+
+define('DB_HOST',     'alchemis-mysql.cswhqpuhwywg.eu-west-1.rds.amazonaws.com');
+define('DB_NAME',     'alchemis');
+define('DB_USER',     'alchemis_app');
+define('DB_PASSWORD', 'rYT4maP7');
+
+$db = new EasySql(DB_USER, DB_PASSWORD, DB_NAME, DB_HOST);
+$db->debug_all = false;
+
+// BELT AND BRACES! Catch anything here that needs to be done before the batch runs
+
+// 1). 	Campaign NBM Targets
+// 		NBMs should all have targets in tbl_campaign_nbm_targets for the periods for which campaign targets exist (held in
+//		tbl_campaign_targets). In some very rare circumstances (undetermined as at 13/06/2012) it appears that
+//		campaign nbms targets are not being added to tbl_campaign_nbm_targets when an nbm is added to tbl_campaign_nbms.
+//		The following code adds targets which were not created when when the NBM was added to the campaign
+
+$sql = 'drop temporary table if exists campaigns_with_targets';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'create temporary table campaigns_with_targets (campaign_id int(11), key `campaign_id` (`campaign_id`))';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'insert into campaigns_with_targets ' .
+		'select campaign_id ' .
+		'from tbl_campaign_targets ct ' .
+		'where ct.`year_month` > \'201206\' ' .
+		'group by ct.campaign_id ' .
+		'order by ct.campaign_id';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'drop temporary table if exists campaign_users_without_targets';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'create temporary table campaign_users_without_targets (user_id int(11), campaign_id int(11), key `campaign_id` (`campaign_id`), key `user_id` (`user_id`))';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'insert into campaign_users_without_targets ' .
+		'select cn.user_id, cn.campaign_id ' .
+		'from tbl_campaign_nbms cn ' .
+		'join campaigns_with_targets cwt on cn.campaign_id = cwt.campaign_id ' .
+		'join tbl_rbac_users r on cn.user_id = r.id ' .
+		'left join tbl_campaign_nbm_targets cnt on cn.user_id = cnt.user_id and cn.campaign_id = cnt.campaign_id ' .
+		'where cnt.id is null ' .
+		'and r.is_active  = 1 ' .
+		'and cn.deactivated_date = \'0000-00-00\' ' .
+		'order by cn.id desc';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'insert into tbl_campaign_nbm_targets (campaign_id, user_id, `year_month`) ' .
+		'select ct.campaign_id, cuwt.user_id, ct.`year_month` ' .
+		'from tbl_campaign_targets ct ' .
+		'join campaign_users_without_targets cuwt on cuwt.campaign_id = ct.campaign_id ' .
+		'where ct.`year_month` >= DATE_FORMAT(now(), \'%Y%m\')';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'drop temporary table if exists campaign_users_without_targets';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'drop temporary table if exists campaigns_with_targets';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'select max(id) from tbl_campaign_nbm_targets';
+echo "<p>$sql</p>";
+$maxId = $db->getVariable($sql);
+echo "<p>$maxId</p>";
+
+$sql = 'update tbl_campaign_nbm_targets_seq set sequence = ' . $maxId;
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'ALTER TABLE tbl_campaign_nbm_targets_seq AUTO_INCREMENT = ' . $maxId + 1;
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// -- END BELT AND BRACES
+
+// Aim will be to work this out dynamically and do an incremental update each night
+$start_date = '2007-01-01 00:00:00';
+//$end_date = date('Y-m-d H:i:s');
+
+// Calculate end date as end of current month plus one year (add year first in case of leap year)
+$month = date('n');
+$year = date('Y') + 1;
+
+// Calculating the days of the month
+$first_of_month = mktime(0, 0, 0, $month, 1, $year);
+$days_in_month = date('t', $first_of_month);
+$last_second_of_month = mktime(23, 59, 59, $month, $days_in_month, $year);
+$end_date = date('Y-m-d H:i:s', $last_second_of_month);
+
+//
+// Record the batch process starting
+//
+echo "<hr /><h2>Record the batch process starting</h2>";
+$start_timestamp = date('Y-m-d H:i:s');
+$sql = "INSERT INTO tbl_data_statistics_run (start) VALUES ('$start_timestamp')";
+$db->query($sql);
+
+
+echo "<hr /><h2>Processing for the period $start_date to $end_date</h2>";
+
+// create temporary copy of tbl_meetings_shadow to use in batch queries.
+// We need to do this to avoid the problem of meetings set before 01/01/2007 which were attended after 01/01/2007. These meets would not be included
+// in the meeting set count, but would be included in the meeting attended count - thus making it impossible to reconcile meets set to meets attended/live/lapsed.
+// Solution is to create a temporary copy of tbl_meetings_shadow and in this copy to alter meeting set date to '01/01/2007' where meeting set date is < '01/01/2007'
+// and meeting attended date (date of the meeting) is >= '01/01/2007'
+
+$sql = 'DROP TABLE IF EXISTS `tbl_meetings_shadow_temp`;';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = "CREATE TABLE `tbl_meetings_shadow_temp` ( " .
+  "`shadow_id` int(11) NOT NULL auto_increment, " .
+  "`shadow_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP, " .
+  "`shadow_updated_by` int(11) NOT NULL, " .
+  "`shadow_type` char(1) default NULL, " .
+  "`id` int(11) NOT NULL default '0', " .
+  "`post_initiative_id` int(11) NOT NULL, " .
+  "`communication_id` int(11) default NULL, " .
+  "`is_current` tinyint(1) NOT NULL default '0', " .
+  "`status_id` int(11) NOT NULL, " .
+  "`type_id` int(11) NOT NULL, " .
+  "`date` datetime NOT NULL, " .
+  "`reminder_date` datetime default NULL, " .
+  "`notes` varchar(255) default '', " .
+  "`created_at` datetime NOT NULL, " .
+  "`created_by` int(11) NOT NULL, " .
+  "`location_id` int(11) default NULL, " .
+  "`nbm_predicted_rating` int(11) default NULL, " .
+  "`feedback_rating` int(11) default NULL, " .
+  "`feedback_decision_maker` tinyint(1) default '0', " .
+  "`feedback_agency_user` tinyint(1) default '0', " .
+  "`feedback_budget_available` tinyint(1) default '0', " .
+  "`feedback_receptive` tinyint(1) default '0', " .
+  "`feedback_targeting` tinyint(1) default '0', " .
+  "`feedback_meeting_length` int(11) default '0', " .
+  "`feedback_comments` text, " .
+  "`feedback_next_steps` text, " .
+  "PRIMARY KEY  (`shadow_id`), " .
+  "KEY `ix_tbl_meetings_temp_shadow_shadow_type` (`shadow_type`), " .
+  "KEY `ix_tbl_meetings_temp_shadow_shadow_updated_by` (`shadow_updated_by`), " .
+  "KEY `ix_tbl_meetings_temp_shadow_shadow_timestamp` (`shadow_timestamp`), " .
+  "KEY `ix_tbl_meetings_temp_shadow_date` (`date`), " .
+  "KEY `ix_tbl_meetings_temp_shadow_created_by` (`created_by`), " .
+  "KEY `ix_tbl_meetings_temp_shadow_created_at` (`created_at`), " .
+  "KEY `ix_tbl_meetings_temp_shadow_id` (`id`) " .
+  ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;";
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'insert into tbl_meetings_shadow_temp select ' .
+  '`shadow_id`, ' .
+  '`shadow_timestamp` , ' .
+  '`shadow_updated_by` , ' .
+  '`shadow_type` , ' .
+  '`id` , ' .
+  '`post_initiative_id` , ' .
+  '`communication_id` , ' .
+  '`is_current` , ' .
+  '`status_id` , ' .
+  '`type_id` , ' .
+  '`date` , ' .
+  '`reminder_date` , ' .
+  '`notes` , ' .
+  '`created_at` , ' .
+  '`created_by` , ' .
+  '`location_id` , ' .
+  '`nbm_predicted_rating` , ' .
+  '`feedback_rating` , ' .
+  '`feedback_decision_maker` , ' .
+  '`feedback_agency_user` , ' .
+  '`feedback_budget_available`, ' .
+  '`feedback_receptive` , ' .
+  '`feedback_targeting` , ' .
+  '`feedback_meeting_length` , ' .
+  '`feedback_comments` , ' .
+  '`feedback_next_steps` ' .
+  'from tbl_meetings_shadow ' .
+  'order by shadow_id';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = "update tbl_meetings_shadow_temp " .
+		"set created_at = '2007-01-01 00:00:00' " .
+		"where created_at < '2007-01-01 00:00:00' " .
+		"and date >= '2007-01-01 00:00:00'";
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = 'DROP TABLE IF EXISTS `tbl_data_statistics`';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+$sql = "CREATE TABLE `tbl_data_statistics` ( " .
+		"`id` int(11) NOT NULL auto_increment, " .
+		"`campaign_id` int(11) NOT NULL default '0', " .
+		"`user_id` int(11) NOT NULL default '0', " .
+		"`year_month` char(6) NULL default '', " .
+        "`period_year` int(11) NULL default '0', " .
+        "`period_quarter` int(11) NULL default '0', " .
+		"`campaign_current_month` int(11) NOT NULL default '0', " .
+		"`campaign_monthly_fee` int(11) NOT NULL default '0', " .
+		"`campaign_meeting_set_target` int(11) NOT NULL default '0', " .
+		"`campaign_meeting_set_target_to_date` int(11) NOT NULL default '0', " .
+		"`campaign_meeting_set_imperative` int(11) NOT NULL default '0', " .
+		"`campaign_meeting_set_imperative_to_date` int(11) NOT NULL default '0', " .
+		"`campaign_meeting_set_count_to_date` int(11) NOT NULL default '0', " .
+		"`campaign_meeting_category_attended_target` int(11) NOT NULL default '0', " .
+		"`campaign_meeting_category_attended_target_to_date` int(11) NOT NULL default '0', " .
+		"`campaign_meeting_category_attended_count_to_date` int(11) NOT NULL default '0', " .
+		"`call_count` int(11) NOT NULL default '0', " .
+		"`call_effective_count` int(11) NOT NULL default '0', " .
+		"`call_effective_target` int(11) NOT NULL default '0', " .
+		"`call_effective_target_to_date` int(11) NOT NULL default '0', " .
+		"`call_effective_count_to_date` int(11) NOT NULL default '0', " .
+		"`call_fresh_effective_count` int(11) NOT NULL default '0', " .
+		"`call_fresh_effective_converted_count` int(11) NOT NULL default '0', " .
+		"`call_back_effective_count` int(11) NOT NULL default '0', " .
+		"`call_back_effective_converted_count` int(11) NOT NULL default '0', " .
+		"`call_ote_count` int(11) NOT NULL default '0', " .
+		"`call_access_rate` decimal(10,4) NOT NULL default '0', " .
+		"`meeting_set_count` int(11) NOT NULL default '0', " .
+		"`meeting_time_lag_0_3` int(11) NOT NULL default '0', " .
+		"`meeting_time_lag_3_5` int(11) NOT NULL default '0', " .
+		"`meeting_time_lag_5_7` int(11) NOT NULL default '0', " .
+		"`meeting_time_lag_7_` int(11) NOT NULL default '0', " .
+		"`meeting_in_diary_this_month_count` int(11) NOT NULL default '0', " .
+		"`meeting_category_unknown_count` int(11) NOT NULL default '0', " .
+		"`meeting_attended_count` int(11) NOT NULL default '0', " .
+		"`meeting_category_attended_count` int(11) NOT NULL default '0', " .
+		"`meeting_category_attended_rate` decimal(10,4) NOT NULL default '0', " .
+		"`win_count` int(11) NOT NULL default '0', " .
+		"`meeting_category_cancelled_count` int(11) NOT NULL default '0', " .
+		"`meeting_category_tbr_count` int(11) NOT NULL default '0', " .
+		"`information_request_count` int(11) NOT NULL default '0', " .
+		"`information_request_pending_count` int(11) NOT NULL default '0', " .
+		"`information_request_failed_count` int(11) NOT NULL default '0', " .
+		"`information_request_converted_count` int(11) NOT NULL default '0', " .
+		'PRIMARY KEY  (`id`), ' .
+		'KEY `ix_tbl_data_statistics_campaign_id` (`campaign_id`), ' .
+		'KEY `ix_tbl_data_statistics_user_id` (`user_id`), ' .
+		'KEY `ix_tbl_data_statistics_year_month` (`year_month`) ' .
+		') ENGINE=InnoDB DEFAULT CHARSET=latin1;';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+echo "<hr /><h2>Created stats table</h2>";
+
+$sql = 'INSERT INTO tbl_data_statistics (campaign_id, user_id, `year_month`, `period_year`, `period_quarter`) ' .
+		'select ct.campaign_id, cn.user_id, ct.`year_month`, YEAR(CONCAT(substring(ct.`year_month`, 1, 4), \'-\', substring(ct.`year_month`, 5,2), \'-01\')), QUARTER(CONCAT(substring(ct.`year_month`, 1, 4), \'-\', substring(ct.`year_month`, 5,2), \'-01\')) ' .
+		'from tbl_campaign_targets ct ' .
+		'left join tbl_campaign_nbms cn on cn.campaign_id = ct.campaign_id';
+// following line removed by DMC 12/01/2009
+//		'and deactivated_date = \'0000-00-00\'';
+
+//		'where cn.user_id is not null ' .
+//		'and deactivated_date = \'0000-00-00\'';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+//
+// Telephone call count
+//
+echo "<hr /><h2>Telephone call count</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, comm.user_id, ' .
+		'EXTRACT(YEAR_MONTH FROM communication_date), ' .
+		'COUNT(comm.id) ' .
+		'from tbl_communications comm ' .
+		'join tbl_post_initiatives pi on pi.id = comm.post_initiative_id ' .
+		'join tbl_initiatives i on pi.initiative_id = i.id ' .
+		'where communication_date >= \'' . $start_date . '\' ' .
+		'and communication_date <= \'' . $end_date . '\' ' .
+		'and type_id = 1 ' .
+		'group by i.campaign_id, ' .
+		'comm.user_id, ' .
+		'EXTRACT(YEAR_MONTH FROM communication_date);';
+
+echo "<p>$sql</p>";
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET call_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Telephone effectives count
+//
+echo "<hr /><h2>Telephone effectives count</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'select i.campaign_id, comm.user_id, ' .
+		'EXTRACT(YEAR_MONTH FROM communication_date), ' .
+		'count(comm.id) ' .
+		'from tbl_communications comm ' .
+		'join tbl_post_initiatives pi on pi.id = comm.post_initiative_id ' .
+		'join tbl_initiatives i on pi.initiative_id = i.id ' .
+		'where communication_date >= \'' . $start_date . '\' ' .
+		'and communication_date <= \'' . $end_date . '\' ' .
+		'and type_id = 1 ' .
+		'and is_effective = 1 ' .
+		'group by i.campaign_id, ' .
+		'comm.user_id, ' .
+		'EXTRACT(YEAR_MONTH FROM communication_date);';
+echo "<p>$sql</p>";
+
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET call_effective_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Telephone effectives count to date
+//
+echo "<hr /><h2>Telephone effectives count to date</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT x1.campaign_id, 0, x1.`year_month`, SUM(x2.call_effective_count) AS running_total ' .
+		'FROM ' .
+		'( ' .
+			'SELECT SUM(call_effective_count) AS call_effective_count, `year_month`, campaign_id ' .
+			'FROM tbl_data_statistics ' .
+			'GROUP BY campaign_id, `year_month`) AS x1 ' .
+		'INNER JOIN  ' .
+		'( ' .
+			'SELECT SUM(call_effective_count) AS call_effective_count, `year_month`, campaign_id ' .
+			'FROM tbl_data_statistics ' .
+			'GROUP BY campaign_id, `year_month`) AS x2 ' .
+		'ON ' .
+		'x1.campaign_id = x2.campaign_id AND x1.`year_month` >= x2.`year_month` ' .
+		'GROUP BY x1.`year_month`, x1.campaign_id';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.year_month = ds_temp.year_month ' .
+		'SET call_effective_count_to_date = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Telephone effectives targets
+//
+echo "<hr /><h2>Telephone effectives targets</h2>";
+//$db->query($sql);
+//$sql = 'UPDATE tbl_data_statistics ds ' .
+//		'join tbl_campaign_targets ct on ds.campaign_id = ct.campaign_id and ds.`year_month` = ct.`year_month` ' .
+//		'SET ' .
+//		'campaign_meeting_set_target = ct.meetings_set, ' .
+//		'campaign_meeting_attended_target = ct.meetings_attended, ' .
+//		'campaign_monthly_fee = ct.fee';
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_campaign_nbm_targets AS cnt ON ds.campaign_id = cnt.campaign_id AND ds.user_id = cnt.user_id AND ds.`year_month` = cnt.`year_month` ' .
+		'SET ' .
+		'ds.call_effective_target = cnt.effectives';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Telephone On target effectives count
+//
+echo "<hr /><h2>Telephone On target effectives count</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'select i.campaign_id, comm.user_id, ' .
+		'EXTRACT(YEAR_MONTH FROM communication_date), ' .
+		'count(comm.id) ' .
+		'from tbl_communications comm ' .
+		'join tbl_post_initiatives pi on pi.id = comm.post_initiative_id ' .
+		'join tbl_initiatives i on pi.initiative_id = i.id ' .
+		'where communication_date >= \'' . $start_date . '\' ' .
+		'and communication_date <= \'' . $end_date . '\' ' .
+		'and type_id = 1 ' .
+		'and ote = 1 ' .
+		'group by i.campaign_id, ' .
+		'comm.user_id, ' .
+		'EXTRACT(YEAR_MONTH FROM communication_date);';
+echo "<p>$sql</p>";
+
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET call_ote_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Telephone access rate
+//
+echo '<hr /><h2>Telephone access rate</h2>';
+$sql = 'UPDATE tbl_data_statistics ds ' .
+		'SET call_access_rate = ROUND((ds.call_effective_count/ds.call_count)*100, 4);';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting set count (meetings set in month)
+//
+echo "<hr /><h2>Meeting set count (meetings set in month)</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'select i.campaign_id, m_sh.created_by, ' .
+		'EXTRACT(YEAR_MONTH FROM m_sh.created_at), ' .
+		'count(m_sh.id) ' .
+		'from tbl_meetings_shadow_temp m_sh ' .
+		'join tbl_post_initiatives pi on pi.id = m_sh.post_initiative_id ' .
+		'join tbl_initiatives i on pi.initiative_id = i.id ' .
+		'where m_sh.created_at >= \'' . $start_date . '\' ' .
+		'and m_sh.created_at <= \'' . $end_date . '\' ' .
+		'and m_sh.shadow_type = \'i\' ' .
+		'AND m_sh.status_id in (12 , 13) ' .
+		'group by i.campaign_id, ' .
+		'm_sh.created_by, ' .
+		'EXTRACT(YEAR_MONTH FROM m_sh.created_at);';
+
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET meeting_set_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+//
+// -- Diary meetings (meetings in diary for this month)
+//
+echo '<hr /><h2>Diary meetings (meetings in diary for this month)</h2>';
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, m.created_by, ' .
+		'EXTRACT(YEAR_MONTH FROM m.date), ' .
+		'COUNT(m.id) ' .
+		'FROM tbl_meetings AS m ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m.date >= \'' . $start_date . '\' ' .
+		'AND m.date <= \'' . $end_date . '\' ' .
+		'AND m.status_id IN (12,13,18,19) ' .
+		'GROUP BY i.campaign_id, m.created_by, ' .
+		'EXTRACT(YEAR_MONTH FROM m.date)';
+echo "<p>$sql;</p>";
+
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET meeting_in_diary_this_month_count = ds_temp.`value`;';
+echo "<p>$sql;</p>";
+$db->query($sql);
+
+
+//
+// Meeting category is 'unknown' - (meetings where the status is current (12,13,18,19) but meeting date has passed)
+//
+echo "<hr /><h2>Meeting category is 'unknown' - (meetings where the status is current (12,13,18,19) but meeting date has passed)</h2>";
+makeTemporaryTable_1($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.created_at >= \'' . $start_date . '\' ' .
+		'AND m_sh.created_at <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type in (\'i\', \'u\') ' .
+// 		'WHERE m_sh.date >= \'' . $start_date . '\' ' .
+// 		'AND m_sh.date <= \'' . $end_date . '\' ' .
+		'GROUP BY m_sh.id;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.date), COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id in (12,13,18,19) ' .
+		'AND m_sh.date < concat(current_date(), \' 00:00:00\') ' .
+		'GROUP BY i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.date);';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET meeting_category_unknown_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting attended count (meetings where the status is currently 'meeting attended: xxx')
+//
+echo '<hr /><h2>Meeting attended count (meetings where the status is currently `meeting attended: xxx`)</h2>';
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, m.created_by, EXTRACT(YEAR_MONTH FROM m.date), COUNT(m.id) ' .
+		'FROM tbl_meetings AS m ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m.date >= \'' . $start_date . '\' ' .
+		'AND m.date <= \'' . $end_date . '\' ' .
+		'AND m.status_id in (24, 25, 26, 27) ' .
+		'GROUP BY i.campaign_id, m.created_by, EXTRACT(YEAR_MONTH FROM m.date);';
+echo "<p>$sql</p>";
+
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET meeting_attended_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+//
+// Meeting category attended count (meetings where the status has been 'meeting attended: xxx' at some point - ie the meeting has been attended)
+//
+echo '<hr /><h2>Meeting category attended count (meetings where the status has been `meeting attended: xxx` at some point - ie the meeting has been attended)</h2>';
+makeTemporaryTable_1($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.date >= \'' . $start_date . '\' ' .
+		'AND m_sh.date <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type = \'u\' ' .
+		'GROUP BY m_sh.id;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.date), COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id >= 24 ' .
+		'GROUP BY i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.date);';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET meeting_category_attended_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting category attended rate
+//
+echo "<hr /><h2>Meeting attended rate</h2>";
+$sql = 'UPDATE tbl_data_statistics ds ' .
+		'SET meeting_category_attended_rate = if((ds.meeting_category_attended_count >0 and ds.meeting_set_count >0), round((ds.meeting_category_attended_count/ds.meeting_set_count)*100, 4), 0);';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Win count (wins in month)
+//
+echo "<hr /><h2>Win count (wins in month)</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'select i.campaign_id, m_sh.created_by, ' .
+		'EXTRACT(YEAR_MONTH FROM m_sh.shadow_timestamp), ' .
+		'count(m_sh.id) ' .
+		'from tbl_meetings_shadow_temp m_sh ' .
+		'join tbl_post_initiatives pi on pi.id = m_sh.post_initiative_id ' .
+		'join tbl_initiatives i on pi.initiative_id = i.id ' .
+		'where m_sh.created_at >= \'' . $start_date . '\' ' .
+		'and m_sh.created_at <= \'' . $end_date . '\' ' .
+		'and m_sh.shadow_type = \'u\' ' .
+		'and m_sh.status_id = 30 ' .
+		'group by i.campaign_id, ' .
+		'm_sh.created_by, ' .
+		'EXTRACT(YEAR_MONTH FROM m_sh.shadow_timestamp);';
+echo "<p>$sql</p>";
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET win_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+//
+// Meeting category cancelled count (meetings which have been cancelled)
+//
+echo '<hr /><h2>Meeting cancelled count</h2>';
+makeTemporaryTable_1($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.date >= \'' . $start_date . '\' ' .
+		'AND m_sh.date <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type = \'u\' ' .
+		'GROUP BY m_sh.id;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.date), COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id in (20,21,22,23) ' .
+		'GROUP BY i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.date);';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET meeting_category_cancelled_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+//
+// Meeting category tbr count (meetings tbr)
+//
+echo '<hr /><h2>Meeting tbr count</h2>';
+makeTemporaryTable_1($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp_1 (`value`) ' .
+		'SELECT MAX(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'WHERE m_sh.date >= \'' . $start_date . '\' ' .
+		'AND m_sh.date <= \'' . $end_date . '\' ' .
+		'AND m_sh.shadow_type = \'u\' ' .
+		'GROUP BY m_sh.id;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.date), COUNT(m_sh.shadow_id) ' .
+		'FROM tbl_meetings_shadow_temp AS m_sh ' .
+		'JOIN tbl_data_statistics_temp_1 ds_1 ON m_sh.shadow_id = ds_1.value ' .
+		'JOIN tbl_post_initiatives AS pi ON pi.id = m_sh.post_initiative_id ' .
+		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE m_sh.status_id in (14,15,16,17) ' .
+		'GROUP BY i.campaign_id, m_sh.created_by, EXTRACT(YEAR_MONTH FROM m_sh.date);';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET meeting_category_tbr_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+//
+// Campaign current month (how many months into the campaign are we?)
+//
+echo "<hr /><h2>Campaign current month (how many months into the campaign are we?): campaign_current_month</h2>";
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_campaigns AS c ON ds.campaign_id = c.id ' .
+		'SET campaign_current_month = PERIOD_DIFF(ds.`year_month`, c. start_year_month) + 1;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+// -- Campaign meetings set target
+// -- Campaign meetings attended target
+// -- Campaign monthly fee
+echo "<hr /><h2>Meeting targets: campaign_meeting_set_target, campaign_meeting_attended_target</h2>";
+//$db->query($sql);
+//$sql = 'UPDATE tbl_data_statistics ds ' .
+//		'join tbl_campaign_targets ct on ds.campaign_id = ct.campaign_id and ds.`year_month` = ct.`year_month` ' .
+//		'SET ' .
+//		'campaign_meeting_set_target = ct.meetings_set, ' .
+//		'campaign_meeting_attended_target = ct.meetings_attended, ' .
+//		'campaign_monthly_fee = ct.fee';
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_campaign_targets AS ct ON ds.campaign_id = ct.campaign_id AND ds.`year_month` = ct.`year_month` ' .
+		'SET ' .
+		'campaign_meeting_set_target = ct.meetings_set, ' .
+		'campaign_meeting_category_attended_target = ct.meetings_attended';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Campaign meeting set target to date
+//
+echo "<hr /><h2>Campaign meeting set target to date: campaign_meeting_set_target_to_date</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT x1.campaign_id, 0, x1.`year_month`, SUM(x2.meet_set_target) AS running_total ' .
+		'FROM ' .
+		'( ' .
+			'SELECT SUM(meetings_set) AS meet_set_target, `year_month`, campaign_id ' .
+			'FROM tbl_campaign_targets ' .
+			'GROUP BY campaign_id, `year_month`) AS x1 ' .
+		'INNER JOIN  ' .
+		'( ' .
+			'SELECT SUM(meetings_set) AS meet_set_target, `year_month`, campaign_id ' .
+			'FROM tbl_campaign_targets ' .
+			'GROUP BY campaign_id, `year_month`) AS x2 ' .
+		'ON ' .
+		'x1.campaign_id = x2.campaign_id AND x1.`year_month` >= x2.`year_month` ' .
+		'GROUP BY x1.`year_month`, x1.campaign_id';
+
+echo "<p>$sql</p>";
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.year_month = ds_temp.year_month ' .
+		'SET campaign_meeting_set_target_to_date = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting Set Imperative: campaign_meeting_set_imperative
+//
+echo "<hr /><h2>Meeting Set Imperative: campaign_meeting_set_imperative</h2>";
+$sql = 'UPDATE tbl_data_statistics AS ds ' .
+		'JOIN tbl_campaign_nbm_targets AS tar ON ds.campaign_id = tar.campaign_id AND ds.`year_month` = tar.`year_month` AND ds.user_id = tar.user_id ' .
+		'SET ds.campaign_meeting_set_imperative = tar.meetings_set_imperative';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting Set Imperative To Date: campaign_meeting_set_imperative_to_date
+//
+echo "<hr /><h2>Campaign meeting set target to date: campaign_meeting_set_imperative_to_date</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT x1.campaign_id, 0, x1.`year_month`, SUM(x2.meetings_set_imperative) AS running_total ' .
+		'FROM ' .
+		'( ' .
+			'SELECT SUM(meetings_set_imperative) AS meetings_set_imperative, `year_month`, campaign_id, user_id ' .
+			'FROM tbl_campaign_nbm_targets ' .
+			'GROUP BY campaign_id, `year_month`, `user_id`) AS x1 ' .
+		'INNER JOIN  ' .
+		'( ' .
+			'SELECT SUM(meetings_set_imperative) AS meetings_set_imperative, `year_month`, campaign_id, user_id ' .
+			'FROM tbl_campaign_nbm_targets ' .
+			'GROUP BY campaign_id, `year_month`, `user_id`) AS x2 ' .
+		'ON ' .
+		'x1.campaign_id = x2.campaign_id AND x1.`year_month` >= x2.`year_month` ' .
+		'GROUP BY x1.`year_month`, x1.campaign_id, x1.user_id';
+
+echo "<p>$sql</p>";
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.year_month = ds_temp.year_month ' .
+		'SET campaign_meeting_set_imperative_to_date = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Campaign meeting set to date
+//
+echo "<hr /><h2>Campaign meeting set to date</h2>";
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'select x1.campaign_id, 0, x1.`year_month`, sum(x2.meet_set_count) as running_total ' .
+		'from ' .
+		'( ' .
+		'select sum(meeting_set_count) as meet_set_count, `year_month`, campaign_id ' .
+		'from tbl_data_statistics ' .
+		'group by campaign_id, `year_month`) as x1 ' .
+		'inner join ' .
+		'( ' .
+		'select sum(meeting_set_count) as meet_set_count, `year_month`, campaign_id ' .
+		'from tbl_data_statistics ' .
+		'group by campaign_id, `year_month`) as x2 ' .
+		'on ' .
+		'x1.campaign_id = x2.campaign_id and x1.`year_month` >= x2.`year_month` ' .
+		'group by x1.`year_month`, x1.campaign_id';
+
+echo "<p>$sql</p>";
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.year_month = ds_temp.year_month ' .
+		'SET campaign_meeting_set_count_to_date = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Campaign meeting category attended target to date
+//
+echo '<hr /><h2>Campaign meeting attended target to date</h2>';
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'select x1.campaign_id, 0, x1.`year_month`, sum(x2.meet_category_attended_target) as running_total ' .
+		'from ' .
+		'( ' .
+		'select sum(meetings_attended) as meet_category_attended_target, `year_month`, campaign_id ' .
+		'from tbl_campaign_targets ' .
+		'group by campaign_id, `year_month`) as x1 ' .
+		'inner join ' .
+		'( ' .
+		'select sum(meetings_attended) as meet_category_attended_target, `year_month`, campaign_id ' .
+		'from tbl_campaign_targets ' .
+		'group by campaign_id, `year_month`) as x2 ' .
+		'on ' .
+		'x1.campaign_id = x2.campaign_id and x1.`year_month` >= x2.`year_month` ' .
+		'group by x1.`year_month`, x1.campaign_id';
+
+echo "<p>$sql</p>";
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.year_month = ds_temp.year_month ' .
+		'SET campaign_meeting_category_attended_target_to_date = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Campaign meeting category attended to date
+//
+echo "<hr /><h2>Campaign meeting category attended to date</h2>";
+
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'select x1.campaign_id, 0, x1.`year_month`, sum(x2.meet_category_attended_count) as running_total ' .
+		'from ' .
+		'( ' .
+		'select sum(meeting_category_attended_count) as meet_category_attended_count, `year_month`, campaign_id ' .
+		'from tbl_data_statistics ' .
+		'group by campaign_id, `year_month`) as x1 ' .
+		'inner join ' .
+		'( ' .
+		'select sum(meeting_category_attended_count) as meet_category_attended_count, `year_month`, campaign_id ' .
+		'from tbl_data_statistics ' .
+		'group by campaign_id, `year_month`) as x2 ' .
+		'on ' .
+		'x1.campaign_id = x2.campaign_id and x1.`year_month` >= x2.`year_month` ' .
+		'group by x1.`year_month`, x1.campaign_id';
+
+echo "<p>$sql</p>";
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.year_month = ds_temp.year_month ' .
+		'SET campaign_meeting_category_attended_count_to_date = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting timelag
+//
+$sql = 'drop table if exists t_meetings;';
+echo "<p>$sql</p>";
+$sql = 'create temporary table t_meetings ' .
+		'select i.campaign_id, m_sh.created_by as user_id, m_sh.id as id, ' .
+		'EXTRACT(YEAR_MONTH FROM m_sh.created_at) as `year_month`, ' .
+		'CEILING(DATEDIFF(m_sh.date, m_sh.created_at)/7) as time_lag ' .
+		'from tbl_meetings_shadow_temp m_sh ' .
+		'join tbl_post_initiatives pi on pi.id = m_sh.post_initiative_id ' .
+		'join tbl_initiatives i on pi.initiative_id = i.id ' .
+		'where m_sh.created_at >= \'' . $start_date . '\' ' .
+		'and m_sh.created_at <= \'' . $end_date . '\' ' .
+		'and m_sh.shadow_type = \'i\';';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting timelag (0-3 weeks)
+//
+echo '<hr /><h2>Meeting timelag (0-3 weeks)</h2>';
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		' select campaign_id, user_id, `year_month`,  count(id) from t_meetings where time_lag <= 3 group by campaign_id, `year_month`, user_id;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET meeting_time_lag_0_3 = ds_temp.`value`';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting timelag (3-5 weeks)
+//
+echo '<hr /><h2>Meeting timelag (3-5 weeks)</h2>';
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		' select campaign_id, user_id, `year_month`,  count(id) from t_meetings where time_lag <= 5 and time_lag > 3 group by campaign_id, `year_month`, user_id;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET meeting_time_lag_3_5 = ds_temp.`value`';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting timelag (5-7 weeks)
+//
+echo '<hr /><h2>Meeting timelag (5-7 weeks)</h2>';
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		' select campaign_id, user_id, `year_month`,  count(id) from t_meetings where time_lag <= 7 and time_lag > 5 group by campaign_id, `year_month`, user_id;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET meeting_time_lag_5_7 = ds_temp.`value`';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Meeting timelag (7+ weeks)
+//
+echo '<hr /><h2>Meeting timelag (7+ weeks)</h2>';
+makeTemporaryTable($db);
+
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		' select campaign_id, user_id, `year_month`,  count(id) from t_meetings where time_lag > 7 group by campaign_id, `year_month`, user_id;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+		'SET meeting_time_lag_7_ = ds_temp.`value`';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Information Requests Count
+//
+echo "<hr /><h2>Information Requests Count</h2>";
+makeTemporaryTable($db);
+//$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+//		'SELECT i.campaign_id, ir.created_by, EXTRACT(YEAR_MONTH FROM ir.created_at), COUNT(ir.id) ' .
+//		'FROM tbl_information_requests AS ir ' .
+//		'JOIN tbl_post_initiatives AS pi ON pi.id = ir.post_initiative_id ' .
+//		'JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+//		"WHERE ir.created_at >= '$start_date' " .
+//		"AND ir.created_at <= '$end_date' " .
+//		'GROUP BY i.campaign_id, ir.created_by, EXTRACT(YEAR_MONTH FROM ir.created_at);';
+//echo "<p>$sql</p>";
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, ir. user_id, EXTRACT(YEAR_MONTH FROM ir.due_date), COUNT(ir.id) ' .
+		'FROM tbl_actions AS ir ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON pi.id = ir.post_initiative_id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE ir.type_id = 2 ' .
+		"AND ir.due_date >= '$start_date' " .
+		"AND ir.due_date <= '$end_date' " .
+		'GROUP BY i.campaign_id, ir.user_id, EXTRACT(YEAR_MONTH FROM ir.due_date)';
+echo "<p>$sql</p>";
+
+$db->query($sql);
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET information_request_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Information Request Pending Count
+//
+// An information request is counted as pending if there is no follow-on effective call.
+//
+echo "<hr /><h2>Information Request Pending Count</h2>";
+
+// Get all the communications for post initiatives which occur after an information request
+$sql = 'CREATE TEMPORARY TABLE t1 ' .
+		'SELECT comm.* ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN tbl_actions AS a ON comm.post_initiative_id = a.post_initiative_id AND comm.communication_date > a.created_at ' .
+		'WHERE a.type_id = 2 ' .
+		"AND a.created_at  >= '$start_date'";
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Get the post initiatives for which there is at least one effective following on from the information request
+$sql = 'CREATE TEMPORARY TABLE t2 ' .
+		'SELECT post_initiative_id ' .
+		'FROM t1 ' .
+		'WHERE is_effective = 1 ' .
+		'GROUP BY post_initiative_id';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Index it else it'll take forever
+$db->query('ALTER TABLE t2 ADD INDEX `ix_t2_1` (`post_initiative_id`)');
+
+// Subtract t2 from t1 to get the communications for which there are no effectives following on from an information request
+$sql = 'CREATE TEMPORARY TABLE t3 ' .
+		'SELECT t1.*  ' .
+		'FROM t1 ' .
+		'LEFT JOIN t2 ON t1.post_initiative_id = t2.post_initiative_id ' .
+		'WHERE t2.post_initiative_id IS NULL';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Get the post initiatives for which there is no effective after an information request
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date), COUNT(comm.id) ' .
+		'FROM t3 AS comm ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON comm.post_initiative_id = pi.id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'GROUP BY i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date)';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Drop temporary tables
+$db->query('DROP TEMPORARY TABLE t1');
+$db->query('DROP TEMPORARY TABLE t2');
+$db->query('DROP TEMPORARY TABLE t3');
+
+// Update tbl_data_statistics
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET information_request_pending_count = ds_temp.`value`';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Information Requests Failed Count
+//
+// An information request is counted as failed if a meeting is not set on the next effective call.
+//
+echo "<hr /><h2>Information Requests Failed Count</h2>";
+
+// Get the next effective communication for post initiatives which occur after an information request
+$sql = 'CREATE TEMPORARY TABLE t1 ' .
+		'SELECT MIN(comm.id) AS id ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN tbl_actions AS a ON comm.post_initiative_id = a.post_initiative_id AND comm.communication_date > a.created_at ' .
+		'WHERE a.type_id = 2 ' .
+		"AND a.created_at  >= '$start_date' " .
+		'AND comm.is_effective = 1';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Count those for which the status is not a meeting set one
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date), COUNT(comm.id) ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN t1 ON comm.id = t1.id ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON comm.post_initiative_id = pi.id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE comm.status_id NOT IN (12,13,18,19) ' .
+		'GROUP BY i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date)';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Drop temporary tables
+$db->query('DROP TEMPORARY TABLE t1');
+
+// Update tbl_data_statistics
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET information_request_failed_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Information Requests Converted Count
+//
+// An information request is counted as converted if a meeting is set on the next effective call.
+//
+echo "<hr /><h2>Information Requests Converted Count</h2>";
+
+// Get the next effective communication for post initiatives which occur after an information request
+$sql = 'CREATE TEMPORARY TABLE t1 ' .
+		'SELECT MIN(comm.id) AS id ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN tbl_actions AS a ON comm.post_initiative_id = a.post_initiative_id AND comm.communication_date > a.created_at ' .
+		'WHERE a.type_id = 2 ' .
+		"AND a.created_at  >= '$start_date' " .
+		'AND comm.is_effective = 1';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Count those for which the status is not a meeting set one
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date), COUNT(comm.id) ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN t1 ON comm.id = t1.id ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON comm.post_initiative_id = pi.id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		'WHERE comm.status_id IN (12,13,18,19) ' .
+		'GROUP BY i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date)';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Drop temporary tables
+$db->query('DROP TEMPORARY TABLE t1');
+
+// Update tbl_data_statistics
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET information_request_converted_count = ds_temp.`value`;';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//// -- call backs
+//echo '<hr /><h2>Call Backs</h2>';
+////makeTemporaryTable($db);
+//
+//$sql = 'INSERT INTO tbl_data_statistics_temp (campaign_id, user_id, `year_month`, `value`) ' .
+//		' select campaign_id, user_id, `year_month`,  count(id) from t_meetings where time_lag > 7 group by campaign_id, `year_month`, user_id;';
+//echo "<p>$sql</p>";
+//$db->query($sql);
+//
+//$sql = 'UPDATE tbl_data_statistics ds JOIN tbl_data_statistics_temp ds_temp on ds.campaign_id = ds_temp.campaign_id and ds.user_id = ds_temp.user_id and ds.year_month = ds_temp.year_month ' .
+//		'SET meeting_time_lag_7_ = ds_temp.`value`';
+//echo "<p>$sql</p>";
+//$db->query($sql);
+
+
+
+
+//
+// Fresh Effectives
+//
+// Total number of effectives made to NEW prospects.  No previous effective logged so a new contact
+//
+$db->debug_all = true;
+echo '<hr /><h2>Fresh Effectives</h2>';
+
+// Get minimum effective communication IDs for each post initiative / user
+$sql = 'CREATE TEMPORARY TABLE t1 ' .
+		'SELECT MIN(id) AS id FROM tbl_communications WHERE is_effective = 1 GROUP BY post_initiative_id, user_id';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Reduce the communications to the first effectives
+$sql = 'CREATE TEMPORARY TABLE t2 ' .
+		'SELECT comm.* ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN t1 ON comm.id = t1.id';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (`campaign_id`, `user_id`, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date), COUNT(comm.id) ' .
+		'FROM t2 AS comm ' .
+//		'INNER JOIN t1 ON comm.id = t1.id  ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON pi.id = comm.post_initiative_id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		"WHERE comm.communication_date >= '$start_date' AND comm.communication_date <= '$end_date' " .
+		'GROUP BY i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date)';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Drop temporary tables
+$db->query('DROP TEMPORARY TABLE t1');
+$db->query('DROP TEMPORARY TABLE t2');
+
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET ds.call_fresh_effective_count = ds_temp.`value`';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Fresh Effectives Converted
+//
+// Total number of effectives made to NEW prospects.  No previous effective logged so a new contact
+//
+//       call_fresh_effective_converted_count
+//
+$db->debug_all = true;
+echo '<hr /><h2>Fresh Effectives Converted</h2>';
+
+// Get minimum effective communication IDs for each post initiative / user
+$sql = 'CREATE TEMPORARY TABLE t1 ' .
+		'SELECT MIN(id) AS id FROM tbl_communications WHERE is_effective = 1 GROUP BY post_initiative_id, user_id';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Reduce the communications to the first effectives
+$sql = 'CREATE TEMPORARY TABLE t2 ' .
+		'SELECT comm.* ' .
+		'FROM tbl_communications AS comm ' .
+		'INNER JOIN t1 ON comm.id = t1.id';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (`campaign_id`, `user_id`, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date), COUNT(comm.id) ' .
+		'FROM t2 AS comm ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON comm.post_initiative_id = pi.id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		"WHERE comm.communication_date >= '$start_date' AND comm.communication_date <= '$end_date' " .
+		'GROUP BY i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date)';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Drop temporary tables
+$db->query('DROP TEMPORARY TABLE t1');
+$db->query('DROP TEMPORARY TABLE t2');
+
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET ds.call_fresh_effective_converted_count = ds_temp.`value`';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+//
+// Call back effectives
+//
+// Total no. of effectives made to a prospect we have already logged an effective against for this client
+echo '<hr /><h2>Call Back Effectives</h2>';
+
+// Get minimum effective communication IDs for each post initiative / user
+$sql = 'CREATE TEMPORARY TABLE t1 ' .
+		'SELECT MIN(id) AS id FROM tbl_communications WHERE is_effective = 1 GROUP BY post_initiative_id, user_id';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Index it else it'll take forever
+$sql = 'ALTER TABLE t1 ADD INDEX `ix_t1_1` (`id`)';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Reduce the communications to the remaining effectives
+$sql = 'CREATE TEMPORARY TABLE t2 ' .
+		'SELECT comm.* ' .
+		'FROM tbl_communications AS comm ' .
+		'LEFT JOIN t1 ON comm.id = t1.id ' .
+		'WHERE comm.is_effective = 1 AND t1.id IS NULL';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+makeTemporaryTable($db);
+$sql = 'INSERT INTO tbl_data_statistics_temp (`campaign_id`, `user_id`, `year_month`, `value`) ' .
+		'SELECT i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date), COUNT(comm.id) ' .
+		'FROM t2 AS comm ' .
+		'INNER JOIN tbl_post_initiatives AS pi ON pi.id = comm.post_initiative_id ' .
+		'INNER JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
+		"WHERE comm.communication_date >= '$start_date' AND comm.communication_date <= '$end_date' " .
+		'GROUP BY i.campaign_id, comm.user_id, EXTRACT(YEAR_MONTH FROM comm.communication_date)';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Remove first temporary table
+$sql = 'DROP TEMPORARY TABLE t1';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Remove secong temporary table
+$sql = 'DROP TEMPORARY TABLE t2';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+// Update tbl_data_statistics
+$sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
+		'SET call_back_effective_count = ds_temp.`value`';
+echo "<p>$sql</p>";
+$db->query($sql);
+
+
+////
+//// Remove statistics for NBMs
+////
+//echo '<hr /><h2>Remove statistics for NBMs</h2>';
+//$sql = "SELECT campaign_id, user_id, '2009-11-01' AS deactivated_date FROM tbl_campaign_nbms";
+//echo "<p>$sql</p>";
+//$rows = $db->get_results($sql);
+//
+//foreach ($rows as $row)
+//{
+//	$sql = "DELETE FROM tbl_data_statistics " .
+//			"WHERE user_id = '" . $row->user_id . "' " .
+//			"AND campaign_id = '" . $row->user_id . "' " .
+//			"AND `year_month` > EXTRACT(YEAR_MONTH FROM " . $row->deactivated_date . ")";
+////	echo "<p>$sql</p>";
+//	$db->query($sql);
+//}
+
+
+//
+// Record the batch process finishing
+//
+echo "<hr /><h2>Record the batch process finishing</h2>";
+$sql = "UPDATE tbl_data_statistics_run SET end = NOW() WHERE start = '$start_timestamp'";
+$db->query($sql);
+
+
+//
+// Finish up
+//
+$sql = 'drop table if exists tbl_meetings_shadow_temp';
+$db->query($sql);
+echo "<p>$sql</p>";
+$sql = 'drop table if exists tbl_data_statistics_temp';
+$db->query($sql);
+echo "<p>$sql</p>";
+$sql = 'drop table if exists tbl_data_statistics_temp_1';
+$db->query($sql);
+echo "<p>$sql</p>";
+
+echo "<p>Done.</p>";
+$timeEnd    = gettimeofday();
+$timeEnd_uS = $timeEnd["usec"];
+$timeEnd_S  = $timeEnd["sec"];
+$ExecTime_S = ($timeEnd_S + ($timeEnd_uS / 1000000)) - ($timeStart_S + ($timeStart_uS / 1000000));
+echo '<div style="text-align: center; padding-bottom: 5px">Execution Time: ' . round($ExecTime_S, 3) . ' seconds</div>';
+
+
+function makeTemporaryTable($db)
+{
+	$sql =	'DROP TABLE IF EXISTS `tbl_data_statistics_temp`; ';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+
+	$sql = 	'CREATE TEMPORARY TABLE `tbl_data_statistics_temp` ( ' .
+			'`id` int(11) NOT NULL auto_increment, ' .
+			'`campaign_id` int(11) NOT NULL default \'0\', ' .
+			'`user_id` int(11) NOT NULL default \'0\', ' .
+			'`year_month` char(6) NOT NULL default \'\', ' .
+			'`value` int(11), ' .
+			'PRIMARY KEY  (`id`), ' .
+			'KEY `campaign_id` (`campaign_id`), ' .
+			'KEY `user_id` (`user_id`), ' .
+			'KEY `year_month` (`year_month`) ' .
+			');';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+}
+
+function makeTemporaryTable_1($db)
+{
+	$sql =	'DROP TABLE IF EXISTS `tbl_data_statistics_temp_1`; ';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+
+	$sql = 	'CREATE TEMPORARY TABLE `tbl_data_statistics_temp_1` ( ' .
+			'`id` int(11) NOT NULL auto_increment, ' .
+			'`value` int(11), ' .
+			'PRIMARY KEY  (`id`) ' .
+			');';
+	echo "<p>$sql</p>";
+	$db->query($sql);
+}
+
+?>

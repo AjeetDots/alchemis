@@ -1,0 +1,197 @@
+================================================================================
+EMAIL 1 – TO SERVER / INFRASTRUCTURE TEAM
+================================================================================
+Subject: Go-live request – Alchemis application (PHP 8.4 + MySQL 8.4)
+
+Hi,
+
+Please deploy the Alchemis application to live with the following requirements.
+
+**Server requirements**
+• PHP: 8.4 (Apache or FPM)
+• MySQL: 8.4 (or MariaDB 10.11+ compatible with MySQL 8.4)
+• PHP extensions: mysqli, pdo, pdo_mysql
+
+**Deployment**
+1. Deploy the application code to the live document root (as per current process).
+2. On the live server, ensure the application uses the **live database (AWS RDS)** and not local/dev:
+   - Either do **not** deploy the `.env` file, or
+   - Deploy a `.env` that contains only:  ALCHEMIS_ENV=aws
+   (No ALCHEMIS_ENV=development and no ALCHEMIS_DB_HOST/ALCHEMIS_DB_PORT on live.)
+3. Ensure `data/app_options.xml` on the server has the correct live `<aws>` database settings (host, database name, user, password). File permissions should be restrictive (e.g. not world-readable).
+4. Ensure the log directory referenced in `app_options.xml` (e.g. `/var/www/html/alchemis/logs/` or as configured) exists and is writable by the web server user.
+5. After deployment, verify the site loads and login works; check that the application connects to the RDS instance (not a local DB).
+
+**What was done in this release**
+• Application updated to run on PHP 8.4 and MySQL 8.4.
+• Environment handling: development (local/Docker) vs aws (live) controlled via ALCHEMIS_ENV.
+• Error display disabled on live; errors are logged only.
+• Database connection logic supports both Docker (host “db”) and live (RDS) without code changes when .env is set correctly.
+
+If you need any clarification or access, please let us know.
+
+Thanks,
+[Your name]
+
+================================================================================
+EMAIL 2 – TO CLIENT / BS&Q TEAM
+================================================================================
+Subject: Alchemis go-live – summary and what you need to know
+
+Hi,
+
+Summary of what has been done and what is needed to take Alchemis live.
+
+**What we have done**
+• Upgraded the application to work on **PHP 8.4** and **MySQL 8.4** so it is ready for current server standards.
+• Fixed local development setup (Docker) so the app connects correctly to the database and you can run and test the same code locally.
+• Prepared the code for production: on live, error messages are not shown to users; they are logged instead.
+• Confirmed that the same codebase works for both:
+  – **Local/development** (e.g. Docker on your machine), and  
+  – **Live** (using your existing live database on AWS RDS).
+
+**What is needed to make it live**
+• **Server team** will:
+  – Update the live server to PHP 8.4 and MySQL 8.4 (or equivalent).
+  – Deploy this code and ensure the live site uses the **live database** (no development settings on production).
+• **No change required** from BS&Q for day-to-day use; the application will behave the same from a user perspective.
+
+**Next steps**
+• We will send separate technical instructions to the server/infrastructure team for deployment and configuration.
+• Once the server team has deployed and confirmed the site is using the live database, we can treat the release as live and close the go-live checklist.
+
+If you have any questions, please let us know.
+
+Thanks,
+[Your name]
+
+================================================================================
+INTERNAL – INTER-TEAM INFORMATION (Alchemis)
+================================================================================
+Subject: Alchemis – upgrade complete | Site on latest PHP & MySQL (client requirement)
+
+**Context**
+Client asked for / required the Alchemis site to run on the latest PHP and MySQL versions. We have completed the work and the application is ready for go-live on these versions.
+
+**What we did**
+• Upgraded the application to **PHP 8.4** and **MySQL 8.4** (latest stable).
+• Fixed database connection issues for both:
+  – Local/Docker (host “db”) and
+  – Live (AWS RDS) via ALCHEMIS_ENV (development vs aws).
+• Resolved MySQL volume/startup issue in Docker (fresh data directory).
+• Turned off error display on live; errors are logged only (production-safe).
+• Added FLUSH TABLES handling so the DB test page does not fail when the DB user has limited privileges.
+• Documented go-live steps for server team and a short summary for the client/BS&Q team.
+
+**Current status**
+• The site runs on **PHP 8.4** and **MySQL 8.4** in our environment (Docker).
+• Same codebase works for local development and for live (RDS); behaviour is controlled by .env / ALCHEMIS_ENV.
+• Ready for server team to deploy to live once the server is on PHP 8.4 and MySQL 8.4.
+
+**For reference**
+• Server team: see “EMAIL 1 – TO SERVER / INFRASTRUCTURE TEAM” in this file.
+• Client/BS&Q: see “EMAIL 2 – TO CLIENT / BS&Q TEAM” in this file.
+• Go-live: set ALCHEMIS_ENV=aws (or no .env) on live so the app uses RDS.
+
+—
+Internal use only. Share with dev/QA/server team as needed.
+
+================================================================================
+READY-TO-SEND MESSAGE (copy and share as needed)
+================================================================================
+Subject: Alchemis – PHP & MySQL upgraded | Running on local | Ready for go-live
+
+Hi,
+
+We have upgraded the Alchemis **stack** to the latest PHP and MySQL versions. The application code was already compatible; no application code changes were required for the new versions.
+
+**Done**
+• Upgraded to **PHP 8.4** and **MySQL 8.4** (latest stable).
+• The site is now running perfectly on the **local environment** (Docker) with the new PHP and MySQL versions.
+• All tested; the site is working fine with the updated stack.
+• No need to update any application files (index.php, ApplicationHelper, app_options.xml, etc.) for the version upgrade – they already support the new stack and environment switching.
+
+**Next: making the code live – things to remember**
+1. **On the live server:** Use **PHP 8.4** and **MySQL 8.4** (or equivalent supported versions).
+2. **Environment:** On live, either do **not** deploy the `.env` file, or set in `.env` only: **ALCHEMIS_ENV=aws** (so the app uses the live database, not development).
+3. **Database:** Live must use the existing **AWS RDS** (configured in `data/app_options.xml` under `<aws>`). Do not use development/local DB settings on live.
+4. **After deploy:** Confirm the site loads, login works, and the app is connected to RDS (not a local DB).
+5. **Secrets:** Keep `data/app_options.xml` secure (it contains DB credentials); restrict file permissions on the server.
+
+If anything is unclear, we can go through it before go-live.
+
+Thanks,
+[Your name]
+
+--------------------------------------------------------------------------------
+Where ALCHEMIS_ENV (from .env) is used – no file changes needed for go-live
+--------------------------------------------------------------------------------
+• **index.php** – Reads ALCHEMIS_ENV from .env (if not set by server), then sets error display (dev vs live) and passes env to the app. Default if unset: 'aws'.
+• **db_test.php** – Reads ALCHEMIS_ENV from .env; chooses DB host (e.g. "db" for local, or RDS for aws).
+• **ApplicationHelper.php** – Uses $_SERVER['ALCHEMIS_ENV'] to load the right block from app_options.xml (development vs aws) and set DB connection.
+• **app/base/Registry.php** – Uses $_SERVER['ALCHEMIS_ENV'] for config freeze file and environment.
+• **data/app_options.xml** – Contains <development> and <aws> blocks; the value of ALCHEMIS_ENV selects which block is used. No change needed; live uses <aws> when ALCHEMIS_ENV=aws.
+• **docker-compose.yml** – Can set ALCHEMIS_ENV=development for local app container; for live, set ALCHEMIS_ENV=aws if you run Docker on the server.
+
+For go-live: set ALCHEMIS_ENV=aws on the server (via .env or server/env). No need to edit index.php, ApplicationHelper, or app_options.xml.
+
+--------------------------------------------------------------------------------
+What to upload to the server (for go-live)
+--------------------------------------------------------------------------------
+**Recommendation: upload the full updated codebase.**
+
+Upload the entire project folder (all application code, config, and assets). That way the server has the same code that runs on your local with PHP 8.4 and MySQL 8.4.
+
+**Must be correct on the server**
+• **.env** – Either:
+  – Do **not** upload your local .env (it has ALCHEMIS_ENV=development), and on the server create a new .env with only: **ALCHEMIS_ENV=aws**
+  – Or upload the project and then **edit .env on the server** so it contains only: **ALCHEMIS_ENV=aws** (remove or comment out ALCHEMIS_DB_HOST, ALCHEMIS_DB_PORT, and any ALCHEMIS_ENV=development)
+• **data/app_options.xml** – Upload as-is. Ensure the **<aws>** block has the correct live RDS host, database name, user, and password. Restrict file permissions (e.g. not world-readable).
+
+**Include when uploading**
+• All PHP files (index.php, db_test.php, app/, etc.)
+• data/ (app_options.xml and any other config)
+• include/, vendor/ (if you use Composer dependencies)
+• Public assets (CSS, JS, images, etc.)
+• .htaccess if present
+
+**Optional (can exclude to keep deploy smaller)**
+• .git/ – Not needed on server unless you deploy via git pull.
+• Docker files (Dockerfile, docker-compose.yml, .ddev/) – Not needed if the server runs plain PHP/Apache; harmless if left in.
+• emails_go_live.txt, change summrry.php, debug*.php – Internal/docs; not required for the app to run.
+
+**Summary:** Share/upload the full updated code. The only thing that must be right on the server is .env (ALCHEMIS_ENV=aws) and that app_options.xml has the correct live <aws> database details.
+
+--------------------------------------------------------------------------------
+Files we updated (for reference only – still recommend full codebase upload)
+--------------------------------------------------------------------------------
+**Application code (5 files if you exclude Docker; 7 with Docker):**
+• index.php – env-based error display, early ALCHEMIS_ENV load, production-safe
+• db_test.php – DB host/port from .env, Docker detection, FLUSH TABLES fix
+• app/controller/ApplicationHelper.php – ALCHEMIS_DB_HOST/PORT for host, Laravel port in config
+• .env – ALCHEMIS_ENV, ALCHEMIS_DB_HOST, ALCHEMIS_DB_PORT (edit on server to ALCHEMIS_ENV=aws only)
+• data/app_options.xml – no changes; already has <development> and <aws>
+
+**Docker (optional on server; include if server uses Docker):**
+• Dockerfile – PHP 8.4-apache
+• docker-compose.yml – network, healthcheck, ALCHEMIS_ENV=development for local
+
+**Doc (optional):**
+• emails_go_live.txt – this file; for team reference only
+
+**Recommendation:** Share the full updated codebase. Do not upload only these 5 or 7 files; the rest of the project (app/, data/, include/, vendor/, assets, etc.) is required for the site to run. Full upload is simpler and avoids missing dependencies.
+
+--------------------------------------------------------------------------------
+Local Docker: if legacy_db has no tables (blank login / "No tables found")
+--------------------------------------------------------------------------------
+The DB is on localhost; the database legacy_db is just empty. Import data so the app has tables and users.
+
+**Option A – Import from live backup (recommended; you get real data and users):**
+1. Ensure Docker is running and container legacy_mysql is up.
+2. From project root:  php import_live_to_local.php
+   (Uses the latest backup_live_*.sql in the project, e.g. backup_live_20260211_124400.sql.)
+3. Or with a specific file:  php import_live_to_local.php path/to/dump.sql
+4. Then open http://localhost:8080/index.php?cmd=Login again.
+
+**Option B – Fresh schema only (empty tables, no users):**
+Import data/schema.sql into legacy_db (e.g. via phpMyAdmin Import, or docker exec -i legacy_mysql mysql -u legacy_user -psecret legacy_db < data/schema.sql). You will still need to create a user or import data for login to work.

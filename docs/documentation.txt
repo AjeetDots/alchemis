@@ -1,0 +1,49 @@
+/* --- Ajax calling functions --- */
+ Each of the following functions collects the data to the sent to a server side ajax command object.
+ All the functions end with the getAjaxData function call which invokes procedures in the ajaxClient.js
+ page which in turn invokes the Ajax handlers in prototype.js
+ Note: data updated via the prototype.InPlaceEditor functionality in controls.js does not need a separate 
+ calling function like the ones below as it make the call to getAjaxData directly from controls.js
+
+ Example function:
+function updateCompany(object_id, field_name, value)
+{
+	var ill_params = new Object;
+	//set item_id - the id of the object we are dealing with
+	ill_params.item_id = object_id;
+	
+	//set the field/value pairs - eg telephone/0121....
+	ill_params[field_name] = value;
+	
+	alert(ill_params[field_name]);
+	getAjaxData("AjaxCompany", "", "update_" + field_name, ill_params, "Saving...")
+}
+
+/* --- Ajax return data handlers --- */
+ Each javascript page which calls an server side ajax command object requires a function whose name
+ is the same as the server side ajax command object being used.
+ This function handles all the return information from the server side ajax command object.
+ The function handles this return information by using the cmd_action switch.
+
+Example function:
+function AjaxCompany(data)
+{
+	for (i = 1; i < data.length + 1; i++) 
+	{
+		t = data[i-1];
+//		alert("t.item_id = " + t.item_id + "\nt.value = " + t.telephone + "\nt.cmd_action = " + t.cmd_action);
+		
+		switch (t.cmd_action)
+		{
+			case "update_telephone":
+				$("edit_company_telephone").innerHTML  = t.telephone;
+				break;
+			case "update_website":
+				$("edit_website").innerHTML  = t.website;
+				break;
+			default:
+				alert("No cmd_action specified");
+				break;
+		}
+	}
+}

@@ -1,0 +1,18 @@
+{
+    "name": "sett/alchemis",
+    "require": {
+      "illuminate/database": "4.2.*",
+      "illuminate/validation": "4.2.*",
+      "illuminate/translation": "4.2.*",
+      "webd/language": "dev-master",
+      "illuminate/console": "4.2.*",
+        "raven/raven": "^0.13.0",
+        "league/csv": "^8.0"
+    },
+    "autoload": {
+      "psr-4": {"": "app/lib"}
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.1"
+    }
+}

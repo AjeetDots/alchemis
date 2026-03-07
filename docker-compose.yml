@@ -1,0 +1,66 @@
+# Updated by ds: app env ALCHEMIS_ENV (development=local from app_options.xml, aws=live AWS RDS); db port 3307 to avoid conflict with host MySQL.
+# To use live AWS database: set ALCHEMIS_ENV=aws in .env (or export ALCHEMIS_ENV=aws) and run: docker compose up -d app
+# With ALCHEMIS_ENV=aws the app connects to AWS RDS from data/app_options.xml <aws> block; local db service is not required.
+# All services use the same network so the hostname "db" resolves from app and phpmyadmin.
+
+services:
+  app:
+    build: .
+    container_name: legacy_php_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    env_file:
+      - .env
+    environment:
+      # Use ALCHEMIS_ENV=aws in .env to connect to live AWS RDS (data/app_options.xml <aws>).
+      - ALCHEMIS_ENV=${ALCHEMIS_ENV:-development}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - alchemis_net
+
+  db:
+    image: mysql:8.4
+    container_name: legacy_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: legacy_db
+      MYSQL_USER: legacy_user
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - alchemis_net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: legacy_phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - alchemis_net
+
+networks:
+  alchemis_net:
+    driver: bridge
+
+volumes:
+  db_data:

@@ -1,0 +1,511 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb" dir="ltr" >
+<head>
+	<title>Help | Characteristics</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link href="../app/view/styles/general.css" rel="stylesheet" type="text/css" />
+
+	<style>
+
+		div
+		{
+			margin-top: 5px;
+		}
+
+		div.example
+		{
+			border: 1px solid grey;
+			margin-bottom: 10px;
+			padding: 10px;
+			width: 600px;
+		}
+		
+		
+		.fade
+		{
+			color: #999999;
+		}
+		
+		hr
+		{
+			border: none;
+			border-top: 1px solid #ccc;
+			margin-top: 15px;
+		}
+		
+	</style>
+</head>
+
+
+<body>
+
+
+	<div class="example">
+
+		<h2>Characteristic</h2>
+		
+		<hr />
+
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text" id="name" name="name" value="Cleaned Date" style="width: 250px" /></td>
+			</tr>
+			<tr>
+				<td>Attributes List</td>
+				<td colspan="3"><input type="checkbox" /></td>
+			</tr>
+			<tr>
+				<td>Options List</td>
+				<td><input type="checkbox" /></td>
+				<td>Multiple Select</td>
+				<td><input type="checkbox" disabled="disabled" /></td>
+			</tr>
+			<tr>
+				<td>Data Type</td>
+				<td colspan="3">
+					<select>
+						<option>boolean</option>
+						<option selected="selected">date</option>
+						<option>text</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+
+		<hr />
+
+		<table>
+			<tr>
+				<td>Cleaned Date</td>
+				<td><input type="text" name="turnover" value="" /></td>
+				<td class="fade">date</td>
+			</tr>
+		</table>
+
+	</div>
+
+
+	<div class="example">
+
+		<h2>Characteristic</h2>
+		
+		<hr />
+
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text" id="name" name="name" value="Mailer Sent" style="width: 250px" /></td>
+			</tr>
+			<tr>
+				<td>Attributes List</td>
+				<td colspan="3"><input type="checkbox" /></td>
+			</tr>
+			<tr>
+				<td>Options List</td>
+				<td><input type="checkbox" /></td>
+				<td>Multiple Select</td>
+				<td><input type="checkbox" disabled="disabled" /></td>
+			</tr>
+			<tr>
+				<td>Data Type</td>
+				<td colspan="3">
+					<select>
+						<option selected="selected">boolean</option>
+						<option>date</option>
+						<option>text</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+
+		<hr />
+
+		<table>
+			<tr>
+				<td>Mailer Sent</td>
+				<td>
+					<table>
+						<tr>
+							<td><input type="radio" name="radio1" value="Yes" /></td>
+							<td>Yes</td>
+							<td><input type="radio" name="radio1" value="No" /></td>
+							<td>No</td>
+						</tr>
+					</table>
+				</td>
+				<td class="fade">boolean</td>
+			</tr>
+		</table>
+
+	</div>
+
+
+	<div class="example">
+
+		<h2>Characteristic with Attributes List</h2>
+		
+		<hr />
+
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text" id="name" name="name" value="Company Attributes" style="width: 250px" /></td>
+			</tr>
+			<tr>
+				<td>Attributes List</td>
+				<td colspan="3"><input type="checkbox" checked="checked" /></td>
+			</tr>
+			<tr>
+				<td>Options List</td>
+				<td><input type="checkbox" /></td>
+				<td>Multiple Select</td>
+				<td><input type="checkbox" disabled="disabled" /></td>
+			</tr>
+		</table>
+		<div>
+			Name <input type="text" "value="Turnover" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option>boolean</option>
+				<option>date</option>
+				<option selected="selected">text</option>
+			</select>
+		</div>
+		<div>
+			Name <input type="text" "value="Cleaned Date" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option>boolean</option>
+				<option selected="selected">date</option>
+				<option>text</option>
+			</select>
+		</div>
+		<div>
+			Name <input type="text" "value="Sent Mailer" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option selected="selected">boolean</option>
+				<option>date</option>
+				<option>text</option>
+			</select>
+		</div>
+
+		<hr />
+
+		<p>Company Attributes</p>
+		<table>
+			<tr>
+				<td>Turnover</td>
+				<td><input type="text" name="turnover" value="" /></td>
+				<td class="fade">text</td>
+			</tr>
+			<tr>
+				<td>Cleaned Date</td>
+				<td>
+					<select><option>01</option></select>
+					<select><option>July</option></select>
+					<select><option>2007</option></select>
+				</td>
+				<td class="fade">date</td>
+			</tr>
+			<tr>
+				<td>Sent Mailer</td>
+				<td>
+					<table>
+						<tr>
+							<td><input type="radio" name="radio1" value="Yes" /></td>
+							<td>Yes</td>
+							<td><input type="radio" name="radio1" value="No" /></td>
+							<td>No</td>
+						</tr>
+					</table>
+				</td>
+				<td class="fade">boolean</td>
+			</tr>
+		</table>
+	</div>
+
+
+	<div class="example">
+
+		<h2>Characteristic with Options List without Multiple Select</h2>
+		
+		<hr />
+		
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text" id="name" name="name" value="Turnover" style="width: 250px" /></td>
+			</tr>
+			<tr>
+				<td>Attributes List</td>
+				<td colspan="3"><input type="checkbox" /></td>
+			</tr>
+			<tr>
+				<td>Options List</td>
+				<td><input type="checkbox" checked="checked" /></td>
+				<td>Multiple Select</td>
+				<td><input type="checkbox" />
+				</td>
+			</tr>
+		</table>
+		<div>
+			Name <input type="text" "value="Small" />
+		</div>
+		<div>
+			Name <input type="text" "value="Medium" />
+		</div>
+		<div>
+			Name <input type="text" "value="Large" />
+		</div>
+
+		<hr />
+
+		<p>Turnover</p>
+		<table>
+			<tr>
+				<td><input type="radio" name="radio2" value="" /></td>
+				<td>Small</td>
+				<td class="fade">boolean</td>
+			</tr>
+			<tr>
+				<td><input type="radio" name="radio2" value="" /></td>
+				<td>Medium</td>
+				<td class="fade">boolean</td>
+			</tr>
+			<tr>
+				<td><input type="radio" name="radio2" value="" /></td>
+				<td>Large</td>
+				<td class="fade">boolean</td>
+			</tr>
+		</table>
+	</div>
+
+
+	<div class="example">
+		
+		<h2>Characteristic with Options List with Multiple Select</h2>
+		
+		<hr />
+		
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text" id="name" name="name" value="Mailer Response" style="width: 250px" /></td>
+			</tr>
+			<tr>
+				<td>Attributes List</td>
+				<td colspan="3"><input type="checkbox" /></td>
+			</tr>
+			<tr>
+				<td>Options List</td>
+				<td><input type="checkbox" checked="checked" /></td>
+				<td>Multiple Select</td>
+				<td><input type="checkbox" checked="checked" /></td>
+			</tr>
+		</table>
+		<div>
+			Name <input type="text" "value="Finance" />
+		</div>
+		<div>
+			Name <input type="text" "value="FMCG" />
+		</div>
+		<div>
+			Name <input type="text" "value="Health Care" />
+		</div>
+		<div>
+			Name <input type="text" "value="Retail" />
+		</div>
+
+		<hr />
+
+		<p>Sectors</p>
+		<table>
+			<tr>
+				<td><input type="checkbox" name="radio3" /></td>
+				<td>Finance</td>
+				<td class="fade">boolean</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="radio3" /></td>
+				<td>FMCG</td>
+				<td class="fade">boolean</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="radio3" /></td>
+				<td>Health Care</td>
+				<td class="fade">boolean</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="radio3" /></td>
+				<td>Retail</td>
+				<td class="fade">boolean</td>
+			</tr>
+		</table>
+	</div>
+
+
+	<div class="example">
+
+		<h2>Characteristic with Attributes as Options List without Multiple Select</h2>
+
+		<hr />
+
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text" id="name" name="name" value="Mailer Response" style="width: 250px" /></td>
+			</tr>
+			<tr>
+				<td>Attributes List</td>
+				<td colspan="3"><input type="checkbox" checked="checked" /></td>
+			</tr>
+			<tr>
+				<td>Options List</td>
+				<td><input type="checkbox" checked="checked" /></td>
+				<td>Multiple Select</td>
+				<td><input type="checkbox" /></td>
+			</tr>
+		</table>
+		<div>
+			Name <input type="text" "value="Yes" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option>boolean</option>
+				<option selected="selected">date</option>
+				<option>text</option>
+			</select>
+		</div>
+		<div>
+			Name <input type="text" "value="No" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option selected="selected">boolean</option>
+				<option>date</option>
+				<option>text</option>
+			</select>
+		</div>
+		<div>
+			Name <input type="text" "value="Other" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option>boolean</option>
+				<option>date</option>
+				<option selected="selected">text</option>
+			</select>
+		</div>
+		
+		<hr />
+		
+		<p>Mailer Response</p>
+		<table>
+			<tr>
+				<td><input type="radio" name="radio4" value="Yes" /> Yes</td>
+				<td>
+					<select><option>01</option></select>
+					<select><option>July</option></select>
+					<select><option>2007</option></select>
+				</td>
+				<td class="fade">date</td>
+			</tr>
+			<tr>
+				<td><input type="radio" name="radio4" value="No" /> No</td>
+				<td></td>
+				<td class="fade">boolean</td>
+			</tr>
+			<tr>
+				<td><input type="radio" name="radio4" value="Other" /> Other</td>
+				<td><input type="text" /></td>
+				<td class="fade">text</td>
+			</tr>
+		</table>
+	</div>
+
+
+	<div class="example">
+		
+		<h2>Characteristic with Attributes as Options List with Multiple Select</h2>
+		
+		<hr />
+
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text" id="name" name="name" value="Mailer Response" style="width: 250px" /></td>
+			</tr>
+			<tr>
+				<td>Attributes List</td>
+				<td colspan="3"><input type="checkbox" checked="checked" /></td>
+			</tr>
+			<tr>
+				<td>Options List</td>
+				<td><input type="checkbox" checked="checked" /></td>
+				<td>Multiple Select</td>
+				<td><input type="checkbox" checked="checked" /></td>
+			</tr>
+		</table>
+		<div>
+			Name <input type="text" "value="Turnover" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option>boolean</option>
+				<option>date</option>
+				<option selected="selected">text</option>
+			</select>
+		</div>
+		<div>
+			Name <input type="text" "value="Cleaned Date" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option>boolean</option>
+				<option selected="selected">date</option>
+				<option>text</option>
+			</select>
+		</div>
+		<div>
+			Name <input type="text" "value="Other" />
+			&nbsp;&nbsp;&nbsp;&nbsp; 
+			Data Type <select>
+				<option selected="selected">boolean</option>
+				<option>date</option>
+				<option>text</option>
+			</select>
+		</div>
+
+		<hr />
+		
+		<p>Mailer Response</p>
+		<table>
+			<tr>
+				<td><input type="checkbox" name="radio1" value="Yes" /></td>
+				<td>Turnover</td>
+				<td><input type="text" name="turnover" value="" /></td>
+				<td class="fade">text</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="radio1" value="No" /></td>
+				<td>Cleaned Date</td>
+				<td>
+					<select><option>01</option></select>
+					<select><option>July</option></select>
+					<select><option>2007</option></select>
+				</td>
+				<td class="fade">date</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="radio1" value="Other" /></td>
+				<td>Other</td>
+				<td></td>
+				<td class="fade">boolean</td>
+			</tr>
+		</table>
+
+	</div>
+
+
+</body>
+
+</html>
