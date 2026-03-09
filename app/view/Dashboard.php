@@ -83,6 +83,11 @@ class app_view_Dashboard extends app_view_View
 		
 		// User's campaigns
 		$this->smarty->assign('yesterday', strtotime('-1 day'));
+		// Campaign Progress heading: use UTC "yesterday" so live and local show the same date
+		$utc = new DateTimeZone('UTC');
+		$yesterdayUtc = new DateTime('now', $utc);
+		$yesterdayUtc->modify('-1 day');
+		$this->smarty->assign('campaign_progress_date_label', $yesterdayUtc->format('l j F Y'));
 		$this->smarty->assign('campaigns', $this->request->getObject('campaigns'));
 		
 		// Messages
@@ -90,11 +95,13 @@ class app_view_Dashboard extends app_view_View
 		
 		// Actions
 		$this->smarty->assign('actions', $this->request->getObject('actions'));
+		$this->smarty->assign('more_actions', $this->request->getObject('more_actions'));
 
 
 		// Top Line Summary Stats
 		$this->smarty->assign('clients_dropdown', $this->request->getObject('clients_dropdown'));
 		$this->smarty->assign('client_selected', $this->request->getObject('client_selected'));
+		$this->smarty->assign('client_id', $this->request->getObject('client_selected'));
 //		$this->smarty->assign('top_line_stats', $this->request->getObject('top_line_stats'));
 		$this->smarty->assign('client_targets', $this->request->getObject('client_targets'));
 		$this->smarty->assign('client_actuals', $this->request->getObject('client_actuals'));
@@ -105,6 +112,7 @@ class app_view_Dashboard extends app_view_View
 		$this->smarty->assign('recommended_effectives', $this->request->getObject('recommended_effectives'));
 		$this->smarty->assign('recommended_meets_set', $this->request->getObject('recommended_meets_set'));
 		$this->smarty->assign('recommended_meets_attended', $this->request->getObject('recommended_meets_attended'));
+		$this->smarty->assign('lapsed_rate', $this->request->getObject('lapsed_rate'));
 		
 		// Calendar data
 		$this->smarty->assign('display', $this->request->getObject('display'));

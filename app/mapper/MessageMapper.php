@@ -15,6 +15,12 @@ require_once('app/mapper/Mapper.php');
  */
 class app_mapper_MessageMapper extends app_mapper_Mapper implements app_domain_MessageFinder
 {
+	protected $selectByPostStmt;
+	protected $insertStmt;
+	protected $updateStmt;
+	protected $deleteStmt;
+	protected $id;
+
 	public function __construct()
 	{
 		if (!self::$DB)

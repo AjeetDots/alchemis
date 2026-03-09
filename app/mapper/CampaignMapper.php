@@ -12,6 +12,9 @@ require_once('app/domain.php');
 class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_CampaignFinder
 {
 	protected static $DB;
+	protected $selectAllStmt;
+	protected $selectStmt;
+	protected $id;
 
 	public function __construct()
 	{

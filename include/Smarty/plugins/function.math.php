@@ -49,8 +49,8 @@ function smarty_function_math($params, &$smarty)
 
     foreach($params as $key => $val) {
         if ($key != "equation" && $key != "format" && $key != "assign") {
-            // make sure value is not empty
-            if (strlen($val)==0) {
+            // make sure value is not empty (cast to string to avoid strlen(null) deprecation in PHP 8.1+)
+            if ($val === null || $val === '' || strlen((string) $val) === 0) {
                 $smarty->trigger_error("math: parameter $key is empty");
                 return;
             }

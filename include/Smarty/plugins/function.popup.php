@@ -22,21 +22,26 @@
 function smarty_function_popup($params, &$smarty)
 {
     $append = '';
+    $safe_str = function ($v) {
+        if (is_array($v)) { return ''; }
+        return (string) $v;
+    };
     foreach ($params as $_key=>$_value) {
+        $_str = $safe_str($_value);
         switch ($_key) {
             case 'text':
             case 'trigger':
             case 'function':
             case 'inarray':
-                $$_key = (string)$_value;
+                $$_key = $_str;
                 if ($_key == 'function' || $_key == 'inarray')
-                    $append .= ',' . strtoupper($_key) . ",'$_value'";
+                    $append .= ',' . strtoupper($_key) . ",'" . str_replace("'", "\\'", $_str) . "'";
                 break;
 
             case 'caption':
             case 'closetext':
             case 'status':
-                $append .= ',' . strtoupper($_key) . ",'" . str_replace("'","\'",$_value) . "'";
+                $append .= ',' . strtoupper($_key) . ",'" . str_replace("'","\'", $_str) . "'";
                 break;
 
             case 'fgcolor':
@@ -53,7 +58,7 @@ function smarty_function_popup($params, &$smarty)
             case 'capicon':
             case 'background':
             case 'frame':
-                $append .= ',' . strtoupper($_key) . ",'$_value'";
+                $append .= ',' . strtoupper($_key) . ",'" . str_replace("'", "\\'", $_str) . "'";
                 break;
 
             case 'textsize':

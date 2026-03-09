@@ -50,6 +50,12 @@ class app_controller_Controller implements app_base_Observable
 	private $current_cmd;
 
 	/**
+	 * Holds the current response object for HTTP or Ajax requests.
+	 * @var mixed
+	 */
+	private $response;
+
+	/**
 	 * Private so the only option for client code is to kick off execution of our system.
 	 */
 	private function __construct()

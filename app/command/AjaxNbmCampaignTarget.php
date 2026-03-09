@@ -113,6 +113,9 @@ class app_command_AjaxNbmCampaignTarget extends app_command_AjaxCommand
 		$planning_data = app_domain_CampaignNbmTarget::findStatisticsById($id);
 		foreach ($planning_data as &$data)
 		{
+			// Ensure scalars (prevent "Array to string conversion" in template if DB returns array)
+			$data['call_days_actual'] = is_array($data['call_days_actual']) ? 0 : (float) $data['call_days_actual'];
+			$data['project_management_days'] = is_array($data['project_management_days']) ? 0 : (float) $data['project_management_days'];
 			if ($data['call_days_actual'] > 0)
 			{
 				$data['average_effectives_per_day'] = round($data['effectives'] / $data['call_days_actual'], 1);
@@ -144,6 +147,12 @@ class app_command_AjaxNbmCampaignTarget extends app_command_AjaxCommand
 
 		$return_data = array();
 		$planning_data_total = app_domain_CampaignNbmTarget::findTotalStatisticsByUserIdAndYearMonth($this->request->user_id, $this->request->year_month);
+		if (!is_array($planning_data_total)) {
+			$planning_data_total = array('call_days_actual' => 0, 'project_management_days' => 0, 'effectives' => 0, 'average_effectives_per_day' => 0);
+		}
+		// Ensure scalars (prevent "Array to string conversion" in template if DB returns array)
+		$planning_data_total['call_days_actual'] = is_array($planning_data_total['call_days_actual']) ? 0 : (float) $planning_data_total['call_days_actual'];
+		$planning_data_total['project_management_days'] = is_array($planning_data_total['project_management_days']) ? 0 : (float) $planning_data_total['project_management_days'];
 		if ($planning_data_total['call_days_actual'] > 0)
 		{
 			$planning_data_total['average_effectives_per_day'] = round($planning_data_total['effectives'] / $planning_data_total['call_days_actual'], 1);

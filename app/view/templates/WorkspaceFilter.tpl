@@ -1,6 +1,6 @@
 {include file="header.tpl" title="Workspace Filter"}
 
-{if $company_id == null || $company_id == ""}
+{if !isset($company_id) || $company_id == null || $company_id == ""}
 	No filter loaded. Please click on the <a href="#" onclick="javascript:parent.loadTab(9, 'FilterList');">Filters</a> tab to load a filter.
 {else}
 	<script type="text/javascript" src="{$APP_URL}app/view/templates/WorkspaceFilter.js"></script>

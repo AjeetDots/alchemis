@@ -1,3 +1,5 @@
+{assign var="total_call_days" value=$planning_data_total.call_days_actual|scalar:0}
+{assign var="total_pm_days" value=$planning_data_total.project_management_days|scalar:0}
 <td style="text-align: left">
 	<strong>Client Totals</strong>
 </td>
@@ -51,16 +53,16 @@
 	{* Planned Days *}
 	{$planning_data_total.planned_days}
 </td>
-<td {popup text="`$planning_data_total.effectives` / 10 = `$planning_data_total.call_days_actual`"}>
+<td {popup text="`$planning_data_total.effectives` / 10 = `$total_call_days`"}>
 	{* Call Days Actual *}
-	{$planning_data_total.call_days_actual}
+	{$total_call_days}
 </td>
 <td>
 	{* Project Managment Days *}
-	{$planning_data_total.project_management_days}
+	{$total_pm_days}
 </td>
-{math assign=total_days equation="x + y" x=$planning_data_total.project_management_days y=$planning_data_total.call_days_actual}
-<td {popup text="`$planning_data_total.call_days_actual` + `$planning_data_total.project_management_days` = `$total_days`"}>
+{math assign=total_days equation="x + y" x=$total_pm_days y=$total_call_days}
+<td {popup text="`$total_call_days` + `$total_pm_days` = `$total_days`"}>
 	{* Total Days *}
 	{$total_days}
 </td>
@@ -185,7 +187,7 @@
 	{* Revenue Per Day - Profitability *}
 	&nbsp;
 </td>
-<td {popup text="`$planning_data_total.effectives` / `$planning_data_total.call_days_actual`"}>
+<td {popup text="`$planning_data_total.effectives` / `$total_call_days`"}>
 	{* Average Effectives Per Day *}
 	{$planning_data_total.average_effectives_per_day}
 </td>

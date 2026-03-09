@@ -120,7 +120,8 @@ class app_mapper_TeamMapper extends app_mapper_Mapper implements app_domain_Mess
 	 */
 	public function findDashboardStatistics()
 	{
-		$year_month = date('Ym', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
+		// Use current month so live and local (same DB) show identical "this month to date" data
+		$year_month = date('Ym');
 		
 //		$query1 = 'SELECT MAX(ds.id) FROM tbl_data_statistics AS ds ' .
 //					'INNER JOIN tbl_campaign_nbms AS cam ON ds.campaign_id = cam.campaign_id ' .

@@ -276,7 +276,7 @@ class app_controller_ControllerMap
 	 * @param integer $status
 	 * @param string $view
 	 */
-	public function addView($command = 'default', $status = 0, $view)
+	public function addView($command = 'default', $status = 0, $view = null)
 	{
 		$this->viewMap[$command][$status] = $view;
 	}
@@ -305,7 +305,7 @@ class app_controller_ControllerMap
 	 * @param integer $status
 	 * @param string $newCommand
 	 */
-	public function addForward($command, $status = 0, $newCommand)
+	public function addForward($command, $status = 0, $newCommand = null)
 	{
 		$this->forwardMap[$command][$status] = $newCommand;
 	}

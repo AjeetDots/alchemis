@@ -115,6 +115,13 @@ define('SERVICES_JSON_SUPPRESS_ERRORS', 32);
 class Services_JSON
 {
    /**
+    * Bitmask of behaviour flags passed to the constructor.
+    *
+    * @var int
+    */
+   var $use = 0;
+
+   /**
     * constructs a new JSON instance
     *
     * @param    int     $use    object behavior flags; combine with boolean-OR

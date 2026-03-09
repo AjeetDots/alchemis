@@ -111,6 +111,11 @@ class app_mapper_ScoreboardMapper extends app_mapper_Mapper implements app_domai
 	}
 	
 	/**
+	 * Cache TTL in seconds for scoreboard (reduces CPU/DB on repeated Home loads in production).
+	 */
+	const SCOREBOARD_CACHE_TTL = 300;
+
+	/**
 	 * 
 	 * @param integer $user_id ID of the user who the scoreboard is for
 	 * @param string $start_date start date of the scoreboard being generated
@@ -119,6 +124,13 @@ class app_mapper_ScoreboardMapper extends app_mapper_Mapper implements app_domai
 	 */
 	public function findByUserIdStartDateEndDate($user_id, $start_date, $end_date)
 	{
+		$dateKey = date('Y-m-d', strtotime($start_date));
+		$cacheKey = 'scoreboard_' . (int) $user_id . '_' . $dateKey;
+		$cached = $this->getScoreboardFromCache($cacheKey);
+		if ($cached !== null) {
+			return $cached;
+		}
+
 		$sql = array();
 		
 		$types = array ('user_id' 		=> 'integer',
@@ -220,10 +232,76 @@ class app_mapper_ScoreboardMapper extends app_mapper_Mapper implements app_domai
 			$this->doStatement($stmt, $values);
 		}
 		
-		$t =  $this->load($result);
-		
-// 		print_r($t);
+		$t = $this->load($result);
+		$this->putScoreboardToCache($cacheKey, $t);
 		return $t;
+	}
+
+	/**
+	 * Read scoreboard from file cache if valid.
+	 * @param string $cacheKey
+	 * @return app_domain_Scoreboard|null
+	 */
+	protected function getScoreboardFromCache($cacheKey)
+	{
+		$dir = $this->getScoreboardCacheDir();
+		if ($dir === null) {
+			return null;
+		}
+		$path = $dir . $cacheKey . '.cache';
+		if (!is_file($path) || (time() - filemtime($path)) > self::SCOREBOARD_CACHE_TTL) {
+			return null;
+		}
+		$raw = @file_get_contents($path);
+		if ($raw === false) {
+			return null;
+		}
+		$array = @unserialize($raw);
+		if (!is_array($array)) {
+			return null;
+		}
+		return $this->loadArray($array);
+	}
+
+	/**
+	 * Write scoreboard to file cache.
+	 * @param string $cacheKey
+	 * @param app_domain_DomainObject $scoreboard
+	 */
+	protected function putScoreboardToCache($cacheKey, $scoreboard)
+	{
+		$dir = $this->getScoreboardCacheDir();
+		if ($dir === null || !$scoreboard) {
+			return;
+		}
+		$array = array(
+			'id' => 1,
+			'communication_count' => method_exists($scoreboard, 'getCommunicationCount') ? $scoreboard->getCommunicationCount() : 0,
+			'effective_count' => method_exists($scoreboard, 'getEffectiveCount') ? $scoreboard->getEffectiveCount() : 0,
+			'non_effective_count' => method_exists($scoreboard, 'getNonEffectiveCount') ? $scoreboard->getNonEffectiveCount() : 0,
+			'meeting_set_count' => method_exists($scoreboard, 'getMeetingSetCount') ? $scoreboard->getMeetingSetCount() : 0,
+			'information_request_count' => method_exists($scoreboard, 'getInformationRequestCount') ? $scoreboard->getInformationRequestCount() : 0,
+			'callback_count' => method_exists($scoreboard, 'getCallBackCount') ? $scoreboard->getCallBackCount() : 0,
+			'priority_callback_count' => method_exists($scoreboard, 'getPriorityCallBackCount') ? $scoreboard->getPriorityCallBackCount() : 0,
+		);
+		$path = $dir . $cacheKey . '.cache';
+		@file_put_contents($path, serialize($array), LOCK_EX);
+	}
+
+	/**
+	 * @return string|null Cache directory path or null if not available
+	 */
+	protected function getScoreboardCacheDir()
+	{
+		if (defined('APP_DIRECTORY')) {
+			$dir = rtrim(APP_DIRECTORY, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'scoreboard' . DIRECTORY_SEPARATOR;
+		} else {
+			$dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'scoreboard_cache' . DIRECTORY_SEPARATOR;
+		}
+		if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
+			return null;
+		}
+		return $dir;
 	}
 
 	/**

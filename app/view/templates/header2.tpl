@@ -82,7 +82,7 @@ function init()
 <body onload="javascript:init()">
 
 
-{if $feedback}
+{if isset($feedback) && $feedback}
 <dl id="system-message" class="message fade">
 	<dt class="message">{#MESSAGE#}</dt>
 	<dd class="message">

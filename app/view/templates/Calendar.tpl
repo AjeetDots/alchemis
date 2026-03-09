@@ -135,7 +135,7 @@
 			{calendar_month data=$month_data
 			                year=$year
 			                month=$month
-			                day=$day
+			                day=$day|default:''
 			                legend=true
 			                hide_completed_items=true
 			                print_month_name=true

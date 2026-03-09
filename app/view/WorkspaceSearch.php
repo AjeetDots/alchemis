@@ -17,9 +17,10 @@ class app_view_WorkspaceSearch extends app_view_View
 {
 	protected function doExecute()
 	{
-		if ($this->request->getObject('company_id') == '' || is_null($this->request->getObject('company_id')))
+		$company_id = $this->request->getObject('company_id');
+		if ($company_id == '' || $company_id === null)
 		{
-			// do nothing
+			$this->smarty->assign('company_id', null);
 		}
 		else
 		{

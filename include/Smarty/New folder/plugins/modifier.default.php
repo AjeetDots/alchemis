@@ -21,7 +21,8 @@
  */
 function smarty_modifier_default($string, $default = '')
 {
-    if (!isset($string) || $string === '')
+    // Treat arrays as empty to prevent "Array to string conversion" when value is used in output
+    if (!isset($string) || $string === '' || is_array($string))
         return $default;
     else
         return $string;

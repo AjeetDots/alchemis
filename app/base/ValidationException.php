@@ -21,7 +21,7 @@ class app_base_ValidationException extends Exception
 	 * @param string $message exception message
 	 * @param integer $code user defined exception code
 	 */
-	function __construct($message = null, $code = 0, $errors)
+	function __construct($message = null, $code = 0, $errors = array())
 	{
 		$this->errors = $errors;
 		parent::__construct($message, $code);

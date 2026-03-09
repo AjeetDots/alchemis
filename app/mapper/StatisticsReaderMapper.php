@@ -11,6 +11,9 @@ require_once('app/domain.php');
  */
 class app_mapper_StatisticsReaderMapper extends app_mapper_ReaderMapper implements app_domain_StatisticsReaderReader
 {
+	protected $selectAllStmt;
+	protected $selectByDateStmt;
+	protected $selectByDateClientIdStmt;
 
 	public function __construct()
 	{

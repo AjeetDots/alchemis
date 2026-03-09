@@ -13,6 +13,12 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 {
 	protected static $DB;
 
+	/** @var MDB2_Statement_*|null */
+	protected $selectAllStmt;
+
+	/** @var MDB2_Statement_*|null */
+	protected $selectStmt;
+
 	public function __construct()
 	{
 		if (!self::$DB)

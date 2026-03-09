@@ -20,6 +20,13 @@ require_once('app/domain.php');
 class app_mapper_MeetingMapper extends app_mapper_ShadowMapper implements app_domain_MeetingFinder
 {
 	protected static $DB;
+	protected $selectAllStmt;
+	protected $selectStmt;
+	protected $selectByPostInitiativeIdStmt;
+	protected $selectCurrentByPostInitiativeIdStmt;
+	protected $insertStmt;
+	protected $updateStmt;
+	protected $id;
 
 	public function __construct()
 	{

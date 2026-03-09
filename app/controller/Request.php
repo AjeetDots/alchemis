@@ -75,6 +75,7 @@ class app_controller_Request
 	public $input;
 	public $referrer;
 	public $ip;
+	public $action;
 
 	/**
 	 * Constructor calls the initialisation routine and registers itself with the Request Registry.

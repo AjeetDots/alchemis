@@ -80,7 +80,7 @@
 			<h3>Summary of progress this month to date</h3>
 			
 			<div style="{*border: 1px solid red; *}text-align: center">
-				<img src="index.php?cmd=DashboardGraph1" />
+				<img src="{$APP_URL}index.php?cmd=DashboardGraph1&amp;client_id={$client_selected|default:0}&amp;v={$APP_VERSION|default:'1'}" alt="Set and Attended chart" />
 			</div>
 
 		</td>
@@ -157,7 +157,7 @@
 			<br />
 
 			<!-- Campaign Progress -->
-			<h3>Campaign Progress as at end of {$yesterday|date_format:$smarty.config.FORMAT_DATE_LONG}</h3>
+			<h3>Campaign Progress as at end of {$campaign_progress_date_label}</h3>
 			<table class="adminlist"{*border="1" style="border: 1px solid yellow; width: 100%"*}>
 				<thead>
 					<tr>
@@ -248,7 +248,7 @@
 			<!-- /Team Zone -->
 			
 			<div style="{*border: 1px solid red; *}text-align: center">
-				<img src="index.php?cmd=DashboardGraph2&amp;media=print" />
+				<img src="{$APP_URL}index.php?cmd=DashboardGraph2&amp;media=print&amp;v={$APP_VERSION|default:'1'}" alt="Team Zone KPI chart" />
 			</div>
 
 		</td>

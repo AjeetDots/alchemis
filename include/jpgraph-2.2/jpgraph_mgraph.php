@@ -202,9 +202,10 @@ function MGraph($aWidth=NULL,$aHeight=NULL) {
 
     function _filledPolygon($pts) {
 	$n=count($pts);
-	for($i=0; $i < $n; ++$i) 
+	for($i=0; $i < $n; ++$i)
 	    $pts[$i] = round($pts[$i]);
-	imagefilledpolygon($this->img,$pts,count($pts)/2,$this->iCurrentColor);
+	// PHP 8.1+: $num_points parameter deprecated; use 3-arg form
+	imagefilledpolygon($this->img, $pts, $this->iCurrentColor);
     }
 	
     function _rectangle($xl,$yu,$xr,$yl) {

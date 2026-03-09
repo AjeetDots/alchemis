@@ -116,11 +116,13 @@ class app_command_Dashboard extends app_command_Command
 		$actions = app_domain_Action::findCurrentByUserId($nbm_id, 5)->toArray();
 		$request->setObject('actions', $actions);
 
-		// Top Line Summary Stats
+		// Top Line Summary Stats (guard empty clients to avoid notice in production)
 		$client_id = $request->getProperty('client_id');
-		if (is_null($client_id) || $client_id == 0)
-		{
+		if ((is_null($client_id) || $client_id == 0) && !empty($clients) && isset($clients[0]['id'])) {
 			$client_id = $clients[0]['id'];
+		}
+		if (is_null($client_id) || $client_id == 0) {
+			$client_id = 0;
 		}
 		$request->setObject('client_selected', $client_id);
 		

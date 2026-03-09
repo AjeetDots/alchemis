@@ -140,6 +140,9 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 		$planning_data = app_domain_CampaignNbmTarget::findStatisticsNonZeroTargetsByUserIdAndYearMonth($selected_user, $year_month);
 		foreach ($planning_data as &$data) {
 			//			echo $data['campaign_id'] . '<br />';
+			// Ensure scalars (prevent "Array to string conversion" in template if DB returns array)
+			$data['call_days_actual'] = is_array($data['call_days_actual']) ? 0 : (float) $data['call_days_actual'];
+			$data['project_management_days'] = is_array($data['project_management_days']) ? 0 : (float) $data['project_management_days'];
 			if ($data['call_days_actual']) {
 				$data['average_effectives_per_day'] = round($data['effectives'] / $data['call_days_actual'], 1);
 			} else {
@@ -163,6 +166,9 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 		// Get planning data for selected user and year/month - where effectives and meetings targets == 0
 		$planning_data_zero_targets = app_domain_CampaignNbmTarget::findStatisticsZeroTargetsByUserIdAndYearMonth($selected_user, $year_month);
 		foreach ($planning_data_zero_targets as &$data) {
+			// Ensure scalars (prevent "Array to string conversion" in template if DB returns array)
+			$data['call_days_actual'] = is_array($data['call_days_actual']) ? 0 : (float) $data['call_days_actual'];
+			$data['project_management_days'] = is_array($data['project_management_days']) ? 0 : (float) $data['project_management_days'];
 			if ($data['call_days_actual']) {
 				$data['average_effectives_per_day'] = round($data['effectives'] / $data['call_days_actual'], 1);
 			} else {
@@ -184,7 +190,46 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 
 		// Get the totals for selected user and year/month
 		$planning_data_total = app_domain_CampaignNbmTarget::findTotalStatisticsByUserIdAndYearMonth($selected_user, $year_month);
-		if ($planning_data_total['call_days_actual'] > 0) {
+		// Ensure all keys the template uses are defined (prevents Smarty math plugin receiving null)
+		$planning_data_total_defaults = [
+			'campaign_meeting_set_target_to_date' => 0,
+			'campaign_meeting_set_to_date_count' => 0,
+			'campaign_meeting_category_attended_target_to_date' => 0,
+			'campaign_meeting_category_attended_to_date_count' => 0,
+			'planned_days' => 0,
+			'call_days_actual' => 0,
+			'project_management_days' => 0,
+			'call_count' => 0,
+			'effectives_target' => 0,
+			'offte' => 0,
+			'ote' => 0,
+			'effectives' => 0,
+			'standard_campaign_meeting_set_target' => 0,
+			'meetings_set_target' => 0,
+			'meetings_set_imperative_target' => 0,
+			'meetings_set' => 0,
+			'meeting_time_lag_0_3' => 0,
+			'meeting_time_lag_3_5' => 0,
+			'meeting_time_lag_5_7' => 0,
+			'meeting_time_lag_7_' => 0,
+			'standard_campaign_meeting_category_attended_target' => 0,
+			'meetings_in_diary_this_month' => 0,
+			'meetings_attended_target' => 0,
+			'meeting_category_attended_count' => 0,
+			'campaign_monthly_fee' => 0,
+			'conversion_rate' => 0,
+			'access_rate' => 0,
+			'average_effectives_per_day' => 0,
+		];
+		if (!is_array($planning_data_total)) {
+			$planning_data_total = $planning_data_total_defaults;
+		} else {
+			$planning_data_total = array_merge($planning_data_total_defaults, $planning_data_total);
+		}
+		// Ensure scalars (prevent "Array to string conversion" in template if DB returns array)
+		$planning_data_total['call_days_actual'] = is_array($planning_data_total['call_days_actual']) ? 0 : (float) $planning_data_total['call_days_actual'];
+		$planning_data_total['project_management_days'] = is_array($planning_data_total['project_management_days']) ? 0 : (float) $planning_data_total['project_management_days'];
+		if (!empty($planning_data_total['call_days_actual']) && $planning_data_total['call_days_actual'] > 0) {
 			$planning_data_total['average_effectives_per_day'] = round($planning_data_total['effectives'] / $planning_data_total['call_days_actual'], 1);
 		} else {
 			$planning_data_total['average_effectives_per_day'] = 0;
@@ -267,11 +312,14 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 
 		// Averages
 		$monthly_call_data = app_domain_StatisticsReader::findCallsByUserIdAndYearMonth($selected_user, $year_month);
+		if (!is_array($monthly_call_data)) {
+			$monthly_call_data = ['call_count' => 0, 'call_effective_count' => 0, 'meeting_set_count' => 0];
+		}
 
 		// Add average to call data
-		$monthly_call_data['average_calls']        = round($monthly_call_data['call_count'] / $worked_days);
-		$monthly_call_data['average_effectives']   = round($monthly_call_data['call_effective_count'] / $worked_days, 1);
-		$monthly_call_data['average_meetings_set'] = round($monthly_call_data['meeting_set_count'] / $worked_days, 1);
+		$monthly_call_data['average_calls']        = $worked_days > 0 ? round($monthly_call_data['call_count'] / $worked_days) : 0;
+		$monthly_call_data['average_effectives']   = $worked_days > 0 ? round($monthly_call_data['call_effective_count'] / $worked_days, 1) : 0;
+		$monthly_call_data['average_meetings_set'] = $worked_days > 0 ? round($monthly_call_data['meeting_set_count'] / $worked_days, 1) : 0;
 
 		if ($monthly_call_data['call_count'] > 0) {
 			$monthly_call_data['access'] = round(($monthly_call_data['call_effective_count'] / $monthly_call_data['call_count']) * 100);
@@ -318,7 +366,7 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 		$request->setObject('kpis', $kpis);
 		$request->setObject('targets', $targets);
 
-		if($_GET['Monthly'] == 3){
+		if(($_GET['Monthly'] ?? null) == 3){
 			echo '<pre>';
 			print_r($request);
 			echo '</pre>';

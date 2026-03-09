@@ -3,7 +3,7 @@
 
 
 
-{if $filter == null || $filter == ""}
+{if !isset($filter) || $filter == null || $filter == ""}
 
 	No filter results loaded. Please click on the <a href="#" onclick="javascript:parent.loadTab(9, 'FilterList');">Filters</a> tab to load a filter.
 

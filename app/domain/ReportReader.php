@@ -217,7 +217,7 @@ class app_domain_ReportReader extends app_domain_ReaderObject
 	 * @param integer $order_by
 	 * @return array assoicative array mapping to a given report record
 	 */
-	public static function getReport6Data($start, $end, $order_by = 0, $client_id)
+	public static function getReport6Data($start, $end, $order_by = 0, $client_id = null)
 	{
 		$reader = self::getReader(__CLASS__);
 //		echo $client_id;

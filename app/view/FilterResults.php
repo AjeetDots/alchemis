@@ -19,7 +19,7 @@ class app_view_FilterResults extends app_view_View
 	{
 		if ($this->request->getObject('results') == '' || is_null($this->request->getObject('results')))
 		{
-			// FilterResultsCompaniesPosts.tpl has a check to display a nothing loaded message if no data supplied
+			$this->smarty->assign('filter', null);
 			$this->smarty->display('FilterResultsCompaniesPosts.tpl');
 		}
 		else

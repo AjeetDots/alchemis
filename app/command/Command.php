@@ -89,6 +89,14 @@ abstract class app_command_Command
 		// Get user information from the session
 		$session = Auth_Session::singleton();
 		$session_user = $session->getSessionUser();
+
+		if (!is_array($session_user) || !isset($session_user['id'])) {
+			// No logged-in user in the session; leave session_user unset for
+			// commands (e.g. Login) that do not require an authenticated user.
+			$this->session_user = null;
+			return;
+		}
+
 		$user = app_domain_RbacUser::find($session_user['id']);
 		$this->session_user = $user;
 	}

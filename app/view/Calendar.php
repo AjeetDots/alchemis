@@ -32,7 +32,8 @@ class app_view_Calendar extends app_view_View
 		$this->smarty->assign('month_data', $month_data);
 		$this->smarty->assign('year',  $this->request->getObject('year'));
 		$this->smarty->assign('month', $this->request->getObject('month'));
-		
+		$this->smarty->assign('day',   $this->request->getObject('day'));
+
 		$this->smarty->display('Calendar.tpl');
 	}
 }

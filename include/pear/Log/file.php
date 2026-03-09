@@ -287,7 +287,7 @@ class Log_file extends Log
 
         /* Build the string containing the complete log line. */
         $line = $this->_format($this->_lineFormat,
-                               strftime($this->_timeFormat),
+                               date(strtr($this->_timeFormat, array('%b'=>'M','%d'=>'d','%H'=>'H','%M'=>'i','%S'=>'s','%Y'=>'Y','%y'=>'y','%m'=>'m','%e'=>'j','%A'=>'l','%a'=>'D','%B'=>'F','%I'=>'h','%p'=>'A','%P'=>'a','%%'=>'%'))),
                                $priority, $message) . $this->_eol;
 
         /* If locking is enabled, acquire an exclusive lock on the file. */

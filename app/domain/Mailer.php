@@ -24,6 +24,7 @@ class app_domain_Mailer extends app_domain_DomainObject
 	protected $type_id;
 	protected $type_name;
 	protected $archived;
+	protected $created_at;
 	protected $created_by;
 	protected $created_by_name;
 	protected $updated_at;

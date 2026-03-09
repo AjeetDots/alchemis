@@ -44,7 +44,7 @@ if (file_exists($envFile)) {
 $env = $_SERVER['ALCHEMIS_ENV'] ?? 'aws';
 $_SERVER['ALCHEMIS_ENV'] = $env;
 
-$isDevelopment = ($env === 'development');
+$isDevelopment = ($env === 'aws');
 
 if ($isDevelopment) {
 
@@ -59,6 +59,13 @@ if ($isDevelopment) {
     ini_set('log_errors', 1);
 
     error_reporting(E_ERROR);
+}
+
+// Graph commands output binary PNG; prevent any PHP notice/warning from corrupting the image
+$graphCmd = isset($_GET['cmd']) ? $_GET['cmd'] : '';
+if ($graphCmd === 'DashboardGraph1' || $graphCmd === 'DashboardGraph2') {
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
 }
 
 /*

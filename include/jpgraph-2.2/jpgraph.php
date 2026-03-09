@@ -353,15 +353,18 @@ function DateLocale() {
 	}
  
 	$this->iLocale = $aLocale;
-	for ( $i = 0, $ofs = 0 - strftime('%w'); $i < 7; $i++, $ofs++ ){
-	    $day = strftime('%a', strtotime("$ofs day"));
+	// PHP 8.1+: strftime() deprecated; use date() which respects setlocale(LC_TIME)
+	for ( $i = 0, $ofs = 0 - (int)date('w'); $i < 7; $i++, $ofs++ ){
+	    $day = date('D', strtotime("$ofs day"));
 	    $day[0] = strtoupper($day[0]);
 	    $this->iDayAbb[$aLocale][]= $day[0];
 	    $this->iShortDay[$aLocale][]= $day;
 	}
 
 	for($i=1; $i<=12; ++$i) {
-	    list($short ,$full) = explode('|', strftime("%b|%B",strtotime("2001-$i-01")));
+	    $ts = strtotime("2001-$i-01");
+	    $short = date('M', $ts);
+	    $full  = date('F', $ts);
 	    $this->iShortMonth[$aLocale][] = ucfirst($short);
 	    $this->iMonthName [$aLocale][] = ucfirst($full);
 	}
@@ -472,6 +475,7 @@ class Graph {
     public $title,$subtitle,$subsubtitle; 	// Title and subtitle(s) text object
     public $axtype="linlin";	// Type of axis
     public $xtick_factor;	// Factot to determine the maximum number of ticks depending on the plot with
+    public $ytick_factor;	// Factor for Y-axis tick density (PHP 8.2+ explicit property)
     public $texts=null, $y2texts=null;		// Text object to ge shown in the graph
     public $lines=null, $y2lines=null;
     public $bands=null, $y2bands=null;
@@ -485,6 +489,8 @@ class Graph {
     public $iAxisStyle = AXSTYLE_SIMPLE;
     public $iCSIMdisplay=false,$iHasStroked = false;
     public $footer;
+    /** @var Legend|null Legend object (PHP 8.2+ explicit property to avoid dynamic property deprecation) */
+    public $legend = null;
     public $csimcachename = '', $csimcachetimeout = 0, $iCSIMImgAlt='';
     public $iDoClipping = false;
     public $y2orderback=true;
@@ -6509,9 +6515,10 @@ class Image {
 	if( $n == 0 ) {
 	    JpGraphError::RaiseL(25105);//('NULL data specified for a filled polygon. Check that your data is not NULL.');
 	}
-	for($i=0; $i < $n; ++$i) 
+	for($i=0; $i < $n; ++$i)
 	    $pts[$i] = round($pts[$i]);
-	imagefilledpolygon($this->img,$pts,count($pts)/2,$this->current_color);
+	// PHP 8.1+: $num_points parameter deprecated; use 3-arg form
+	imagefilledpolygon($this->img, $pts, $this->current_color);
     }
 	
     function Rectangle($xl,$yu,$xr,$yl) {

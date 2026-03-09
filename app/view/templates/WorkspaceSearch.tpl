@@ -1,6 +1,6 @@
 {include file="header.tpl" title="Workspace Search"}
 
-{if $company_id == null || $company_id == ""}
+{if !isset($company_id) || $company_id == null || $company_id == ""}
 	No search criteria specified. Please click on the <a href="#" onclick="javascript:parent.loadTab(6, 'Search');">Search</a> tab to perform a search.
 {else}
 	<script type="text/javascript" src="{$APP_URL}app/view/templates/WorkspaceSearch.js"></script>

@@ -71,10 +71,11 @@ class app_command_Calendar extends app_command_Command
 		$month = date('m', strtotime($date));
 		$day   = date('d', strtotime($date));
 		
-		$request->setObject('date', date('Y-m-d', mktime(0, 0, 0, $month, $day, $year)));	
+		$request->setObject('date', date('Y-m-d', mktime(0, 0, 0, $month, $day, $year)));
 		$request->setObject('year', $year);
 		$request->setObject('month', $month);
-		
+		$request->setObject('day', (int) $day);
+
 		// Get data for the month
 		$request->setObject('display', 'month');
 		$month_data = app_domain_CalendarReader::getMonth($date, $nbm_id, $client_id);

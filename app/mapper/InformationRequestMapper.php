@@ -10,6 +10,12 @@ require_once ('app/domain.php');
  */
 class app_mapper_InformationRequestMapper extends app_mapper_Mapper implements app_domain_InformationRequestFinder
 {
+	protected $selectAllStmt;
+	protected $selectStmt;
+	protected $selectByPostInitiativeIdStmt;
+	protected $insertStmt;
+	protected $updateStmt;
+	protected $id;
 
 	public function __construct()
 	{

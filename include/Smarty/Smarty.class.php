@@ -502,6 +502,13 @@ class Smarty
     var $_cache_info           = array();
 
     /**
+     * Information needed to build optional cache include files.
+     *
+     * @var array|null
+     */
+    var $_cache_include_info   = null;
+
+    /**
      * default file permissions
      *
      * @var integer

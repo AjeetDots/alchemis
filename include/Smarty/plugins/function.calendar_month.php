@@ -154,6 +154,7 @@ function smarty_function_calendar_month($params, &$smarty)
 	}
 
 	// Day
+	$highlighted_day = null;
 	if (!empty($day))
 	{
 		$highlighted_day = $day;
@@ -207,7 +208,7 @@ function smarty_function_calendar_month($params, &$smarty)
 		$selected = intval(date('d'));
 
 	$colwidth = 0;
-	if (!empty($width))
+	if (!empty($width) && is_numeric($width))
 		$colwidth = round($width / 7);
 
 	if (empty($no_future))

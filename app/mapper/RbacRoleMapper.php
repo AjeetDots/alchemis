@@ -16,6 +16,11 @@ class app_mapper_RbacRoleMapper extends app_mapper_Mapper implements app_domain_
 {
 	protected static $DB;
 	
+	protected $selectAllStmt;
+	protected $selectStmt;
+	protected $findByUserStmt;
+	protected $findAvailableForUserStmt;
+	
 	public function __construct()
 	{
 		if (!self::$DB)

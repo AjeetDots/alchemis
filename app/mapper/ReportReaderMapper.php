@@ -15,6 +15,8 @@ require_once('app/mapper/ReaderMapper.php');
  */
 class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 {
+	protected $select_stmt;
+	protected $select_all_stmt;
 
 	public function __construct()
 	{

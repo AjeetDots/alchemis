@@ -8,7 +8,15 @@ require_once('app/mapper/Mapper.php');
 class app_mapper_ClientMapper extends app_mapper_Mapper implements app_domain_ClientFinder
 {
 	protected static $DB;
-	
+	protected $selectAllStmt;
+	protected $selectAllClientInitiativesStmt;
+	protected $selectStmt;
+	protected $selectSetStmt;
+	protected $selectClientByInitiativeIdStmt;
+	protected $selectClientByPostInitiativeIdStmt;
+	protected $countStmt;
+	protected $id;
+
 	public function __construct()
 	{
 		if (!self::$DB)

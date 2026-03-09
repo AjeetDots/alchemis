@@ -20,6 +20,8 @@ require_once('app/domain.php');
 class app_mapper_CampaignNbmTargetMapper extends app_mapper_Mapper implements app_domain_CampaignNbmTargetFinder
 {
 	protected static $DB;
+	protected $selectStmt;
+	protected $selectAllStmt;
 
 	public function __construct()
 	{
@@ -483,7 +485,7 @@ class app_mapper_CampaignNbmTargetMapper extends app_mapper_Mapper implements ap
 				'GROUP BY cnt.campaign_id ' .
 				'ORDER BY cl.name';
 //		echo "<P>$query</P>";
-if($_GET['Monthly'] == 3){
+if(($_GET['Monthly'] ?? null) == 3){
 	echo '<pre>';
 			echo "<P>$query</P>";
 	echo '</pre>';
@@ -542,7 +544,16 @@ if($_GET['Monthly'] == 3){
 		        'OR cn.deactivated_date = \'0000-00-00\') ' .
 				'group by cnt.user_id, cnt.`year_month`';
 //		echo "<P>$query</P>$year_month" . "01 00:00:00";
-		return self::$DB->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
+		$row = self::$DB->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
+		if (is_array($row)) {
+			if (isset($row['call_days_actual']) && is_array($row['call_days_actual'])) {
+				$row['call_days_actual'] = 0;
+			}
+			if (isset($row['project_management_days']) && is_array($row['project_management_days'])) {
+				$row['project_management_days'] = 0;
+			}
+		}
+		return $row;
 	}
 
    /**

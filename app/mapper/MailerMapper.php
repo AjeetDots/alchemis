@@ -13,6 +13,12 @@ class app_mapper_MailerMapper extends app_mapper_Mapper implements app_domain_Ma
 {
 	protected static $DB;
 
+	/** @var MDB2_Statement_*|null */
+	protected $selectAllStmt;
+
+	/** @var MDB2_Statement_*|null */
+	protected $selectStmt;
+
 	public function __construct()
 	{
 		if (!self::$DB)

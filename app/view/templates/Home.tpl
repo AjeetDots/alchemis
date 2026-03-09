@@ -36,10 +36,28 @@
 	
 	var current_tab_id = 1;
 
+	function loadHomeScoreboard() {
+		var ill_params = {};
+		getAjaxData("AjaxScoreboard", "", "get_home_scoreboard", ill_params, "");
+	}
+
+	function AjaxScoreboard(data) {
+		if (!data || !data.length) return;
+		for (var i = 0; i < data.length; i++) {
+			var t = data[i];
+			if (t.cmd_action === "get_home_scoreboard" && t.success) {
+				if ($("communication_count")) $("communication_count").innerHTML = "Calls: " + (t.communication_count != null ? t.communication_count : 0);
+				if ($("effective_count")) $("effective_count").innerHTML = "Effectives: " + (t.effective_count != null ? t.effective_count : 0);
+				if ($("span_callback_count")) $("span_callback_count").innerHTML = "Today's Callbacks: " + (t.callback_count != null ? t.callback_count : 0) + " (" + (t.priority_callback_count != null ? t.priority_callback_count : 0) + ")";
+				break;
+			}
+		}
+	}
+
 {/literal}
 </script>
 
-<body style="background-color: #003366" onload="loadTab(1, 'DashboardFrame');{if $redirect != ''}loadTab(3,'ActionsFrame&redirect={$redirect}', true){/if};"{*if $tab == "tabWorkspace"} onload="javascript:screenSize();"{/if*}>
+<body style="background-color: #003366" onload="loadTab(1, 'DashboardFrame');{if $redirect != ''}loadTab(3,'ActionsFrame&redirect={$redirect}', true){/if}; loadHomeScoreboard();"{*if $tab == "tabWorkspace"} onload="javascript:screenSize();"{/if*}>
 
 	<form id="adminform">
 

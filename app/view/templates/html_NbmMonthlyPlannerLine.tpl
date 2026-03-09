@@ -59,16 +59,16 @@
 		{* Planned Days *}
 		<input type="text" style="text-align: center; width: 30px" value="{$data.planned_days}" id="{$data.campaign_id}-planned_days" name="{$data.campaign_id}-planned_days" disabled="disabled" />
 	</td>
-	<td {popup text="`$data.effectives` / 10 = `$data.call_days_actual`"}>
+	<td {popup text="`$data.effectives` / 10 = `$data.call_days_actual|scalar:0`"}>
 		{* Call Days Actual *}
-		{$data.call_days_actual}
+		{$data.call_days_actual|scalar:0}
 	</td>
 	<td>
 		{* Project Management Days *}
-		<input type="text" style="text-align: center; width: 30px" value="{$data.project_management_days}" id="{$data.campaign_id}-project_management_days" name="{$data.campaign_id}-project_management_days" disabled="disabled" />
+		<input type="text" style="text-align: center; width: 30px" value="{$data.project_management_days|scalar:0}" id="{$data.campaign_id}-project_management_days" name="{$data.campaign_id}-project_management_days" disabled="disabled" />
 	</td>
-	{math assign=total_days equation="x + y" x=$data.call_days_actual y=$data.project_management_days}
-	<td {popup text="`$data.call_days_actual` + `$data.project_management_days` = `$total_days`"}>
+	{math assign=total_days equation="x + y" x=$data.call_days_actual|scalar:0 y=$data.project_management_days|scalar:0}
+	<td {popup text="`$data.call_days_actual|scalar:0` + `$data.project_management_days|scalar:0` = `$total_days`"}>
 		{* Total Days *}
 		{$total_days}
 	</td>
@@ -192,7 +192,7 @@
 		{* Revenue Per Day - Profitability *}
 		&nbsp;
 	</td>
-	<td {popup text="`$data.effectives` / `$data.call_days_actual`"}>
+	<td {popup text="`$data.effectives` / `$data.call_days_actual|scalar:0`"}>
 		{* Average Effectives Per Day *}
 		{$data.average_effectives_per_day}
 	</td>

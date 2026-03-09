@@ -3939,6 +3939,7 @@ class MDB2_Statement_Common
     var $result_types;
     var $types;
     var $values = array();
+    var $positions = array();
     var $limit;
     var $offset;
     var $is_manip;

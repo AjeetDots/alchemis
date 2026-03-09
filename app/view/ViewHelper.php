@@ -59,15 +59,10 @@ class ViewHelper
 		// This is the name of the directory where compiled templates are located.
 		$smarty->compile_dir = SMARTY_COMPILE_DIR;
 		
-		// Upon each invocation of the PHP application, Smarty tests to see if the current template has changed 
-		// (different time stamp) since the last time it was compiled. If it has changed, it recompiles that template. 
-		// If the template has not been compiled, it will compile regardless of this setting. By default this variable 
-		// is set to TRUE.
-		// Once an application is put into production (ie the templates won't be changing), the compile check step is 
-		// no longer needed. Be sure to set $compile_check to FALSE for maximal performance. Note that if you change 
-		// this to FALSE and a template file is changed, you will *not* see the change since the template will not get 
-		// recompiled. If $caching is enabled and $compile_check is enabled, then the cache files will get regenerated 
-		// if an involved template file or config file was updated. See $force_compile and clear_compiled_tpl().
+		// Upon each invocation of the PHP application, Smarty tests to see if the current template has changed
+		// (different time stamp) since the last time it was compiled. If it has changed, it recompiles that template.
+		// If compile_check is FALSE (e.g. production), after uploading new .tpl files either set compile_check to TRUE
+		// temporarily or clear the compiled templates (delete app/view/templates_c/*) so changes are picked up.
 		$smarty->compile_check = (bool) app_base_ApplicationRegistry::getItem('smarty_compile_check');
 		
 		// This forces Smarty to (re)compile templates on every invocation. This setting overrides $compile_check. By 

@@ -234,7 +234,7 @@ iframeLocation(		top.frames["iframe_3"], "index.php?cmd=Calendar&date=" + date +
 			<h3>Summary of progress this month to date</h3>
 			
 			<div style="{*border: 1px solid red; *}text-align: center">
-				<img src="index.php?cmd=DashboardGraph1" />
+				<img src="{$APP_URL}index.php?cmd=DashboardGraph1&amp;client_id={$client_selected|default:0}&amp;v={$APP_VERSION|default:'1'}" alt="Set and Attended chart" />
 			</div>
 
 		</td>
@@ -261,19 +261,27 @@ iframeLocation(		top.frames["iframe_3"], "index.php?cmd=Calendar&date=" + date +
 				</thead>
 				<tr>
 					<td>Monthly Target</td>
+					{if $client_targets}
 					<td style="text-align: center">{$client_targets.meeting_set_target}</td>
 					<td style="text-align: center">{$client_targets.meeting_attended_target}</td>
 					<td style="text-align: center">{$client_targets.call_target}</td>
 					<td style="text-align: center">{$client_targets.call_effective_target}</td>
 					<td style="text-align: center">{$client_targets.conversion|string_format:"%.0f"}%</td>
+					{else}
+					<td colspan="5" style="text-align: center">-</td>
+					{/if}
 				</tr>
 				<tr>
 					<td>Monthly Actual</td>
+					{if $client_actuals}
 					<td style="text-align: center">{$client_actuals.meeting_set_count}</td>
 					<td style="text-align: center">{$client_actuals.meeting_attended_count}</td>
 					<td style="text-align: center">{$client_actuals.call_count}</td>
 					<td style="text-align: center">{$client_actuals.call_effective_count}</td>
 					<td style="text-align: center">{$client_actuals.conversion|string_format:"%.0f"}%</td>
+					{else}
+					<td colspan="5" style="text-align: center">-</td>
+					{/if}
 				</tr>
 			</table>
 			<!-- /Top Line Summary -->
@@ -311,7 +319,7 @@ iframeLocation(		top.frames["iframe_3"], "index.php?cmd=Calendar&date=" + date +
 			<br />
 
 			<!-- Campaign Progress -->
-			<h3>Campaign Progress as at end of {$yesterday|date_format:$smarty.config.FORMAT_DATE_LONG}</h3>
+			<h3>Campaign Progress as at end of {$campaign_progress_date_label}</h3>
 			<table class="adminlist"{*border="1" style="border: 1px solid yellow; width: 100%"*}>
 				<thead>
 					<tr>
@@ -325,7 +333,7 @@ iframeLocation(		top.frames["iframe_3"], "index.php?cmd=Calendar&date=" + date +
 					</tr>
 				</thead>
 				{foreach name=campaign_loop from=$campaigns item=campaign}
-				<tr{if $client_selected == $campaign.client_id} class="current"{/if}>
+				<tr{if isset($campaign.client_id) && $client_selected == $campaign.client_id} class="current"{/if}>
 					<td>{$campaign.campaign_name}</td>
 					<td style="text-align: center; white-space: nowrap">{$campaign.campaign_meeting_set_count_to_date} v {$campaign.campaign_meeting_set_target_to_date}</td>
 					<td style="text-align: center; white-space: nowrap">{$campaign.campaign_meeting_attended_count_to_date} v {$campaign.campaign_meeting_category_attended_target_to_date}</td>
@@ -458,7 +466,7 @@ iframeLocation(		top.frames["iframe_3"], "index.php?cmd=Calendar&date=" + date +
 			<!-- /Team Zone -->
 			
 			<div style="{*border: 1px solid red; *}text-align: center">
-				<img src="index.php?cmd=DashboardGraph2" />
+				<img src="{$APP_URL}index.php?cmd=DashboardGraph2&amp;v={$APP_VERSION|default:'1'}" alt="Team Zone KPI chart" />
 			</div>
 
 		</td>

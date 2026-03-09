@@ -53,6 +53,8 @@ class Smarty_Compiler extends Smarty {
     var $_num_const_regexp      =   null;
     var $_dvar_guts_regexp      =   null;
     var $_dvar_regexp           =   null;
+    var $_dvar_math_regexp      =   null;
+    var $_dvar_math_var_regexp  =   null;
     var $_cvar_regexp           =   null;
     var $_svar_regexp           =   null;
     var $_avar_regexp           =   null;
@@ -64,6 +66,8 @@ class Smarty_Compiler extends Smarty {
     var $_obj_start_regexp      =   null;
     var $_obj_params_regexp     =   null;
     var $_obj_call_regexp       =   null;
+    var $_obj_restricted_param_regexp = null;
+    var $_obj_single_param_regexp     = null;
     var $_cacheable_state       =   0;
     var $_cache_attrs_count     =   0;
     var $_nocache_count         =   0;
@@ -72,6 +76,9 @@ class Smarty_Compiler extends Smarty {
 
     var $_strip_depth           =   0;
     var $_additional_newline    =   "\n";
+
+    var $_param_regexp          =   null;
+    var $_plugins_code          =   '';
 
     /**#@-*/
     /**
@@ -391,7 +398,7 @@ class Smarty_Compiler extends Smarty {
         }
 
         // put header at the top of the compiled template
-        $template_header = "<?php /* Smarty version ".$this->_version.", created on ".strftime("%Y-%m-%d %H:%M:%S")."\n";
+        $template_header = "<?php /* Smarty version ".$this->_version.", created on ".date('Y-m-d H:i:s')."\n";
         $template_header .= "         compiled from ".strtr(urlencode($resource_name), array('%2F'=>'/', '%3A'=>':'))." */ ?>\n";
 
         /* Emit code to load needed plugins. */
