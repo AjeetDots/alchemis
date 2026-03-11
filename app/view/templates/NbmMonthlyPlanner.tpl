@@ -344,6 +344,8 @@ iframeLocation(		top.frames["iframe_3"].frames["ifr_admin"], "index.php?cmd=Cale
 					</thead>
 					<tbody>
 						{foreach name=planning_data from=$planning_data item=data}
+							{assign var="row_call_days_actual" value=$data.call_days_actual|scalar:0}
+							{assign var="row_project_management_days" value=$data.project_management_days|scalar:0}
 							<tr id="tr_{$data.campaign_id}" style="text-align:center; background-color: {cycle values="#ddd,#eee"};">
 								<td style="text-align: left">
 									{math assign=delivered equation="x - y" x=$data.meeting_category_attended_count y=$data.standard_campaign_meeting_category_attended_target}
@@ -405,16 +407,16 @@ iframeLocation(		top.frames["iframe_3"].frames["ifr_admin"], "index.php?cmd=Cale
 									{* Planned Days *}
 									<input type="text" style="text-align: center; width: 30px" value="{$data.planned_days}" id="{$data.campaign_id}-planned_days" name="{$data.campaign_id}-planned_days" disabled="disabled" />
 								</td>
-								<td {popup text="`$data.effectives` / 10 = `$data.call_days_actual|scalar:0`"}>
+								<td {popup text=$data.popup_call_days_text}>
 									{* Call Days Actual *}
-									{$data.call_days_actual|scalar:0}
+									{$row_call_days_actual}
 								</td>
 								<td>
 									{* Project Management Days *}
-									<input type="text" style="text-align: center; width: 30px" value="{$data.project_management_days|scalar:0}" id="{$data.campaign_id}-project_management_days" name="{$data.campaign_id}-project_management_days" disabled="disabled" />
+									<input type="text" style="text-align: center; width: 30px" value="{$row_project_management_days}" id="{$data.campaign_id}-project_management_days" name="{$data.campaign_id}-project_management_days" disabled="disabled" />
 								</td>
-								{math assign=total_days equation="x + y" x=$data.call_days_actual|scalar:0 y=$data.project_management_days|scalar:0}
-								<td {popup text="`$data.call_days_actual|scalar:0` + `$data.project_management_days|scalar:0` = `$total_days`"}>
+								{math assign=total_days equation="x + y" x=$row_call_days_actual y=$row_project_management_days}
+								<td {popup text=$data.popup_total_days_text}>
 									{* Total Days *}
 									{$total_days}
 								</td>
@@ -538,7 +540,7 @@ iframeLocation(		top.frames["iframe_3"].frames["ifr_admin"], "index.php?cmd=Cale
 									{* Revenue Per Day - Profitability *}
 									&nbsp;
 								</td>
-								<td {popup text="`$data.effectives` / `$data.call_days_actual|scalar:0`"}>
+								<td {popup text=$data.popup_avg_effectives_text}>
 									{* Average Effectives Per Day *}
 									{$data.average_effectives_per_day}
 								</td>
@@ -554,6 +556,8 @@ iframeLocation(		top.frames["iframe_3"].frames["ifr_admin"], "index.php?cmd=Cale
 							</tr>
 						{* -- Clients with zero in effectives target and meetings target -- *}
 						{foreach name=planning_data from=$planning_data_zero_targets item=data}
+							{assign var="row_call_days_actual" value=$data.call_days_actual|scalar:0}
+							{assign var="row_project_management_days" value=$data.project_management_days|scalar:0}
 							<tr id="tr_{$data.campaign_id}" style="text-align:center; background-color: {cycle values="#ddd,#eee"};">
 								<td style="text-align: left">
 									{math assign=delivered equation="x - y" x=$data.meeting_category_attended_count y=$data.standard_campaign_meeting_category_attended_target}
@@ -615,16 +619,16 @@ iframeLocation(		top.frames["iframe_3"].frames["ifr_admin"], "index.php?cmd=Cale
 									{* Planned Days *}
 									<input type="text" style="text-align: center; width: 30px" value="{$data.planned_days}" id="{$data.campaign_id}-planned_days" name="{$data.campaign_id}-planned_days" disabled="disabled" />
 								</td>
-								<td {popup text="`$data.effectives` / 10 = `$data.call_days_actual|scalar:0`"}>
+								<td {popup text=$data.popup_call_days_text}>
 									{* Call Days Actual *}
-									{$data.call_days_actual|scalar:0}
+									{$row_call_days_actual}
 								</td>
 								<td>
 									{* Project Management Days *}
-									<input type="text" style="text-align: center; width: 30px" value="{$data.project_management_days|scalar:0}" id="{$data.campaign_id}-project_management_days" name="{$data.campaign_id}-project_management_days" disabled="disabled" />
+									<input type="text" style="text-align: center; width: 30px" value="{$row_project_management_days}" id="{$data.campaign_id}-project_management_days" name="{$data.campaign_id}-project_management_days" disabled="disabled" />
 								</td>
-								{math assign=total_days equation="x + y" x=$data.call_days_actual|scalar:0 y=$data.project_management_days|scalar:0}
-								<td {popup text="`$data.call_days_actual|scalar:0` + `$data.project_management_days|scalar:0` = `$total_days`"}>
+								{math assign=total_days equation="x + y" x=$row_call_days_actual y=$row_project_management_days}
+								<td {popup text=$data.popup_total_days_text}>
 									{* Total Days *}
 									{$total_days}
 								</td>
@@ -748,7 +752,7 @@ iframeLocation(		top.frames["iframe_3"].frames["ifr_admin"], "index.php?cmd=Cale
 									{* Revenue Per Day - Profitability *}
 									&nbsp;
 								</td>
-								<td {popup text="`$data.effectives` / `$data.call_days_actual|scalar:0`"}>
+								<td {popup text=$data.popup_avg_effectives_text}>
 									{* Average Effectives Per Day *}
 									{$data.average_effectives_per_day}
 								</td>
@@ -824,7 +828,7 @@ iframeLocation(		top.frames["iframe_3"].frames["ifr_admin"], "index.php?cmd=Cale
 								{$total_pm_days}
 							</td>
 							{math assign=total_days equation="x + y" x=$total_pm_days y=$total_call_days}
-							<td {popup text="`$total_call_days` + `$total_pm_days` = `$total_days`"}>
+							<td {popup text="{$total_call_days} + {$total_pm_days} = {$total_days}"}>
 								{* Total Days *}
 								{$total_days}
 							</td>

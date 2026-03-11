@@ -62,6 +62,17 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 	 */
 	private function init(app_controller_Request $request)
 	{
+		// Force recompile of NbmMonthlyPlanner so updated .tpl is always used (prevents array-to-string popup warnings).
+		$compileDir = (defined('APP_DIRECTORY') ? APP_DIRECTORY : '') . 'app' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'templates_c';
+		if (is_dir($compileDir)) {
+			$mask = $compileDir . DIRECTORY_SEPARATOR . '*NbmMonthlyPlanner*';
+			foreach (glob($mask) ?: [] as $file) {
+				if (is_file($file)) {
+					@unlink($file);
+				}
+			}
+		}
+
 		// Pass-through parameters
 		$user_id = $request->getProperty('user_options');
 		$session = Auth_Session::singleton();
@@ -148,6 +159,11 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 			} else {
 				$data['average_effectives_per_day'] = 0;
 			}
+			// Precomputed popup text (avoids Smarty array-to-string issues in template)
+			$data['popup_call_days_text'] = $data['effectives'] . ' / 10 = ' . $data['call_days_actual'];
+			$totalDays = $data['call_days_actual'] + $data['project_management_days'];
+			$data['popup_total_days_text'] = $data['call_days_actual'] . ' + ' . $data['project_management_days'] . ' = ' . $totalDays;
+			$data['popup_avg_effectives_text'] = $data['effectives'] . ' / ' . $data['call_days_actual'];
 
 			foreach ($maxYearMonthByCampaign as $maxTargetMonthYear) {
 				//				echo $maxTargetMonthYear['campaign_id'];
@@ -174,6 +190,11 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 			} else {
 				$data['average_effectives_per_day'] = 0;
 			}
+			// Precomputed popup text (avoids Smarty array-to-string issues in template)
+			$data['popup_call_days_text'] = $data['effectives'] . ' / 10 = ' . $data['call_days_actual'];
+			$totalDays = $data['call_days_actual'] + $data['project_management_days'];
+			$data['popup_total_days_text'] = $data['call_days_actual'] . ' + ' . $data['project_management_days'] . ' = ' . $totalDays;
+			$data['popup_avg_effectives_text'] = $data['effectives'] . ' / ' . $data['call_days_actual'];
 
 			foreach ($maxYearMonthByCampaign as $maxTargetMonthYear) {
 				//                echo $maxTargetMonthYear['campaign_id'];
