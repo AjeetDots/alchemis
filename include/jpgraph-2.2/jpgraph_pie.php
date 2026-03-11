@@ -294,12 +294,13 @@ function PiePlot($data) {
 	}
 	for( $i=$n-1; $i >= 0; --$i ) {
 	    $l = $this->legends[$i];
-	    // Replace possible format with actual values
-	    if( count($this->csimalts) > $i ) {
+	    // Replace possible format with actual values. In modern PHP versions
+	    // count() on null throws a TypeError, so normalise to an array first.
+	    if( is_array($this->csimalts) && count($this->csimalts) > $i ) {
 		$fmt = $this->csimalts[$i];
 	    }
 	    else {
-		$fmt = "%d"; // Deafult Alt if no other has been specified
+		$fmt = "%d"; // Default Alt if no other has been specified
 	    }
 	    if( $this->labeltype==0 ) {
 		$l = sprintf($l,100*$this->data[$i]/$sum);

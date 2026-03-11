@@ -35,7 +35,7 @@ function submitbutton(pressbutton)
 	
 	<form id="frm_mailer_edit" name="frm_mailer_edit" action="index.php?cmd=MailerEdit" method="post">
 		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="source_tab" value="{$source_tab}" />
+		<input type="hidden" name="source_tab" value="{$source_tab|default:''}" />
 		<input type="hidden" name="id" value="{$id}" />
 		
 		<table class="adminlist" style="width:500px">

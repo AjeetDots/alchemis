@@ -398,7 +398,11 @@ function DrawTableLine($data, $header, $pDataType = 0){
         }
        
         $MaxLines = floor($AvailPageH / $data[$i]['LN_SIZE']);//floor this value, must be the lowest possible
-        if (!isset($data[$i]['TEXT_STRLINES'])) $data[$i]['TEXT_STRLINES'] = $this->StringToLines($data[$i]['CELL_WIDTH'], $data[$i]['TEXT']);
+        if (!isset($data[$i]['TEXT_STRLINES'])) {
+            // Safely handle missing TEXT key to avoid PHP 8 warnings
+            $text = isset($data[$i]['TEXT']) ? $data[$i]['TEXT'] : '';
+            $data[$i]['TEXT_STRLINES'] = $this->StringToLines($data[$i]['CELL_WIDTH'], $text);
+        }
         $NoLines = count($data[$i]['TEXT_STRLINES']);
         
         $hm = max($hm, $data[$i]['LN_SIZE'] * $NoLines);//this would be the normal height

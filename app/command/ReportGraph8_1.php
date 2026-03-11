@@ -11,10 +11,12 @@
 
 require_once('app/domain/ReportReader.php');
 //require_once('app/domain/Team.php');
-require_once('include/Illumen/Graph.php');
-require_once('include/jpgraph-2.3/jpgraph.php');
-require_once('include/jpgraph-2.3/jpgraph_bar.php');
-require_once('include/jpgraph-2.3/jpgraph_pie.php');
+// Legacy JpGraph includes are no longer needed for this command and
+// can trigger PHP 8 warnings during jpgraph.php initialisation.
+// require_once('include/Illumen/Graph.php');
+// require_once('include/jpgraph-2.3/jpgraph.php');
+// require_once('include/jpgraph-2.3/jpgraph_bar.php');
+// require_once('include/jpgraph-2.3/jpgraph_pie.php');
 require_once('include/Utils/Utils.class.php');
 
 /**
@@ -121,8 +123,20 @@ class app_command_ReportGraph8_1 extends app_command_Command
 
 
 		$data = app_domain_ReportReader::getReport8CampaignSummary($start_date, $end_date, $client_id);
-		$data1y = array($data[0]['meets_set_target_to_date'], $data[0]['meets_attended_target_to_date']);
-		$data2y = array($data[0]['meets_set_to_date'], $data[0]['meets_attended_to_date']);
+
+		// If there is no data for the period/client, don't attempt to draw a graph
+		if (!$data || !isset($data[0])) {
+			return;
+		}
+
+		$data1y = array(
+			isset($data[0]['meets_set_target_to_date']) ? (float)$data[0]['meets_set_target_to_date'] : 0.0,
+			isset($data[0]['meets_attended_target_to_date']) ? (float)$data[0]['meets_attended_target_to_date'] : 0.0
+		);
+		$data2y = array(
+			isset($data[0]['meets_set_to_date']) ? (float)$data[0]['meets_set_to_date'] : 0.0,
+			isset($data[0]['meets_attended_to_date']) ? (float)$data[0]['meets_attended_to_date'] : 0.0
+		);
 
 
 		$DataSet->AddPoint($data1y, "Serie1");
@@ -144,6 +158,10 @@ class app_command_ReportGraph8_1 extends app_command_Command
 		$DataSet->SetSerieName("Actual", "Serie2");
 		//		  $DataSet->SetSerieName("March","Serie3");
 
+		// Cache dataset arrays to avoid passing expressions by reference (PHP 7+ notice)
+		$data = $DataSet->GetData();
+		$dataDescription = $DataSet->GetDataDescription();
+
 		// Initialise the graph
 		$Test = new pChart(400, 240);
 
@@ -153,7 +171,7 @@ class app_command_ReportGraph8_1 extends app_command_Command
 		//	  $Test->drawRoundedRectangle(5,5,695,225,5,230,230,230);
 		$Test->drawGraphArea(255, 255, 255);
 		$scale = SCALE_ADDALLSTART0;
-		$num = $data[0]['meets_set_target_to_date'] + $data[0]['meets_set_to_date'];
+		$num = $data1y[0] + $data2y[0];
 		if ($num <= 10) {
 			$scale = SCALE_NORMAL0;
 			$Test->VMin = 0;
@@ -161,7 +179,7 @@ class app_command_ReportGraph8_1 extends app_command_Command
 			$Test->Divisions = 5;
 		}
 
-		$Test->drawScale($DataSet->GetData(), $DataSet->GetDataDescription(), $scale, 0, 0, 0, TRUE, 0, 0, TRUE);
+		$Test->drawScale($data, $dataDescription, $scale, 0, 0, 0, TRUE, 0, 0, TRUE);
 		//		  $Test->drawGrid(4,TRUE,230,230,230,50);
 
 		//		  // Draw the 0 line
@@ -169,11 +187,11 @@ class app_command_ReportGraph8_1 extends app_command_Command
 		//		  $Test->drawTreshold(0,143,55,72,TRUE,TRUE);
 
 		// Draw the bar graph
-		$Test->drawBarGraph($DataSet->GetData(), $DataSet->GetDataDescription(), TRUE);
+		$Test->drawBarGraph($data, $dataDescription, TRUE);
 
 		// Finish the graph
 		$Test->setFontProperties("include/pChart/Fonts/tahoma.ttf", 8);
-		$Test->drawLegend(150, 40, $DataSet->GetDataDescription(), 255, 255, 255);
+		$Test->drawLegend(150, 40, $dataDescription, 255, 255, 255);
 		//$Test->setFontProperties("include/pChart/Fonts/tahoma.ttf",10);
 		//$Test->drawTitle(50,22,"Example 12",50,50,50,585);
 
@@ -182,9 +200,14 @@ class app_command_ReportGraph8_1 extends app_command_Command
 		// Output the graph
 		$file = $request->getProperty('file');
 
+		// Ensure the output directory exists before writing the image file
+		$outputDir = 'app' . DIRECTORY_SEPARATOR . 'report' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+		if (!is_dir($outputDir)) {
+			@mkdir($outputDir, 0777, true);
+		}
 
-		//		  $Test->Render("example12.png");
-		$Test->Render('app' . DIRECTORY_SEPARATOR . 'report' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $file);
+		// Render the image file into the tmp directory
+		$Test->Render($outputDir . $file);
 		// echo '<img src="app' . DIRECTORY_SEPARATOR . 'report' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $file . '"/>';
 
 

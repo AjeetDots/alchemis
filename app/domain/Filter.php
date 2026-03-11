@@ -24,6 +24,8 @@ class app_domain_Filter extends app_domain_DomainObject
 	protected $results_format;
 	protected $is_report_source;
 	protected $report_format_source;
+	/** @var string|null */
+	protected $report_parameter_description;
 	protected $company_count;
 	protected $post_count;
 	protected $created_at;

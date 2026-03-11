@@ -85,6 +85,10 @@ class ViewHelper
 		$smarty->assign('LOCALE',          app_base_ApplicationRegistry::getLocale());
 		$smarty->assign('ENVIRONMENT',     app_base_ApplicationRegistry::getEnvironment());
 
+		// Legacy templates expect {$ROOT_PATH} to point at the
+		// web root; mirror APP_URL so those references keep working.
+		$smarty->assign('ROOT_PATH',       app_base_ApplicationRegistry::getUrl());
+
 		return $smarty;
 	}
 	

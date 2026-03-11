@@ -1,0 +1,1208 @@
+[2026-03-09 11:20:21] No graph file found! Looking for: app/report/tmp/ReportGraph8_1_419539460.png in /var/www/html/app/report/Report8.php on line 702
+Stack trace:
+#0 /var/www/html/app/report/Report8.php(90): app_report_Report8->sectorPenetrationSummary()
+#1 /var/www/html/app/command/Report8.php(111): app_report_Report8->__construct('2026-03-01', '2026-03-09', '549', '0', '1', '0', '1')
+#2 /var/www/html/app/command/Command.php(48): app_command_Report8->doExecute(Object(app_controller_Request))
+#3 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#4 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#5 /var/www/html/index.php(145): app_controller_Controller::run()
+#6 {main}
+
+[2026-03-09 11:22:57] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/include/pChart/pChart/pData.class on line 119
+Stack trace:
+#0 /var/www/html/app/command/ReportGraph8_1.php(128): pData->AddPoint(Array, 'Serie1')
+#1 /var/www/html/app/command/ReportGraph8_1.php(37): app_command_ReportGraph8_1->init(Object(app_controller_Request))
+#2 /var/www/html/app/command/Command.php(48): app_command_ReportGraph8_1->doExecute(Object(app_controller_Request))
+#3 /var/www/html/app/report/Report8.php(747): app_command_Command->execute(Object(app_controller_Request))
+#4 /var/www/html/app/report/Report8.php(700): app_report_Report8->writeImage('index.php?cmd=R...')
+#5 /var/www/html/app/report/Report8.php(93): app_report_Report8->sectorPenetrationSummary()
+#6 /var/www/html/app/command/Report8.php(111): app_report_Report8->__construct('2026-03-01', '2026-03-09', '549', '0', '1', '0', '1')
+#7 /var/www/html/app/command/Command.php(48): app_command_Report8->doExecute(Object(app_controller_Request))
+#8 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#9 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#10 /var/www/html/index.php(145): app_controller_Controller::run()
+#11 {main}
+
+[2026-03-09 11:24:02] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/include/pChart/pChart/pData.class on line 119
+Stack trace:
+#0 /var/www/html/app/command/ReportGraph8_1.php(128): pData->AddPoint(Array, 'Serie1')
+#1 /var/www/html/app/command/ReportGraph8_1.php(37): app_command_ReportGraph8_1->init(Object(app_controller_Request))
+#2 /var/www/html/app/command/Command.php(48): app_command_ReportGraph8_1->doExecute(Object(app_controller_Request))
+#3 /var/www/html/app/report/Report8.php(748): app_command_Command->execute(Object(app_controller_Request))
+#4 /var/www/html/app/report/Report8.php(700): app_report_Report8->writeImage('index.php?cmd=R...')
+#5 /var/www/html/app/report/Report8.php(93): app_report_Report8->sectorPenetrationSummary()
+#6 /var/www/html/app/command/Report8.php(111): app_report_Report8->__construct('2026-03-01', '2026-03-09', '549', '0', '1', '0', '1')
+#7 /var/www/html/app/command/Command.php(48): app_command_Report8->doExecute(Object(app_controller_Request))
+#8 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#9 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#10 /var/www/html/index.php(145): app_controller_Controller::run()
+#11 {main}
+
+[2026-03-09 11:25:28] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/include/pChart/pChart/pData.class on line 121
+Stack trace:
+#0 /var/www/html/app/command/ReportGraph8_1.php(128): pData->AddPoint(Array, 'Serie1')
+#1 /var/www/html/app/command/ReportGraph8_1.php(37): app_command_ReportGraph8_1->init(Object(app_controller_Request))
+#2 /var/www/html/app/command/Command.php(48): app_command_ReportGraph8_1->doExecute(Object(app_controller_Request))
+#3 /var/www/html/app/report/Report8.php(748): app_command_Command->execute(Object(app_controller_Request))
+#4 /var/www/html/app/report/Report8.php(700): app_report_Report8->writeImage('index.php?cmd=R...')
+#5 /var/www/html/app/report/Report8.php(93): app_report_Report8->sectorPenetrationSummary()
+#6 /var/www/html/app/command/Report8.php(111): app_report_Report8->__construct('2026-03-01', '2026-03-09', '549', '0', '1', '0', '1')
+#7 /var/www/html/app/command/Command.php(48): app_command_Report8->doExecute(Object(app_controller_Request))
+#8 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#9 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#10 /var/www/html/index.php(145): app_controller_Controller::run()
+#11 {main}
+
+[2026-03-09 11:26:29] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/include/pChart/pChart/pData.class on line 121
+Stack trace:
+#0 /var/www/html/app/command/ReportGraph8_1.php(142): pData->AddPoint(Array, 'Serie1')
+#1 /var/www/html/app/command/ReportGraph8_1.php(39): app_command_ReportGraph8_1->init(Object(app_controller_Request))
+#2 /var/www/html/app/command/Command.php(48): app_command_ReportGraph8_1->doExecute(Object(app_controller_Request))
+#3 /var/www/html/app/report/Report8.php(748): app_command_Command->execute(Object(app_controller_Request))
+#4 /var/www/html/app/report/Report8.php(700): app_report_Report8->writeImage('index.php?cmd=R...')
+#5 /var/www/html/app/report/Report8.php(93): app_report_Report8->sectorPenetrationSummary()
+#6 /var/www/html/app/command/Report8.php(111): app_report_Report8->__construct('2026-03-01', '2026-03-09', '549', '0', '1', '0', '1')
+#7 /var/www/html/app/command/Command.php(48): app_command_Report8->doExecute(Object(app_controller_Request))
+#8 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#9 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#10 /var/www/html/index.php(145): app_controller_Controller::run()
+#11 {main}
+
+[2026-03-09 11:31:06] imagecolorallocate(): Argument #1 ($image) must be of type GdImage, null given in /var/www/html/include/pChart/pChart/pChart.class on line 3023
+Stack trace:
+#0 /var/www/html/include/pChart/pChart/pChart.class(3023): imagecolorallocate(NULL, 255, 255, 255)
+#1 /var/www/html/include/pChart/pChart/pChart.class(2724): pChart->AllocateColor(NULL, 255, 255, 255)
+#2 /var/www/html/include/pChart/pChart/pChart.class(290): pChart->drawFilledRectangle(40, 20, 360, 210, 255, 255, 255, false)
+#3 /var/www/html/app/command/ReportGraph8_1.php(168): pChart->drawGraphArea(255, 255, 255)
+#4 /var/www/html/app/command/ReportGraph8_1.php(39): app_command_ReportGraph8_1->init(Object(app_controller_Request))
+#5 /var/www/html/app/command/Command.php(48): app_command_ReportGraph8_1->doExecute(Object(app_controller_Request))
+#6 /var/www/html/app/report/Report8.php(748): app_command_Command->execute(Object(app_controller_Request))
+#7 /var/www/html/app/report/Report8.php(700): app_report_Report8->writeImage('index.php?cmd=R...')
+#8 /var/www/html/app/report/Report8.php(93): app_report_Report8->sectorPenetrationSummary()
+#9 /var/www/html/app/command/Report8.php(111): app_report_Report8->__construct('2026-03-01', '2026-03-09', '549', '0', '1', '0', '1')
+#10 /var/www/html/app/command/Command.php(48): app_command_Report8->doExecute(Object(app_controller_Request))
+#11 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#12 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#13 /var/www/html/index.php(145): app_controller_Controller::run()
+#14 {main}
+
+[2026-03-09 11:39:59] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/report/Report5.php on line 266
+Stack trace:
+#0 /var/www/html/app/report/Report5.php(73): app_report_Report5->doBody()
+#1 /var/www/html/app/command/Report5.php(108): app_report_Report5->__construct('2026-03-01', '2026-03-09', '549', NULL, '2', true, true, true)
+#2 /var/www/html/app/command/Command.php(48): app_command_Report5->doExecute(Object(app_controller_Request))
+#3 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#4 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#5 /var/www/html/index.php(145): app_controller_Controller::run()
+#6 {main}
+
+[2026-03-09 12:00:51] Division by zero in /var/www/html/app/command/Report9.php on line 362
+Stack trace:
+#0 /var/www/html/app/command/Report9.php(78): app_command_Report9->getRowData('116', '2026-03-01', '2026-03-31', '202603')
+#1 /var/www/html/app/command/Report9.php(32): app_command_Report9->exportXLS('2026-03-01', '2026-03-09')
+#2 /var/www/html/app/command/Command.php(48): app_command_Report9->doExecute(Object(app_controller_Request))
+#3 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#4 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#5 /var/www/html/index.php(145): app_controller_Controller::run()
+#6 {main}
+
+[2026-03-09 12:19:15] Client ID not supplied in /var/www/html/app/command/Report15.php on line 31
+Stack trace:
+#0 /var/www/html/app/command/Command.php(48): app_command_Report15->doExecute(Object(app_controller_Request))
+#1 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#2 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#3 /var/www/html/index.php(145): app_controller_Controller::run()
+#4 {main}
+
+[2026-03-09 12:20:37] Client ID not supplied in /var/www/html/app/command/Report15.php on line 31
+Stack trace:
+#0 /var/www/html/app/command/Command.php(48): app_command_Report15->doExecute(Object(app_controller_Request))
+#1 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#2 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#3 /var/www/html/index.php(145): app_controller_Controller::run()
+#4 {main}
+
+[2026-03-09 12:20:43] Client ID not supplied in /var/www/html/app/command/Report15.php on line 31
+Stack trace:
+#0 /var/www/html/app/command/Command.php(48): app_command_Report15->doExecute(Object(app_controller_Request))
+#1 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#2 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#3 /var/www/html/index.php(145): app_controller_Controller::run()
+#4 {main}
+
+[2026-03-09 12:22:59] Client ID not supplied in /var/www/html/app/command/Report15.php on line 31
+Stack trace:
+#0 /var/www/html/app/command/Command.php(48): app_command_Report15->doExecute(Object(app_controller_Request))
+#1 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#2 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#3 /var/www/html/index.php(145): app_controller_Controller::run()
+#4 {main}
+
+[2026-03-09 12:26:46] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 664
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 12:28:14] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 772
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 12:29:41] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 772
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 12:34:59] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 664
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 12:59:58] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 664
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:00:28] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 772
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:03:10] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 664
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:03:44] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 772
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:06:36] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 664
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:07:08] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 772
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:11:49] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 664
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:13:05] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:14:20] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:14:26] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 668
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:14:51] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:16:37] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 668
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:17:52] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:18:12] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:33:42] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 668
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:34:15] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:42:41] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 668
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:43:10] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:43:37] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:44:06] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:44:36] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:45:07] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:47:09] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 668
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:47:40] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:48:06] Call to undefined method app_domain_CampaignNbm::isActive() in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 776
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:53:16] Call to a member function getIsCurrent() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 674
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:53:58] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:54:24] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 13:54:49] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 14:09:34] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-09 14:10:12] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:18:38] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:19:12] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:22:45] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:33:29] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:34:08] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:41:49] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:42:57] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:56:35] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:56:44] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 04:57:12] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:00:57] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:02:16] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:02:44] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:03:10] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(145): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:13:55] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:15:22] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:15:28] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:23:45] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:24:48] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:25:17] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:25:49] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:27:10] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:28:32] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:30:00] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(152): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:32:45] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:33:19] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:33:47] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:34:20] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:37:24] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:37:58] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:42:40] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:43:18] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:45:02] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:45:36] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:46:57] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:47:21] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:47:32] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:47:56] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:48:21] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:49:36] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:50:55] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:51:22] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:51:47] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:54:43] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:54:49] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 05:55:22] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 06:02:50] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 06:03:22] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 06:03:32] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 06:03:38] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 06:04:46] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 06:08:32] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 06:10:05] Call to a member function getId() on null in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 684
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+
+[2026-03-10 06:10:53] count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/app/view/templates_c/%%48^486^486DC400%%CampaignView.tpl.php on line 1089
+Stack trace:
+#0 /var/www/html/include/Smarty/Smarty.class.php(1269): include()
+#1 /var/www/html/include/Smarty/Smarty.class.php(1119): Smarty->fetch('CampaignView.tp...', NULL, NULL, true)
+#2 /var/www/html/app/view/CampaignView.php(66): Smarty->display('CampaignView.tp...')
+#3 /var/www/html/app/view/View.php(47): app_view_CampaignView->doExecute()
+#4 /var/www/html/app/controller/Controller.php(271): app_view_View->execute()
+#5 /var/www/html/app/controller/Controller.php(249): app_controller_Controller->forward('CampaignView')
+#6 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#7 /var/www/html/index.php(153): app_controller_Controller::run()
+#8 {main}
+

@@ -1,12 +1,15 @@
 <?php
 
-class app_model_LoginLog {
+use Illuminate\Database\Eloquent\Model;
 
-  public static function create($data)
+class app_model_LoginLog extends Model {
+
+  protected $guarded = [];
+  public $table = 'tbl_login_log';
+
+  public function user()
   {
-    // Simple implementation without Laravel - just return true for now
-    // In a full implementation, this would insert into tbl_login_log
-    return true;
+    return $this->belongsTo('app_model_User', 'user_id');
   }
 
 }

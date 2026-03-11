@@ -75,6 +75,12 @@ var $PDFVersion;         //PDF version number
 *                               Public methods                                 *
 *                                                                              *
 *******************************************************************************/
+// PHP 8-compatible constructor that forwards to the legacy PHP4-style constructor
+function __construct($orientation='P',$unit='mm',$format='A4') {
+	$this->FPDF($orientation,$unit,$format);
+}
+
+// Legacy constructor kept for backwards compatibility with existing code
 function FPDF($orientation='P',$unit='mm',$format='A4')
 {
 	//Some checks
@@ -429,7 +435,7 @@ function GetStringWidth($s)
 	$w=0;
 	$l=strlen($s);
 	for($i=0;$i<$l;$i++)
-		$w+=$cw[$s{$i}];
+		$w+=$cw[$s[$i]];
 	return $w*$this->FontSize/1000;
 }
 
@@ -737,7 +743,7 @@ function MultiCell($w,$h,$txt,$border=0,$align='J',$fill=0)
 	while($i<$nb)
 	{
 		//Get next character
-		$c=$s{$i};
+		$c=$s[$i];
 		if($c=="\n")
 		{
 			//Explicit line break
@@ -827,7 +833,7 @@ function Write($h,$txt,$link='')
 	while($i<$nb)
 	{
 		//Get next character
-		$c=$s{$i};
+		$c=$s[$i];
 		if($c=="\n")
 		{
 			//Explicit line break
@@ -906,8 +912,13 @@ function Image($file,$x,$y,$w=0,$h=0,$type='',$link='')
 			$type=substr($file,$pos+1);
 		}
 		$type=strtolower($type);
-		$mqr=get_magic_quotes_runtime();
-		ini_set('magic_quotes_runtime', 0);;
+		// Handle magic quotes runtime safely on modern PHP versions
+		if (function_exists('get_magic_quotes_runtime')) {
+			$mqr = get_magic_quotes_runtime();
+			ini_set('magic_quotes_runtime', 0);
+		} else {
+			$mqr = 0;
+		}
 		if($type=='jpg' || $type=='jpeg')
 			$info=$this->_parsejpg($file);
 		elseif($type=='png')
@@ -921,7 +932,9 @@ function Image($file,$x,$y,$w=0,$h=0,$type='',$link='')
 //				$this->Error('Unsupported image type: '.$type);
 //			$info=$this->$mtd($file);
 		}
-        ini_set('magic_quotes_runtime', $mqr);
+        if (function_exists('get_magic_quotes_runtime')) {
+			ini_set('magic_quotes_runtime', $mqr);
+		}
 		$info['i']=count($this->images)+1;
 		$this->images[$file]=$info;
 	}
@@ -1162,8 +1175,13 @@ function _putfonts()
 		$this->_out('<</Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences ['.$diff.']>>');
 		$this->_out('endobj');
 	}
-	$mqr=get_magic_quotes_runtime();
-	ini_set('magic_quotes_runtime', 0);;
+	// Handle magic quotes runtime safely on modern PHP versions
+	if (function_exists('get_magic_quotes_runtime')) {
+		$mqr = get_magic_quotes_runtime();
+		ini_set('magic_quotes_runtime', 0);
+	} else {
+		$mqr = 0;
+	}
 	foreach($this->FontFiles as $file=>$info)
 	{
 		//Font file embedding
@@ -1179,16 +1197,16 @@ function _putfonts()
 		$compressed=(substr($file,-2)=='.z');
 		if(!$compressed && isset($info['length2']))
 		{
-			$header=(ord($font{0})==128);
+			$header = (ord($font[0]) == 128);
 			if($header)
 			{
 				//Strip first binary header
-				$font=substr($font,6);
+				$font = substr($font, 6);
 			}
-			if($header && ord($font{$info['length1']})==128)
+			if($header && ord($font[$info['length1']]) == 128)
 			{
 				//Strip second binary header
-				$font=substr($font,0,$info['length1']).substr($font,$info['length1']+6);
+				$font = substr($font, 0, $info['length1']) . substr($font, $info['length1'] + 6);
 			}
 		}
 		$this->_out('<</Length '.strlen($font));
@@ -1201,7 +1219,9 @@ function _putfonts()
 		$this->_putstream($font);
 		$this->_out('endobj');
 	}
-    ini_set('magic_quotes_runtime', $mqr);
+    if (function_exists('get_magic_quotes_runtime')) {
+		ini_set('magic_quotes_runtime', $mqr);
+	}
 	foreach($this->fonts as $k=>$font)
 	{
 		//Font objects
@@ -1272,8 +1292,8 @@ function _putfonts()
 function _putimages()
 {
 	$filter=($this->compress) ? '/Filter /FlateDecode ' : '';
-	reset($this->images);
-	while(list($file,$info)=each($this->images))
+	// PHP 7.2+ removed each(); use a foreach loop instead.
+	foreach($this->images as $file => $info)
 	{
 		$this->_newobj();
 		$this->images[$file]['n']=$this->n;
@@ -1444,7 +1464,7 @@ function _beginpage($orientation)
 		$orientation=$this->DefOrientation;
 	else
 	{
-		$orientation=strtoupper($orientation{0});
+		$orientation = strtoupper($orientation[0]);
 		if($orientation!=$this->DefOrientation)
 			$this->OrientationChanges[$this->page]=true;
 	}

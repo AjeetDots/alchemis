@@ -18,7 +18,7 @@ class ErrMsgText {
     private $lt=NULL;
         function __construct(...$args) { call_user_func_array(array($this, 'ErrMsgText'), $args); }
 function ErrMsgText() {
-	GLOBAL $__jpg_err_locale;
+	GLOBAL $__jpg_err_locale, $_jpg_messages;
 	$file = 'lang/'.$__jpg_err_locale.'.inc.php';
 
 	// If the chosen locale doesn't exist try english
@@ -31,7 +31,13 @@ function ErrMsgText() {
 	    die('Chosen locale file ("'.$file.'") for error messages does not exist or is not readable for the PHP process. Please make sure that the file exists and that the file permissions are such that the PHP process is allowed to read this file.');
 	}
 	require_once($file);
-	$this->lt = $_jpg_messages;
+
+	// Make sure we have a valid message table to avoid undefined variable notices
+	if (isset($_jpg_messages) && is_array($_jpg_messages)) {
+	    $this->lt = $_jpg_messages;
+	} else {
+	    $this->lt = array();
+	}
     }
 
     function Get($errnbr,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null) {

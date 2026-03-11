@@ -1,0 +1,5 @@
+<IfModule mod_headers.c>
+    Header unset Content-Security-Policy
+    Header set Permissions-Policy "unload=(self)"
+    Header set Content-Security-Policy "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
+</IfModule>

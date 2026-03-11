@@ -27,9 +27,7 @@ class app_command_Report9 extends app_command_Command
         $date_to = $request->getProperty('end');
 
         $report_name = 'Sales Team Performance Against KPI Targets';
-        $xls = new Spreadsheet_Excel_Writer();
-
-        $xls =& $this->exportXLS($date_from, $date_to);
+        $xls = $this->exportXLS($date_from, $date_to);
         $xls->send($report_name . '.xls');
         $xls->close();
         exit();
@@ -277,6 +275,13 @@ class app_command_Report9 extends app_command_Command
         // Averages
 //        echo '$user_id = ' .$user_id;
         $monthly_call_data = app_domain_StatisticsReader::findCallsByUserIdAndYearMonth($user_id, $year_month);
+        if (!$monthly_call_data) {
+            $monthly_call_data = array(
+                'call_count' => 0,
+                'call_effective_count' => 0,
+                'meeting_set_count' => 0
+            );
+        }
 //        echo 'here' . $monthly_call_data['call_count'];
 //        exit();
 //        // Add average to call data
@@ -328,7 +333,11 @@ class app_command_Report9 extends app_command_Command
         // What have I got left to achieve before the end of the month
         // all of the above divided by the remaining working days available in the month (including any 'booked' days)
         $return['calls_need'] = round((($kpis['calls_per_call_day'] * $worked_days) - $monthly_call_data['call_count'] + ($kpis['calls_per_call_day'] * $working_days_for_remainder_of_month)));
-        $return['calls_need_per_day'] = round((($kpis['calls_per_call_day'] * $worked_days) - $monthly_call_data['call_count'] + ($kpis['calls_per_call_day'] * $working_days_for_remainder_of_month))/$working_days_for_remainder_of_month);
+        if ($working_days_for_remainder_of_month > 0) {
+            $return['calls_need_per_day'] = round((($kpis['calls_per_call_day'] * $worked_days) - $monthly_call_data['call_count'] + ($kpis['calls_per_call_day'] * $working_days_for_remainder_of_month))/$working_days_for_remainder_of_month);
+        } else {
+            $return['calls_need_per_day'] = 0;
+        }
 
 
         $return['effectives_target'] = $kpis['effectives_per_call_day'] * $return['call_days_max_month'];
@@ -338,7 +347,11 @@ class app_command_Report9 extends app_command_Command
             $return['effectives_actual'] = 0;
         }
         $return['effectives_need'] = round((($kpis['effectives_per_call_day'] * $worked_days) - $monthly_call_data['call_effective_count'] + ($kpis['effectives_per_call_day'] * $working_days_for_remainder_of_month)));
-        $return['effectives_need_per_day'] = round((($kpis['effectives_per_call_day'] * $worked_days) - $monthly_call_data['call_effective_count'] + ($kpis['effectives_per_call_day'] * $working_days_for_remainder_of_month))/$working_days_for_remainder_of_month);
+        if ($working_days_for_remainder_of_month > 0) {
+            $return['effectives_need_per_day'] = round((($kpis['effectives_per_call_day'] * $worked_days) - $monthly_call_data['call_effective_count'] + ($kpis['effectives_per_call_day'] * $working_days_for_remainder_of_month))/$working_days_for_remainder_of_month);
+        } else {
+            $return['effectives_need_per_day'] = 0;
+        }
 
 
         $return['meets_target'] = $kpis['meets_set_per_call_day'] * $return['call_days_max_month'];
@@ -348,20 +361,44 @@ class app_command_Report9 extends app_command_Command
             $return['meets_actual'] = 0;
         }
         $return['meets_need'] = round((($kpis['meets_set_per_call_day'] * $worked_days) - $monthly_call_data['meeting_set_count'] + ($kpis['meets_set_per_call_day'] * $working_days_for_remainder_of_month)), 2);
-        $return['meets_need_per_day'] = round((($kpis['meets_set_per_call_day'] * $worked_days) - $monthly_call_data['meeting_set_count'] + ($kpis['meets_set_per_call_day'] * $working_days_for_remainder_of_month))/$working_days_for_remainder_of_month, 2);
+        if ($working_days_for_remainder_of_month > 0) {
+            $return['meets_need_per_day'] = round((($kpis['meets_set_per_call_day'] * $worked_days) - $monthly_call_data['meeting_set_count'] + ($kpis['meets_set_per_call_day'] * $working_days_for_remainder_of_month))/$working_days_for_remainder_of_month, 2);
+        } else {
+            $return['meets_need_per_day'] = 0;
+        }
 
         // call rate = actual calls / elapsed time
-        $return['call_rate'] = round($return['calls_actual'] / $return['call_days_elapsed'], 2);
+        if ($return['call_days_elapsed'] > 0) {
+            $return['call_rate'] = round($return['calls_actual'] / $return['call_days_elapsed'], 2);
+        } else {
+            $return['call_rate'] = 0;
+        }
 
         // effective rate = actual effectives / elapsed time
-        $return['effectives_rate'] = round($return['effectives_actual'] / $return['call_days_elapsed'], 2);
+        if ($return['call_days_elapsed'] > 0) {
+            $return['effectives_rate'] = round($return['effectives_actual'] / $return['call_days_elapsed'], 2);
+        } else {
+            $return['effectives_rate'] = 0;
+        }
 
         // meets rate = meets / elapsed time
-        $return['meets_per_day'] = round($return['meets_actual'] / $return['call_days_elapsed'], 2);
+        if ($return['call_days_elapsed'] > 0) {
+            $return['meets_per_day'] = round($return['meets_actual'] / $return['call_days_elapsed'], 2);
+        } else {
+            $return['meets_per_day'] = 0;
+        }
 
-        $return['conversion'] = round($return['meets_actual'] * 100 / $return['effectives_actual'], 2);
+        if ($return['effectives_actual'] > 0) {
+            $return['conversion'] = round($return['meets_actual'] * 100 / $return['effectives_actual'], 2);
+        } else {
+            $return['conversion'] = 0;
+        }
 
-        $return['access'] = round($return['effectives_actual'] * 100 / $return['calls_actual'], 2);
+        if ($return['calls_actual'] > 0) {
+            $return['access'] = round($return['effectives_actual'] * 100 / $return['calls_actual'], 2);
+        } else {
+            $return['access'] = 0;
+        }
 
 
         return $return;

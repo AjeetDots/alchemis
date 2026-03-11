@@ -15,13 +15,23 @@
  * @link http://smarty.php.net/manual/en/language.modifiers.php#LANGUAGE.MODIFIER.CAPITALIZE
  *      capitalize (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @param string
+ * @param string|null $string
+ * @param bool        $uc_digits
  * @return string
  */
 function smarty_modifier_capitalize($string, $uc_digits = false)
 {
+    if ($string === null) {
+        return '';
+    }
+
     smarty_modifier_capitalize_ucfirst(null, $uc_digits);
-    return preg_replace_callback('!\b\w+\b!', 'smarty_modifier_capitalize_ucfirst', $string);
+
+    return preg_replace_callback(
+        '!\b\w+\b!',
+        'smarty_modifier_capitalize_ucfirst',
+        (string) $string
+    );
 }
 
 function smarty_modifier_capitalize_ucfirst($string, $uc_digits = null)

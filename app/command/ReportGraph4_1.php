@@ -158,7 +158,12 @@ class app_command_ReportGraph4_1 extends app_command_Command
 		$file = $request->getProperty('file');
 		if ($file)
 		{
-			$graph->Stroke('app' . DIRECTORY_SEPARATOR . 'report' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $file);
+			// Ensure the output directory exists before writing the image file
+			$outputDir = 'app' . DIRECTORY_SEPARATOR . 'report' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+			if (!is_dir($outputDir)) {
+				@mkdir($outputDir, 0777, true);
+			}
+			$graph->Stroke($outputDir . $file);
 		}
 		else
 		{

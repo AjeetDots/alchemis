@@ -17,22 +17,41 @@ class app_command_FilterExport extends app_command_Command
 
 			$filter_id = $request->getProperty('id');
 			$filter = app_domain_Filter::find($filter_id);
-			
-			if ($file_format == 'csv') {
+
+			// Guard against huge XLS exports that would exhaust memory.
+			// For very large result sets we automatically fall back to CSV.
+			$maxXlsRows = 50000;
+			if ($file_format === 'xls') {
+				$resultCount = app_domain_FilterBuilder::getFilterResultCount($filter_id);
+				if ($resultCount > $maxXlsRows) {
+					$file_format = 'csv';
+				}
+			}
+
+			if ($file_format === 'csv') {
 				$output = $this->exportCSV($filter_id);
 			} else {
-				$output =& $this->exportXLS($filter_id, $export_format);
+				$output = $this->exportXLS($filter_id, $export_format);
 			}
-			
+
 			return Response::download($output, $filter->getName() . '.' . $file_format);
 		}
 	}
 
 	function exportXLS($filter_id, $export_format)
   {
+		// Allow larger XLS exports without exhausting memory_limit
+		if (function_exists('ini_set')) {
+			// Increase memory limit specifically for heavy XLS exports.
+			// If ini_set is disabled or capped in php.ini, PHP will keep
+			// the lower effective limit.
+			@ini_set('memory_limit', '1024M');
+		}
+
 		$filter = app_domain_Filter::find($filter_id);
 
-		$xls = new Spreadsheet_Excel_Writer();
+		// Workbook requires a filename; '-' writes to stdout (captured by ob_start below)
+		$xls = new Spreadsheet_Excel_Writer('-');
 		$header_format =& $xls->addFormat([
 			'Size' => 10,
       'Align' => 'left',
@@ -438,18 +457,22 @@ class app_command_FilterExport extends app_command_Command
 		function exportCSV($filter_id)
 	  {
 			$filter = app_domain_Filter::find($filter_id);
-			$csv = Writer::createFromFileObject(new SplTempFileObject());
-			
-			$data = new Collection();
+
+			$handle = fopen('php://temp', 'r+');
+			if ($handle === false) {
+				throw new Exception('Unable to open temporary stream for CSV export');
+			}
+
+			// Write header row based on results format
 			switch ($filter->getResultsFormat())
 			{
 				case 'Company':
 				case 'Site':
-					$data->push($this->companyHeader());
+					fputcsv($handle, $this->companyHeader());
 					break;
 				case 'Company and posts':
 				case 'Site and posts':
-					$data->push(array_merge(
+					fputcsv($handle, array_merge(
 						$this->companyHeader(),
 						$this->postHeader()
 					));
@@ -457,20 +480,22 @@ class app_command_FilterExport extends app_command_Command
 				case 'Client initiative':
 				case 'Client initiative with last note':
 				case 'Mailer':
-					$data->push(array_merge(
+					fputcsv($handle, array_merge(
 						$this->companyHeader(),
 						$this->postHeader(),
 						$this->postInitiativeHeader()
 					));
 					break;
 				case 'Meeting':
-					$data->push(array_merge(
+					fputcsv($handle, array_merge(
 						$this->meetingHeader(),
 						$this->companyHeader(),
 						$this->postHeader(),
 						$this->postInitiativeHeader()
 					));
-	        break;
+					break;
+				default:
+					throw new Exception('No results format variable ($results_format) supplied.');
 			}
 
 			if ($items = app_domain_FilterBuilder::getFilterExport($filter_id, $filter->getResultsFormat())) {
@@ -479,13 +504,13 @@ class app_command_FilterExport extends app_command_Command
 					case 'Company':
 					case 'Site':
 						foreach ($items as $item) {
-							$data->push($this->companyData($item));
+							fputcsv($handle, $this->companyData($item));
 						}
 						break;
 					case 'Company and posts':
 					case 'Site and posts':
 						foreach ($items as $item) {
-							$data->push(array_merge(
+							fputcsv($handle, array_merge(
 								$this->companyData($item),
 								$this->postData($item)
 							));
@@ -495,7 +520,7 @@ class app_command_FilterExport extends app_command_Command
 					case 'Client initiative with last note':
 					case 'Mailer':
 						foreach ($items as $item) {
-							$data->push(array_merge(
+							fputcsv($handle, array_merge(
 								$this->companyData($item),
 								$this->postData($item),
 								$this->postInitiativeData($item)
@@ -504,7 +529,7 @@ class app_command_FilterExport extends app_command_Command
 						break;
 					case 'Meeting':
             foreach ($items as $item) {
-							$data->push(array_merge(
+							fputcsv($handle, array_merge(
 								$this->meetingData($item),
 								$this->companyData($item),
 								$this->postData($item),
@@ -514,13 +539,14 @@ class app_command_FilterExport extends app_command_Command
             break;
 					default:
 						throw new Exception('No results format variable ($results_format) supplied.');
-						break;
-					}
-					// write data
-					$csv->insertAll($data->toArray());
 				}
+			}
 
-				return $csv;
+			rewind($handle);
+			$csvContent = stream_get_contents($handle);
+			fclose($handle);
+
+			return $csvContent;
 	    }
 }
 

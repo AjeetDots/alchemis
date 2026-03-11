@@ -600,7 +600,7 @@ var $wt_TempData; //some temporary info
 
 		$last_width = $wmax - $w_first;
 
-        while (list($key, $val) = each($aTxt)) {
+        foreach ($aTxt as $key => $val) {
             
             $bYPosUsed = false;
                        
@@ -649,7 +649,7 @@ var $wt_TempData; //some temporary info
             
             if ($bYPosUsed) $this->y = $lastY;
             
-		}//while
+		}//foreach
 
 		// Output the Last Cell
 		if ($last_width != 0){

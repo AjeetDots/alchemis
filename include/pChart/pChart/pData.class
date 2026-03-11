@@ -50,7 +50,11 @@ class pData
   var $Data;
   var $DataDescription;
 
-  function pData()
+  /**
+   * PHP 8+ constructor. Old-style pData() is kept as an alias for
+   * backwards compatibility on older PHP versions.
+   */
+  function __construct()
   {
     $this->Data                           = [];
     $this->DataDescription                = [];
@@ -59,6 +63,12 @@ class pData
     $this->DataDescription["Format"]["Y"] = "number";
     $this->DataDescription["Unit"]["X"]   = NULL;
     $this->DataDescription["Unit"]["Y"]   = NULL;
+  }
+
+  // Legacy PHP 4-style constructor, delegates to __construct()
+  function pData()
+  {
+    $this->__construct();
   }
 
   function ImportFromCSV($FileName, $Delimiter = ",", $DataColumns = -1, $HasHeader = FALSE, $DataName = -1)
@@ -112,8 +122,10 @@ class pData
 
   function AddPoint($Value, $Serie = "Serie1", $Description = "")
   {
-    if (is_array($Value) && count($Value) == 1)
+    // Normalize single-element arrays to scalar
+    if (is_array($Value) && count($Value) == 1) {
       $Value = $Value[0];
+    }
 
     $ID = 0;
     for ($i = 0; $i <= count($this->Data); $i++) {
@@ -122,18 +134,31 @@ class pData
       }
     }
 
-    if (count($Value) == 1) {
+    // PHP 8 compatibility: only call count() on arrays
+    if (!is_array($Value)) {
+      // Treat non-array (scalar or null) as a single value
       $this->Data[$ID][$Serie] = $Value;
-      if ($Description != "")
+      if ($Description != "") {
         $this->Data[$ID]["Name"] = $Description;
-      elseif (!isset($this->Data[$ID]["Name"]))
+      } elseif (!isset($this->Data[$ID]["Name"])) {
         $this->Data[$ID]["Name"] = $ID;
+      }
     } else {
-      foreach ($Value as $key => $Val) {
-        $this->Data[$ID][$Serie] = $Val;
-        if (!isset($this->Data[$ID]["Name"]))
+      if (count($Value) == 1) {
+        $this->Data[$ID][$Serie] = $Value[0];
+        if ($Description != "") {
+          $this->Data[$ID]["Name"] = $Description;
+        } elseif (!isset($this->Data[$ID]["Name"])) {
           $this->Data[$ID]["Name"] = $ID;
-        $ID++;
+        }
+      } else {
+        foreach ($Value as $key => $Val) {
+          $this->Data[$ID][$Serie] = $Val;
+          if (!isset($this->Data[$ID]["Name"])) {
+            $this->Data[$ID]["Name"] = $ID;
+          }
+          $ID++;
+        }
       }
     }
   }

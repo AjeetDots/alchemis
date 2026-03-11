@@ -79,6 +79,8 @@ class app_command_MailerStatistics extends app_command_Command
 		}
 		
 		// MarketingStatisticsGraph3
+		$data = array();
+		$total_count = 0;
 		if ($results = app_domain_MailerItemResponse::findCountAndDescriptionByMailerId($mailer_id))
 		{
 			
@@ -107,23 +109,26 @@ class app_command_MailerStatistics extends app_command_Command
 	
 	protected function getMailerResponses($mailer_id)
 	{
+		$data = array();
+
 		if ($results = app_domain_MailerItemResponse::findByMailerId($mailer_id))
 		{
 			foreach ($results as $result)
 			{
-				$data[]   = array(	'company_id' 	=> $result['company_id'],
-									'company_name' 	=> $result['company_name'],
-									'post_id'		=> $result['post_id'],
-									'post'			=> $result['job_title'],
-									'contact' 		=> $result['contact'],
-									'response'  	=> $result['description'],
-									'response_date' => $result['response_date'],
-									'response_note' => $result['response_note']);
+				$data[] = array(
+					'company_id'    => $result['company_id'],
+					'company_name'  => $result['company_name'],
+					'post_id'       => $result['post_id'],
+					'post'          => $result['job_title'],
+					'contact'       => $result['contact'],
+					'response'      => $result['description'],
+					'response_date' => $result['response_date'],
+					'response_note' => $result['response_note']
+				);
 			}
-			
-//			$smarty->assign('responses', $data);
-			return $data;
 		}
+
+		return $data;
 	}
 
 }

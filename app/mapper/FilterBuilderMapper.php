@@ -224,6 +224,24 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 
 
 	/**
+	 * Returns the total number of rows in tbl_filter_results for a filter.
+	 * This is used to guard very large exports that would exhaust memory
+	 * when rendered to XLS.
+	 *
+	 * @param integer $filter_id
+	 * @return integer
+	 */
+	public function getFilterResultCount($filter_id)
+	{
+		$query = 'SELECT COUNT(*) ' .
+				 'FROM tbl_filter_results fr ' .
+				 'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer');
+
+		$result = self::$DB->queryOne($query);
+		return (int) $result;
+	}
+
+	/**
 	 * Constructs filter export results.
 	 * @return raw array of app_mapper_FilterBuilderCollection -
 	 */

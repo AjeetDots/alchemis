@@ -89,7 +89,11 @@ class app_domain_Characteristic extends app_domain_DomainObject
 	 */
 	public function setName($name)
 	{
-		$this->name = trim($name);
+		if ($name !== null) {
+			$name = trim((string)$name);
+		}
+
+		$this->name = $name;
 		$this->markDirty();
 	}
 
@@ -108,7 +112,11 @@ class app_domain_Characteristic extends app_domain_DomainObject
 	 */
 	public function setDescription($description)
 	{
-		$this->description = trim($description);
+		if ($description !== null) {
+			$description = trim((string)$description);
+		}
+
+		$this->description = $description;
 		$this->markDirty();
 	}
 
@@ -127,7 +135,11 @@ class app_domain_Characteristic extends app_domain_DomainObject
 	 */
 	public function setType($type)
 	{
-		$this->type = trim($type);
+		if ($type !== null) {
+			$type = trim((string)$type);
+		}
+
+		$this->type = $type;
 		$this->markDirty();
 	}
 

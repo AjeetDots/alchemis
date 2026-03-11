@@ -19,6 +19,21 @@ require_once('app/domain.php');
  */
 class app_mapper_CharacteristicElementMapper extends app_mapper_Mapper implements app_domain_CharacteristicElementFinder
 {
+	/** @var mixed */
+	protected $select_stmt;
+	/** @var mixed */
+	protected $insert_stmt;
+	/** @var mixed */
+	protected $update_stmt;
+	/** @var mixed */
+	protected $delete_stmt;
+	/** @var mixed */
+	protected $select_by_characteristic_stmt;
+	/** @var mixed */
+	protected $select_by_characteristic_id_and_name_stmt;
+	/** @var mixed */
+	protected $lookup_name_stmt;
+
 	public function __construct()
 	{
 		if (!self::$DB)

@@ -32,8 +32,11 @@ require_once('app/mapper/CompanyMapper.php');
  */
 class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 {
-
+	/** @var app_domain_Filter|null */
+	protected $filter;
+	/** @var app_domain_FilterBuilder */
 	protected $filter_builder;
+
 	/**
 	 * Excute the command.
 	 */

@@ -45,15 +45,26 @@ require_once 'Spreadsheet/Excel/Writer/Workbook.php';
 class Spreadsheet_Excel_Writer extends Spreadsheet_Excel_Writer_Workbook
 {
     /**
-    * The constructor. It just creates a Workbook
+    * PHP 5+/7+ constructor. It just creates a Workbook.
     *
     * @param string $filename The optional filename for the Workbook.
-    * @return Spreadsheet_Excel_Writer_Workbook The Workbook created
+    * @return void
     */
-    function Spreadsheet_Excel_Writer($filename = '')
+    public function __construct($filename = '')
     {
         $this->_filename = $filename;
-        $this->Spreadsheet_Excel_Writer_Workbook($filename);
+        parent::__construct($filename);
+    }
+
+    /**
+    * PHP 4-style constructor kept for backwards compatibility.
+    *
+    * @param string $filename The optional filename for the Workbook.
+    * @return void
+    */
+    public function Spreadsheet_Excel_Writer($filename = '')
+    {
+        $this->__construct($filename);
     }
 
     /**

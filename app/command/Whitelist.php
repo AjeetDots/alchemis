@@ -12,14 +12,18 @@ class app_command_Whitelist extends app_command_ResourceCommand
 
     foreach ($whitelist as $item) {
       $log = $item->logins()->orderBy('created_at', 'desc')->first();
-      if ($log) {
+      if ($log && $log->user) {
         $created = new Carbon($log->created_at);
         $item->last_login = $created->toDayDateTimeString() . ' by ' . $log->user->name;
+      } else {
+        $item->last_login = null;
       }
     }
 
     return Response::view('whitelist.index', [
-      'whitelist' => $whitelist
+      'whitelist' => $whitelist,
+      'errors' => [],
+      'input' => []
     ]);
   }
 
@@ -36,7 +40,9 @@ class app_command_Whitelist extends app_command_ResourceCommand
     if ($validator->fails()) {
       $messages = $validator->messages();
       return Response::view('whitelist.index', [
-        'errors' => $messages->toArray()
+        'whitelist' => app_model_Whitelist::all(),
+        'errors' => $messages->toArray(),
+        'input' => $data
       ]);
     }
 

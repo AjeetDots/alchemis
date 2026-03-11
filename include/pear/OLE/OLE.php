@@ -59,9 +59,14 @@ class OLE extends PEAR
     * Remember to use ampersand when creating an OLE object ($my_ole = new OLE();)
     * @access public
     */
-    function OLE()
+    function __construct()
     {
         $this->_list = array();
+    }
+
+    function OLE()
+    {
+        $this->__construct();
     }
 
     /**
@@ -92,26 +97,26 @@ class OLE extends PEAR
         }
         fseek($fh, $big_block_size_offset);
         $packed_array = unpack("v", fread($fh, 2));
-        $big_block_size   = pow(2, $packed_array['']);
+        $big_block_size   = pow(2, $packed_array[1]);
 
         $packed_array = unpack("v", fread($fh, 2));
-        $small_block_size = pow(2, $packed_array['']);
+        $small_block_size = pow(2, $packed_array[1]);
         $i1stBdL = ($big_block_size - 0x4C) / OLE_LONG_INT_SIZE;
 
         fseek($fh, $iBdbCnt_offset);
         $packed_array = unpack("V", fread($fh, 4));
-        $iBdbCnt = $packed_array[''];
+        $iBdbCnt = $packed_array[1];
 
         $packed_array = unpack("V", fread($fh, 4));
-        $pps_wk_start = $packed_array[''];
+        $pps_wk_start = $packed_array[1];
 
         fseek($fh, $bd_start_offset);
         $packed_array = unpack("V", fread($fh, 4));
-        $bd_start = $packed_array[''];
+        $bd_start = $packed_array[1];
         $packed_array = unpack("V", fread($fh, 4));
-        $bd_count = $packed_array[''];
+        $bd_count = $packed_array[1];
         $packed_array = unpack("V", fread($fh, 4));
-        $iAll = $packed_array[''];  // this may be wrong
+        $iAll = $packed_array[1];  // this may be wrong
         /* create OLE_PPS objects from */
         $ret = $this->_readPpsWks($pps_wk_start, $big_block_size);
         if (PEAR::isError($ret)) {
@@ -126,9 +131,16 @@ class OLE extends PEAR
     *
     * @access private
     */
+    function __destruct()
+    {
+        if (isset($this->_file_handle) && is_resource($this->_file_handle)) {
+            fclose($this->_file_handle);
+        }
+    }
+
     function _OLE()
     {
-        fclose($this->_file_handle);
+        $this->__destruct();
     }
 
     /**
@@ -152,14 +164,14 @@ class OLE extends PEAR
                 //return $this->raiseError("PPS at $pointer seems too short: ".strlen($pps_wk));
             }
             $name_length = unpack("c", substr($pps_wk, 64, 2)); // FIXME (2 bytes??)
-            $name_length = $name_length[''] - 2;
+            $name_length = $name_length[1] - 2;
             $name = substr($pps_wk, 0, $name_length);
             $type = unpack("c", substr($pps_wk, 66, 1));
-            if (($type[''] != OLE_PPS_TYPE_ROOT) and
-                ($type[''] != OLE_PPS_TYPE_DIR) and
-                ($type[''] != OLE_PPS_TYPE_FILE))
+            if (($type[1] != OLE_PPS_TYPE_ROOT) and
+                ($type[1] != OLE_PPS_TYPE_DIR) and
+                ($type[1] != OLE_PPS_TYPE_FILE))
             {
-                return $this->raiseError("PPS at $pointer has unknown type: {$type['']}");
+                return $this->raiseError("PPS at $pointer has unknown type: {$type[1]}");
             }
             $prev = unpack("V", substr($pps_wk, 68, 4));
             $next = unpack("V", substr($pps_wk, 72, 4));
@@ -172,12 +184,12 @@ class OLE extends PEAR
             $size = unpack("V", substr($pps_wk, 120, 4));
             // _data member will point to position in file!!
             // OLE_PPS object is created with an empty children array!!
-            $this->_list[] = new OLE_PPS(null, '', $type[''], $prev[''], $next[''],
-                                         $dir[''], OLE::OLE2LocalDate($time_1st),
+            $this->_list[] = new OLE_PPS(null, '', $type[1], $prev[1], $next[1],
+                                         $dir[1], OLE::OLE2LocalDate($time_1st),
                                          OLE::OLE2LocalDate($time_2nd),
-                                         ($start_block[''] + 1) * $big_block_size, array());
+                                         ($start_block[1] + 1) * $big_block_size, array());
             // give it a size
-            $this->_list[count($this->_list) - 1]->Size = $size[''];
+            $this->_list[count($this->_list) - 1]->Size = $size[1];
             // check if the PPS tree (starting from root) is complete
             if ($this->_ppsTreeComplete(0)) {
                 break;
@@ -308,7 +320,7 @@ class OLE extends PEAR
     {
         $rawname = '';
         for ($i = 0; $i < strlen($ascii); $i++) {
-            $rawname .= $ascii{$i}."\x00";
+            $rawname .= $ascii[$i]."\x00";
         }
         return $rawname;
     }
@@ -380,8 +392,8 @@ class OLE extends PEAR
         $high_part = 0;
         for ($i=0; $i<4; $i++)
         {
-            $al = unpack('C', $string{(7 - $i)});
-            $high_part += $al[''];
+            $al = unpack('C', $string[(7 - $i)]);
+            $high_part += $al[1];
             if ($i < 3) {
                 $high_part *= 0x100;
             }
@@ -389,8 +401,8 @@ class OLE extends PEAR
         $low_part = 0;
         for ($i=4; $i<8; $i++)
         {
-            $al = unpack('C', $string{(7 - $i)});
-            $low_part += $al[''];
+            $al = unpack('C', $string[(7 - $i)]);
+            $low_part += $al[1];
             if ($i < 7) {
                 $low_part *= 0x100;
             }

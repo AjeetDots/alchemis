@@ -1463,6 +1463,9 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     */
     function writeString($row, $col, $str, $format = null)
     {
+        if ($str === null) {
+            $str = '';
+        }
         if ($this->_BIFF_version == 0x0600) {
             return $this->writeStringBIFF8($row, $col, $str, $format);
         }
@@ -1537,6 +1540,9 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     */
     function writeStringBIFF8($row, $col, $str, $format = null)
     {
+        if ($str === null) {
+            $str = '';
+        }
         if ($this->_input_encoding == 'UTF-16LE')
         {
             $strlen = function_exists('mb_strlen') ? mb_strlen($str, 'UTF-16LE') : (strlen($str) / 2);

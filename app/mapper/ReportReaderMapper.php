@@ -1063,7 +1063,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 	 */
 	public function getReport6Data($start, $end, $order_by = 0, $client_id = null)
 	{
-		//$debug = true;
+		$debug = false;
 
 		// New meetings
 		$query = 'CREATE TEMPORARY TABLE m1 ' .
@@ -1688,6 +1688,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 	public function getReport7ClientCampaignSummary($start, $end, $client_id)
 	{
 //		$debug = true;
+		$debug = false;
 
 		$query = 'create temporary table tmp_NbmsWithCallsInPeriod ' .
         'SELECT ds.user_id, sum(call_count) as calls ' .
@@ -1724,6 +1725,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 	public function getReport7ClientCampaignDisciplines($client_id)
 	{
 //		$debug = true;
+		$debug = false;
 		$query = 'select ' .
 					'tc.value as discipline ' .
 					'from tbl_campaign_disciplines cd ' .
@@ -1739,6 +1741,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 	public function getReport7ClientCampaignLeadNbm($client_id)
 	{
 //		$debug = true;
+		$debug = false;
 		$query = 'select ' .
 					'rbac.name, cnbm.deactivated_date ' .
 					'from tbl_campaign_nbms cnbm ' .
@@ -1755,6 +1758,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 	public function getReport7ClientCampaignNonLeadNbm($client_id)
 	{
 //		$debug = true;
+		$debug = false;
 
 
 		$query = 'select ' .
@@ -1775,6 +1779,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 	public function getReport7MeetingsTargets($start, $end, $client_id)
 	{
 //		$debug = true;
+		$debug = false;
 		$query = 'select ' .
 					'sum(calls) AS calls_target, ' .
 					'sum(effectives) AS effectives_target, ' .
@@ -1796,6 +1801,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 	public function getReport7DatabaseAnalysisProspect($start, $end, $client_id)
 	{
 		//$debug = true;
+		$debug = false;
 		$query = 'select ' .
 					'sum(call_count) AS call_count, ' .
 					'sum(call_effective_count) AS call_effective_count, ' .
@@ -1844,6 +1850,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7DatabaseAnalysisProspectByNbm($start, $end, $client_id)
 	{
+		$debug = false;
 //		$debug = true;
 
 
@@ -1889,6 +1896,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7DatabaseAnalysisProspectByNbmByMonth($start, $end, $client_id)
 	{
+		$debug = false;
 
 		// NOTE: This function assumes that the function getReport7DatabaseAnalysisProspectByNbm has already been run since
 		// the function getReport7DatabaseAnalysisProspectByNbm creates a temporary table which restricts NBMs shown on this
@@ -1947,6 +1955,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7MeetingsSetSummaryNewMeetings($start, $end, $client_id)
 	{
+		$debug = false;
 //		$debug = true;
 //		$query = 'call sp_report_5_3b_4 (' . self::$DB->quote($start, 'timestamp') . ', ' .
 //					self::$DB->quote($end, 'timestamp') . ', ' .
@@ -1977,6 +1986,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7MeetingsSetSummaryRearrangedMeetings($start, $end, $client_id)
 	{
+		$debug = false;
 //		$debug = true;
 	$values = array();
 
@@ -2033,6 +2043,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7CampaignCancellationsMeetingLeadTimes($start, $end, $client_id)
 	{
+		$debug = false;
 		//$debug = true;
 
 		$query = 'SELECT avg(DATEDIFF(m.date, m.created_at)) as day_count, count(m.id) as meeting_count ' .
@@ -2061,6 +2072,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7PeriodCancellationsMeetingLeadTimes($start, $end, $client_id)
 	{
+		$debug = false;
 //		$debug = true;
 
 //	makeTemporaryTable_1($db);
@@ -2652,6 +2664,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
    public function getReport10GlobalSectorAnalysis($start, $end)
     {
 //      $debug = true;
+        $debug = false;
         $values = array();
 
         $query = 'create temporary table t (' .
@@ -2745,6 +2758,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
     public function getReport10NbmSectorAnalysis($start, $end)
     {
 //      $debug = true;
+        $debug = false;
         $values = array();
 
         $query = 'create temporary table t (' .
@@ -2847,7 +2861,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
    public function getReport11GlobalDisciplineAnalysis($start, $end)
     {
-//        $debug = true;
+        $debug = false;
 
         $query = 'select u.id as user_id, ' .
                 'u.name AS nbm, ' .
@@ -2875,7 +2889,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport11NbmDisciplineAnalysis($start, $end)
     {
-//      $debug = true;
+        $debug = false;
         $query = 'select u.id as user_id, ' .
                 'u.name AS nbm, ' .
                 'sum(call_count) AS calls, ' .
@@ -2912,7 +2926,8 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
    public function getReport12GlobalSectorDisciplineAnalysis($start, $end)
     {
-//        $debug = true;
+   //        $debug = true;
+        $debug = false;
 
     	$values = array();
 
@@ -2975,7 +2990,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
         $query = 'insert into t1 ' .
                 'select m.id as meeting_id, m.communication_id ' .
-                'from tbl_meetings m';
+                'from tbl_meetings m ' .
                 'where m.date >= ' . self::$DB->quote($start, 'timestamp') .' ' .
                 'AND m.date <= ' . self::$DB->quote($end, 'timestamp');
 
@@ -3025,9 +3040,8 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 
    public function getReport13QuarterSummary($year, $nbm_exclusions, $client_id = null)
-    {
-//        $debug = true;
-
+   {
+        $debug = false;
         $query = 'select period_year, period_quarter, u.name as nbm, ' .
                  'sum(meeting_category_attended_count) as attended, ' .
                  'sum(meeting_category_tbr_count) as tbr, ' .
@@ -3060,8 +3074,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport13QuarterClientSummary($year, $nbm_exclusions, $client_id = null)
     {
-//        $debug = true;
-
+        $debug = false;
         $query = 'select period_year, period_quarter, u.name as nbm, c.name as client, ' .
                  'sum(meeting_category_attended_count) as attended, ' .
                  'sum(meeting_category_tbr_count) as tbr, ' .
@@ -3140,8 +3153,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport14NBMSummary($year, $userId)
     {
-//        $debug = true;
-
+        $debug = false;
         $query = 'select period_year, period_quarter, u.name as nbm, ' .
                  'sum(meeting_category_attended_count) as attended, ' .
                  'sum(meeting_category_tbr_count) as tbr, ' .
@@ -3163,8 +3175,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport14QuarterClientSummary($year, $userId)
     {
-//        $debug = true;
-
+        $debug = false;
         $query = 'select period_year, period_quarter, u.name as nbm, c.name as client, ' .
                  'sum(meeting_category_attended_count) as attended, ' .
                  'sum(meeting_category_tbr_count) as tbr, ' .
@@ -3199,8 +3210,6 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport15ClientExceptionBase($clientId)
     {
-//        $debug = true;
-
     	$query = 'select c.name as client_name, u.name as nbm ' .
                 'from tbl_clients c ' .
                 'join tbl_campaigns cam on cam.client_id = c.id ' .
@@ -3208,7 +3217,6 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
                 'join tbl_rbac_users u on camn.user_id = u.id ' .
                 'where c.id = ' . self::$DB->quote($clientId, 'integer');
 
-        if ($debug) echo "<p>$query;</p>";
         $results = self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
 
         return $results;
@@ -3216,8 +3224,6 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport15ClientMeetings($clientId)
     {
-//        $debug = true;
-
     	$query = 'select ' .
                 'sum(meeting_category_tbr_count) as tbr, ' .
                 'sum(meeting_category_unknown_count) as unknown ' .
@@ -3226,7 +3232,6 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
                 'join tbl_data_statistics ds on cam.id = ds.campaign_id ' .
                 'where c.id = ' . self::$DB->quote($clientId, 'integer');
 
-        if ($debug) echo "<p>$query;</p>";
         $results = self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
 
         return $results;
@@ -3235,8 +3240,6 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport15ClientFreshLeads($clientId)
     {
-//        $debug = true;
-
     	$query = 'select ' .
                 'count(pi.id) as fresh_lead_count ' .
                 'from tbl_post_initiatives pi ' .
@@ -3246,7 +3249,6 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
                 'where c.id = ' . self::$DB->quote($clientId, 'integer') . ' ' .
                 'and pi.status_id = 7';
 
-        if ($debug) echo "<p>$query;</p>";
         $results = self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
 
         return $results;
@@ -3254,15 +3256,12 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport15ClientMaxTargetDate($clientId)
     {
-//        $debug = true;
-
         $query = 'select max(camt.year_month) as max_target_date ' .
                 'from tbl_clients c ' .
                 'join tbl_campaigns cam on cam.client_id = c.id ' .
                 'join tbl_campaign_targets camt on camt.campaign_id = cam.id ' .
                 'where c.id = ' . self::$DB->quote($clientId, 'integer');
 
-        if ($debug) echo "<p>$query;</p>";
         $results = self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
 
         return $results;
@@ -3270,15 +3269,12 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport15ClientSectorCount($clientId)
     {
-//        $debug = true;
-
         $query = 'select count(cams.id) as sector_count ' .
                 'from tbl_clients c ' .
                 'join tbl_campaigns cam on cam.client_id = c.id ' .
                 'join tbl_campaign_sectors cams on cams.campaign_id = cam.id ' .
                 'where c.id = ' . self::$DB->quote($clientId, 'integer');
 
-        if ($debug) echo "<p>$query;</p>";
         $results = self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
 
         return $results;
@@ -3286,15 +3282,12 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
     public function getReport15ClientDisciplineCount($clientId)
     {
-//        $debug = true;
-
         $query = 'select count(camd.id) as discipline_count ' .
                 'from tbl_clients c ' .
                 'join tbl_campaigns cam on cam.client_id = c.id ' .
                 'join tbl_campaign_disciplines camd on camd.campaign_id = cam.id ' .
                 'where c.id = ' . self::$DB->quote($clientId, 'integer');
 
-        if ($debug) echo "<p>$query;</p>";
         $results = self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
 
         return $results;

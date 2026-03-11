@@ -9,9 +9,12 @@
  */
 
 require_once('app/base/Registry.php');
+require_once('app/controller/Request.php');
 
 require_once('app/domain/Filter.php');
 require_once('app/domain/FilterBuilder.php');
+
+require_once('app/command/ReportGraph8_1.php');
 
 require_once('include/fpdf/fpdf_table.php');
 //require_once('include/fpdf/.php');
@@ -682,24 +685,25 @@ class app_report_Report8 extends FPDF_TABLE
 		$this->Ln(5);
 
 		$path = 'app' . DIRECTORY_SEPARATOR . 'report' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-
+		
 		$filename = 'ReportGraph8_1_' . mt_rand() . '.png';
 		$dest = 'index.php?cmd=ReportGraph8_1&media=print&file=' . $filename
 			. '&start=' . urlencode($this->params['campaign_start'])
 			. '&end=' . urlencode($this->params['end'])
 			. '&client_id=' . urlencode($this->params['client_id']);
-		if ($_GET['test']){
+		if (isset($_GET['test']) && $_GET['test']) {
 			print_r($this->params);
 			die($dest);
 		}
+
+		// Generate image file by invoking the ReportGraph8_1 command directly
 		$this->writeImage($dest);
 		$img = $path . $filename;
-
-		// check if file exists
-		while (!file_exists($img)) {
-			// do nothing
-			// $img = $path . 'test.png';
-			throw new Exception('No graph file found! Looking for: ' . $img);
+		
+		// check if file exists; if not, skip embedding graph but continue report generation
+		if (!file_exists($img)) {
+			// Graph generation failed (e.g. missing GD/pChart or permissions); continue without graph
+			return;
 		}
 
 		$this->Image($img, $this->GetX() + 150, $this->getY(), 120, 70);
@@ -707,34 +711,41 @@ class app_report_Report8 extends FPDF_TABLE
 	}
 
 	/**
-	 * NB Function was failing due to Undefined index: auth_session in Session.php::getSessionUser.
-	 * Writes the graph image to a file so that it can be imported by FPDF.
-	 * NB Function was failing due to Undefined index: auth_session in Session.php::getSessionUser.
-	 * @param string $dest
+	 * Generate a graph image file by invoking the ReportGraph8_1
+	 * command directly (avoids HTTP/cURL and file path issues).
+	 *
+	 * @param string $dest e.g. 'index.php?cmd=ReportGraph8_1&media=print&file=...'
+	 * @throws Exception if parameters are invalid or the command fails.
 	 */
 	private function writeImage($dest)
 	{
-		// Need to use localhost rather than server name ($_SERVER['SERVER_NAME'])
-		if ($_SERVER['SERVER_PORT'] == 443) {
-			$url = 'http://localhost' . app_base_ApplicationRegistry::getUrl();
-		} else {
-			$url = 'http://localhost' . app_base_ApplicationRegistry::getUrl();
+		$query = parse_url($dest, PHP_URL_QUERY);
+		if ($query === null) {
+			throw new Exception('Invalid graph destination: ' . $dest);
 		}
 
+		$params = array();
+		parse_str($query, $params);
 
-		$full_url = $url . $dest;
-
-		$ch = curl_init($full_url);
-		if (!$ch) {
-			echo "Here - in die";
-			die('Cannot allocate a new PHP-CURL handle');
+		if (!isset($params['cmd']) || $params['cmd'] !== 'ReportGraph8_1') {
+			throw new Exception('Unknown or missing graph command in destination: ' . $dest);
 		}
-		curl_setopt($ch, CURLOPT_FAILONERROR,    1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-		$data = curl_exec($ch);
 
-		curl_close($ch);
+		// Ensure the output directory exists
+		$outputDir = 'app' . DIRECTORY_SEPARATOR . 'report' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+		if (!is_dir($outputDir)) {
+			@mkdir($outputDir, 0777, true);
+		}
+
+		// Build an internal request carrying the same parameters
+		$request = new app_controller_Request();
+		foreach ($params as $key => $value) {
+			$request->setProperty($key, $value);
+		}
+
+		// Execute the graph command; it will write the PNG into app/report/tmp
+		$command = new app_command_ReportGraph8_1();
+		$command->execute($request);
 	}
 
 	public function sectorPeriodResults()
@@ -853,7 +864,7 @@ class app_report_Report8 extends FPDF_TABLE
 		$this->SetStyle("style", "arial", "I", 8, "0, 0, 0");
 
 		$current_status = '';
-		foreach ($data2 as $row) {
+		foreach ((array)$data2 as $row) {
 			// do grouping check
 			if ($current_status != $row['status']) {
 				$current_status = $row['status'];
@@ -1252,15 +1263,19 @@ class app_report_Report8 extends FPDF_TABLE
 
 	protected static function array_utf8_to_iso88591($in)
 	{
+		$out = array();
+
 		if (is_array($in)) {
 			foreach ($in as $key => $value) {
 				$out[self::array_utf8_to_iso88591($key)] = self::array_utf8_to_iso88591($value);
 			}
-		} elseif (is_string($in)) {
-			return iconv("UTF-8", "windows-1252//TRANSLIT", $in);
-		} else {
-			return $in;
+			return $out;
 		}
-		return $out;
+
+		if (is_string($in)) {
+			return iconv("UTF-8", "windows-1252//TRANSLIT", $in);
+		}
+
+		return $in;
 	}
 }

@@ -164,11 +164,12 @@ class app_report_Report14 extends FPDF
 	                $x++;
 	            }
 
-	            if ($currentQuarter == $quarter) {
-	                $total = (int)$row['attended'] + (int)$row['tbr'] + (int)$row['cancelled'] + (int)$row['unknown'] + (int)$row['diary'];
-	            } else {
-	            	$total = (int)$row['attended'] + (int)$row['tbr'] + (int)$row['cancelled'] + (int)$row['unknown'];
-	            }
+            $diaryCount = isset($row['diary']) ? (int)$row['diary'] : 0;
+            if ($currentQuarter == $quarter) {
+                $total = (int)$row['attended'] + (int)$row['tbr'] + (int)$row['cancelled'] + (int)$row['unknown'] + $diaryCount;
+            } else {
+            	$total = (int)$row['attended'] + (int)$row['tbr'] + (int)$row['cancelled'] + (int)$row['unknown'];
+            }
 
 	            if ($total > 0) {
 	            	if ($currentQuarter == $quarter) {
@@ -177,7 +178,7 @@ class app_report_Report14 extends FPDF
 			            $this->Cell(18, 5, $row['tbr'],            1, 0, 'C', 0);
 			            $this->Cell(22, 5, $row['cancelled'],       1, 0, 'C', 0);
 			            $this->Cell(22, 5, $row['unknown'],        1, 0, 'C', 0);
-			            $this->Cell(18, 5, $row['diary'],        1, 0, 'C', 0);
+			            $this->Cell(18, 5, $diaryCount,        1, 0, 'C', 0);
 			            $this->Cell(18, 5, $total, 1, 0, 'C', 0);
 	            	} else {
 	            		$this->Cell(58, 5, $row['nbm'],         1, 0, 'L', 0);
@@ -197,12 +198,13 @@ class app_report_Report14 extends FPDF
     public function quarterFinancialSummaryByNBM($year, $userId)
     {
         $quarter = '';
-        $x = 0;
-        $currentQuarter = null;
-        $runningAttended = 0;
-        $runningPotential = 0;
-        $runningWasted = 0;
-        $diary = 0;
+       $x = 0;
+       $currentQuarter = null;
+       $runningAttended = 0;
+       $runningPotential = 0;
+       $runningWasted = 0;
+       $diary = 0;
+       $runningTotal = 0;
         $this->Ln();
 
         $rows = app_domain_ReportReader::getReport14NBMSummary($year . '-01-01', $userId);
@@ -236,10 +238,13 @@ class app_report_Report14 extends FPDF
 	                    $runningAttended += (int)$row['attended'] * 100;
 	                    $this->Cell(40, 5, (int)$total * 100,            1, 0, 'C', 0);
 	                    $runningPotential += (int)$total * 100;
-	                    $this->Cell(22, 5, ((int)$total * 100) - ((int)$row['attended'] * 100),       1, 0, 'C', 0);
-	                    $runningWasted += ((int)$total * 100) - ((int)$row['attended'] * 100);
-	                    $runningTotal += $total*100;
-	                    $this->Cell(22, 5, number_format((int)$row['attended']*100/(int)$total) . '%',        1, 0, 'C', 0);
+                    $this->Cell(22, 5, ((int)$total * 100) - ((int)$row['attended'] * 100),       1, 0, 'C', 0);
+                    $runningWasted += ((int)$total * 100) - ((int)$row['attended'] * 100);
+                    $runningTotal += $total * 100;
+                    $attRate = ($total > 0)
+                        ? number_format(((int)$row['attended'] * 100) / (int)$total) . '%'
+                        : '0%';
+                    $this->Cell(22, 5, $attRate,        1, 0, 'C', 0);
 	                $this->Ln();
 	            }
 
@@ -249,8 +254,11 @@ class app_report_Report14 extends FPDF
 	        $this->Cell(84, 5, 'Totals',         1, 0, 'L', 0);
 	        $this->Cell(22, 5, $runningAttended,         1, 0, 'L', 0);
 	        $this->Cell(40, 5, $runningPotential,            1, 0, 'C', 0);
-	        $this->Cell(22, 5, $runningWasted,       1, 0, 'C', 0);
-	        $this->Cell(22, 5, number_format($runningAttended/$runningTotal*100). '%',        1, 0, 'C', 0);
+            $this->Cell(22, 5, $runningWasted,       1, 0, 'C', 0);
+            $totalRate = ($runningTotal > 0)
+                ? number_format($runningAttended / $runningTotal * 100) . '%'
+                : '0%';
+            $this->Cell(22, 5, $totalRate,        1, 0, 'C', 0);
 
 	        $this->Ln();
 	        $this->Ln();
@@ -280,10 +288,13 @@ class app_report_Report14 extends FPDF
 	                    $this->Cell(40, 5, (int)$row['diary'] * 100,            1, 0, 'C', 0);
 	                    $runningPotential += ((int)$row['diary'] * 100) + ((int)$row['attended'] * 100);
 	                    $diary = (int)$row['diary'] * 100;
-	                    $this->Cell(22, 5, ((int)$row['diary'] * 100) + ((int)$row['attended'] * 100),       1, 0, 'C', 0);
-	//                    $runningWasted += ((int)$total * 100) - ((int)$row['attended'] * 100);
-	//                    $runningTotal += $total*100;
-	                    $this->Cell(22, 5, number_format((int)$row['attended']*100/(int)$total) . '%',        1, 0, 'C', 0);
+                        $this->Cell(22, 5, ((int)$row['diary'] * 100) + ((int)$row['attended'] * 100),       1, 0, 'C', 0);
+    //                    $runningWasted += ((int)$total * 100) - ((int)$row['attended'] * 100);
+    //                    $runningTotal += $total*100;
+                        $attRate = ($total > 0)
+                            ? number_format(((int)$row['attended'] * 100) / (int)$total) . '%'
+                            : '0%';
+                        $this->Cell(22, 5, $attRate,        1, 0, 'C', 0);
 	                $this->Ln();
 	            }
 
@@ -305,16 +316,22 @@ class app_report_Report14 extends FPDF
 
 	        $this->Cell(84, 5, 'Actual',         1, 0, 'L', 0);
 	        $this->Cell(22, 5, $runningAttended,         1, 0, 'L', 0);
-	        $this->Cell(40, 5, $runningPotential,            1, 0, 'C', 0);
-	        $this->Cell(22, 5, $runningWasted,       1, 0, 'C', 0);
-	        $this->Cell(22, 5, number_format((int)$runningAttended*100/(int)$runningPotential) . '%',        1, 0, 'C', 0);
+            $this->Cell(40, 5, $runningPotential,            1, 0, 'C', 0);
+            $this->Cell(22, 5, $runningWasted,       1, 0, 'C', 0);
+            $ytdRateActual = ($runningPotential > 0)
+                ? number_format((int)$runningAttended * 100 / (int)$runningPotential) . '%'
+                : '0%';
+            $this->Cell(22, 5, $ytdRateActual,        1, 0, 'C', 0);
 	        $this->Ln();
 
 	        $this->Cell(84, 5, 'Max',         1, 0, 'L', 0);
 	        $this->Cell(22, 5, $runningAttended + $diary,         1, 0, 'L', 0);
-	        $this->Cell(40, 5, $runningPotential,            1, 0, 'C', 0);
-	        $this->Cell(22, 5, $runningWasted - $diary,       1, 0, 'C', 0);
-	        $this->Cell(22, 5, number_format(($runningAttended + $diary)*100/$runningPotential) . '%',        1, 0, 'C', 0);
+            $this->Cell(40, 5, $runningPotential,            1, 0, 'C', 0);
+            $this->Cell(22, 5, $runningWasted - $diary,       1, 0, 'C', 0);
+            $ytdRateMax = ($runningPotential > 0)
+                ? number_format(($runningAttended + $diary) * 100 / $runningPotential) . '%'
+                : '0%';
+            $this->Cell(22, 5, $ytdRateMax,        1, 0, 'C', 0);
          }
 
          $this->Ln();
@@ -379,26 +396,29 @@ class app_report_Report14 extends FPDF
 
             }
 
+            $diaryCount = isset($row['diary']) ? (int)$row['diary'] : 0;
             if ($currentQuarter == $quarter) {
-                $total = (int)$row['attended'] + (int)$row['tbr'] + (int)$row['cancelled'] + (int)$row['unknown'] + (int)$row['diary'];
+                $total = (int)$row['attended'] + (int)$row['tbr'] + (int)$row['cancelled'] + (int)$row['unknown'] + $diaryCount;
             } else {
                 $total = (int)$row['attended'] + (int)$row['tbr'] + (int)$row['cancelled'] + (int)$row['unknown'];
             }
 
             // Add records to running totals by client
             // Does the current client_id exist in $clientYearToDateRunningTotals?
-            if (array_key_exists($row['client'],$clientYearToDateRunningTotals)) {
+            $rowDiaryCount = isset($row['diary']) ? (int)$row['diary'] : 0;
+            if (array_key_exists($row['client'], $clientYearToDateRunningTotals)) {
                 $clientYearToDateRunningTotals[$row['client']]['attended'] = $clientYearToDateRunningTotals[$row['client']]['attended'] + (int)$row['attended'];
                 $clientYearToDateRunningTotals[$row['client']]['tbr'] = $clientYearToDateRunningTotals[$row['client']]['tbr'] + (int)$row['tbr'];
-                $clientYearToDateRunningTotals[$row['client']]['cancelled'] = $clientYearToDateRunningTotals[$row['client']]['cancelled']+ (int)$row['cancelled'];
+                $clientYearToDateRunningTotals[$row['client']]['cancelled'] = $clientYearToDateRunningTotals[$row['client']]['cancelled'] + (int)$row['cancelled'];
                 $clientYearToDateRunningTotals[$row['client']]['unknown'] = $clientYearToDateRunningTotals[$row['client']]['unknown'] + (int)$row['unknown'];
-                $clientYearToDateRunningTotals[$row['client']]['diary'] = $clientYearToDateRunningTotals[$row['client']]['diary'] + (int)$row['diary'];
+                $clientYearToDateRunningTotals[$row['client']]['diary'] = $clientYearToDateRunningTotals[$row['client']]['diary'] + $rowDiaryCount;
                 $clientYearToDateRunningTotals[$row['client']]['total'] = $clientYearToDateRunningTotals[$row['client']]['total'] + $total;
             } else {
                 $clientYearToDateRunningTotals[$row['client']]['attended'] = (int)$row['attended'];
                 $clientYearToDateRunningTotals[$row['client']]['tbr'] = (int)$row['tbr'];
                 $clientYearToDateRunningTotals[$row['client']]['cancelled'] = (int)$row['cancelled'];
                 $clientYearToDateRunningTotals[$row['client']]['unknown'] = (int)$row['unknown'];
+                $clientYearToDateRunningTotals[$row['client']]['diary'] = $rowDiaryCount;
                 $clientYearToDateRunningTotals[$row['client']]['total'] = $total;
             }
 
@@ -461,16 +481,22 @@ class app_report_Report14 extends FPDF
             $this->Cell(18, 5, $item['tbr'],            1, 0, 'C', 0);
             $this->Cell(22, 5, $item['cancelled'],       1, 0, 'C', 0);
             $this->Cell(22, 5, $item['unknown'],        1, 0, 'C', 0);
-            $this->Cell(18, 5, $item['diary'],        1, 0, 'C', 0);
+            $itemDiary = isset($item['diary']) ? $item['diary'] : 0;
+            $this->Cell(18, 5, $itemDiary,        1, 0, 'C', 0);
             $this->Cell(18, 5, $item['total'], 1, 0, 'C', 0);
-            $this->Cell(22, 5, number_format((((int)$item['attended']/$item['total']) * 100)) . '%', 1, 0, 'C', 0);
+
+            // Avoid division by zero when calculating client attendance percentage
+            $clientPercent = ($item['total'] > 0)
+                ? number_format(((int)$item['attended'] / (int)$item['total']) * 100)
+                : 0;
+            $this->Cell(22, 5, $clientPercent . '%', 1, 0, 'C', 0);
 	        $this->Ln();
 
 	        $ytdTotals['attended'] += $item['attended'];
 	        $ytdTotals['tbr'] += $item['tbr'];
 	        $ytdTotals['cancelled'] += $item['cancelled'];
 	        $ytdTotals['unknown'] += $item['unknown'];
-	        $ytdTotals['diary'] += $item['diary'];
+	        $ytdTotals['diary'] += $itemDiary;
 	        $ytdTotals['total'] += $item['total'];
         }
 
@@ -482,7 +508,12 @@ class app_report_Report14 extends FPDF
         $this->Cell(22, 5, $ytdTotals['unknown'],        1, 0, 'C', 0);
         $this->Cell(18, 5, $ytdTotals['diary'],        1, 0, 'C', 0);
         $this->Cell(18, 5, $ytdTotals['total'], 1, 0, 'C', 0);
-        $this->Cell(22, 5, number_format((((int)$ytdTotals['attended']/$ytdTotals['total']) * 100)) . '%', 1, 0, 'C', 0);
+
+        // Avoid division by zero when calculating overall YTD attendance percentage
+        $overallPercent = ($ytdTotals['total'] > 0)
+            ? number_format(((int)$ytdTotals['attended'] / (int)$ytdTotals['total']) * 100)
+            : 0;
+        $this->Cell(22, 5, $overallPercent . '%', 1, 0, 'C', 0);
         $this->Ln();
     }
 }

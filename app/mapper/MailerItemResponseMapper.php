@@ -12,6 +12,20 @@ require_once('app/domain.php');
 class app_mapper_MailerItemResponseMapper extends app_mapper_Mapper implements app_domain_MailerItemResponseFinder
 {
 	protected static $DB;
+
+	/**
+	 * Prepared statement handles.
+	 * Explicitly declared to avoid PHP 8.2 dynamic property deprecation.
+	 */
+	protected $selectAllStmt;
+	protected $selectStmt;
+	protected $insertStmt;
+	protected $updateStmt;
+
+	/**
+	 * Last generated identifier.
+	 */
+	protected $id;
 	
 	public function __construct()
 	{

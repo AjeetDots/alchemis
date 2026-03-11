@@ -27,7 +27,7 @@
 	
 	function handleRefresh(e)
 	{
-		if (watchEvents) e.preventDefault();
+		if (watch_events) e.preventDefault();
 	}
 	
 	var tab_colln = new ill_Data_Collection();

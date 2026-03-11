@@ -15,6 +15,7 @@
 	<meta name="keywords" content="alchemis" />
 	<meta name="description" content="{$APP_NAME} - {$APP_DESCRIPTION}" />
 	<meta name="referrer" content="no-referrer" />
+	<meta http-equiv="Permissions-Policy" content="unload=(self)" />
 	<link rel="shortcut icon" href="{$APP_URL}favicon.ico" />
 	
 	<link href="{$APP_URL}app/ajax/styles/notification.css" rel="stylesheet" type="text/css">
@@ -348,19 +349,25 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 	
 	function responderFadeIn()
 	{
-		
 		if (top != null) {
-		$('notification').innerHTML = '<img src="app/view/images/ajax_loader.gif" width="16" height="16" align="absmiddle">&nbsp;Working...';
-		Effect.Appear('notification',{duration: 0.25, queue: 'end'});
+			var notification = $('notification');
+			if (!notification) {
+				return;
+			}
+			notification.innerHTML = '<img src="app/view/images/ajax_loader.gif" width="16" height="16" align="absmiddle">&nbsp;Working...';
+			Effect.Appear('notification',{duration: 0.25, queue: 'end'});
 		}
 	}
 	
 	function responderFadeOut()
 	{
 		if (top != null) {
-	
-		$('notification').innerHTML = '&nbsp;Done.';
-		Effect.Fade('notification',{duration: 1.25, queue: 'end'});
+			var notification = $('notification');
+			if (!notification) {
+				return;
+			}
+			notification.innerHTML = '&nbsp;Done.';
+			Effect.Fade('notification',{duration: 1.25, queue: 'end'});
 		}
 	}	
 	

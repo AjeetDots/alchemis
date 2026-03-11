@@ -150,7 +150,14 @@ abstract class app_mapper_ShadowMapper extends app_mapper_Mapper
 			{
 				$param_count = 0;
 				$key = md5(rand());
-				$table_name        = self::getTableName($matches[1]);
+				$table_name = self::getTableName($matches[1]);
+
+				// If we can't safely determine a non-empty table name, skip shadow handling
+				if ($table_name === null || $table_name === '') {
+					if ($debug) echo '<p style="color: red">Do not add to shadow: unable to determine table name</p>';
+					continue;
+				}
+
 				$table_name_shadow = $table_name . '_shadow';
 
 				$q = 'PREPARE MDB2_SHADOW_STATEMENT_mysqli_' . $key . ' FROM \'';

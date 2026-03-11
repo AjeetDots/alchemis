@@ -55,7 +55,8 @@ function doMenuItem(location, location_href)
 				alert('Invalid location: ' + location);
 				return;
 		}
-		iframeLocation(ifr_admin, "index.php?cmd=" + location);
+		var adminFrame = document.getElementById('ifr_admin');
+		iframeLocation(adminFrame, "index.php?cmd=" + location);
 		// Reset option menu after a second
 		setTimeout("$('admin_menu').selectedIndex = 0", 1000);
 	}
@@ -81,7 +82,8 @@ function doClientCalendar(client_id, location)
 	if (!location) {
 		var location = 'Calendar&client_id=' + client_id;
 	}
-	iframeLocation(ifr_admin, 'index.php?cmd=' + location);
+	var adminFrame = document.getElementById('ifr_admin');
+	iframeLocation(adminFrame, 'index.php?cmd=' + location);
 	
 	// Reset option menu after a second
 	setTimeout("$('admin_menu').selectedIndex = 0", 1000);
@@ -105,7 +107,8 @@ function hideNbmDiv()
 function doNbmCalendar(nbm_id)
 {
 	var location = 'index.php?cmd=Calendar&nbm_id=' + nbm_id;
-	iframeLocation(ifr_admin, location);
+	var adminFrame = document.getElementById('ifr_admin');
+	iframeLocation(adminFrame, location);
 	
 	// Reset option menu after a second
 	setTimeout("$('admin_menu').selectedIndex = 0", 1000);

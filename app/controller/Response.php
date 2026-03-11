@@ -1,6 +1,6 @@
 <?php
 
-include '../ajax/domain/ajaxResponse.class.php';
+require_once __DIR__ . '/../ajax/domain/ajaxResponse.class.php';
 
 class app_controller_Response
 {

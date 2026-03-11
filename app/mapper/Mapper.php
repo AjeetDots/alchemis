@@ -19,6 +19,7 @@ require_once('include/Auth/Session.php');
  * Responsible for handling the transition from database to object.
  * @package Framework
  */
+#[\AllowDynamicProperties]
 abstract class app_mapper_Mapper implements app_domain_Finder
 {
 	private $debug = false;

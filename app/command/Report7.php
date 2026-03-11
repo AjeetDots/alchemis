@@ -53,19 +53,34 @@ class app_command_Report7 extends app_command_Command
             throw new Exception('Client ID not supplied');
         }
 
-        if ($request->propertyExists('client_fact_summary')) $client_fact_summary = true;
-        if ($request->propertyExists('campaign_statistics')) $campaign_statistics = true;
-        if ($request->propertyExists('nbm_statistics')) $nbm_statistics = true;
-        if ($request->propertyExists('meetings_set_summary')) $meetings_set_summary = true;
-        if ($request->propertyExists('cancellation_clinic')) $cancellation_clinic = true;
-        if ($request->propertyExists('opportunities_and_wins_clinic'))$opportunities_and_wins_clinic = true;
-        if ($request->propertyExists('targeting_clinic')) $targeting_clinic = true;
-        if ($request->propertyExists('database_analysis')) $database_analysis = true;
-        if ($request->propertyExists('effectives_analysis')) $effectives_analysis = true;
-        if ($request->propertyExists('nbm_discipline_effectiveness')) $nbm_discipline_effectiveness = true;
-        if ($request->propertyExists('nbm_industry_effectiveness')) $nbm_industry_effectiveness = true;
-        if ($request->propertyExists('pipeline_report')) $pipeline_report = true;
-        if ($request->propertyExists('effective_notes')) $effective_notes = true;
+        // Initialise optional section flags to avoid undefined variable notices
+        $client_fact_summary           = false;
+        $campaign_statistics           = false;
+        $nbm_statistics                = false;
+        $meetings_set_summary          = false;
+        $cancellation_clinic           = false;
+        $opportunities_and_wins_clinic = false;
+        $targeting_clinic              = false;
+        $database_analysis             = false;
+        $effectives_analysis           = false;
+        $nbm_discipline_effectiveness  = false;
+        $nbm_industry_effectiveness    = false;
+        $pipeline_report               = false;
+        $effective_notes               = false;
+
+        if ($request->propertyExists('client_fact_summary'))           $client_fact_summary = true;
+        if ($request->propertyExists('campaign_statistics'))           $campaign_statistics = true;
+        if ($request->propertyExists('nbm_statistics'))                $nbm_statistics = true;
+        if ($request->propertyExists('meetings_set_summary'))          $meetings_set_summary = true;
+        if ($request->propertyExists('cancellation_clinic'))           $cancellation_clinic = true;
+        if ($request->propertyExists('opportunities_and_wins_clinic')) $opportunities_and_wins_clinic = true;
+        if ($request->propertyExists('targeting_clinic'))              $targeting_clinic = true;
+        if ($request->propertyExists('database_analysis'))             $database_analysis = true;
+        if ($request->propertyExists('effectives_analysis'))           $effectives_analysis = true;
+        if ($request->propertyExists('nbm_discipline_effectiveness'))  $nbm_discipline_effectiveness = true;
+        if ($request->propertyExists('nbm_industry_effectiveness'))    $nbm_industry_effectiveness = true;
+        if ($request->propertyExists('pipeline_report'))               $pipeline_report = true;
+        if ($request->propertyExists('effective_notes'))               $effective_notes = true;
         
         // Validate and set
         $this->validateParameters($start, $end, $client_id);

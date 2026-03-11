@@ -303,7 +303,7 @@ class Utils
 	 * @access public
 	 * @static
 	 */
-	function DateFormat($date, $inputFormat=null, $outputFormat=null)
+	public static function DateFormat($date, $inputFormat=null, $outputFormat=null)
 	{
 		if (is_null($date) || empty($date) || $date == '0000-00-00' || $date == '--')
 			return;

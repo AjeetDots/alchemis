@@ -19,7 +19,12 @@ class app_command_Categories extends app_command_BaseCommand
 	{
     $categories = app_model_Category::where('parent_id', 0)->get();
   	return Response::view('categories.index', [
-      'categories' => $categories
+      'categories' => $categories,
+      // Provide safe defaults so the template
+      // doesn't emit notices on first load.
+      'parent_id' => 0,
+      'errors'    => [],
+      'input'     => ['value' => ''],
     ]);
 	}
 
@@ -29,7 +34,11 @@ class app_command_Categories extends app_command_BaseCommand
     $id = $input->get('id');
     if(!$id) $id = 0;
     return Response::view('categories.create', [
-      'parent_id' => $id
+      'parent_id' => $id,
+      // First load of the create form has
+      // no validation errors or prior input.
+      'errors'    => [],
+      'input'     => ['value' => ''],
     ]);
   }
 

@@ -172,12 +172,36 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
     var $_string_sizeinfo_size;
 
     /**
+    * Sizeinfo flag for strings
+    * @var integer
+    */
+    var $_string_sizeinfo;
+
+    /**
+    * Total number of strings
+    * @var integer
+    */
+    var $_str_total;
+
+    /**
+    * Total number of unique strings
+    * @var integer
+    */
+    var $_str_unique;
+
+    /**
+    * Shared strings table
+    * @var array
+    */
+    var $_str_table;
+
+    /**
     * Class constructor
     *
     * @param string filename for storing the workbook. "-" for writing to stdout.
     * @access public
     */
-    function Spreadsheet_Excel_Writer_Workbook($filename)
+    function __construct($filename)
     {
         // It needs to call its parent's constructor explicitly
         $this->Spreadsheet_Excel_Writer_BIFFwriter();
@@ -208,6 +232,11 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
         $this->_str_table       = array();
         $this->_setPaletteXl97();
         $this->_tmp_dir         = '';
+    }
+
+    function Spreadsheet_Excel_Writer_Workbook($filename)
+    {
+        $this->__construct($filename);
     }
 
     /**
@@ -315,6 +344,7 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
     */
     function &addWorksheet($name = '')
     {
+        $this->_worksheets = $this->_worksheets ?? array();
         $index     = count($this->_worksheets);
         $sheetname = $this->_sheetname;
 

@@ -10,7 +10,9 @@ class app_command_Postcode extends app_command_ResourceCommand
     $postcodes = app_model_Postcode::all();
     
     return Response::view('postcode.index', [
-      'postcodes' => $postcodes
+      'postcodes' => $postcodes,
+      'errors' => [],
+      'input' => []
     ]);
   }
   
@@ -27,7 +29,9 @@ class app_command_Postcode extends app_command_ResourceCommand
     if ($validator->fails()) {
       $messages = $validator->messages();
       return Response::view('postcode.index', [
-        'errors' => $messages->toArray()
+        'postcodes' => app_model_Postcode::all(),
+        'errors' => $messages->toArray(),
+        'input' => $data
       ]);
     }
     

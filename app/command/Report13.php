@@ -37,11 +37,17 @@ class app_command_Report13 extends app_command_Command
 
         // Validate and set
         $session = Auth_Session::singleton();
-		$user = $session->getSessionUser();
-		$user = app_model_User::find($user['id']);
+        $user = $session->getSessionUser();
+        $user = app_model_User::find($user['id']);
+
         // only alchemis users
-        if ($user->client_id !== null) die;
-        
+        if ($user->client_id !== null) {
+            die;
+        }
+
+        // Alchemis-level report runs without client filter
+        $client_id = null;
+
         $pdf = new app_report_Report13($year, $nbm_exclusions, $client_id);
         $pdf->Output(date('Y-m-d') . 'NBM Bonus report.pdf', 'I');
     }

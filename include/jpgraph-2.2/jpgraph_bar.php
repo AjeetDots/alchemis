@@ -122,8 +122,14 @@ function BarPlot($datay,$datax=false) {
 	// For a "text" X-axis scale we will adjust the
 	// display of the bars a little bit.
 	if( substr($graph->axtype,0,3)=="tex" ) {
-	    // Position the ticks between the bars
-	    $graph->xaxis->scale->ticks->SetXLabelOffset(0.5,0);
+	    // Position the ticks between the bars.
+	    // On some PHP 8+ setups the ticks object may not yet be initialised;
+	    // guard against that to avoid fatal errors.
+	    $xaxis = isset($graph->xaxis) ? $graph->xaxis : null;
+	    if (is_object($xaxis) && isset($xaxis->scale) && is_object($xaxis->scale)
+		    && isset($xaxis->scale->ticks) && is_object($xaxis->scale->ticks)) {
+		    $xaxis->scale->ticks->SetXLabelOffset(0.5,0);
+	    }
 
 	    // Center the bars 
 	    if( $this->abswidth > -1 ) {

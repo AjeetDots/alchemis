@@ -20,6 +20,12 @@ require_once('app/domain.php');
 class app_mapper_CampaignReportSummaryMapper extends app_mapper_Mapper implements app_domain_CampaignReportSummaryFinder
 {
 	protected static $DB;
+
+	// Explicitly declare properties to avoid PHP 8.2 dynamic property deprecation
+	protected $selectStmt;
+	protected $selectAllStmt;
+	protected $insertStmt;
+	protected $id;
 	
 	public function __construct()
 	{

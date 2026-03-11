@@ -3,18 +3,18 @@
 <form action="index.php?cmd=Whitelist&action=store" method="post" name="adminForm" autocomplete="off">
  <fieldset class="adminform">
     <legend>Add IP to Whitelist</legend>
-    <table>
+   <table>
       <tr>
-        <td style="width: 80px" {if $errors.ip} class="key_error" title="{ $errors.ip.0 }"{else}class="key"{/if}>
+        <td style="width: 80px" {if isset($errors.ip)} class="key_error" title="{$errors.ip.0}"{else}class="key"{/if}>
           <label for="ip">IP *</label>
         </td>
-        <td><input type="text" name="ip" id="ip" style="width: 200px" value="{$input.ip}" /></td>
+        <td><input type="text" name="ip" id="ip" style="width: 200px" value="{$input.ip|default:''}" /></td>
       </tr>
       <tr>
-        <td style="width: 80px" {if $errors.description} class="key_error" title="{ $errors.description.0 }"{else}class="key"{/if}>
+        <td style="width: 80px" {if isset($errors.description)} class="key_error" title="{$errors.description.0}"{else}class="key"{/if}>
           <label for="description">Description</label>
         </td>
-        <td><input type="text" name="description" id="description" style="width: 200px" value="{$input.description}" /></td>
+        <td><input type="text" name="description" id="description" style="width: 200px" value="{$input.description|default:''}" /></td>
       </tr>
    </table>
  </fieldset>

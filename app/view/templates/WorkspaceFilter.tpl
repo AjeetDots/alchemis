@@ -195,16 +195,18 @@
 {literal}
 	
 	// hide relevant menu bars
-	hideMenus();
+	if (typeof hideMenus === 'function') {
+		hideMenus();
+	}
 	loadCompanyCharacteristics();
 
 	// number of the tab (SearchWorkspace will be 5) - we may need to pass this into child windows
 	var tab_id = 7;
 	
-	function loadCompanyCharacteristics()
-	{
-		var defaultView = undefined;
-		{/literal}defaultView = '{$defaultView}';{literal}
+		function loadCompanyCharacteristics()
+		{
+			var defaultView = undefined;
+			{/literal}defaultView = "{$defaultView|escape:'javascript'}";{literal}
 		// load company characteristics into info pane
 		if ($('initiative_id'))
 		{

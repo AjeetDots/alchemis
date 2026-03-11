@@ -43,7 +43,8 @@ function doMenuItem(location)
 				alert('Invalid location: ' + location);
 				return;
 		}
-iframeLocation(		ifr_admin, "index.php?cmd=" + location);
+		var adminFrame = document.getElementById('ifr_admin');
+		iframeLocation(adminFrame, "index.php?cmd=" + location);
 	}
 
 	// Reset menu after a second
@@ -64,7 +65,8 @@ function hideNbmDiv()
 function doNbmDashboard(nbm_id)
 {
 	var location = 'index.php?cmd=Dashboard&nbm_id=' + nbm_id;
-iframeLocation(	ifr_admin, location); 
+	var adminFrame = document.getElementById('ifr_admin');
+	iframeLocation(adminFrame, location); 
 	
 	// Reset option menu after a second
 	setTimeout("$('admin_menu').selectedIndex = 0", 1000);

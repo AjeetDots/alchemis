@@ -200,6 +200,14 @@ function validate()
 
 		default:
 
+        case '15':
+            var client_id = $F('client_id');
+            if (isEmpty(client_id) || client_id < 1)
+            {
+                msg_error_count ++;
+                msg_error += msg_error_count + ". Client must be selected\n";
+            }
+            break;
 	}
 
 	if (msg_error != "")

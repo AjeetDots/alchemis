@@ -3,12 +3,12 @@
 <form action="index.php?cmd=Postcode&action=store" method="post" name="adminForm" autocomplete="off">
  <fieldset class="adminform">
     <legend>Add Postcode</legend>
-    <table>
+   <table>
       <tr>
-        <td style="width: 80px" {if $errors.postcode} class="key_error" title="{ $errors.postcode.0 }"{else}class="key"{/if}>
+        <td style="width: 80px" {if isset($errors.postcode)} class="key_error" title="{$errors.postcode.0}"{else}class="key"{/if}>
           <label for="postcode">Postcode *</label>
         </td>
-        <td><input type="text" name="postcode" id="postcode" style="width: 200px" value="{$input.postcode}" /></td>
+        <td><input type="text" name="postcode" id="postcode" style="width: 200px" value="{$input.postcode|default:''}" /></td>
       </tr>
    </table>
  </fieldset>

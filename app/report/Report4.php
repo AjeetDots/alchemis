@@ -9,6 +9,11 @@
  */
 
 require_once('app/base/Registry.php');
+require_once('app/controller/Request.php');
+require_once('app/command/ReportGraph4_1.php');
+require_once('app/command/ReportGraph4_2.php');
+require_once('app/command/ReportGraph4_3.php');
+require_once('app/command/ReportGraph4_4.php');
 require_once('include/fpdf/fpdf.php');
 require_once('include/EasySql/EasySql.class.php');
 require_once('include/Utils/Utils.class.php');
@@ -18,6 +23,13 @@ require_once('include/Utils/Utils.class.php');
  */
 class app_report_Report4 extends FPDF
 {
+
+    /**
+     * Parameters used to build the report header and image URLs.
+     *
+     * @var array
+     */
+    protected $params = array();
 
 	/**
 	 * @param string $start in the format 'YYYY-MM-DD'
@@ -31,7 +43,16 @@ class app_report_Report4 extends FPDF
 		$this->params['end']     = $end;
 		$this->params['team_id'] = $team_id;
 		$this->params['nbm_id']  = $nbm_id;
-		parent::__construct('P');
+
+		// PHP 8 compatibility: some environments use the legacy PHP4-style
+		// FPDF() constructor, others use __construct(). Call whichever exists.
+		if (method_exists('FPDF', '__construct')) {
+			parent::__construct('P');
+		} else {
+			// Fallback for very old FPDF versions that only define FPDF()
+			parent::FPDF('P');
+		}
+
 		$this->AliasNbPages();
 //		$this->LineItems();
 	}
@@ -152,6 +173,10 @@ class app_report_Report4 extends FPDF
 		$dest = 'index.php?cmd=ReportGraph4_1&media=print&file=' . $filename . '&start=' . $this->params['start'] . '&end=' . $this->params['end'] . $str;
 		$this->writeImage($dest);
 		$img = $path . $filename;
+		// Ensure the graph image was actually created before attempting to embed it
+		if (!file_exists($img)) {
+			throw new Exception('No graph file found! Looking for: ' . $img);
+		}
 		$this->Image($img, 10, 30, 90, 120);
 		unlink($path . $filename);
 		
@@ -181,34 +206,60 @@ class app_report_Report4 extends FPDF
 	}
 
 	/**
-	 * NB Function was failing due to Undefined index: auth_session in Session.php::getSessionUser. 
-	 * Writes the graph image to a file so that it can be imported by FPDF.
-	 * NB Function was failing due to Undefined index: auth_session in Session.php::getSessionUser. 
-	 * @param string $dest
+	 * Generate a graph image file by invoking the appropriate ReportGraph4_X
+	 * command directly (avoids HTTP/cURL and file path issues).
+	 *
+	 * @param string $dest e.g. 'index.php?cmd=ReportGraph4_1&media=print&file=...'
+	 * @throws Exception if the graph command is unknown or fails.
 	 */
 	private function writeImage($dest)
 	{
-		if ($_SERVER['SERVER_PORT'] == 443)
-		{
-			$url = 'http://localhost' . app_base_ApplicationRegistry::getUrl();
+		$query = parse_url($dest, PHP_URL_QUERY);
+		if ($query === null) {
+			throw new Exception('Invalid graph destination: ' . $dest);
 		}
-		else
-		{
-			$url = 'http://localhost' . app_base_ApplicationRegistry::getUrl();
+
+		$params = array();
+		parse_str($query, $params);
+
+		if (!isset($params['cmd'])) {
+			throw new Exception('Missing graph command in destination: ' . $dest);
 		}
-		
-		$full_url = $url . $dest;
-		$ch = curl_init($full_url);
-		if (!$ch)
-		{
-			die('Cannot allocate a new PHP-CURL handle');
+
+		$cmdName = $params['cmd'];
+
+		// Map cmd parameter to concrete command class
+		switch ($cmdName) {
+			case 'ReportGraph4_1':
+				$command = new app_command_ReportGraph4_1();
+				break;
+			case 'ReportGraph4_2':
+				$command = new app_command_ReportGraph4_2();
+				break;
+			case 'ReportGraph4_3':
+				$command = new app_command_ReportGraph4_3();
+				break;
+			case 'ReportGraph4_4':
+				$command = new app_command_ReportGraph4_4();
+				break;
+			default:
+				throw new Exception('Unknown graph command: ' . $cmdName);
 		}
-		curl_setopt($ch, CURLOPT_FAILONERROR,    1);
-//		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);  // allow redirects 
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-		$data = curl_exec($ch);
-		curl_close($ch);
+
+		// Ensure the output directory exists
+		$outputDir = 'app' . DIRECTORY_SEPARATOR . 'report' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+		if (!is_dir($outputDir)) {
+			@mkdir($outputDir, 0777, true);
+		}
+
+		// Build an internal request carrying the same parameters
+		$request = new app_controller_Request();
+		foreach ($params as $key => $value) {
+			$request->setProperty($key, $value);
+		}
+
+		// Execute the graph command; it will write the PNG into app/report/tmp
+		$command->execute($request);
 	}
 
 }

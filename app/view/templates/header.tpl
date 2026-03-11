@@ -18,6 +18,7 @@
 	<meta name="keywords" content="alchemis" />
 	<meta name="description" content="{$APP_NAME} - {$APP_DESCRIPTION}" />
 	<meta name="referrer" content="no-referrer" />
+	<meta http-equiv="Permissions-Policy" content="unload=(self)" />
 	{*<link rel="shortcut icon" href="{$APP_URL}favicon.ico" />*}
 
 	<link href="{$APP_URL}app/view/styles/general.css" rel="stylesheet" type="text/css" />

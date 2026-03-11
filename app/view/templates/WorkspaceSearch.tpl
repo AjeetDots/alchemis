@@ -194,16 +194,18 @@
 {literal}
 
 	// hide relevant menu bars
-	hideMenus();
+	if (typeof hideMenus === 'function') {
+		hideMenus();
+	}
 	loadCompanyCharacteristics();
 
 	// number of the tab (FilterWorkspace will be 7) - we may need to pass this into child windows
 	var tab_id = 5;
 	
-	function loadCompanyCharacteristics()
-	{
-		var defaultView = undefined;
-		{/literal}defaultView = '{$defaultView}';{literal}
+		function loadCompanyCharacteristics()
+		{
+			var defaultView = undefined;
+			{/literal}defaultView = "{$defaultView|escape:'javascript'}";{literal}
 
 		// load company characteristics into info pane
 		if ($('initiative_id'))

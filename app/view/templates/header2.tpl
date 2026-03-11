@@ -17,6 +17,8 @@
 	<meta name="keywords" content="alchemis" />
 	<meta name="description" content="{$APP_NAME} - {$APP_DESCRIPTION}" />
   <meta name="referrer" content="no-referrer" />
+	<meta http-equiv="Permissions-Policy" content="unload=(self)" />
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
 	{*<link rel="shortcut icon" href="{$APP_URL}favicon.ico" />*}
 
 	{popup_init src="`$APP_URL`app/view/js/overlib/Mini/overlib_mini.js"}

@@ -35,7 +35,8 @@ function doMenuItem(location)
 				alert('Invalid location: ' + location);
 				return;
 		}
-		iframeLocation(ifr_admin, "index.php?cmd=" + location);
+		var adminFrame = document.getElementById('ifr_admin');
+		iframeLocation(adminFrame, "index.php?cmd=" + location);
 	}
 
 	// Reset menu after a second

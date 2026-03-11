@@ -48,21 +48,21 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 	protected function doLoad($array)
 	{
 		$obj = new app_domain_Filter($array['id']);
-		$obj->setName($array['name']);
-		$obj->setDescription($array['description']);
-		$obj->setTypeId($array['type_id']);
-		$obj->setType($array['filter_type']);
-		$obj->setCampaignId($array['campaign_id']);
-		$obj->setCampaignName($array['campaign_name']);
-		$obj->setResultsFormat($array['results_format']);
-		$obj->setIsReportSource($array['is_report_source']);
-		$obj->setReportParameterDescription($array['report_parameter_description']);
-		$obj->setCompanyCount($array['company_count']);
-		$obj->setPostCount($array['post_count']);
-		$obj->setCreatedAt($array['created_at']);
-		$obj->setCreatedBy($array['created_by']);
-		$obj->setCreatedByName($array['created_by_name']);
-		$obj->setUpdatedAt($array['updated_at']);
+		$obj->setName($array['name'] ?? '');
+		$obj->setDescription($array['description'] ?? '');
+		$obj->setTypeId($array['type_id'] ?? null);
+		$obj->setType($array['filter_type'] ?? null);
+		$obj->setCampaignId($array['campaign_id'] ?? null);
+		$obj->setCampaignName($array['campaign_name'] ?? null);
+		$obj->setResultsFormat($array['results_format'] ?? null);
+		$obj->setIsReportSource($array['is_report_source'] ?? null);
+		$obj->setReportParameterDescription($array['report_parameter_description'] ?? null);
+		$obj->setCompanyCount($array['company_count'] ?? null);
+		$obj->setPostCount($array['post_count'] ?? null);
+		$obj->setCreatedAt($array['created_at'] ?? null);
+		$obj->setCreatedBy($array['created_by'] ?? null);
+		$obj->setCreatedByName($array['created_by_name'] ?? null);
+		$obj->setUpdatedAt($array['updated_at'] ?? null);
 		$obj->markClean();
 		return $obj;
 	}

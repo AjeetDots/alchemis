@@ -455,6 +455,7 @@ class app_report_Report6 extends FPDF
 	 */
 	protected static function array_field_sum($array, $field)
 	{
+		$sum = 0;
 		foreach ($array as $row)
 		{
 			$sum += $row[$field];

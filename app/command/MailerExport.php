@@ -9,24 +9,188 @@ class app_command_MailerExport extends app_command_Command
 {
 	public function doExecute(app_controller_Request $request)
 	{
+        // Allow mailer exports to run for a while; some mailers are large.
+        @set_time_limit(600);
 
 		if ($request->getProperty('id') != '')
 		{
 			$mailer_id = $request->getProperty('id');
-			$mailer = app_domain_Mailer::find($mailer_id);
 
-			$xls = new Spreadsheet_Excel_Writer();
-
-			$xls =& $this->exportXLS($mailer_id);
-			$xls->send($mailer->getName() . '.xls');
-			$xls->close();
+            // For reliability on constrained hosting, export as streaming CSV
+            // rather than building a multi-sheet XLS workbook in memory.
+            $this->exportCSV($mailer_id);
 		}
 
-//		return self::statuses('CMD_OK');
 		exit();
 	}
 
+    /**
+     * Stream a CSV export directly to the browser.
+     * This uses constant memory and avoids Spreadsheet_Excel_Writer limits.
+     */
+    protected function exportCSV($mailer_id)
+    {
+        $mailer = app_domain_Mailer::find($mailer_id);
 
+        // Derive a safe filename
+        $name = $mailer ? $mailer->getName() : ('mailer-' . $mailer_id);
+        $safeName = preg_replace('/[^A-Za-z0-9 _.-]+/', '_', $name);
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $safeName . '.csv"');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+
+        $out = fopen('php://output', 'w');
+        if ($out === false) {
+            return;
+        }
+
+        // Mailer details section
+        fputcsv($out, ['Mailer Details']);
+        fputcsv($out, ['Name', $mailer->getName()]);
+        fputcsv($out, ['Description', $mailer->getDescription()]);
+        fputcsv($out, ['Mailer Type', $mailer->getResponseGroupName()]);
+        fputcsv($out, ['Delivery Method', $mailer->getTypeName()]);
+        fputcsv($out, ['Created By', $mailer->getCreatedByName()]);
+        fputcsv($out, ['Date Created', $mailer->getCreatedAt()]);
+        fputcsv($out, []); // blank line
+
+        // In-progress section
+        fputcsv($out, ['In Progress']);
+        $inProgressHeader = [
+            'CompanyID',
+            'Company',
+            'ContactID',
+            'ContactTitle',
+            'ContactFirstName',
+            'ContactSurname',
+            'PostID',
+            'Post',
+        ];
+
+        switch ($mailer->getTypeName()) {
+            case 'E-mail':
+                $inProgressHeader[] = 'Email Address';
+                break;
+            case 'Fax':
+                $inProgressHeader[] = 'Fax Number';
+                break;
+            case 'Postal':
+                $inProgressHeader = array_merge(
+                    $inProgressHeader,
+                    ['Address 1', 'Address 2', 'Town', 'City', 'Postcode', 'County', 'Country']
+                );
+                break;
+        }
+        fputcsv($out, $inProgressHeader);
+
+        if ($not_despatched = app_domain_MailerItem::findNotDespatchedByMailerIdForExport($mailer_id)) {
+            foreach ($not_despatched as $item) {
+                $row = [
+                    $item['company_id'],
+                    $item['company_name'],
+                    $item['contact_id'],
+                    $item['title'],
+                    $item['first_name'],
+                    $item['surname'],
+                    $item['post_id'],
+                    $item['job_title'],
+                ];
+
+                switch ($mailer->getTypeName()) {
+                    case 'E-mail':
+                        $row[] = $item['email'];
+                        break;
+                    case 'Fax':
+                        $row[] = $item['telephone_fax'];
+                        break;
+                    case 'Postal':
+                        $row[] = $item['address_1'];
+                        $row[] = $item['address_2'];
+                        $row[] = $item['town'];
+                        $row[] = $item['city'];
+                        $row[] = $item['postcode'];
+                        $row[] = $item['county'];
+                        $row[] = $item['country'];
+                        break;
+                }
+
+                fputcsv($out, $row);
+            }
+        }
+
+        fputcsv($out, []); // blank line between sections
+
+        // Dispatched section
+        fputcsv($out, ['Despatched']);
+        $dispatchedHeader = [
+            'CompanyID',
+            'Company',
+            'ContactID',
+            'ContactTitle',
+            'ContactFirstName',
+            'ContactSurname',
+            'PostID',
+            'Post',
+            'Despatched Date',
+        ];
+        switch ($mailer->getTypeName()) {
+            case 'E-mail':
+                $dispatchedHeader[] = 'Email Address';
+                break;
+            case 'Fax':
+                $dispatchedHeader[] = 'Fax Number';
+                break;
+            case 'Postal':
+                $dispatchedHeader = array_merge(
+                    $dispatchedHeader,
+                    ['Address 1', 'Address 2', 'Town', 'City', 'Postcode', 'County', 'Country']
+                );
+                break;
+        }
+        fputcsv($out, $dispatchedHeader);
+
+        if ($despatched = app_domain_MailerItem::findDespatchedByMailerIdForExport($mailer_id)) {
+            foreach ($despatched as $item) {
+                $row = [
+                    $item['company_id'],
+                    $item['company_name'],
+                    $item['contact_id'],
+                    $item['title'],
+                    $item['first_name'],
+                    $item['surname'],
+                    $item['post_id'],
+                    $item['job_title'],
+                    $item['despatched_date'],
+                ];
+
+                switch ($mailer->getTypeName()) {
+                    case 'E-mail':
+                        $row[] = $item['email'];
+                        break;
+                    case 'Fax':
+                        $row[] = $item['telephone_fax'];
+                        break;
+                    case 'Postal':
+                        $row[] = $item['address_1'];
+                        $row[] = $item['address_2'];
+                        $row[] = $item['town'];
+                        $row[] = $item['city'];
+                        $row[] = $item['postcode'];
+                        $row[] = $item['county'];
+                        $row[] = $item['country'];
+                        break;
+                }
+
+                fputcsv($out, $row);
+            }
+        }
+
+        fclose($out);
+    }
+
+
+	// Legacy XLS export kept for reference; no longer used in production.
 	function exportXLS($mailer_id)
     {
 		$xls = new Spreadsheet_Excel_Writer();

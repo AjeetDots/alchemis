@@ -396,7 +396,7 @@ class app_domain_ReportReader extends app_domain_ReaderObject
 	public static function getReport8SectorPenetrationSummary($start_date, $end_date, $client_id)
 	{
 		$reader = self::getReader(__CLASS__);
-		if($_GET['pdf'] == 2){
+		if (isset($_GET['pdf']) && $_GET['pdf'] == 2) {
 			echo '<pre>';
 			echo __CLASS__.'</br>';
 			echo $start_date.'</br>';

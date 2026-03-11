@@ -55,7 +55,8 @@ var $iTagMaxElem;
         if (isset($reg[2])) {
             preg_match_all("|([^ ]*)=[\"'](.*)[\"']|U", $reg[2], $out, PREG_PATTERN_ORDER);
             for ($i=0; $i<count($out[0]); $i++){
-                $out[2][$i] = eregi_replace("(\"|')", "", $out[2][$i]);
+                // Remove surrounding quote characters from attribute values (PHP 7/8-safe replacement for eregi_replace)
+                $out[2][$i] = preg_replace('/["\']/', '', $out[2][$i]);
                 array_push($sHREF, array($out[1][$i], $out[2][$i]));
             }
         }
@@ -168,7 +169,7 @@ var $iTagMaxElem;
 	    $sTAG = "";
 	    $sHREF = "";
 
-        while (list($key, $val) = each($reg)) {
+        foreach ($reg as $key => $val) {
 	    	if ($val == "") continue;
 
 	        if ($this->OpenTag($val,$reg)){
@@ -181,7 +182,7 @@ var $iTagMaxElem;
 	        	if ($val != "")
 	        		array_push($result, array('text'=>$val, 'tag'=>$sTAG, 'params'=>$sHREF));
 	        }
-	    }//while
+	    }//foreach
 
 	    return $this->optimize_tags($result);
 	}

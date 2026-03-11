@@ -1,28 +1,27 @@
 <?php
 
-class app_model_Whitelist {
+use Illuminate\Database\Eloquent\Model;
 
-  public static function where($field, $value)
+class app_model_Whitelist extends Model {
+
+  protected $guarded = [];
+  public $table = 'tbl_whitelist';
+
+  public static function boot()
   {
-    // Simple implementation - return a mock object that has first() method
-    return new app_model_WhitelistQuery($field, $value);
+    parent::boot();
+
+    static::saving(function ($whitelist) {
+      if (!empty($whitelist->ip)) {
+        $whitelist->ip_int = ip2long($whitelist->ip);
+      }
+    });
   }
 
-}
-
-class app_model_WhitelistQuery {
-  private $field;
-  private $value;
-  
-  public function __construct($field, $value) {
-    $this->field = $field;
-    $this->value = $value;
-  }
-  
-  public function first()
+  public function logins()
   {
-    // For now, always return true (allow all IPs)
-    // In a full implementation, this would query tbl_whitelist
-    return (object)['ip' => $this->value];
+    // Link whitelist entries to login log rows by IP address
+    return $this->hasMany('app_model_LoginLog', 'ip', 'ip');
   }
+
 }

@@ -19,6 +19,17 @@ require_once('app/domain.php');
  */
 class app_mapper_CharacteristicMapper extends app_mapper_Mapper implements app_domain_CharacteristicFinder
 {
+	/** @var mixed */
+	protected $insert_stmt;
+	/** @var mixed */
+	protected $update_stmt;
+	/** @var mixed */
+	protected $delete_stmt;
+	/** @var mixed */
+	protected $select_stmt;
+	/** @var mixed */
+	protected $select_all_stmt;
+
 	/**
 	 * Load an object from an associative array.
 	 * @param array $array an associative array

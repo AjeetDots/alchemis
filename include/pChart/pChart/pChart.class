@@ -180,27 +180,33 @@
    var $ShadowGColor    = 60;
    var $ShadowBColor    = 60;
 
-   /* Image Map settings */
-   var $BuildMap         = FALSE;
-   var $MapFunction      = NULL;
-   var $tmpFolder        = "tmp/";
-   var $MapID            = NULL;
+  /* Image Map settings */
+  var $BuildMap         = FALSE;
+  var $MapFunction      = NULL;
+  var $tmpFolder        = "tmp/";
+  var $MapID            = NULL;
 
-   /* This function create the background picture */
-   function pChart($XSize,$YSize)
-    {
-     $this->XSize   = $XSize;
-     $this->YSize   = $YSize;
-     $this->Picture = imagecreatetruecolor($XSize,$YSize);
-     $white = imagecolorallocate($this->Picture, 255, 255, 255);
-     imagefill($this->Picture, 0, 0, $white);
+  /* PHP 5+ / PHP 7+ / PHP 8+ compatible constructor */
+  function __construct($XSize,$YSize)
+   {
+    $this->pChart($XSize,$YSize);
+   }
 
-     // $C_White =$this->AllocateColor($this->Picture,255,255,255);
-     // imagefilledrectangle($this->Picture,0,0,$XSize,$YSize,$white);
-     // imagecolortransparent($this->Picture,$C_White);
+  /* This function create the background picture (legacy PHP 4-style constructor) */
+  function pChart($XSize,$YSize)
+   {
+    $this->XSize   = $XSize;
+    $this->YSize   = $YSize;
+    $this->Picture = imagecreatetruecolor($XSize,$YSize);
+    $white = imagecolorallocate($this->Picture, 255, 255, 255);
+    imagefill($this->Picture, 0, 0, $white);
 
-     $this->setFontProperties("tahoma.ttf",8);
-    }
+    // $C_White =$this->AllocateColor($this->Picture,255,255,255);
+    // imagefilledrectangle($this->Picture,0,0,$XSize,$YSize,$white);
+    // imagecolortransparent($this->Picture,$C_White);
+
+    $this->setFontProperties("tahoma.ttf",8);
+   }
 
   /* Set if warnings should be reported */
   function reportWarnings($Interface="CLI")

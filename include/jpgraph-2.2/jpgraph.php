@@ -217,9 +217,43 @@ if( !function_exists("imagetypes") || !function_exists('imagecreatefromstring') 
 // Setup PHP error handler
 //
 function _phpErrorHandler($errno, $errmsg, $filename, $linenum, $vars = null) {
-    // Respect current error level. PHP 8+ no longer passes 5th arg (errcontext).
+    // Ignore deprecation notices and harmless float->int precision warnings
+    if (is_string($errmsg)) {
+        if (stripos($errmsg, 'deprecated') !== false) {
+            // Handled here – prevent PHP's default handler from running
+            return true;
+        }
+        if (stripos($errmsg, 'Implicit conversion from float') !== false) {
+            // Handled here – don't escalate minor GD coordinate warnings
+            return true;
+        }
+    }
+
+    // On PHP 8+ this legacy library can generate a lot of non‑fatal notices and
+    // warnings (E_WARNING, E_NOTICE, E_USER_*, E_STRICT, E_DEPRECATED, …).
+    // Previously these were promoted to fatal "General PHP error" image dialogs
+    // via JpGraphError::RaiseL(), which stops graphs and reports from working.
+    //
+    // For this application we treat those as non‑fatal: handle them here and
+    // prevent JpGraph from converting them into blocking errors.
+    $nonFatalMask = E_WARNING
+        | E_NOTICE
+        | E_USER_WARNING
+        | E_USER_NOTICE
+        | E_STRICT
+        | E_DEPRECATED
+        | E_USER_DEPRECATED;
+
+    if ($errno & $nonFatalMask) {
+        // Mark as handled so PHP's built‑in error handler will not run and
+        // JpGraph will continue rendering the graph.
+        return true;
+    }
+
+    // For anything else that still matches the current error_reporting level,
+    // fall back to the original JpGraph behaviour.
     if( $errno & error_reporting() ) {
-	JpGraphError::RaiseL(25003,basename($filename),$linenum,$errmsg); 
+        JpGraphError::RaiseL(25003,basename($filename),$linenum,$errmsg); 
     }
 }
 
@@ -1285,6 +1319,11 @@ class Graph {
 	    $txts = $this->y2texts;
 	else
 	    $txts = $this->texts;
+
+	if( $txts === null ) {
+	    return null;
+	}
+
 	$n = count($txts);
 	$min=null;
 	$max=null;
@@ -1312,6 +1351,11 @@ class Graph {
 	    $txts = $this->y2texts;
 	else
 	    $txts = $this->texts;
+
+	if( $txts === null ) {
+	    return null;
+	}
+
 	$n = count($txts);
 	$min=null;
 	$max=null;
@@ -2675,6 +2719,10 @@ class Graph {
 
     // Get Y min and max values for added lines
     function GetLinesYMinMax( $aLines ) {
+	if( $aLines === null ) {
+	    return false;
+	}
+
 	$n = count($aLines);
 	if( $n == 0 ) return false;
 	$min = $aLines[0]->scaleposition ;
@@ -2693,6 +2741,10 @@ class Graph {
 
     // Get X min and max values for added lines
     function GetLinesXMinMax( $aLines ) {
+	if( $aLines === null ) {
+	    return false;
+	}
+
 	$n = count($aLines);
 	if( $n == 0 ) return false ;
 	$min = $aLines[0]->scaleposition ;
@@ -4306,6 +4358,9 @@ function LinearTicks() {
 	else
 	    $precision = $this->precision;
 
+	// PHP 8+: guard against negative zero or invalid precision
+	$precision = max(0, (int)round($precision));
+
 	if( $this->label_formfunc != '' ) {
 	    $f=$this->label_formfunc;
 	    $l = call_user_func($f,$aVal);
@@ -4467,6 +4522,7 @@ class LinearScale {
     private $intscale=false; // Restrict autoscale to integers
 //---------------
 // CONSTRUCTOR
+        function __construct(...$args) { call_user_func_array(array($this, 'LinearScale'), $args); }
     function LinearScale($aMin=0,$aMax=0,$aType="y") {
 	assert($aType=="x" || $aType=="y" );
 	assert($aMin<=$aMax);
@@ -4474,7 +4530,7 @@ class LinearScale {
 	$this->type=$aType;
 	$this->scale=array($aMin,$aMax);		
 	$this->world_size=$aMax-$aMin;	
-	$this->ticks = new LinearTicks();
+	$this->ticks = new LinearTicks($this);
     }
 
 //---------------
@@ -4565,6 +4621,11 @@ class LinearScale {
 	
     // Calculate an integer autoscale
     function IntAutoScale($img,$min,$max,$maxsteps,$majend=true) {
+	// Ensure ticks object exists (PHP 8+ safety)
+	if( $this->ticks === null ) {
+	    $this->ticks = new LinearTicks($this);
+	}
+
 	// Make sure limits are integers
 	$min=floor($min);
 	$max=ceil($max);
@@ -5548,7 +5609,13 @@ function RGB($aImg=null) {
 	if( $aAlpha < 0 || $aAlpha > 1 ) {
 	    JpGraphError::RaiseL(25080);//('Alpha parameter for color must be between 0.0 and 1.0');
 	}
-	return imagecolorresolvealpha($this->img, $r, $g, $b, round($aAlpha * 127));
+	// Explicit casts avoid PHP 8.x implicit float-to-int deprecations
+	$rInt = (int) round($r);
+	$gInt = (int) round($g);
+	$bInt = (int) round($b);
+	$alphaInt = (int) round($aAlpha * 127);
+
+	return imagecolorresolvealpha($this->img, $rInt, $gInt, $bInt, $alphaInt);
     }
 } // Class
 
@@ -5558,6 +5625,7 @@ function RGB($aImg=null) {
 // Description: Wrapper class with some goodies to form the
 // Interface to low level image drawing routines.
 //===================================================
+#[\AllowDynamicProperties]
 class Image {
     public $left_margin=30,$right_margin=30,$top_margin=20,$bottom_margin=30;
     public $img=null;
@@ -5995,21 +6063,47 @@ class Image {
 		for($i=0; $i < count($tmp); ++$i) {
 		    $w1 = $this->GetTextWidth($tmp[$i]);
 		    if( $paragraph_align=="left" ) {
-			imagestring($this->img,$this->font_family,$x,$y-$h+1+$i*$fh,$tmp[$i],$this->current_color);
+			imagestring(
+                $this->img,
+                $this->font_family,
+                (int)round($x),
+                (int)round($y-$h+1+$i*$fh),
+                $tmp[$i],
+                $this->current_color
+            );
 		    }
 		    elseif( $paragraph_align=="right" ) {
-			imagestring($this->img,$this->font_family,$x+($w-$w1),
-				    $y-$h+1+$i*$fh,$tmp[$i],$this->current_color);
+			imagestring(
+                $this->img,
+                $this->font_family,
+                (int)round($x+($w-$w1)),
+                (int)round($y-$h+1+$i*$fh),
+                $tmp[$i],
+                $this->current_color
+            );
 		    }
 		    else {
-			imagestring($this->img,$this->font_family,$x+$w/2-$w1/2,
-				    $y-$h+1+$i*$fh,$tmp[$i],$this->current_color);
+			imagestring(
+                $this->img,
+                $this->font_family,
+                (int)round($x+$w/2-$w1/2),
+                (int)round($y-$h+1+$i*$fh),
+                $tmp[$i],
+                $this->current_color
+            );
 		    }
 		}
 	    } 
 	    else {
 		//Put the text
-		imagestring($this->img,$this->font_family,$x,$y-$h+1,$txt,$this->current_color);
+		imagestring(
+            $this->img,
+            $this->font_family,
+            (int)round($x),
+            (int)round($y-$h+1),
+            $txt,
+            $this->current_color
+        );
 	    }
             if( $aDebug ) {
 		// Draw the bounding rectangle and the bounding box

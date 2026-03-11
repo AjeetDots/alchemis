@@ -44,7 +44,7 @@ class app_command_Report12 extends app_command_Command
         }
 
         // Validate and set
-        $this->validateParameters($start, $end, $client_id);
+        $this->validateParameters($start, $end);
         $pdf = new app_report_Report12($start, $end);
         $pdf->Output(date('Y-m-d') . 'Sector Discipline Report.pdf', 'I');
     }
@@ -53,11 +53,9 @@ class app_command_Report12 extends app_command_Command
      * Validates the input.
      * @param string $start
      * @param string $end
-     * @param integer $client_id
-     * @param boolean $full_history
      * @return boolean
      */
-    protected function validateParameters($start, $end, $client_id)
+    protected function validateParameters($start, $end)
     {
         if ($end < $start)
         {

@@ -14,7 +14,9 @@ require_once('include/Utils/Utils.class.php');
 set_time_limit(0);
 ini_set('memory_limit', '128M');
 
-ob_flush();
+if (ob_get_level()) {
+	ob_flush();
+}
 
 class app_command_MailerItemList extends app_command_Command
 {
@@ -129,7 +131,7 @@ class app_command_MailerItemList extends app_command_Command
 					// Despatch mailer item
 					if ($mailer_item = $this->getMailerItemPostInitiativeId($db, $mailer_item_id))
 					{
-						$communication_id = $this->addMailerCommunication(null, $mailer_item, $despatched_date, $communication_comments, $communication_notes);
+						$communication_id = $this->addMailerCommunication($mailer_item, $despatched_date, $communication_comments, $communication_notes);
 					
 						$sql = 'update tbl_mailer_items set despatched_date = \'' . $despatched_date . '\', ' .
 								'despatched_communication_id = ' . $communication_id . ' ' . 
@@ -206,7 +208,7 @@ class app_command_MailerItemList extends app_command_Command
 		}
 	}
 	
-	protected function addMailerCommunication($despatched_communicaton_id = null, $post_initiative_id, $despatched_date, $comments, $notes)
+	protected function addMailerCommunication($post_initiative_id, $despatched_date, $comments, $notes, $despatched_communicaton_id = null)
 	{
 		if (is_null($despatched_communicaton_id))
 		{

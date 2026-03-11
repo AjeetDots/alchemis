@@ -225,8 +225,20 @@ class app_report_Report5 extends FPDF
 		$this->SetMargins(20, 20, 20);
 		
 		// Get the note data
-		$data = app_domain_ReportReader::getReport5DetailData($this->params['start'], $this->params['end'], $this->params['client_id'], $this->params['project_ref'], $this->params['effectives'], $this->params['full_history']);
-        $data = self::array_utf8_to_iso88591($data);
+		$data = app_domain_ReportReader::getReport5DetailData(
+			$this->params['start'],
+			$this->params['end'],
+			$this->params['client_id'],
+			$this->params['project_ref'],
+			$this->params['effectives'],
+			$this->params['full_history']
+		);
+		$data = self::array_utf8_to_iso88591($data);
+
+		// If no data returned, skip body generation gracefully
+		if (!is_array($data) || count($data) === 0) {
+			return;
+		}
 		
 		if ($this->params['full_history'])
 		{
@@ -387,22 +399,23 @@ class app_report_Report5 extends FPDF
 
 	protected static function array_utf8_to_iso88591($in) 
 	{
-	    if (is_array($in)) 
-	    {
-	        foreach ($in as $key => $value) 
-	        {
-	            $out[self::array_utf8_to_iso88591($key)] = self::array_utf8_to_iso88591($value);
-	        }
-	    } 
-	    elseif(is_string($in)) 
-	    {
+		$out = array();
+
+		if (is_array($in)) 
+		{
+			foreach ($in as $key => $value) 
+			{
+				$out[self::array_utf8_to_iso88591($key)] = self::array_utf8_to_iso88591($value);
+			}
+			return $out;
+		} 
+
+		if (is_string($in)) 
+		{
 			return iconv("UTF-8", "windows-1252//TRANSLIT", $in);
-	    } 
-	    else 
-	    {
-	        return $in;
-	    }
-		return $out;
+		} 
+
+		return $in;
 	}
 }
 

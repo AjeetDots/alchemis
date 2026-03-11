@@ -357,7 +357,6 @@ class app_report_Report7 extends FPDF
 
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(190, 5, 'Client Fact Summary', 0, 0, 'C', 0);
-        $this->Ln(10);
 
         $campaign_data = app_domain_ReportReader::getReport7ClientCampaignSummary($this->params['start'], $this->params['end'], $this->params['client_id']);
 
@@ -443,7 +442,10 @@ class app_report_Report7 extends FPDF
             $x++;
         }
 
-        $this->Cell(140, $heights, '', 0, 0, 'L', 0);
+        $this->Ln(10);
+
+        // trailing spacer row
+        $this->Cell(140, $height, '', 0, 0, 'L', 0);
         $this->Ln();
     }
 

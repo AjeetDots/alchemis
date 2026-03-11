@@ -23,7 +23,8 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 
 
 	public $fields;
-//	protected $sql_query = array();
+	/** @var array */
+	protected $sql_query = array();
 	protected $sql_exclude_query = array();
 	protected $sql_include_query = array();
 	protected $sql__exclude_query = array();
@@ -2544,6 +2545,18 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 	{
 		$finder = self::getFinder(__CLASS__);
 		return $finder->getFilterExport($filter_id, $results_format);
+	}
+
+	/**
+	 * Returns the number of rows that would be exported for a filter.
+	 *
+	 * @param integer $filter_id
+	 * @return integer
+	 */
+	public static function getFilterResultCount($filter_id)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->getFilterResultCount($filter_id);
 	}
 
 

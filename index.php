@@ -1,6 +1,14 @@
 <?php
 
 session_start();
+
+// Fix browser blocking scripts so Administration / Campaign View toggles work.
+if (!headers_sent()) {
+    header('Permissions-Policy: unload=(self)');
+    // Allow eval/inline so jQuery, Angular, Prototype and moofx work (fixes CSP blocking toggle).
+    header("Content-Security-Policy: script-src 'self' 'unsafe-eval' 'unsafe-inline'");
+}
+
 function pr($data = [], $tag = "##############"){
 	// echo '<pre>'.$tag;
 	// print_r($data);
@@ -48,7 +56,9 @@ $isDevelopment = ($env === 'aws');
 
 if ($isDevelopment) {
 
-    error_reporting(E_ALL);
+    // Show all useful errors in development, but suppress noisy deprecation
+    // notices from legacy libraries (Carbon, JpGraph, etc.) on PHP 8+.
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
 
@@ -144,7 +154,26 @@ try {
 
 } catch (Throwable $e) {
 
-    if ($isDevelopment) {
+    // Always log the full exception so production issues can be diagnosed.
+    $logMessage = sprintf(
+        "[%s] %s in %s on line %s\nStack trace:\n%s\n\n",
+        date('Y-m-d H:i:s'),
+        $e->getMessage(),
+        $e->getFile(),
+        $e->getLine(),
+        $e->getTraceAsString()
+    );
+
+    // Prefer a local log file in the app directory; fall back to PHP's error_log.
+    $localLogFile = APP_DIRECTORY . 'php-exception.log';
+    if (@is_writable(APP_DIRECTORY) || (!file_exists($localLogFile) && @is_writable(APP_DIRECTORY))) {
+        @file_put_contents($localLogFile, $logMessage, FILE_APPEND);
+    } else {
+        error_log($logMessage);
+    }
+
+    // Show detailed error output in development or when explicitly requested with ?debug=1.
+    if ($isDevelopment || (isset($_GET['debug']) && $_GET['debug'] == '1')) {
 
         echo '<pre>';
         echo $e;

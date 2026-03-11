@@ -29,23 +29,27 @@ function submitbutton(pressbutton, form_name)
 	}
 }
 
+function getInfoFrame()
+{
+	return document.getElementById('ifr_info');
+}
+
 function openInfoPane(src)
 {
-	//alert('openInfoPane(' + src + ')');
-
-	if (ifr_info == undefined)
+	var infoFrame = getInfoFrame();
+	if (!infoFrame)
 	{
 		popupWindow(src);
 	}
 	else
 	{
-iframeLocation(		ifr_info, src);
+		iframeLocation(infoFrame, src);
 	}
 }
 
 function addClient()
 {
-iframeLocation(	ifr_info, "index.php?cmd=ClientCreate");
+	openInfoPane("index.php?cmd=ClientCreate");
 }
 
 function addNbm()
@@ -650,37 +654,39 @@ function deleteRow(table_name, item_id)
 					<a href="#" onclick="javascript:addClient()"><img src="{$APP_URL}app/view/images/icons/table_add.png" alt="Add Client" title="Add a new client" /></a>
 				</form>		
 				{if $client_selected != ''}
+        {if isset($campaign) && $campaign}
         <input type="hidden" id="campaign_id" name="campaign_id" value="{$campaign->getId()}">
+        {/if}
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tr class="hdr">
-						<td colspan="3"{if !$client->getIsCurrent()} style="color:red;"{/if}>Campaign View</td>
+						<td colspan="3"{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Campaign View</td>
 					</tr>
 					
 					<tr valign="top">
 						<td width="50%" class="lcol">
 							{if $session_user->hasPermission('permission_admin_client_campaigns')} 
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Client Details</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Client Details</span></summary>
 									<div class="moofx-slider content">
 										<iframe id="ifr_client_details" name="ifr_client_details" src="index.php?cmd=ClientDetails&id={$client->getId()}" scrolling="no" border="0" frameborder="no" style="height: 300px; width: 100%; "></iframe>
 									</div>
-								</div>
+								</details>
 							</div>
 							
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Campaign Details</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Campaign Details</span></summary>
 									<div class="moofx-slider content">
 										<iframe id="ifr_campaign_details" name="ifr_campaign_details" src="index.php?cmd=CampaignDetails&id={$client->getId()}" scrolling="no" border="0" frameborder="no" style="height: 300px; width: 100%; "></iframe>
 									</div>
-								</div>
+								</details>
 							</div>
 							{/if}
 							{if $session_user->hasPermission('permission_admin_client_campaigns') || $session_user->hasPermission('permission_admin_clients_nbm_admin')}
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Alchemis Team Details</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Alchemis Team Details</span></summary>
 									<div class="moofx-slider content">
 										<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0">
 											<tr class="hdr">
@@ -793,13 +799,13 @@ function deleteRow(table_name, item_id)
 											</tr>
 										</table>
 									</div>
-								</div>
+								</details>
 							</div>
 							{/if}
 							{if $session_user->hasPermission('permission_admin_client_campaigns') || $session_user->hasPermission('permission_admin_clients_nbm_admin')}
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Campaign Disciplines ({$campaign_disciplines_count}</strong> record{if $campaign_disciplines_count != 1}s{/if})</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Campaign Disciplines ({$campaign_disciplines_count}</strong> record{if $campaign_disciplines_count != 1}s{/if})</span></summary>
 									<div class="moofx-slider content">
 										<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0">
 											<tr class="hdr">
@@ -860,16 +866,18 @@ function deleteRow(table_name, item_id)
 											</tr>
 										</table>
 									</div>
-								</div>
+								</details>
 							</div>
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Targets</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Targets</span></summary>
 									<div class="moofx-slider content">
-										{if $campaign->getStartYearMonth()}
-										<a href="#" onclick="javascript:openInfoPane('index.php?cmd=CampaignTargetCreate&amp;campaign_id={$campaign->getId()}'); return false;">Add additional 12 months</a>
-										{else}
-										<p>New campaign targets cannot be added until a campaign start date has been specified</p>
+										{if isset($campaign) && $campaign}
+											{if $campaign->getStartYearMonth()}
+											<a href="#" onclick="javascript:openInfoPane('index.php?cmd=CampaignTargetCreate&amp;campaign_id={$campaign->getId()}'); return false;">Add additional 12 months</a>
+											{else}
+											<p>New campaign targets cannot be added until a campaign start date has been specified</p>
+											{/if}
 										{/if}
 										<form action="" method="post" id="dataForm" name="dataForm" autocomplete="off">
 											<input type="hidden" name="task" value="" />
@@ -921,12 +929,12 @@ function deleteRow(table_name, item_id)
 											</table>
 										</form>
 									</div>
-								</div>
+								</details>
 							</div>
 							
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>'Do Not Call' Companies</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>'Do Not Call' Companies</span></summary>
 									<div class="moofx-slider content">
 										<div style="height:400px; overflow-x: hidden; overflow-y: y:auto">
 										<table id="tbl_company_do_not_call_list" class="adminlist">
@@ -952,12 +960,12 @@ function deleteRow(table_name, item_id)
 										</table>
 										</div>
 									</div>
-								</div>
+								</details>
 							</div>
 									
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Target Sectors</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Target Sectors</span></summary>
 									<div class="moofx-slider content">
 										<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0">
 											<tr class="hdr">
@@ -1029,12 +1037,12 @@ function deleteRow(table_name, item_id)
 											</tr>
 										</table>
 									</div>
-								</div>
+								</details>
 							</div>
 							
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Target Regions</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Target Regions</span></summary>
 									<div class="moofx-slider content">
 										<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0">
 											<tr class="hdr">
@@ -1095,35 +1103,41 @@ function deleteRow(table_name, item_id)
 											</tr>
 										</table>
 									</div>
-								</div>
+								</details>
 							</div>
 							{/if}
 				
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Report Summaries</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Report Summaries</span></summary>
 									<div class="moofx-slider content">
+										{if isset($campaign) && $campaign}
 										<iframe id="ifr_summary_reports" name="ifr_summary_reports" src="index.php?cmd=CampaignReportSummaries&campaign_id={$campaign->getId()}" scrolling="no" border="0" frameborder="no" style="height: 300px; width: 100%; "></iframe>
+										{/if}
 									</div>
-								</div>
+								</details>
 							</div>
 									
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span{if !$client->getIsCurrent()} style="color:red;"{/if}>Document Library</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>Document Library</span></summary>
 									<div class="moofx-slider content">
+										{if isset($campaign) && $campaign}
 										<iframe id="ifr_documents" name="ifr_documents" src="index.php?cmd=CampaignDocuments&campaign_id={$campaign->getId()}" scrolling="no" border="0" frameborder="no" style="height: 300px; width: 100%; "></iframe>
+										{/if}
 									</div>
-								</div>
+								</details>
 							</div>
 
 							<div id="content-pane" class="pane-sliders">
-								<div class="panel">
-									<h3 class="moofx-toggler title" id="cpanel-panel"><span>Gui settings</span></h3>
+								<details class="panel accordion-panel">
+									<summary class="moofx-toggler title"><span>Gui settings</span></summary>
 									<div class="moofx-slider content">
+										{if isset($campaign) && $campaign}
 										<iframe id="ifr_documents" name="ifr_documents" src="index.php?cmd=CampaignSettings&campaign_id={$campaign->getId()}" scrolling="no" border="0" frameborder="no" style="height: 300px; width: 100%; "></iframe>
+										{/if}
 									</div>
-								</div>
+								</details>
 							</div>
 							{/if}
 
@@ -1145,7 +1159,15 @@ function deleteRow(table_name, item_id)
 </table>
 <div id="notification" style="display: none;"><img src="{$APP_URL}app/view/images/ajax_loader.gif" width="16" height="16" align="absmiddle">&nbsp;Working...</div>
 
-<script language="JavaScript" type="text/javascript">
-	init_moofx();
-</script>
+<style>
+{literal}
+.accordion-panel { margin-bottom: 2px; }
+.accordion-panel summary { cursor: pointer; list-style: none; }
+.accordion-panel summary::-webkit-details-marker { display: none; }
+.accordion-panel[open] summary { margin-bottom: 0; }
+/* Override global .pane-sliders .content { display:none } so open panel content is visible */
+.accordion-panel[open] .moofx-slider,
+.accordion-panel[open] .content { display: block !important; height: auto !important; }
+{/literal}
+</style>
 {include file="footer.tpl"}
