@@ -352,9 +352,15 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 		// plus
 		// What have I got left to achieve before the end of the month
 		// all of the above divided by the remaining working days available in the month (including any 'booked' days)
-		$targets['calls_per_call_day'] = round((($kpis['calls_per_call_day'] * $worked_days) - $monthly_call_data['call_count'] + ($kpis['calls_per_call_day'] * $working_days_for_remainder_of_month)) / $working_days_for_remainder_of_month);
-		$targets['effectives_per_call_day'] = round((($kpis['effectives_per_call_day'] * $worked_days) - $monthly_call_data['call_effective_count'] + ($kpis['effectives_per_call_day'] * $working_days_for_remainder_of_month)) / $working_days_for_remainder_of_month);
-		$targets['meets_set_per_call_day'] = round((($kpis['meets_set_per_call_day'] * $worked_days) - $monthly_call_data['meeting_set_count'] + ($kpis['meets_set_per_call_day'] * $working_days_for_remainder_of_month)) / $working_days_for_remainder_of_month, 2);
+		if ($working_days_for_remainder_of_month > 0) {
+			$targets['calls_per_call_day'] = round((($kpis['calls_per_call_day'] * $worked_days) - $monthly_call_data['call_count'] + ($kpis['calls_per_call_day'] * $working_days_for_remainder_of_month)) / $working_days_for_remainder_of_month);
+			$targets['effectives_per_call_day'] = round((($kpis['effectives_per_call_day'] * $worked_days) - $monthly_call_data['call_effective_count'] + ($kpis['effectives_per_call_day'] * $working_days_for_remainder_of_month)) / $working_days_for_remainder_of_month);
+			$targets['meets_set_per_call_day'] = round((($kpis['meets_set_per_call_day'] * $worked_days) - $monthly_call_data['meeting_set_count'] + ($kpis['meets_set_per_call_day'] * $working_days_for_remainder_of_month)) / $working_days_for_remainder_of_month, 2);
+		} else {
+			$targets['calls_per_call_day'] = $kpis['calls_per_call_day'];
+			$targets['effectives_per_call_day'] = $kpis['effectives_per_call_day'];
+			$targets['meets_set_per_call_day'] = $kpis['meets_set_per_call_day'];
+		}
 		$targets['access'] = 0;
 		$targets['conversion'] = 0; // %
 
