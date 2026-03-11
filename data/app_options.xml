@@ -7,8 +7,8 @@
 			<database>
 				<host>db</host>
 				<database>legacy_db</database>
-				<username>legacy_user</username>
-				<password>secret</password>
+				<username>root</username>
+				<password>root</password>
 			</database>
 			<url>/</url>
 			<log_directory>/var/www/html/logs/</log_directory>
@@ -22,19 +22,19 @@
 		</development>
 
 		<aws>
-			<!-- <database>
+			<database>
 				<host>alchemis-mysql-upgrade.cswhqpuhwywg.eu-west-1.rds.amazonaws.com</host>
 				<port>3306</port>
 				<database>alchemis</database>
 				<username>alchemis</username>
 				<password>rYT4maP7</password>
-			</database> -->
-			<database>
+			</database>
+			<!-- <database>
                 <host>alchemis-mysql.cswhqpuhwywg.eu-west-1.rds.amazonaws.com</host>
                 <database>alchemis</database>
                 <username>alchemis</username>
                 <password>rYT4maP7</password>
-            </database>
+            </database> -->
 			<url>/alchemis/</url>
 			<log_directory>/var/www/html/alchemis/logs/</log_directory>
 			<name>Alchemis Elixir</name>
