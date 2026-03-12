@@ -106,6 +106,7 @@ class app_command_Dashboard extends app_command_Command
 		
 		// User's campaigns
 		$campaigns = app_domain_Campaign::findProgressByUserId($nbm_id);
+		// print_r(	$nbm_id);die;
 		$request->setObject('campaigns', $campaigns);
 
 		// Messages
@@ -170,7 +171,7 @@ class app_command_Dashboard extends app_command_Command
 		$request->setObject('team_stats', $team_stats);
 		$user_team = app_domain_RbacUser::findTeamIdByUserId($nbm_id);
 		$request->setObject('user_team', $user_team);
-		
+
 		// Determine media type
 		$request->setObject('media', $request->getProperty('media'));
 		

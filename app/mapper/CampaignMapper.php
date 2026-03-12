@@ -296,23 +296,41 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $user_id
 	 * @return array
 	 */
-	public static function findProgressByUserId($user_id)
+	public function findProgressByUserId($user_id)
 	{
-		$year_month = date('Ym', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
+		// Prefer current month; if no data, try previous month; then try latest year_month in DB.
+		$year_month = date('Ym', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
+		$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $year_month);
+		if (empty($ids)) {
+			$year_month_prev = date('Ym', strtotime('first day of last month'));
+			$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $year_month_prev);
+		}
+		if (empty($ids)) {
+			$year_month_latest = $this->fetchLatestYearMonthInStatistics();
+			if ($year_month_latest !== '') {
+				$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $year_month_latest);
+			}
+		}
+		if (empty($ids)) {
+			return array();
+		}
 
-		$query = 'SELECT MAX(ds.id) AS id FROM tbl_data_statistics AS ds ' .
-					'INNER JOIN tbl_campaign_nbms AS cam ON ds.campaign_id = cam.campaign_id ' .
-					'WHERE ds.`year_month` =  ' . self::$DB->quote($year_month, 'text') . ' ' .
-					'AND cam.user_id = ' . self::$DB->quote($user_id, 'integer') . ' ' .
-					'GROUP BY ds.campaign_id';
-//		echo $query;
-		$result = self::$DB->query($query);
+		$rows = $this->fetchProgressRowsByIds($ids, true);
+		// If no rows with is_current=1 (e.g. staging data), show anyway without filter so data appears like on live
+		if (empty($rows)) {
+			$rows = $this->fetchProgressRowsByIds($ids, false);
+		}
+		return $rows;
+	}
 
-		// We fetch the items and put them into a string because
-		// using this as a sub-query really kills the performace.
-		$array = $result->fetchCol();
-		$ids = implode(',', $array);
-
+	/**
+	 * Run the main campaign progress SELECT for given ds.id list.
+	 * @param string $ids comma-separated ds.id values
+	 * @param bool $onlyCurrentClient if true, add AND cli.is_current = 1
+	 * @return array
+	 */
+	protected function fetchProgressRowsByIds($ids, $onlyCurrentClient = true)
+	{
 		$query = 'SELECT ds.id, ds.campaign_id, cli.name AS campaign_name, cli.id AS client_id, ds.user_id, ds.`year_month`, ' .
 					'ds.campaign_current_month, ds.campaign_meeting_set_target, ' .
 					'ds.campaign_meeting_set_target_to_date, ds.campaign_meeting_set_count_to_date, ' .
@@ -321,21 +339,64 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 					'FROM tbl_data_statistics AS ds ' .
 					'INNER JOIN tbl_campaigns AS cam ON ds.campaign_id = cam.id ' .
 					'INNER JOIN tbl_clients AS cli ON cam.client_id = cli.id ' .
-					'WHERE ds.id IN (' . ($ids ? $ids : '-1') . ') ' .
-					'AND cli.is_current = 1 ' .
-                    'ORDER BY cli.name';
-//		echo $query;
+					'WHERE ds.id IN (' . $ids . ') ';
+		if ($onlyCurrentClient) {
+			$query .= 'AND cli.is_current = 1 ';
+		}
+		$query .= 'ORDER BY cli.name';
 		$result = self::$DB->query($query);
+		if (MDB2::isError($result)) {
+			return array();
+		}
 		return self::mdb2ResultToArray($result);
+	}
+
+	/**
+	 * Fetch comma-separated ds.id values for campaign progress (first query).
+	 * @param int $user_id
+	 * @param string $year_month e.g. 202603
+	 * @return string comma-separated ids or empty string
+	 */
+	protected function fetchProgressIdsForUserAndMonth($user_id, $year_month)
+	{
+		$query = 'SELECT MAX(ds.id) AS id FROM tbl_data_statistics AS ds ' .
+					'INNER JOIN tbl_campaign_nbms AS cam ON ds.campaign_id = cam.campaign_id ' .
+					'WHERE ds.`year_month` = ' . self::$DB->quote($year_month, 'text') . ' ' .
+					'AND cam.user_id = ' . self::$DB->quote($user_id, 'integer') . ' ' .
+					'GROUP BY ds.campaign_id';
+		$result = self::$DB->query($query);
+		if (MDB2::isError($result)) {
+			return '';
+		}
+		$array = $result->fetchCol();
+		if (!is_array($array)) {
+			$array = array();
+		}
+		return implode(',', $array);
+	}
+
+	/**
+	 * Get the latest year_month present in tbl_data_statistics (fallback when current/prev month have no data).
+	 * Uses backticks for year_month for MySQL reserved-word safety.
+	 * @return string e.g. 203412 or empty string
+	 */
+	protected function fetchLatestYearMonthInStatistics()
+	{
+		$query = 'SELECT MAX(`year_month`) FROM tbl_data_statistics';
+		$result = self::$DB->query($query);
+		if (MDB2::isError($result)) {
+			return '';
+		}
+		$row = $result->fetchOne();
+		return ($row !== null && $row !== '') ? (string) $row : '';
 	}
 
 	/**
 	 * Find the list of marketing services from tbl_tiered_characteristics.
 	 * @return array
 	 */
-	public static function findAllDisciplines()
+	public function findAllDisciplines()
 	{
-
 		$query = 'SELECT * ' .
 				'FROM tbl_tiered_characteristics AS tc ' .
 				'WHERE tc.parent_id =  18 ' .
@@ -350,7 +411,7 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $campaign_id
 	 * @return array
 	 */
-	public static function findDisciplines($campaign_id)
+	public function findDisciplines($campaign_id)
 	{
 
 		$query = 'SELECT tc.id, tc.value ' .
@@ -368,14 +429,14 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $initiative_id
 	 * @return array
 	 */
-	public static function findDisciplinesByInitiativeId($initiative_id)
+	public function findDisciplinesByInitiativeId($initiative_id)
 	{
 		$query = 'SELECT i.campaign_id ' .
 				'FROM tbl_initiatives AS i ' .
 				'WHERE i.id = ' . self::$DB->quote($initiative_id, 'integer');
 		$result = self::$DB->query($query);
 		$row = $result->fetchRow();
-		return self::findDisciplines($row[0]);
+		return $this->findDisciplines($row[0]);
 	}
 
 
@@ -385,7 +446,7 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $initiative_id
 	 * @return single item
 	 */
-	public static function findCampaignIdByInitiativeId($initiative_id)
+	public function findCampaignIdByInitiativeId($initiative_id)
 	{
 		$query = 'SELECT i.campaign_id ' .
 				'FROM tbl_initiatives AS i ' .
@@ -400,7 +461,7 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $campaign_id
 	 * @return array
 	 */
-	public static function findAvailableDisciplines($campaign_id)
+	public function findAvailableDisciplines($campaign_id)
 	{
 
 		$query = 'SELECT tc.id, tc.value ' .
@@ -420,7 +481,7 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $initiative_id
 	 * @return array
 	 */
-	public static function findAvailableDisciplinesByInitiativeId($initiative_id)
+	public function findAvailableDisciplinesByInitiativeId($initiative_id)
 	{
 
 		$query = 'SELECT i.campaign_id ' .
@@ -428,7 +489,7 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 				'WHERE i.id = ' . self::$DB->quote($initiative_id, 'integer');
 		$result = self::$DB->query($query);
 		$row = $result->fetchRow();
-		return self::findAvailableDisciplines($row[0]);
+		return $this->findAvailableDisciplines($row[0]);
 	}
 
 
@@ -438,7 +499,7 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $initiative_id
 	 * @return array
 	 */
-	public static function isCompanyDoNotCall($campaign_id, $company_id)
+	public function isCompanyDoNotCall($campaign_id, $company_id)
 	{
 		$query = 'SELECT count(id) ' .
 				'FROM tbl_campaign_do_not_call AS cdnc ' .
@@ -501,7 +562,7 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $campaign_id
 	 * @return string datetime in the format 'YYYY-MM-DD HH:MM:SS'
 	 */
-	public static function findLastEffectiveDate($campaign_id)
+	public function findLastEffectiveDate($campaign_id)
 	{
 		$query = 'SELECT comm.communication_date ' .
 					'FROM tbl_campaigns AS cam ' .
@@ -519,7 +580,7 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $campaign_id
 	 * @return array
 	 */
-	public static function getProspectsStatuses($campaign_id)
+	public function getProspectsStatuses($campaign_id)
 	{
 		$query = 'SELECT cs.id AS status_id, cs.description AS status, COUNT(cs.description) AS count ' .
 					'FROM tbl_post_initiatives AS pi ' .

@@ -96,7 +96,7 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 			$options = array();
 			$options[0] = '-- select --';
 			foreach ($items as $item) {
-				$options[$item['id']] = @@C_String::htmlDisplay($item['name']);
+				$options[$item['id']] = @C_String::htmlDisplay($item['name']);
 				if ($user_id == $item['id']) {
 					$selected_user = $item['id'];
 				}

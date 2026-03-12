@@ -78,6 +78,11 @@ class app_mapper_StatisticsReaderMapper extends app_mapper_ReaderMapper implemen
 	 */
 	public static function findCallsByUserIdAndYearMonth($user_id, $year_month)
 	{
+		$defaults = array(
+			'call_count' => 0,
+			'call_effective_count' => 0,
+			'meeting_set_count' => 0
+		);
 		$query = 'SELECT SUM(call_count) AS call_count, ' .
 					'SUM(call_effective_count) AS call_effective_count, ' .
 					'SUM(meeting_set_count) AS meeting_set_count ' .
@@ -85,7 +90,11 @@ class app_mapper_StatisticsReaderMapper extends app_mapper_ReaderMapper implemen
 					'WHERE ds.user_id = ' . self::$DB->quote($user_id, 'integer') . ' ' .
 					'AND ds.`year_month` = ' . self::$DB->quote($year_month, 'text') . ' ' .
 					'GROUP BY ds.user_id, ds.`year_month`';
-		return self::$DB->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
+		$row = self::$DB->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
+		if (!is_array($row)) {
+			return $defaults;
+		}
+		return array_merge($defaults, $row);
 	}
 
 }

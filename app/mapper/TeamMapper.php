@@ -120,28 +120,26 @@ class app_mapper_TeamMapper extends app_mapper_Mapper implements app_domain_Mess
 	 */
 	public function findDashboardStatistics()
 	{
-		// Use current month so live and local (same DB) show identical "this month to date" data
+		// Use current month first; if all zeros, use latest year_month in DB so dashboard shows data like on live
 		$year_month = date('Ym');
-		
-//		$query1 = 'SELECT MAX(ds.id) FROM tbl_data_statistics AS ds ' .
-//					'INNER JOIN tbl_campaign_nbms AS cam ON ds.campaign_id = cam.campaign_id ' .
-//					'WHERE ds.`year_month` =  ' . self::$DB->quote($year_month, 'text') . ' ' .
-//					'AND cam.user_id = ' . self::$DB->quote($user_id, 'integer') . ' ' .
-//					'GROUP BY ds.campaign_id';
-////		echo "<p>$query1</p>";
-//		
-//		$query2 = 'SELECT ds.id, ds.campaign_id, cli.name AS campaign_name, ds.user_id, ds.`year_month`, ' .
-//					'ds.campaign_current_month, ds.campaign_meeting_set_target, ' .
-//					'ds.campaign_meeting_set_target_to_date, ds.campaign_meeting_set_count_to_date, ' .
-//					'ds.campaign_meeting_attended_target_to_date, ds.campaign_meeting_attended_count_to_date, ' .
-//					'ds.meeting_in_diary_this_month_count ' .
-//					'FROM tbl_data_statistics AS ds ' .
-//					'INNER JOIN tbl_campaigns AS cam ON ds.campaign_id = cam.id ' .
-//					'INNER JOIN tbl_clients AS cli ON cam.client_id = cli.id ' .
-//					'WHERE ds.id IN (' . $query1 . ')';		
-////		echo "<p>$query2</p>";
+		$rows = $this->fetchTeamStatsForYearMonth($year_month);
+		if ($this->teamStatsAllZero($rows)) {
+			$year_month_latest = $this->fetchLatestYearMonthInStatistics();
+			if ($year_month_latest !== '' && $year_month_latest !== $year_month) {
+				$rows = $this->fetchTeamStatsForYearMonth($year_month_latest);
+			}
+		}
+		return $rows;
+	}
 
-		$query2 = 'SELECT ds.id, ds.`year_month`, SUM(ds.call_count) AS call_count, ' .
+	/**
+	 * Fetch team zone stats for a given year_month.
+	 * @param string $year_month e.g. 202603
+	 * @return array
+	 */
+	protected function fetchTeamStatsForYearMonth($year_month)
+	{
+		$query = 'SELECT ds.id, ds.`year_month`, SUM(ds.call_count) AS call_count, ' .
 					'SUM(ds.call_effective_count) AS call_effective_count, SUM(ds.meeting_set_count) AS meeting_set_count, ' .
 					'SUM((ds.call_count + (ds.call_ote_count * 10) + (ds.meeting_set_count * 100))) AS kpi, ' .
 					'n.team_id, t.name AS team ' .
@@ -151,15 +149,44 @@ class app_mapper_TeamMapper extends app_mapper_Mapper implements app_domain_Mess
 					'WHERE ds.`year_month` = ' . self::$DB->quote($year_month, 'text') . ' ' .
 					'GROUP BY n.team_id ' .
 					'ORDER BY t.name';
-//		$query2 = 'SELECT t.id AS team_id, t.name AS team, ds.* ' .
-//					'FROM tbl_teams AS t ' .
-//					'LEFT JOIN tbl_team_nbms AS n ON t.id = n.team_id ' .
-//					'LEFT JOIN tbl_data_statistics AS ds ON n.user_id = ds.user_id ' .
-//					'WHERE ds.`year_month` = ' . self::$DB->quote($year_month, 'text') . ' ' .
-//					'ORDER BY t.name';
-//		echo "<p>$query2</p>";
-		$result = self::$DB->query($query2);
+		$result = self::$DB->query($query);
+		if (MDB2::isError($result)) {
+			return array();
+		}
 		return self::mdb2ResultToArray($result);
+	}
+
+	/**
+	 * True if all team rows have zero counts (no activity for that period).
+	 * @param array $rows
+	 * @return bool
+	 */
+	protected function teamStatsAllZero($rows)
+	{
+		if (empty($rows)) {
+			return true;
+		}
+		foreach ($rows as $row) {
+			if (!empty($row['call_count']) || !empty($row['call_effective_count']) || !empty($row['meeting_set_count']) || !empty($row['kpi'])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Get latest year_month from tbl_data_statistics (for fallback when current month has no data).
+	 * @return string
+	 */
+	protected function fetchLatestYearMonthInStatistics()
+	{
+		$query = 'SELECT MAX(`year_month`) FROM tbl_data_statistics';
+		$result = self::$DB->query($query);
+		if (MDB2::isError($result)) {
+			return '';
+		}
+		$row = $result->fetchOne();
+		return ($row !== null && $row !== '') ? (string) $row : '';
 	}
 
 	/**
