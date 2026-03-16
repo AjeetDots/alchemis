@@ -121,7 +121,7 @@ function deleteRow(item_id)
 </script>
 
 
-<div style="height:630px; overflow-x: hidden; overflow-y: y:auto">
+<div style="height:630px; overflow-x: hidden; overflow-y: auto">
 	<div id="div_region_postcode_menu" >
 		Postcodes for region: <strong>{$region->getName()}</strong> &nbsp;&nbsp;|&nbsp;&nbsp;
 		{assign var=postcodes value=$region->getPostcodes()}

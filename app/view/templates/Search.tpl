@@ -331,7 +331,7 @@ function AjaxCampaignCompanyDoNotCall(data)
 	<tr>
 		<td width="67%" valign="top">
 			<div class="module_content" tabindex="-1">
-				<iframe id="iframe1" name="iframe1" src="" scrolling="no" border="0" tabindex="-1" 	frameborder="no" style="height: 760px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+				<iframe id="iframe1" name="iframe1" src="" scrolling="no" border="0" tabindex="-1" 	frameborder="no" style="height: 760px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 			</div>
 		</td>
 		<td width="33%" valign="top">
@@ -632,7 +632,7 @@ function AjaxCampaignCompanyDoNotCall(data)
 									<h3 class="moofx-toggler title" id="cpanel-panel"><span>Add Site</span></h3>
 									<div class="moofx-slider content">
 										<div id="div_add_company_html" style="display:block">
-											<iframe id="ifr_add_company" name="ifr_add_company" src="index.php?cmd=CompanyCreate" scrolling="yes" border="0" frameborder="no" style="height: 500px; width: 100%; overflow-x: hidden; overflow-y: y:auto">
+											<iframe id="ifr_add_company" name="ifr_add_company" src="index.php?cmd=CompanyCreate" scrolling="yes" border="0" frameborder="no" style="height: 500px; width: 100%; overflow-x: hidden; overflow-y: auto">
 											</iframe>
 										</div>
 									</div>
@@ -664,7 +664,7 @@ function AjaxCampaignCompanyDoNotCall(data)
 									<h3 class="moofx-toggler title" id="cpanel-panel"><span>Add Company</span></h3>
 									<div class="moofx-slider content">
 										<div id="div_add_parent_company_html" style="display:block">
-											<iframe id="ifr_add_parent_company" name="ifr_add_company" src="index.php?cmd=ParentCompany" scrolling="yes" border="0" frameborder="no" style="height: 500px; width: 100%; overflow-x: hidden; overflow-y: y:auto">
+											<iframe id="ifr_add_parent_company" name="ifr_add_company" src="index.php?cmd=ParentCompany" scrolling="yes" border="0" frameborder="no" style="height: 500px; width: 100%; overflow-x: hidden; overflow-y: auto">
 											</iframe>
 										</div>
 									</div>

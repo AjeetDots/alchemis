@@ -23,7 +23,7 @@
 					<div class="moofx-slider content">
 						<div class="module_content">
 							<iframe id="iframe1" name="iframe1" src="index.php?cmd=CharacteristicList" scrolling="yes" 
-								border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+								border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 						</div>
 					</div>
 				</div>

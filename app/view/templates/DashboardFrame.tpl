@@ -136,7 +136,7 @@ function doNbmDashboard(nbm_id)
 	<tr>
 		<td>
 			<iframe id="ifr_admin" name="ifr_admin" src="" scrolling="yes" 
-			border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+			border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 		</td>
 	</tr>
 </table>

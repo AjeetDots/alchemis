@@ -642,7 +642,7 @@ function deleteRow(table_name, item_id)
 <table class="adminform">
 	<tr>
 		<td width="66%" valign="top">
-			<div class="cfg" style="overflow-x: hidden; overflow-y: y:auto">
+			<div class="cfg" style="overflow-x: hidden; overflow-y: auto">
 				<form action="index.php?cmd=CampaignView" method="post" id="adminForm" name="adminForm" autocomplete="off">
 					<input type="hidden" name="task" value="" />
 
@@ -936,7 +936,7 @@ function deleteRow(table_name, item_id)
 								<details class="panel accordion-panel">
 									<summary class="moofx-toggler title"><span{if isset($client) && $client && !$client->getIsCurrent()} style="color:red;"{/if}>'Do Not Call' Companies</span></summary>
 									<div class="moofx-slider content">
-										<div style="height:400px; overflow-x: hidden; overflow-y: y:auto">
+										<div style="height:400px; overflow-x: hidden; overflow-y: auto">
 										<table id="tbl_company_do_not_call_list" class="adminlist">
 											<thead>
 												<tr>
@@ -971,7 +971,7 @@ function deleteRow(table_name, item_id)
 											<tr class="hdr">
 												<td>
 													Sectors&nbsp;&nbsp;|&nbsp;&nbsp;
-													<span style="text-align: right"><strong>{$nbms|@count}</strong> record{if $nbms|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
+													<span style="text-align: right"><strong>{$campaign_sectors|@count}</strong> record{if $campaign_sectors|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
 													<input type="button" id="add_new_sector" name="add_new_sector" value="Add New Sector" onclick="javascript:$('div_new_sector').show();$('user_id').focus();" />
 													<div id="div_new_sector" style="display: none; margin-top: 10px">
 														<form id="form_new_sector" name="form_new_sector" action="" method="post">
@@ -1048,7 +1048,7 @@ function deleteRow(table_name, item_id)
 											<tr class="hdr">
 												<td>
 													Regions&nbsp;&nbsp;|&nbsp;&nbsp;
-													<span style="text-align: right"><strong>{$nbms|@count}</strong> record{if $regions|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
+													<span style="text-align: right"><strong>{$campaign_regions|@count}</strong> record{if $campaign_regions|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
 													<input type="button" id="add_new_region" name="add_new_sector" value="Add New Region" onclick="javascript:$('div_new_region').show();$('region_id').focus();" />
 													<div id="div_new_region" style="display: none; margin-top: 10px">
 														<form id="form_new_region" name="form_new_region" action="" method="post">

@@ -151,11 +151,11 @@
 		</td>
 		<td style="width: 25%">
 			<iframe id="iframe_day_view" name="iframe_day_view" src="" scrolling="yes" border="0" frameborder="no"
-				style="height: 650px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+				style="height: 650px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 		</td>
 		<td style="width: 25%">
 			<iframe id="iframe_edit_pane" name="iframe_edit_pane" src="" scrolling="yes" border="0" frameborder="no"
-				style="height: 650px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+				style="height: 650px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 		</td>
 	</tr>
 </table>

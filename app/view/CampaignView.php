@@ -22,6 +22,10 @@ class app_view_CampaignView extends app_view_ManipulationView
 		
 		$this->smarty->assign('client_options', $this->request->getObject('client_options'));
 		$this->smarty->assign('client_selected', $this->request->getProperty('client_selected'));
+
+		// Ensure array variables exist for template count/foreach (avoid undefined key and count(null) errors).
+		$this->smarty->assign('campaign_sectors', $this->request->getObject('campaign_sectors') ?: []);
+		$this->smarty->assign('campaign_regions', $this->request->getObject('campaign_regions') ?: []);
 		
 		if ($this->request->getProperty('client_selected') != '')
 		{
@@ -38,14 +42,14 @@ class app_view_CampaignView extends app_view_ManipulationView
 			
 			$this->smarty->assign('campaign_nbms', $this->request->getObject('campaign_nbms'));
 			$this->smarty->assign('campaign_targets', $this->request->getObject('campaign_targets'));
-			$this->smarty->assign('campaign_sectors', $this->request->getObject('campaign_sectors'));
+			$this->smarty->assign('campaign_sectors', $this->request->getObject('campaign_sectors') ?: []);
 			$this->smarty->assign('campaign_companies_do_not_call', $this->request->getObject('campaign_companies_do_not_call'));
 			
 			$this->smarty->assign('user_options', $this->request->getObject('user_options'));
 			$this->smarty->assign('campaign_sector_options', $this->request->getObject('campaign_sector_options'));
 			$this->smarty->assign('region_options', $this->request->getObject('region_options'));
 			
-			$this->smarty->assign('campaign_regions', $this->request->getObject('campaign_regions'));
+			$this->smarty->assign('campaign_regions', $this->request->getObject('campaign_regions') ?: []);
 			
 			$this->smarty->assign('campaign_report_summaries', $this->request->getObject('campaign_report_summaries'));
 		}

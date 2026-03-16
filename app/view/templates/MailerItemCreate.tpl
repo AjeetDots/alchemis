@@ -84,7 +84,7 @@ function addPosts()
 		<span>
 	</div>
 	<div class="module_content" style="height: 690px; width: 100%;">
-		<iframe id="iframe1" name="iframe1" src="" scrolling="yes" border="0" frameborder="no" style="height: 99%; width: 99%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+		<iframe id="iframe1" name="iframe1" src="" scrolling="yes" border="0" frameborder="no" style="height: 99%; width: 99%; overflow-x: hidden; overflow-y: auto"></iframe>
 	</div>
 	
 {/if}

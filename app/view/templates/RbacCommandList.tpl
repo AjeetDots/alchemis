@@ -110,7 +110,7 @@
 								<div class="panel">
 									<h3 class="moofx-toggler title" id="cpanel-panel"><span>Log Communication</span></h3>
 									<div class="moofx-slider content">
-										<iframe id="iframe5" src="index.php?cmd=CommunicationCreate" scrolling="yes" border="0" frameborder="no" height="600" width="100%" style="overflow-x: hidden; overflow-y: y:auto"></iframe>
+										<iframe id="iframe5" src="index.php?cmd=CommunicationCreate" scrolling="yes" border="0" frameborder="no" height="600" width="100%" style="overflow-x: hidden; overflow-y: auto"></iframe>
 									</div>
 								</div>
 *}

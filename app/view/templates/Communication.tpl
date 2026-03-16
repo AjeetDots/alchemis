@@ -22,12 +22,12 @@ if (parent.tab_colln !== undefined && !parent.tab_colln.goToValue(4))
 		<tr>
 			<td width="66%" valign="top">
 				<div class="module_content" >
-					<iframe id="iframe1" name="iframe1" src="index.php?cmd=CommunicationCreate&company_id={$company_id}&post_id={$post_id}&post_initiative_id={$post_initiative_id}&initiative_id={$initiative_id}&source_tab={$source_tab}" scrolling="yes" border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+					<iframe id="iframe1" name="iframe1" src="index.php?cmd=CommunicationCreate&company_id={$company_id}&post_id={$post_id}&post_initiative_id={$post_initiative_id}&initiative_id={$initiative_id}&source_tab={$source_tab}" scrolling="yes" border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 				</div>
 			</td>
 			<td width="34%" valign="top">
 				<div class="module_content">
-					<iframe id="ifr_info" name="ifr_info" src="" scrolling="yes" border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+					<iframe id="ifr_info" name="ifr_info" src="" scrolling="yes" border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 				</div>
 			</td>
 		</tr>

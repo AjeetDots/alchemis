@@ -156,7 +156,7 @@ function doNbmCalendar(nbm_id)
 	</tr>
 	<tr>
 		<td>
-			<iframe id="ifr_admin" name="ifr_admin" src="" scrolling="yes" border="0" frameborder="no" style="padding: 0; height: 720px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+			<iframe id="ifr_admin" name="ifr_admin" src="" scrolling="yes" border="0" frameborder="no" style="padding: 0; height: 720px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 		</td>
 	</tr>
 </table>

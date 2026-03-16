@@ -18,7 +18,7 @@ if (parent.tab_colln !== undefined && !parent.tab_colln.goToValue(8))
 	<tr>
 		<td width="50%" valign="top">
 			<div class="module_content">
-				<iframe id="iframe1" name="iframe1" src="index.php?cmd=FilterBuilder&id={$id}" scrolling="yes" border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+				<iframe id="iframe1" name="iframe1" src="index.php?cmd=FilterBuilder&id={$id}" scrolling="yes" border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 			</div>
 		</td>
 		<td width="50%" valign="top">

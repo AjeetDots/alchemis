@@ -234,7 +234,7 @@ iframeLocation(		ifr_summary_reports, 'index.php?cmd=CampaignReportSummaries&cam
 		</td>
 		
 		<td width="40%" valign="top">
-			<iframe id="ifr_info" name="ifr_info" src="" scrolling="no" border="0" frameborder="no" style="height: 760px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+			<iframe id="ifr_info" name="ifr_info" src="" scrolling="no" border="0" frameborder="no" style="height: 760px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 		</td>
 
 	</tr>

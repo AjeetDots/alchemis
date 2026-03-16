@@ -175,7 +175,7 @@
 					<tr class="keyRow">
 						<td valign="top" width="450px">
 							<!-- width on following s/be 350px -->
-							<iframe id="ifr_notes" name="ifr_notes" src="index.php?cmd=WorkspaceNotes&post_id={$post_id}&initiative_id={$initiative_id}&post_initiative_id={$post_initiative_id}" scrolling="yes" border="0" frameborder="no" style="height: 704px; width: 100%; overflow-x: hidden; overflow-y: y:auto">
+							<iframe id="ifr_notes" name="ifr_notes" src="index.php?cmd=WorkspaceNotes&post_id={$post_id}&initiative_id={$initiative_id}&post_initiative_id={$post_initiative_id}" scrolling="yes" border="0" frameborder="no" style="height: 704px; width: 100%; overflow-x: hidden; overflow-y: auto">
 							</iframe>
 						</td>
 					</tr>
@@ -184,7 +184,7 @@
 			</td>
 			<td valign="top" width="500px"> <!-- info pane -->
 				<!--Info Pane-->
-				<iframe id="ifr_info" name="ifr_info" src="" scrolling="yes" border="0" frameborder="no" style="height: 704px; width: 100%; overflow-x: hidden; overflow-y: y:auto">
+				<iframe id="ifr_info" name="ifr_info" src="" scrolling="yes" border="0" frameborder="no" style="height: 704px; width: 100%; overflow-x: hidden; overflow-y: auto">
 				</iframe>
 			</td>
 		</tr>

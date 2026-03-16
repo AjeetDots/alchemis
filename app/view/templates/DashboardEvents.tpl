@@ -74,7 +74,7 @@ iframeLocation(	iframe1, 'index.php?cmd=EventDelete&referrer=DashboardEvents&eve
 
 		</td>
 		<td width="25%" valign="top">
-			<iframe id="iframe1" name="iframe1" src="" scrolling="no" border="0" frameborder="no" style="height: 760px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+			<iframe id="iframe1" name="iframe1" src="" scrolling="no" border="0" frameborder="no" style="height: 760px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 		</td>
 	</tr>
 </table>

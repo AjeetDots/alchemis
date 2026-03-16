@@ -122,7 +122,7 @@
 				<input type="hidden" name="post_list_by_post" id="post_list_by_post" value="{$post->getId()}" />
 				<a href="#" id="popup_posts_link"></a>
 				
-				<div id="popup_posts" class="popup" style="display: none; height: 250px; width: 800px; overflow-x: hidden; overflow-y: y:auto">
+				<div id="popup_posts" class="popup" style="display: none; height: 250px; width: 800px; overflow-x: hidden; overflow-y: auto">
 					<span style="position: fixed; top: 220px; left: 45px; z-index: 100;"><a href="#" class="popup_closebox">Close</a></span>
 			    	<table class="sortable" id="sortable_{$company->getId()}">
 			    	<thead>

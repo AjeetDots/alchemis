@@ -19,7 +19,7 @@ iframeLocation(	top.frames["iframe_5"], "index.php?cmd=WorkspaceSearch&id=" + co
 
 </script>
 
-<div id="div_mailer_statistics" style="border: solid 1px #ccc; padding: 2px; width: 100%; height:690px; overflow-x: hidden; overflow-y: y:auto">
+<div id="div_mailer_statistics" style="border: solid 1px #ccc; padding: 2px; width: 100%; height:690px; overflow-x: hidden; overflow-y: auto">
 	<h3>Statistics for Marketing Item: {$mailer->getName()}</h1>
 	
 	<input type="button" value="print" onClick="javascript: window.self.print();" />

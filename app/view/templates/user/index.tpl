@@ -162,7 +162,7 @@ function addNewLine(id, html)
 			</table>
 		</td>
 		<td width="50%" valign="top">
-			<iframe id="iframe1" name="iframe1" src="" scrolling="yes" border="0" frameborder="no" style="height: 680px; width: 100%; overflow-x: hidden; overflow-y: y:auto"></iframe>
+			<iframe id="iframe1" name="iframe1" src="" scrolling="yes" border="0" frameborder="no" style="height: 680px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 		</td>
 	</tr>
 </table>

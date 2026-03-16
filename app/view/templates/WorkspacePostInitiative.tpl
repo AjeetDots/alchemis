@@ -1,6 +1,6 @@
 {strip}	
 {*{if $post_initiative}*}
-<div style="height:350px; overflow-x: hidden; overflow-y: y:auto">
+<div style="height:350px; overflow-x: hidden; overflow-y: auto">
 	{*post initiative id: {if $post_initiative}{$post_initiative->getId()}{/if}*}
 	<input type="hidden" id="initiative_id" name="initiative_id" value="{if $initiative_id}{$initiative_id}{/if}" />
 	<input type="hidden" id="post_initiative_id" name="post_initiative_id" value="{if $post_initiative}{$post_initiative->getId()}{/if}" />

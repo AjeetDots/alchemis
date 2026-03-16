@@ -252,7 +252,7 @@ function selectRemove(id)
 	</div>
 	<br />
 	<br />
-	<div id="div_mailer_items" class="cfg" style="border: solid 1px #ccc; padding: 2px; width: 100%; height: 99%; overflow-x: hidden; overflow-y: y:auto">
+	<div id="div_mailer_items" class="cfg" style="border: solid 1px #ccc; padding: 2px; width: 100%; height: 99%; overflow-x: hidden; overflow-y: auto">
 		<form id="mailer_items" name="mailer_items" action="" method="post">
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" id="mailer_id" name="mailer_id" value="{$mailer->getId()}" />
@@ -338,7 +338,7 @@ function selectRemove(id)
 							
 						{/if}
 						
-							<div id="log_response_{$mailer_item.id}" class="popup" style="display: none; height: 400px; width: 500px; overflow-x: hidden; overflow-y: y:auto"></div>
+							<div id="log_response_{$mailer_item.id}" class="popup" style="display: none; height: 400px; width: 500px; overflow-x: hidden; overflow-y: auto"></div>
 					{/if}
 					</td>
 				</tr>

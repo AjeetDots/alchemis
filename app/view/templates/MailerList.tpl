@@ -193,14 +193,14 @@ function exportMailer(mailer_id)
 <table class="adminform">
 	<tr>
 		<td width="34%" valign="top">
-			<div style="height:720px; overflow-x: hidden; overflow-y: y:auto">
+			<div style="height:720px; overflow-x: hidden; overflow-y: auto">
 				<table id="" style="width:100%" class="adminlist" border="0" cellpadding="0" cellspacing="0">
 					<tr class="hdr">
 						<td style="vertical-align: middle">
 							<a href="#" onclick="javascript:addMailer();return false;"><img src="{$APP_URL}app/view/images/icons/email_add.png" alt="Add Mailer" title="Add a new mailer" /></a>
 							| <a href="#" onclick="javascript:refreshMailerList('archived');return false;">Show Archived</a>
 							| <a href="#" onclick="javascript:refreshMailerList('current');return false;">Show Current</a>
-							<div id="div_add_mailer" class="popup" style="display: none; height: 400px; width: 500px; overflow-x: hidden; overflow-y: y:auto"></div>
+							<div id="div_add_mailer" class="popup" style="display: none; height: 400px; width: 500px; overflow-x: hidden; overflow-y: auto"></div>
 						</td>
 					</tr>
 					<tr valign="top">
