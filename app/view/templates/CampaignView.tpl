@@ -653,7 +653,7 @@ function deleteRow(table_name, item_id)
 					&nbsp;&nbsp;|&nbsp;&nbsp;
 					<a href="#" onclick="javascript:addClient()"><img src="{$APP_URL}app/view/images/icons/table_add.png" alt="Add Client" title="Add a new client" /></a>
 				</form>		
-				{if $client_selected != ''}
+				{if isset($client) && $client}
         {if isset($campaign) && $campaign}
         <input type="hidden" id="campaign_id" name="campaign_id" value="{$campaign->getId()}">
         {/if}

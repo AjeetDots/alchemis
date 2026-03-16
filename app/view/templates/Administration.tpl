@@ -20,12 +20,13 @@ function doMenuItem(location)
 	{
 		switch (location)
 		{
+			case 'CampaignView':
+			case 'ClientList':
 			case 'CharacteristicList':
 			case 'AdminRegions':
 			case 'AdminRegionPostcodes':
 			case 'AdminReports':
 			case 'User':
-			case 'CampaignView':
 			case 'Dedupe':
 			case 'Categories':
 			case 'Whitelist':
@@ -56,7 +57,11 @@ function doMenuItem(location)
 
 				{if $session_user->hasPermission('permission_admin_client_campaigns')
 					|| $session_user->hasPermission('permission_admin_clients_nbm_admin')}
-					<option value="CampaignView">Client Campaigns</option>
+					<option value="CampaignView">Campaign View</option>
+				{/if}
+				{if $session_user->hasPermission('permission_admin_client_campaigns')
+					|| $session_user->hasPermission('permission_admin_clients_nbm_admin')}
+					<option value="ClientList">Client Details</option>
 				{/if}
 {*
 				{if $session_user->hasPermission('permission_admin_nbm_monthly_planner')} 
