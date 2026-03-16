@@ -139,15 +139,25 @@ class app_mapper_TeamMapper extends app_mapper_Mapper implements app_domain_Mess
 	 */
 	protected function fetchTeamStatsForYearMonth($year_month)
 	{
-		$query = 'SELECT ds.id, ds.`year_month`, SUM(ds.call_count) AS call_count, ' .
-					'SUM(ds.call_effective_count) AS call_effective_count, SUM(ds.meeting_set_count) AS meeting_set_count, ' .
-					'SUM((ds.call_count + (ds.call_ote_count * 10) + (ds.meeting_set_count * 100))) AS kpi, ' .
+		// Note: MySQL 8+ enforces ONLY_FULL_GROUP_BY by default. The original
+		// query selected non-aggregated columns that were not part of the
+		// GROUP BY, which caused it to return an error under MySQL 8 and
+		// resulted in empty dashboard "Team Zone" data on localhost. We remove
+		// the unnecessary non-aggregated id column and group by all remaining
+		// non-aggregated fields so the query works consistently on both the
+		// legacy (PHP 7.4 / older MySQL) live environment and the upgraded
+		// PHP 8 / MySQL 8 environment.
+		$query = 'SELECT ds.`year_month`, ' .
+					'SUM(ds.call_count) AS call_count, ' .
+					'SUM(ds.call_effective_count) AS call_effective_count, ' .
+					'SUM(ds.meeting_set_count) AS meeting_set_count, ' .
+					'SUM(ds.call_count + (ds.call_ote_count * 10) + (ds.meeting_set_count * 100)) AS kpi, ' .
 					'n.team_id, t.name AS team ' .
 					'FROM tbl_data_statistics AS ds ' .
 					'INNER JOIN tbl_team_nbms AS n ON ds.user_id = n.user_id ' .
 					'INNER JOIN tbl_teams AS t ON n.team_id = t.id ' .
 					'WHERE ds.`year_month` = ' . self::$DB->quote($year_month, 'text') . ' ' .
-					'GROUP BY n.team_id ' .
+					'GROUP BY ds.`year_month`, n.team_id, t.name ' .
 					'ORDER BY t.name';
 		$result = self::$DB->query($query);
 		if (MDB2::isError($result)) {

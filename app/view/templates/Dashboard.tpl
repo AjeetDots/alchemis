@@ -340,7 +340,7 @@ iframeLocation(		top.frames["iframe_3"], "index.php?cmd=Calendar&date=" + date +
 					<td style="text-align: center; white-space: nowrap">{$campaign.meeting_in_diary_this_month_count}</td>
 					<td style="text-align: center; white-space: nowrap">
 						{$campaign.campaign_meeting_set_target_to_date-$campaign.campaign_meeting_set_count_to_date} &amp;
-						{$campaign.campaign_meeting_category_attended_target_to_date-$campaign.campaign_meeting_category_attended_count_to_date}
+						{$campaign.campaign_meeting_category_attended_target_to_date-$campaign.campaign_meeting_attended_count_to_date}
 					</td>
 					<td style="text-align: center; white-space: nowrap"></td>
 					<td style="text-align: center; white-space: nowrap">{$campaign.campaign_current_month}</td>

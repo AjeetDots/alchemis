@@ -296,33 +296,104 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 * @param integer $user_id
 	 * @return array
 	 */
+	// public function findProgressByUserId($user_id)
+	// {
+		
+	// 	// Prefer current month (yesterday's year_month so "as at end of Sunday"
+	// 	// style headings line up). If there is no data for that period, fall
+	// 	// back to previous month, then to the latest year_month that exists in
+	// 	+		// tbl_data_statistics. This mirrors the legacy behaviour but is more
+	// 		// defensive so that upgraded MySQL/PHP still show something rather than
+	// 		// "No results".
+	// 		$resolvedYearMonth = date('Ym', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
+	// 		$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $resolvedYearMonth);
+
+	// 		if (empty($ids)) {
+	// 			$year_month_prev = date('Ym', strtotime('first day of last month'));
+	// 			$resolvedYearMonth = $year_month_prev;
+	// 			$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $resolvedYearMonth);
+	// 		}
+
+	// 		if (empty($ids)) {
+	// 			$year_month_latest = $this->fetchLatestYearMonthInStatistics();
+	// 			if ($year_month_latest !== '') {
+	// 				$resolvedYearMonth = $year_month_latest;
+	// 				$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $resolvedYearMonth);
+	// 			}
+	// 		}
+
+	// 		// Primary path: use the id list and existing query (keeps behaviour
+	// 		// consistent with live where this works).
+	// 		if (!empty($ids)) {
+	// 			$rows = $this->fetchProgressRowsByIds($ids, true);
+	// 			// If no rows with is_current=1 (e.g. staging data), show anyway
+	// 			// without filter so data appears like on live.
+	// 			if (empty($rows)) {
+	// 				$rows = $this->fetchProgressRowsByIds($ids, false);
+	// 			}
+	// 			if (!empty($rows)) {
+	// 				return $rows;
+	// 			}
+	// 		}
+
+	// 		// Fallback path: if for any reason the id-based route yields no data
+	// 		// (for example stricter SQL modes behaving differently to legacy),
+	// 		// run a single, MySQL-8-safe query keyed by user + resolvedYearMonth.
+	// 		return $this->fetchProgressRowsByUserAndMonthFallback($user_id, $resolvedYearMonth);
+	// }
+
 	public function findProgressByUserId($user_id)
-	{
-		// Prefer current month; if no data, try previous month; then try latest year_month in DB.
-		$year_month = date('Ym', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
-		$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $year_month);
-		if (empty($ids)) {
-			$year_month_prev = date('Ym', strtotime('first day of last month'));
-			$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $year_month_prev);
-		}
-		if (empty($ids)) {
-			$year_month_latest = $this->fetchLatestYearMonthInStatistics();
-			if ($year_month_latest !== '') {
-				$ids = $this->fetchProgressIdsForUserAndMonth($user_id, $year_month_latest);
-			}
-		}
-		if (empty($ids)) {
-			return array();
-		}
+{
+    // 1. Find the latest statistics month that actually exists for this user.
+    $sqlYearMonth = 'SELECT MAX(ds.year_month) ' .
+                    'FROM tbl_data_statistics AS ds ' .
+                    'INNER JOIN tbl_campaign_nbms AS cam ON ds.campaign_id = cam.campaign_id ' .
+                    'WHERE cam.user_id = ' . self::$DB->quote($user_id, 'integer');
+    $latestYearMonth = self::$DB->queryOne($sqlYearMonth);
+    if ($latestYearMonth === null || $latestYearMonth === '') {
+        return array(); // no stats at all for this user
+    }
 
-		$rows = $this->fetchProgressRowsByIds($ids, true);
-		// If no rows with is_current=1 (e.g. staging data), show anyway without filter so data appears like on live
-		if (empty($rows)) {
-			$rows = $this->fetchProgressRowsByIds($ids, false);
-		}
-		return $rows;
-	}
+    // 2. Get the latest ds.id per campaign for that month.
+    $queryIds = 'SELECT MAX(ds.id) AS id ' .
+                'FROM tbl_data_statistics AS ds ' .
+                'INNER JOIN tbl_campaign_nbms AS cam ON ds.campaign_id = cam.campaign_id ' .
+                'WHERE ds.year_month = ' . self::$DB->quote($latestYearMonth, 'text') . ' ' .
+                'AND cam.user_id = ' . self::$DB->quote($user_id, 'integer') . ' ' .
+                'GROUP BY ds.campaign_id';
+    $result = self::$DB->query($queryIds);
+    if (MDB2::isError($result)) {
+        return array();
+    }
 
+    $idsArray = $result->fetchCol();
+    if (!is_array($idsArray) || empty($idsArray)) {
+        return array();
+    }
+    $ids = implode(',', $idsArray);
+
+    // 3. Fetch the campaign progress rows for those ids.
+    $query = 'SELECT ds.id, ds.campaign_id, cli.name AS campaign_name, cli.id AS client_id, ds.user_id, ds.year_month, ' .
+             'ds.campaign_current_month, ds.campaign_meeting_set_target, ' .
+             'ds.campaign_meeting_set_target_to_date, ds.campaign_meeting_set_count_to_date, ' .
+             'ds.campaign_meeting_category_attended_target_to_date, ' .
+             'ds.campaign_meeting_category_attended_count_to_date AS campaign_meeting_attended_count_to_date, ' .
+             'ds.meeting_in_diary_this_month_count ' .
+             'FROM tbl_data_statistics AS ds ' .
+             'INNER JOIN tbl_campaigns AS cam ON ds.campaign_id = cam.id ' .
+             'INNER JOIN tbl_clients AS cli ON cam.client_id = cli.id ' .
+             'WHERE ds.id IN (' . $ids . ') ' .
+             'AND cli.is_current = 1 ' .
+             'ORDER BY cli.name';
+			 
+
+    $result = self::$DB->query($query);
+    if (MDB2::isError($result)) {
+        return array();
+    }
+
+    return self::mdb2ResultToArray($result);
+}
 	/**
 	 * Run the main campaign progress SELECT for given ds.id list.
 	 * @param string $ids comma-separated ds.id values
@@ -331,11 +402,13 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 	 */
 	protected function fetchProgressRowsByIds($ids, $onlyCurrentClient = true)
 	{
-		$query = 'SELECT ds.id, ds.campaign_id, cli.name AS campaign_name, cli.id AS client_id, ds.user_id, ds.`year_month`, ' .
-					'ds.campaign_current_month, ds.campaign_meeting_set_target, ' .
-					'ds.campaign_meeting_set_target_to_date, ds.campaign_meeting_set_count_to_date, ' .
-					'ds.campaign_meeting_category_attended_target_to_date, ds.campaign_meeting_category_attended_count_to_date, ' .
-					'ds.meeting_in_diary_this_month_count ' .
+		$query = 'SELECT ds.id, ds.campaign_id, cli.name AS campaign_name, cli.id AS client_id, ds.user_id, ds.year_month, ' .
+         'ds.campaign_current_month, ds.campaign_meeting_set_target, ' .
+         'ds.campaign_meeting_set_target_to_date, ds.campaign_meeting_set_count_to_date, ' .
+         'ds.campaign_meeting_category_attended_target_to_date, ' .
+         'ds.campaign_meeting_category_attended_count_to_date, ' .
+         'ds.campaign_meeting_category_attended_count_to_date AS campaign_meeting_attended_count_to_date, ' .
+         'ds.meeting_in_diary_this_month_count ' .
 					'FROM tbl_data_statistics AS ds ' .
 					'INNER JOIN tbl_campaigns AS cam ON ds.campaign_id = cam.id ' .
 					'INNER JOIN tbl_clients AS cli ON cam.client_id = cli.id ' .
@@ -389,6 +462,49 @@ class app_mapper_CampaignMapper extends app_mapper_Mapper implements app_domain_
 		}
 		$row = $result->fetchOne();
 		return ($row !== null && $row !== '') ? (string) $row : '';
+	}
+
+	/**
+	 * Fallback campaign progress query that does not rely on an id list and
+	 * is written to be compatible with MySQL 8 strict SQL modes. It selects
+	 * the latest statistics row per campaign for the given user and
+	 * year_month, then joins to campaigns/clients just like the legacy query.
+	 *
+	 * @param int    $user_id
+	 * @param string $year_month
+	 * @return array
+	 */
+	protected function fetchProgressRowsByUserAndMonthFallback($user_id, $year_month)
+	{
+		if ($year_month === '' || $year_month === null) {
+			return array();
+		}
+
+		// Subquery to pick the latest ds.id per campaign for the period/user
+		$subquery = 'SELECT MAX(ds.id) AS id ' .
+		            'FROM tbl_data_statistics AS ds ' .
+		            'INNER JOIN tbl_campaign_nbms AS cnb ON ds.campaign_id = cnb.campaign_id ' .
+		            'WHERE ds.`year_month` = ' . self::$DB->quote($year_month, 'text') . ' ' .
+		            'AND cnb.user_id = ' . self::$DB->quote($user_id, 'integer') . ' ' .
+		            'GROUP BY ds.campaign_id';
+
+		$query = 'SELECT ds.id, ds.campaign_id, cli.name AS campaign_name, cli.id AS client_id, ds.user_id, ds.`year_month`, ' .
+		         'ds.campaign_current_month, ds.campaign_meeting_set_target, ' .
+		         'ds.campaign_meeting_set_target_to_date, ds.campaign_meeting_set_count_to_date, ' .
+		         'ds.campaign_meeting_category_attended_target_to_date, ds.campaign_meeting_category_attended_count_to_date, ' .
+		         'ds.meeting_in_diary_this_month_count ' .
+		         'FROM tbl_data_statistics AS ds ' .
+		         'INNER JOIN (' . $subquery . ') AS latest ON ds.id = latest.id ' .
+		         'INNER JOIN tbl_campaigns AS cam ON ds.campaign_id = cam.id ' .
+		         'INNER JOIN tbl_clients AS cli ON cam.client_id = cli.id ' .
+		         'WHERE cli.is_current = 1 ' .
+		         'ORDER BY cli.name';
+
+		$result = self::$DB->query($query);
+		if (MDB2::isError($result)) {
+			return array();
+		}
+		return self::mdb2ResultToArray($result);
 	}
 
 	/**

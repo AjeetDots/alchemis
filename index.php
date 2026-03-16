@@ -2,6 +2,14 @@
 
 session_start();
 
+// Ensure a consistent timezone across environments so all date('...')
+// calls (used in dashboard reports, campaign progress and planners)
+// resolve to the same calendar day/month whether running on legacy
+// PHP/MySQL or the upgraded stack. Live is UK-based, so use London.
+if (!ini_get('date.timezone')) {
+    date_default_timezone_set('Europe/London');
+}
+
 // Fix browser blocking scripts so Administration / Campaign View toggles work.
 if (!headers_sent()) {
     header('Permissions-Policy: unload=(self)');
