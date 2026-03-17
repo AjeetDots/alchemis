@@ -737,6 +737,12 @@ class app_domain_Client extends app_domain_DomainObject
 		return $finder->findActualsByClientIdAndYearmonth($client_id, $year_month);
 	}
 
+	public static function findGraphTotalsForClient($client_id)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->findGraphTotalsForClient($client_id);
+	}
+
 	/**
 	 * Return a client name for a given ID.
 	 * @param integer $client_id

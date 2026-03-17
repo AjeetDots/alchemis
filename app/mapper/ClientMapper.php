@@ -469,6 +469,36 @@ class app_mapper_ClientMapper extends app_mapper_Mapper implements app_domain_Cl
 	}
 
 	/**
+	 * Return Set/Attended totals for the "Summary of progress this month to date" graph.
+	 * Uses the latest year_month that has statistics for this client so the graph
+	 * always shows real data even when the current calendar month hasn't been written yet.
+	 * Uses campaign_meeting_set_count_to_date and campaign_meeting_category_attended_count_to_date
+	 * which are the same cumulative-to-date columns that Campaign Progress displays.
+	 * @param integer $client_id
+	 * @return array|null  ['set_count' => int, 'attended_count' => int] or null if no data
+	 */
+	public function findGraphTotalsForClient($client_id)
+	{
+		$client_id = (int) $client_id;
+		$sql = 'SELECT SUM(ds.campaign_meeting_set_count_to_date) AS set_count, ' .
+		       'SUM(ds.campaign_meeting_category_attended_count_to_date) AS attended_count ' .
+		       'FROM tbl_data_statistics AS ds ' .
+		       'INNER JOIN tbl_campaigns AS cam ON ds.campaign_id = cam.id ' .
+		       'WHERE cam.client_id = ' . self::$DB->quote($client_id, 'integer') . ' ' .
+		       'AND ds.year_month = (' .
+		           'SELECT MAX(ds2.year_month) ' .
+		           'FROM tbl_data_statistics AS ds2 ' .
+		           'INNER JOIN tbl_campaigns AS cam2 ON ds2.campaign_id = cam2.id ' .
+		           'WHERE cam2.client_id = ' . self::$DB->quote($client_id, 'integer') .
+		       ')';
+		$row = self::$DB->queryRow($sql, null, MDB2_FETCHMODE_ASSOC);
+		if (empty($row) || !is_array($row)) {
+			return null;
+		}
+		return $row;
+	}
+
+	/**
 	* find client ids where publish_diary = 1
 	* @return array
 	*/

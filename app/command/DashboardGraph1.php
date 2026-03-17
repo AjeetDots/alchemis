@@ -42,10 +42,33 @@ class app_command_DashboardGraph1 extends app_command_Command
 		self::sendVisiblePng('Graph unavailable');
 	}
 
-	/** Visible placeholder when there is no data to show. */
+	/** Visible placeholder when there is no data to show — same 530×220 size as the real chart. */
 	private static function sendNoDataPng()
 	{
-		self::sendVisiblePng('No data');
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
+		header('Content-Type: image/png');
+		header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+		header('Pragma: no-cache');
+		header('Expires: 0');
+		$w = 530;
+		$h = 220;
+		$img = @imagecreatetruecolor($w, $h);
+		if ($img === false) {
+			self::sendPlaceholderPng();
+		}
+		$bg    = imagecolorallocate($img, 249, 249, 249);
+		$frame = imagecolorallocate($img, 224, 224, 224);
+		$text  = imagecolorallocate($img, 160, 160, 160);
+		imagefill($img, 0, 0, $bg);
+		imagerectangle($img, 0, 0, $w - 1, $h - 1, $frame);
+		$msg = 'No data available for this month';
+		$tw  = strlen($msg) * imagefontwidth(4);
+		imagestring($img, 4, (int)(($w - $tw) / 2), (int)(($h - imagefontheight(4)) / 2), $msg, $text);
+		imagepng($img);
+		imagedestroy($img);
+		exit(0);
 	}
 
 	/**
@@ -151,29 +174,31 @@ class app_command_DashboardGraph1 extends app_command_Command
 			$session = Auth_Session::singleton();
 			$user = $session->getSessionUser();
 			if (empty($user['id'])) {
-				return array(0, 0);
+				return null;
 			}
 			$nbm_id = (int) $user['id'];
 			$client_id = $request->getProperty('client_id');
 			if ($client_id === null || $client_id === '' || $client_id === '0') {
 				$clients = app_domain_Client::findByUserId($nbm_id);
 				if (empty($clients) || !isset($clients[0]['id'])) {
-					return array(0, 0);
+					return null;
 				}
 				$client_id = (int) $clients[0]['id'];
 			} else {
 				$client_id = (int) $client_id;
 			}
-			$year_month = date('Ym');
-			$actuals = app_domain_Client::findActualsByClientIdAndYearmonth($client_id, $year_month);
-			if (empty($actuals) || !is_array($actuals)) {
-				return array(0, 0);
+
+			// Use campaign_meeting_set_count_to_date / campaign_meeting_category_attended_count_to_date
+			// (same columns as Campaign Progress) for the latest available year_month.
+			$totals = app_domain_Client::findGraphTotalsForClient($client_id);
+			if ($totals === null || !is_array($totals)) {
+				return null;
 			}
-			$set = isset($actuals['meeting_set_count']) ? (int) $actuals['meeting_set_count'] : 0;
-			$attended = isset($actuals['meeting_attended_count']) ? (int) $actuals['meeting_attended_count'] : 0;
+			$set      = isset($totals['set_count'])      ? (int) $totals['set_count']      : 0;
+			$attended = isset($totals['attended_count']) ? (int) $totals['attended_count'] : 0;
 			return array($set, $attended);
 		} catch (Throwable $e) {
-			return array(0, 0);
+			return null;
 		}
 	}
 
@@ -254,12 +279,6 @@ class app_command_DashboardGraph1 extends app_command_Command
 
 			$set = (int) $values[0];
 			$attended = (int) $values[1];
-
-			// If both values are zero, treat this as "no data" so the user understands
-			// that nothing has been recorded yet for this month/client.
-			if ($set === 0 && $attended === 0) {
-				self::sendNoDataPng();
-			}
 
 			$topMargin    = 24;
 			$bottomMargin = 36;
