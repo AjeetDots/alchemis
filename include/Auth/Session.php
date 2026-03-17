@@ -213,10 +213,11 @@ class Auth_Session implements app_base_Observable
         require_once('app/base/Registry.php');
         require_once('include/EasySql/EasySql.class.php');
         $dsn = app_base_ApplicationRegistry::getDSN();
-        $username = preg_replace('/^.+:\/\/|:.+@.+\/.+$/i', '', $dsn);
-        $password = preg_replace('/^.+:\/\/.+:|@.+\/.+$/i', '', $dsn);
-        $database = preg_replace('/^.+:\/\/.+:.+@.+\//i', '', $dsn);
-        $hostname = preg_replace('/^.+:\/\/.+:.+@|\/.+$/i', '', $dsn);
+        $parsed   = parse_url($dsn);
+        $username = isset($parsed['user']) ? $parsed['user'] : '';
+        $password = isset($parsed['pass']) ? $parsed['pass'] : '';
+        $database = isset($parsed['path']) ? ltrim($parsed['path'], '/') : '';
+        $hostname = isset($parsed['host']) ? $parsed['host'] : '';
         try {
             return new EasySql($username, $password, $database, $hostname);
         } catch (Exception $e) {

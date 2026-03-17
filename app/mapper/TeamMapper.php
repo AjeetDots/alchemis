@@ -120,83 +120,21 @@ class app_mapper_TeamMapper extends app_mapper_Mapper implements app_domain_Mess
 	 */
 	public function findDashboardStatistics()
 	{
-		// Use current month first; if all zeros, use latest year_month in DB so dashboard shows data like on live
-		$year_month = date('Ym');
-		$rows = $this->fetchTeamStatsForYearMonth($year_month);
-		if ($this->teamStatsAllZero($rows)) {
-			$year_month_latest = $this->fetchLatestYearMonthInStatistics();
-			if ($year_month_latest !== '' && $year_month_latest !== $year_month) {
-				$rows = $this->fetchTeamStatsForYearMonth($year_month_latest);
-			}
-		}
-		return $rows;
-	}
+		$year_month = date('Ym', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
 
-	/**
-	 * Fetch team zone stats for a given year_month.
-	 * @param string $year_month e.g. 202603
-	 * @return array
-	 */
-	protected function fetchTeamStatsForYearMonth($year_month)
-	{
-		// Note: MySQL 8+ enforces ONLY_FULL_GROUP_BY by default. The original
-		// query selected non-aggregated columns that were not part of the
-		// GROUP BY, which caused it to return an error under MySQL 8 and
-		// resulted in empty dashboard "Team Zone" data on localhost. We remove
-		// the unnecessary non-aggregated id column and group by all remaining
-		// non-aggregated fields so the query works consistently on both the
-		// legacy (PHP 7.4 / older MySQL) live environment and the upgraded
-		// PHP 8 / MySQL 8 environment.
-		$query = 'SELECT ds.`year_month`, ' .
-					'SUM(ds.call_count) AS call_count, ' .
-					'SUM(ds.call_effective_count) AS call_effective_count, ' .
-					'SUM(ds.meeting_set_count) AS meeting_set_count, ' .
-					'SUM(ds.call_count + (ds.call_ote_count * 10) + (ds.meeting_set_count * 100)) AS kpi, ' .
+		$query = 'SELECT ds.`year_month`, SUM(ds.call_count) AS call_count, ' .
+					'SUM(ds.call_effective_count) AS call_effective_count, SUM(ds.meeting_set_count) AS meeting_set_count, ' .
+					'SUM((ds.call_count + (ds.call_ote_count * 10) + (ds.meeting_set_count * 100))) AS kpi, ' .
 					'n.team_id, t.name AS team ' .
 					'FROM tbl_data_statistics AS ds ' .
 					'INNER JOIN tbl_team_nbms AS n ON ds.user_id = n.user_id ' .
 					'INNER JOIN tbl_teams AS t ON n.team_id = t.id ' .
 					'WHERE ds.`year_month` = ' . self::$DB->quote($year_month, 'text') . ' ' .
-					'GROUP BY ds.`year_month`, n.team_id, t.name ' .
+					'GROUP BY n.team_id, t.name, ds.`year_month` ' .
 					'ORDER BY t.name';
+
 		$result = self::$DB->query($query);
-		if (MDB2::isError($result)) {
-			return array();
-		}
 		return self::mdb2ResultToArray($result);
-	}
-
-	/**
-	 * True if all team rows have zero counts (no activity for that period).
-	 * @param array $rows
-	 * @return bool
-	 */
-	protected function teamStatsAllZero($rows)
-	{
-		if (empty($rows)) {
-			return true;
-		}
-		foreach ($rows as $row) {
-			if (!empty($row['call_count']) || !empty($row['call_effective_count']) || !empty($row['meeting_set_count']) || !empty($row['kpi'])) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Get latest year_month from tbl_data_statistics (for fallback when current month has no data).
-	 * @return string
-	 */
-	protected function fetchLatestYearMonthInStatistics()
-	{
-		$query = 'SELECT MAX(`year_month`) FROM tbl_data_statistics';
-		$result = self::$DB->query($query);
-		if (MDB2::isError($result)) {
-			return '';
-		}
-		$row = $result->fetchOne();
-		return ($row !== null && $row !== '') ? (string) $row : '';
 	}
 
 	/**

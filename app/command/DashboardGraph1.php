@@ -245,9 +245,20 @@ class app_command_DashboardGraph1 extends app_command_Command
 			require_once($base . 'include/jpgraph-2.2/jpgraph_pie.php');
 			require_once($base . 'include/Illumen/Graph.php');
 
-			$attended = self::getProgressData($request);
-			if (!is_array($attended) || count($attended) === 0) {
-				$attended = array(0, 0);
+			// Pull current month progress data for the selected client.
+			$values = self::getProgressData($request);
+			if (!is_array($values) || count($values) < 2) {
+				// No usable data at all – show explicit "No data" image instead of empty chart.
+				self::sendNoDataPng();
+			}
+
+			$set = (int) $values[0];
+			$attended = (int) $values[1];
+
+			// If both values are zero, treat this as "no data" so the user understands
+			// that nothing has been recorded yet for this month/client.
+			if ($set === 0 && $attended === 0) {
+				self::sendNoDataPng();
 			}
 
 			$topMargin    = 24;
@@ -278,7 +289,7 @@ class app_command_DashboardGraph1 extends app_command_Command
 			$graph->ygrid->SetWeight(1);
 			$graph->xgrid->Show(false);
 
-			$b1plot = new BarPlot($attended);
+			$b1plot = new BarPlot(array($set, $attended));
 			$b1plot->SetFillColor('#A4C5E8');
 			$b1plot->SetWidth(0.6);
 			$b1plot->value->Show(true);

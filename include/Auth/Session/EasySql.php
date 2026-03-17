@@ -177,10 +177,11 @@ class Auth_Session_EasySql
 		pr([], 'EasySql.php open($a, $b)');
 		require_once('app/base/Registry.php');
 		$dsn = app_base_ApplicationRegistry::getDSN();
-		$username = preg_replace('/^.+:\/\/|:.+@.+\/.+$/i', '', $dsn);
-		$password = preg_replace('/^.+:\/\/.+:|@.+\/.+$/i', '', $dsn);
-		$database = preg_replace('/^.+:\/\/.+:.+@.+\//i', '', $dsn);
-		$hostname = preg_replace('/^.+:\/\/.+:.+@|\/.+$/i', '', $dsn);
+		$parsed   = parse_url($dsn);
+		$username = isset($parsed['user']) ? $parsed['user'] : '';
+		$password = isset($parsed['pass']) ? $parsed['pass'] : '';
+		$database = isset($parsed['path']) ? ltrim($parsed['path'], '/') : '';
+		$hostname = isset($parsed['host']) ? $parsed['host'] : '';
 		$this->dbConn = new EasySql($username, $password, $database, $hostname);
 		return null;
 	}

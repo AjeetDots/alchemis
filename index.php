@@ -160,7 +160,7 @@ try {
 
     app_controller_Controller::run();
 
-} catch (Throwable $e) {
+} catch (Exception $e) {
 
     // Always log the full exception so production issues can be diagnosed.
     $logMessage = sprintf(

@@ -22,21 +22,21 @@
 		</development>
 
 		<aws>
-			<!-- <database>
+			<database>
 				<host>alchemis-mysql-upgrade.cswhqpuhwywg.eu-west-1.rds.amazonaws.com</host>
 				<port>3306</port>
 				<database>alchemis</database>
 				<username>alchemis</username>
 				<password>rYT4maP7</password>
-			</database> -->
-			<database>
+			</database>
+			<!-- <database>
                 <host>alchemis-mysql.cswhqpuhwywg.eu-west-1.rds.amazonaws.com</host>
                 <database>alchemis</database>
                 <username>alchemis</username>
                 <password>rYT4maP7</password>
-            </database>
-			<url>/alchemis/</url>
-			<log_directory>/var/www/html/alchemis/logs/</log_directory>
+            </database> -->
+			<url>/</url>
+			<log_directory>/var/www/html/logs/</log_directory>
 			<name>Alchemis Elixir</name>
 			<description>Industry leading prospect relationship management software</description>
 			<developer>Sett</developer>

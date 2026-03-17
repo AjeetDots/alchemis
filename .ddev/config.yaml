@@ -12,7 +12,7 @@ database:
 use_dns_when_possible: true
 composer_version: "2"
 web_environment:
-  - ALCHEMIS_ENV=development
+  - ALCHEMIS_ENV=aws
 corepack_enable: false
 default_container_timeout: "240"
 
