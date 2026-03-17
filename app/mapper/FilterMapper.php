@@ -241,7 +241,7 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 	 **/
 	public function findCampaignFiltersByUserId($user_id)
 	{
-		$query = 'SELECT f.*, u.name as created_by_name, cl.name as campaign_name ' .
+		$query = 'SELECT DISTINCT f.*, u.name as created_by_name, cl.name as campaign_name ' .
 					'FROM tbl_filters f ' .
 					'join tbl_rbac_users u on f.created_by = u.id ' .
 					'JOIN tbl_campaigns camp on f.campaign_id = camp.id ' .
@@ -329,7 +329,7 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 		 **/
 		public function findDeletedCampaignFiltersByUserId($user_id)
 		{
-			$query = 'SELECT f.*, u.name as created_by_name, cl.name as campaign_name ' .
+			$query = 'SELECT DISTINCT f.*, u.name as created_by_name, cl.name as campaign_name ' .
 						'FROM tbl_filters f ' .
 						'join tbl_rbac_users u on f.created_by = u.id ' .
 						'JOIN tbl_campaigns camp on f.campaign_id = camp.id ' .

@@ -1338,3 +1338,12 @@ Stack trace:
 #7 /var/www/html/index.php(153): app_controller_Controller::run()
 #8 {main}
 
+[2026-03-17 14:09:05] characteristic 1 Company Cleaned At of type company could not be found in /var/www/html/app/domain/FilterBuilder.php on line 1742
+Stack trace:
+#0 /var/www/html/app/command/FilterResults.php(32): app_domain_FilterBuilder->makeSQLData('14458', Array, 'include')
+#1 /var/www/html/app/command/Command.php(48): app_command_FilterResults->doExecute(Object(app_controller_Request))
+#2 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#3 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#4 /var/www/html/index.php(161): app_controller_Controller::run()
+#5 {main}
+

@@ -1345,8 +1345,16 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 				{
 					case 'characteristic':
 						$characteristic_name = $field_names[1];
-						//get the characteristic
-						if ($characteristic = app_domain_Characteristic::findByNameAndType($characteristic_name, $item['table_name']))
+						//get the characteristic - try by ID first (new format), fall back to name (legacy format)
+						if (is_numeric($characteristic_name))
+						{
+							$characteristic = app_domain_Characteristic::find((int)$characteristic_name);
+						}
+						else
+						{
+							$characteristic = app_domain_Characteristic::findByNameAndType($characteristic_name, $item['table_name']);
+						}
+						if ($characteristic)
 						{
 							if ($characteristic->hasAttributes())
 							{

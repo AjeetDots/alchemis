@@ -494,17 +494,17 @@ function addToWhereTable(include)
 	
 	if ($("additional_data").style.display != "none")
 	{
-		if ($("span_where_label") == undefined) 
+		if ($("span_where_label") == undefined)
 		{
 			// this means we havent got any elements showing so need to use the characteristic list as span_where_label
 			sel_additional_data = $("additional_data");
-			var where_field = $F("fields") + "." + sel_additional_data.options[sel_additional_data.selectedIndex].text; 			
+			var where_field = $F("fields") + "." + sel_additional_data.options[sel_additional_data.selectedIndex].value;
 		}
 		else
 		{
 			sel_where = $("span_where_label");
 			sel_additional_data = $("additional_data");
-			var where_field = $F("fields") + "." + sel_additional_data.options[sel_additional_data.selectedIndex].text + "." + sel_where.options[sel_where.selectedIndex].text;
+			var where_field = $F("fields") + "." + sel_additional_data.options[sel_additional_data.selectedIndex].value + "." + sel_where.options[sel_where.selectedIndex].text;
 		}
 		
 	}
