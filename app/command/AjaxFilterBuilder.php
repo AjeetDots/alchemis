@@ -81,6 +81,8 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 				$this->request->filter_list = $this->makeFilterList($this->request->client_id);
 				break;
 			case 'get_filter_statistics':
+				// Allow up to 5 minutes for large filter statistics rebuild
+				set_time_limit(300);
 				$this->filter = app_domain_Filter::find($filter_id);
 				$filter_lines_include = app_domain_Filter::findFilterLinesByFilterIdAndDirection($filter_id, 'include');
 				$filter_lines_exclude = app_domain_Filter::findFilterLinesByFilterIdAndDirection($filter_id, 'exclude');

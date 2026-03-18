@@ -35,6 +35,9 @@ class app_command_FilterResults extends app_command_Command
 			}
 			else
 			{
+				// Allow up to 5 minutes for large filter regeneration
+				set_time_limit(300);
+
 				// regenerate filter results and insert into tbl_filter_results
 				$filter_lines_include = app_domain_Filter::findFilterLinesByFilterIdAndDirection($id, 'include');
 				$filter_lines_exclude = app_domain_Filter::findFilterLinesByFilterIdAndDirection($id, 'exclude');

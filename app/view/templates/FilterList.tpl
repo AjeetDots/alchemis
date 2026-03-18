@@ -89,11 +89,25 @@ function loadFilter(filter_id, action)
 
 function getFilterStatistics(filter_id)
 {
+	var btn = $('btn_statistics_' + filter_id);
+	if (btn) {
+		var img = btn.down('img');
+		var originalSrc = img.src;
+		img.src = originalSrc.replace('/icons/chart_pie.png', '/ajax_loader.gif');
+		btn.onclick = function() { return false; };
+	}
+
 	var ill_params = new Object;
 	//set item_id - the id of the object we are dealing with
 	ill_params.item_id = filter_id;
-	
-	getAjaxData("AjaxFilterBuilder", "", "get_filter_statistics", ill_params, "Saving...")
+
+	getAjaxData("AjaxFilterBuilder", "", "get_filter_statistics", ill_params, "Refreshing statistics...", false, function() {
+		if (btn) {
+			var img = btn.down('img');
+			img.src = img.src.replace('/ajax_loader.gif', '/icons/chart_pie.png');
+			btn.onclick = function() { getFilterStatistics(filter_id); return false; };
+		}
+	});
 }
 
 /* --- Ajax return data handlers --- */

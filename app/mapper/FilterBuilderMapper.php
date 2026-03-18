@@ -172,8 +172,8 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN tbl_sites s on s.company_id = c.id ' .
 							'LEFT JOIN tbl_posts p on fr.post_id = p.id ' .
 							'LEFT JOIN vw_contacts con on p.id = con.post_id ' .
-							'LEFT JOIN tbl_object_characteristics_date ocd on c.id = ocd.company_id ' .
-							'LEFT JOIN tbl_object_characteristics_date ocd_1 on p.id = ocd_1.post_id ' .
+							'LEFT JOIN tbl_object_characteristics_date ocd on c.id = ocd.company_id AND ocd.characteristic_id = 13 ' .
+							'LEFT JOIN tbl_object_characteristics_date ocd_1 on p.id = ocd_1.post_id AND ocd_1.characteristic_id = 13 ' .
                             'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
                             (!empty($user['client_id']) 
                                 ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
