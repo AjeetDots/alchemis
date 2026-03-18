@@ -94,8 +94,6 @@
 	var current_tab_id;
 	// hold scroll positions currently is use on tab iframes
 	var scroll_positions = new Array(12);
-	
-	monitorCallBacks();
 			
 	function showScoreboard()
 	{

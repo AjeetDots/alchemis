@@ -156,11 +156,6 @@ class app_command_Dashboard extends app_command_Command
 		$request->setObject('recommended_meets_set',      $recommended_meets_set);
 		$request->setObject('recommended_meets_attended', $recommended_meets_attended);
 
-		$weekdays_remaining = 6 - date('N');
-		$request->setObject('weekdays_remaining', $weekdays_remaining);
-
-		$weekdays_remaining = 6 - date('N');
-		$request->setObject('weekdays_remaining', $weekdays_remaining);
 		
 		// Get calendar data
 		$client_id = null;

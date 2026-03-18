@@ -88,21 +88,55 @@ class app_domain_CalendarReader extends app_domain_ReaderObject
 		{
 			if ($to < $from)
 			{
-				//switch dates over
 				$tmp = $from;
 				$from = $to;
 				$to = $tmp;
 			}
 
+			// Pre-populate all dates in range with empty arrays so the calendar renders
+			// even days with no events — then fill in results from a single batch query.
 			$range = array();
-			while ($from <= $to)
+			$cursor = $from;
+			while ($cursor <= $to)
 			{
-				$range = array_merge($range, self::getDay($from, $nbm_id, $client_id));
-				$year = substr($from, 0, 4);
-				$month = substr($from, 5, 2);
-				$day = substr($from, 8, 2);
-				$from = date('Y-m-d', mktime(0, 0, 1, $month, $day + 1, $year));
+				$range[$cursor] = array();
+				$year   = substr($cursor, 0, 4);
+				$month  = substr($cursor, 5, 2);
+				$day    = substr($cursor, 8, 2);
+				$cursor = date('Y-m-d', mktime(0, 0, 1, $month, $day + 1, $year));
 			}
+
+			// Single query for the whole range instead of one query per day
+			$reader = self::getReader(__CLASS__);
+			$rows   = $reader->findByDateRange($from, $to, $nbm_id, $client_id);
+
+			if ($rows)
+			{
+				foreach ($rows as $row)
+				{
+					$date = substr($row['date'], 0, 10);
+					if (isset($range[$date]))
+					{
+						$range[$date][] = array(
+							'id'                 => $row['id'],
+							'from'               => $row['date'],
+							'subject'            => $row['subject'],
+							'notes'              => $row['notes'],
+							'type'               => $row['type'],
+							'type_id'            => $row['type_id'],
+							'company_id'         => $row['company_id'],
+							'post_id'            => $row['post_id'],
+							'reminder_date'      => $row['reminder_date'],
+							'post_initiative_id' => $row['post_initiative_id'],
+							'initiative_id'      => $row['initiative_id'],
+							'completed'          => $row['completed'],
+							'status_id'          => $row['status_id'],
+							'rearranged_count'   => $row['rearranged_count'],
+						);
+					}
+				}
+			}
+
 			return $range;
 		}
 		else

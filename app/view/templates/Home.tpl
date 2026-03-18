@@ -57,7 +57,7 @@
 {/literal}
 </script>
 
-<body style="background-color: #003366" onload="loadTab(1, 'DashboardFrame');{if $redirect != ''}loadTab(3,'ActionsFrame&redirect={$redirect}', true){/if}; loadHomeScoreboard();"{*if $tab == "tabWorkspace"} onload="javascript:screenSize();"{/if*}>
+<body style="background-color: #003366" onload="loadTab(1, 'DashboardFrame');{if $redirect != ''}loadTab(3,'ActionsFrame&redirect={$redirect}', true){/if}; loadHomeScoreboard(); monitorCallBacks();"{*if $tab == "tabWorkspace"} onload="javascript:screenSize();"{/if*}>
 
 	<form id="adminform">
 
