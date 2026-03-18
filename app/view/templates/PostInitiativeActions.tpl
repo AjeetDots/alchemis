@@ -14,7 +14,7 @@
 	<a href="#" onclick="javascript:document.location.href='index.php?cmd=PostInitiativeActionEdit&post_initiative_id={$post_initiative_id}&referrer_type={$referrer_type}{if $type_id}&type_id={$type_id}{/if}'">
 		Add new action
 	</a>
-	{if $actions->toArray()|@count > 0}
+	{if $actions && $actions->toArray()|@count > 0}
 		<table id="table1" class="adminlist sortable" border="0" cellpadding="0" cellspacing="1" width="100%">
 			<thead>
 				<tr>

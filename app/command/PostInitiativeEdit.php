@@ -85,7 +85,11 @@ class app_command_PostInitiativeEdit extends app_command_ManipulationCommand
 	protected function processForm(app_controller_Request $request)
 	{
 		$post_initiative = app_domain_PostInitiative::find($request->getProperty('id'));
-		
+		if ($post_initiative === null)
+		{
+			return false;
+		}
+
 		$post_initiative->setStatusId($request->getProperty('status_id'));
 		$post_initiative->setComment($request->getProperty('comment'));
 		
@@ -114,10 +118,15 @@ class app_command_PostInitiativeEdit extends app_command_ManipulationCommand
 	{
 		// Get post initiative details
 		$post_initiative = app_domain_PostInitiative::find($request->getProperty('id'));
+		if ($post_initiative === null)
+		{
+			$request->addFeedback('Post initiative not found');
+			return;
+		}
 		$request->setObject('post_initiative', $post_initiative);
-		
+
 		$request->setProperty('parent_tab', $request->getProperty('parent_tab'));
-		
+
 		$status_id = $post_initiative->getStatusId();
 		$request->setProperty('status_id', $status_id);
 		

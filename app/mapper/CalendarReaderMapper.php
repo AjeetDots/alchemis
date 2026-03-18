@@ -52,6 +52,8 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 				'FROM tbl_meetings_shadow ' .
 				'WHERE status_id IN (18, 19) ' .
 				"AND shadow_type = 'u' " .
+				'AND date >= ' . self::$DB->quote($from, 'timestamp') . ' ' .
+				'AND date <= ' . self::$DB->quote($to, 'timestamp') . ' ' .
 				'GROUP BY id, date';
 		self::$DB->query($sql);
 
@@ -219,6 +221,8 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 				'SELECT id FROM tbl_meetings_shadow ' .
 				'WHERE status_id IN (18, 19) ' .
 				"AND shadow_type = 'u' " .
+				'AND date >= ' . self::$DB->quote($from_dt, 'timestamp') . ' ' .
+				'AND date <= ' . self::$DB->quote($to_dt, 'timestamp') . ' ' .
 				'GROUP BY id, date';
 		self::$DB->query($sql);
 
