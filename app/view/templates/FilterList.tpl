@@ -233,7 +233,7 @@ function exportFilter(filter_id, format, file_format)
 												
 			{*									<td>{$filter->getCreatedAt()|date_format:"`$smarty.config.format_datetime_short`"}</td>*}
 												<td style="text-align: center; vertical-align: middle; background-color: #F3F3F3">
-													{*<a id="btn_display_{$filter->getId()}" title="Display current results" href="#" onclick="javascript:loadFilter({$filter->getId()}, 'reload');return false;"><img src="{$APP_URL}app/view/images/icons/table_go.png" alt="Display" title="Display currently saved results" /></a>&nbsp;*}
+													<a id="btn_display_{$filter->getId()}" title="Display current results" href="#" onclick="javascript:loadFilter({$filter->getId()}, 'reload');return false;"><img src="{$APP_URL}app/view/images/icons/table_go.png" alt="Display" title="Display currently saved results" /></a>&nbsp;
 													<a id="btn_refresh_{$filter->getId()}" title="Rebuild filter using saved parameters" href="#" onclick="javascript:loadFilter({$filter->getId()}, 'build');return false;"><img src="{$APP_URL}app/view/images/icons/table_refresh.png" alt="Re-generate" title="Re-generate filter from database and display results" /></a>&nbsp;
 													<a id="btn_statistics_{$filter->getId()}" title="Refresh Statistics" href="#" onclick="javascript:getFilterStatistics({$filter->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/chart_pie.png" alt="Statistics" title="Refresh statistics for this filter" /></a>&nbsp;
 													<a id="btn_edit_{$filter->getId()}" title="Edit Filter" href="#" onclick="javascript:editFilter({$filter->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/table_edit.png" alt="Edit" title="Edit/view parameters for this filter" /></a>&nbsp;
