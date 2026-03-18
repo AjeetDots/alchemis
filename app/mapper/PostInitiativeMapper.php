@@ -115,12 +115,12 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 	{
 		$query = 'SELECT pi.id, pi.initiative_id, pi.post_id, pi.status_id, pi.next_action_by, vw_ci_1.client_name as next_action_by_name, ' .
 					'pi.next_communication_date, pi.priority_callback, ' .
-					'pi.last_effective_communication_id, pi.last_communication_id, pi.last_mailer_communication_id, pi.lead_source_id, pi.data_source_id, pi.data_source_updated, pi.comment, ' .
+					'pi.last_effective_communication_id, pi.last_communication_id, pi.last_mailer_communication_id, pi.lead_source_id, pi.comment, ' .
+					'NULL as data_source_id, NULL as data_source_updated, NULL as data_source, ' .
 					'com1.communication_date AS last_communication_date, ' .
 					'com2.communication_date AS last_effective_communication_date, ' .
 					'vw_ci.client_name, lkp_cs.description AS status, cn.user_alias AS last_communication_user_client_alias, ' .
-                    'lkp_ls.description as lead_source, ' .
-                    'lkp_ds.description as data_source ' .
+                    'lkp_ls.description as lead_source ' .
 					'FROM tbl_post_initiatives AS pi ' .
 					'INNER JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 					'INNER JOIN tbl_lkp_communication_status AS lkp_cs ON pi.status_id = lkp_cs.id ' .
@@ -128,7 +128,6 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 					'LEFT JOIN tbl_communications AS com2 ON pi.last_effective_communication_id = com2.id ' .
 					'LEFT JOIN tbl_campaign_nbms cn ON vw_ci.campaign_id = cn.campaign_id AND com1.user_id = cn.user_id ' .
                     'LEFT JOIN tbl_lkp_lead_source lkp_ls ON pi.lead_source_id = lkp_ls.id ' .
-                    'LEFT JOIN tbl_lkp_data_sources lkp_ds ON pi.data_source_id = lkp_ds.id ' .
 					'LEFT JOIN vw_client_initiatives AS vw_ci_1 ON pi.next_action_by = vw_ci_1.client_id ' .
 					'WHERE pi.id = ?';
 		$types = array('integer');
@@ -149,12 +148,12 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 	{
 		$query = 'SELECT pi.id, pi.initiative_id, pi.post_id, pi.status_id, pi.next_action_by, vw_ci_1.client_name as next_action_by_name, ' .
 					'pi.next_communication_date, pi.priority_callback, ' .
-					'pi.last_effective_communication_id, pi.last_communication_id, pi.last_mailer_communication_id, pi.lead_source_id, pi.data_source_id, pi.data_source_updated, pi.comment, ' .
+					'pi.last_effective_communication_id, pi.last_communication_id, pi.last_mailer_communication_id, pi.lead_source_id, pi.comment, ' .
+					'NULL as data_source_id, NULL as data_source_updated, NULL as data_source, ' .
 					'com1.communication_date AS last_communication_date, ' .
 					'com2.communication_date AS last_effective_communication_date, ' .
 					'vw_ci.client_name, lkp_cs.description AS status, cn.user_alias AS last_communication_user_client_alias, ' .
                     'lkp_ls.description as lead_source, ' .
-                    'lkp_ds.description as data_source ' .
 					'FROM tbl_post_initiatives AS pi ' .
 					'INNER JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 					'INNER JOIN tbl_lkp_communication_status AS lkp_cs ON pi.status_id = lkp_cs.id ' .
@@ -162,7 +161,6 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 					'LEFT JOIN tbl_communications AS com2 ON pi.last_effective_communication_id = com2.id ' .
 					'LEFT JOIN tbl_campaign_nbms AS cn ON vw_ci.campaign_id = cn.campaign_id AND com1.user_id = cn.user_id ' .
                     'LEFT JOIN tbl_lkp_lead_source lkp_ls ON pi.lead_source_id = lkp_ls.id ' .
-                    'LEFT JOIN tbl_lkp_data_sources lkp_ds ON pi.data_source_id = lkp_ds.id ' .
 					'LEFT JOIN vw_client_initiatives AS vw_ci_1 ON pi.next_action_by = vw_ci_1.client_id ' .
 					'WHERE pi.post_id = ? ' .
 					'AND pi.initiative_id = ?';
@@ -185,12 +183,12 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 	{
 		$query = 'SELECT pi.id, pi.initiative_id, pi.post_id, pi.status_id, pi.next_action_by, vw_ci_1.client_name as next_action_by_name, ' .
 					'pi.next_communication_date, pi.priority_callback, ' .
-					'pi.last_effective_communication_id, pi.last_communication_id, pi.last_mailer_communication_id, pi.lead_source_id, pi.data_source_id, pi.data_source_updated, pi.comment, ' .
+					'pi.last_effective_communication_id, pi.last_communication_id, pi.last_mailer_communication_id, pi.lead_source_id, pi.comment, ' .
+					'NULL as data_source_id, NULL as data_source_updated, NULL as data_source, ' .
 					'com1.communication_date AS last_communication_date, ' .
 					'com2.communication_date AS last_effective_communication_date, ' .
 					'vw_ci.client_name, lkp_cs.description AS status, cn.user_alias AS last_communication_user_client_alias, ' .
                     'lkp_ls.description as lead_source, ' .
-                    'lkp_ds.description as data_source ' .
 					'FROM tbl_post_initiatives AS pi ' .
 					'INNER JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 					'INNER JOIN tbl_lkp_communication_status AS lkp_cs ON pi.status_id = lkp_cs.id ' .
@@ -198,7 +196,6 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 					'LEFT JOIN tbl_communications AS com2 ON pi.last_effective_communication_id = com2.id ' .
 					'LEFT JOIN tbl_campaign_nbms AS cn ON vw_ci.campaign_id = cn.campaign_id AND com1.user_id = cn.user_id ' .
                     'LEFT JOIN tbl_lkp_lead_source lkp_ls ON pi.lead_source_id = lkp_ls.id ' .
-                    'LEFT JOIN tbl_lkp_data_sources lkp_ds ON pi.data_source_id = lkp_ds.id ' .
 					'INNER JOIN tbl_campaign_nbms AS cn_access ON vw_ci.campaign_id = cn_access.campaign_id ' .
 					'LEFT JOIN vw_client_initiatives AS vw_ci_1 ON pi.next_action_by = vw_ci_1.client_id ' .
 					'WHERE pi.post_id = ' . self::$DB->quote($post_id, 'integer') . ' ' .
@@ -428,12 +425,12 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 	{
 		$query = 'SELECT pi.id, pi.initiative_id, pi.post_id, pi.status_id, pi.next_action_by, vw_ci_1.client_name as next_action_by_name, ' .
 					'pi.next_communication_date, pi.priority_callback, ' .
-					'pi.last_effective_communication_id, pi.last_communication_id, pi.last_mailer_communication_id, pi.lead_source_id, pi.data_source_id, pi.data_source_updated, pi.comment, ' .
+					'pi.last_effective_communication_id, pi.last_communication_id, pi.last_mailer_communication_id, pi.lead_source_id, pi.comment, ' .
+					'NULL as data_source_id, NULL as data_source_updated, NULL as data_source, ' .
 					'com1.communication_date AS last_communication_date, ' .
 					'com2.communication_date AS last_effective_communication_date, ' .
 					'vw_ci.client_name, lkp_cs.description AS status, cn.user_alias AS last_communication_user_client_alias, ' .
                     'lkp_ls.description as lead_source, ' .
-                    'lkp_ds.description as data_source ' .
 					'FROM tbl_post_initiatives AS pi ' .
 					'INNER JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 					'INNER JOIN tbl_lkp_communication_status AS lkp_cs ON pi.status_id = lkp_cs.id ' .
@@ -441,7 +438,6 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 					'LEFT JOIN tbl_communications AS com2 ON pi.last_effective_communication_id = com2.id ' .
 					'LEFT JOIN tbl_campaign_nbms cn ON vw_ci.campaign_id = cn.campaign_id AND com1.user_id = cn.user_id ' .
                     'LEFT JOIN tbl_lkp_lead_source lkp_ls ON pi.lead_source_id = lkp_ls.id ' .
-                    'LEFT JOIN tbl_lkp_data_sources lkp_ds ON pi.data_source_id = lkp_ds.id ' .
 					'LEFT JOIN vw_client_initiatives AS vw_ci_1 ON pi.next_action_by = vw_ci_1.client_id ' .
 					'WHERE pi.post_id = ?';
 		$types = array('integer');

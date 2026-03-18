@@ -174,8 +174,8 @@ class app_domain_CalendarReader extends app_domain_ReaderObject
 		// If $time is not in format yyyy-mm-dd
 		if (preg_match('/^\d{4}-\d{2}/', $year_month, $found))
 		{
-			// string format YYYY-MM
-			$from = $year_month . '-01';
+			// Extract just YYYY-MM in case a full YYYY-MM-DD date was passed
+			$from = substr($year_month, 0, 7) . '-01';
 			$to   = date('Y-m-d', strtotime($from . ' +1 month -1 day'));
 			return self::getDateRange($from, $to, $nbm_id, $client_id);
 		}

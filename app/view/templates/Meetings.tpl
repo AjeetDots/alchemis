@@ -2,7 +2,7 @@
 
 <fieldset class="adminform">
 
-	<legend>Meetings with {$post->getContactName()}</legend>
+	<legend>Meetings with {if $post}{$post->getContactName()}{/if}</legend>
 	(for {$initiative_name})
 	<br />
 	<input type="hidden" id="post_initiative_id" name="post_initiative_id" value={$post_initiative_id}" />

@@ -111,6 +111,10 @@ YAHOO.util.Event.addListener(window, "load", init);
 {/if}
 </script>
 
+{if !$post_initiative}
+	<p><em>Post initiative not found.</em></p>
+{else}
+
 <form action="index.php?cmd=PostInitiativeEdit" method="post" name="adminForm" autocomplete="off">
 
 	<input type="hidden" name="task" value="" />
@@ -174,5 +178,7 @@ YAHOO.util.Event.addListener(window, "load", init);
 	
 	
 </form>
+
+{/if}
 
 {include file="footer2.tpl"}

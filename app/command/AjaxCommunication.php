@@ -111,32 +111,32 @@ class app_command_AjaxCommunication extends app_command_AjaxCommand
  						}
  					}
  				}
-				
-				
- 				// commit the post_initiative at this point else the communication insert will fail on foreign key
- 				$post_initiative->commit();
-				
- 				// Instantiate the communication at this point so we can set the last_communication_id in tbl_post_initiative
-				$communication = new app_domain_Communication();
- 				$communication->setPostInitiativeId($post_initiative->getId());
- 				$communication->setCommunicationDate(date('Y-m-d H:i:s'));
- 				$communication->setUserId($_SESSION['auth_session']['user']['id']);
- 				$communication->setTypeId(1);
- 				$communication->setDirection('out');
- 				$communication->setStatusId($status_id);
- 				$communication->setNextActionBy($next_action_by);
- 				$communication->setEffective('non-effective');
- 				$communication->setIsEffective(false);
-// //				$communication->setHasAttachment(false);
- 				$communication->commit();
+	
 
-				
-//				$communication = app_class_Communication::logNonEffective($_SESSION['auth_session']['user']['id'], 1, $this->request->post_initiative_id, $this->request->initiative_id, $this->request->post_id);
- 				// now set the last communication id for the post initiative
- 				// NOTE: cannot do before this point else the update will fail on foreign key constraint
- 				$post_initiative->setLastCommunicationId($communication->getId());
- 				$post_initiative->commit();
-						
+ 				if ($this->request->result)
+				{
+					// commit the post_initiative at this point else the communication insert will fail on foreign key
+					$post_initiative->commit();
+
+					// Instantiate the communication at this point so we can set the last_communication_id in tbl_post_initiative
+					$communication = new app_domain_Communication();
+					$communication->setPostInitiativeId($post_initiative->getId());
+					$communication->setCommunicationDate(date('Y-m-d H:i:s'));
+					$communication->setUserId($_SESSION['auth_session']['user']['id']);
+					$communication->setTypeId(1);
+					$communication->setDirection('out');
+					$communication->setStatusId($status_id);
+					$communication->setNextActionBy($next_action_by);
+					$communication->setEffective('non-effective');
+					$communication->setIsEffective(false);
+					$communication->commit();
+
+					// now set the last communication id for the post initiative
+					// NOTE: cannot do before this point else the update will fail on foreign key constraint
+					$post_initiative->setLastCommunicationId($communication->getId());
+					$post_initiative->commit();
+				}
+
 				$this->request->post_initiative_id = $post_initiative->getId();
 //				$this->request->post_initiative_id = $communication['post_initiative_id'];
 				break;
