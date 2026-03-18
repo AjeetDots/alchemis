@@ -14,55 +14,37 @@ $logger = &Log::singleton('file', '../../logs/DatabaseSequences.log', '', $conf)
 $logger->log('----- Start -----');
 
 // DB settings
-//$env = ( isset( $_SERVER['APPLICATION_ENV'] ) ) ? $_SERVER['APPLICATION_ENV'] : 'development';
-//if ('development' == $env && '192.168.0.97' != $_SERVER['SERVER_ADDR'])
-//{
-//    $dbhost = 'localhost';
-//    $dbname = 'dev-alchemis-webapp';
-//    $dbuser = 'dev';
-//    $dbpass = 'd3v3nv';
-//}
-//else
-//{
-    $dbhost = 'localhost';
-    $dbname = 'alchemis';
-    $dbuser = 'alchemis';
-    $dbpass = 'rYT4maP7';
-//}
+$dbhost = 'localhost';
+$dbname = 'alchemis';
+$dbuser = 'alchemis';
+$dbpass = 'rYT4maP7';
 
 // Connect
-if (!mysql_connect($dbhost, $dbuser, $dbpass))
+$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+if (!$conn)
 {
     $logger->log('Could not connect to mysql');
     exit;
 }
 
-// Use database
-if (!mysql_select_db($dbname))
-{
-    $logger->log('Could not select database ' . $dbname);
-    $logger->log('MySQL Error: ' . mysql_error());
-    exit;
-}
-
 // Get the tables in the database
 $sql = "SHOW TABLES FROM `$dbname`";
-$result = mysql_query($sql);
+$result = mysqli_query($conn, $sql);
 
 if (!$result)
 {
     $logger->log('DB Error, could not list tables');
-    $logger->log('MySQL Error: ' . mysql_error());
+    $logger->log('MySQL Error: ' . mysqli_error($conn));
     exit;
 }
 
 // Record tables in an array
 $tables = array();
-while ($row = mysql_fetch_row($result))
+while ($row = mysqli_fetch_row($result))
 {
     $tables[] = $row[0];
 }
-mysql_free_result($result);
+mysqli_free_result($result);
 
 
 // Arrays for collecting data
@@ -80,42 +62,42 @@ foreach ($tables as $table)
         {
             // Get max id
             $sql = 'SELECT MAX(id) AS id FROM ' . $table;
-            $result = mysql_query($sql);
+            $result = mysqli_query($conn, $sql);
             if (!$result) {
-                $logger->log('Invalid query: ' . mysql_error());
+                $logger->log('Invalid query: ' . mysqli_error($conn));
                 exit;
             }
-            $row = mysql_fetch_array($result);
+            $row = mysqli_fetch_array($result);
             $maxId = $row['id'];
-            mysql_free_result($result);
+            mysqli_free_result($result);
 
             // Get sequence id
             $sql = 'SELECT sequence AS id FROM ' . $table . '_seq';
-            $result = mysql_query($sql);
+            $result = mysqli_query($conn, $sql);
             if (!$result) {
-                $logger->log('Invalid query: ' . mysql_error());
+                $logger->log('Invalid query: ' . mysqli_error($conn));
                 exit;
             }
-            $row = mysql_fetch_array($result);
+            $row = mysqli_fetch_array($result);
             $seqId = $row['id'];
-            mysql_free_result($result);
-        
+            mysqli_free_result($result);
+
             // Get number of rows in sequence table
             $sql = 'SELECT COUNT(*) AS row_count FROM ' . $table . '_seq';
-            $result = mysql_query($sql);
+            $result = mysqli_query($conn, $sql);
             if (!$result) {
-                $logger->log('Invalid query: ' . mysql_error());
+                $logger->log('Invalid query: ' . mysqli_error($conn));
                 exit;
             }
-            $row = mysql_fetch_array($result);
+            $row = mysqli_fetch_array($result);
             $seqTableRowCount = $row['row_count'];
-            mysql_free_result($result);
+            mysqli_free_result($result);
 
             if ($maxId > $seqId)
             {
                 $affectedTables[] = $table;
                 $sqlFixes[] = 'ALTER TABLE `' . $table . '_seq` AUTO_INCREMENT = ' . $maxId;
-                
+
                 if ($seqTableRowCount > 1)
                 {
                     $sqlFixes[] = 'DELETE FROM `' . $table . '_seq`';
@@ -160,12 +142,13 @@ if ($sqlFixes)
     {
         $logger->log("\t" . $sql . ';');
 
-        $result = mysql_query($sql);
+        $result = mysqli_query($conn, $sql);
         if (!$result) {
             $logger->log('QUERY FAILED: ' . $sql);
-            $logger->log(mysql_error());
+            $logger->log(mysqli_error($conn));
         }
     }
 }
 
 $logger->log('----- End -----');
+mysqli_close($conn);

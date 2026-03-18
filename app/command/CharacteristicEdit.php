@@ -100,7 +100,7 @@ class app_command_CharacteristicEdit extends app_command_Command
 					}
 				}
 
-				$initiatives = filter_input(INPUT_POST, 'selected_initiatives', FILTER_SANITIZE_STRING);
+				$initiatives = filter_input(INPUT_POST, 'selected_initiatives', FILTER_DEFAULT);
 				$postedInits = explode(',', $initiatives);
 				$deletes = array_diff($campCharList, $postedInits);
 

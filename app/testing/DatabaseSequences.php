@@ -24,38 +24,31 @@ else
 }
 
 // Connect
-if (!mysql_connect($dbhost, $dbuser, $dbpass))
+$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+if (!$conn)
 {
     echo 'Could not connect to mysql';
     exit;
 }
 
-// Use database
-if (!mysql_select_db($dbname))
-{
-    echo 'Could not select database ' . $dbname;
-    echo 'MySQL Error: ' . mysql_error();
-    exit;
-}
-
 // Get the tables in the database
 $sql = "SHOW TABLES FROM `$dbname`";
-$result = mysql_query($sql);
+$result = mysqli_query($conn, $sql);
 
 if (!$result)
 {
     echo "DB Error, could not list tables\n";
-    echo 'MySQL Error: ' . mysql_error();
+    echo 'MySQL Error: ' . mysqli_error($conn);
     exit;
 }
 
 // Record tables in an array
 $tables = array();
-while ($row = mysql_fetch_row($result))
+while ($row = mysqli_fetch_row($result))
 {
     $tables[] = $row[0];
 }
-mysql_free_result($result);
+mysqli_free_result($result);
 
 
 // Array for collecting SQL statements for correcting
@@ -82,33 +75,33 @@ foreach ($tables as $table)
         {
             // Get max id
             $sql = 'SELECT MAX(id) AS id FROM ' . $table;
-            $result = mysql_query($sql);
+            $result = mysqli_query($conn, $sql);
             if (!$result) {
-                die('Invalid query: ' . mysql_error());
+                die('Invalid query: ' . mysqli_error($conn));
             }
-            $row = mysql_fetch_array($result);
+            $row = mysqli_fetch_array($result);
             $maxId = $row['id'];
-            mysql_free_result($result);
+            mysqli_free_result($result);
 
             // Get sequence id
             $sql = 'SELECT sequence AS id FROM ' . $table . '_seq';
-            $result = mysql_query($sql);
+            $result = mysqli_query($conn, $sql);
             if (!$result) {
-                die('Invalid query: ' . mysql_error());
+                die('Invalid query: ' . mysqli_error($conn));
             }
-            $row = mysql_fetch_array($result);
+            $row = mysqli_fetch_array($result);
             $seqId = $row['id'];
-            mysql_free_result($result);
-        
+            mysqli_free_result($result);
+
             // Get number of rows in sequence table
             $sql = 'SELECT COUNT(*) AS row_count FROM ' . $table . '_seq';
-            $result = mysql_query($sql);
+            $result = mysqli_query($conn, $sql);
             if (!$result) {
-                die('Invalid query: ' . mysql_error());
+                die('Invalid query: ' . mysqli_error($conn));
             }
-            $row = mysql_fetch_array($result);
+            $row = mysqli_fetch_array($result);
             $seqTableRowCount = $row['row_count'];
-            mysql_free_result($result);
+            mysqli_free_result($result);
 
             if ($maxId == $seqId && $seqTableRowCount == 1)
             {
@@ -120,7 +113,7 @@ foreach ($tables as $table)
                 $css = 'style="color: red"';
                 $operand = '>';
                 $sqlFixes[] = 'ALTER TABLE ' . $table . '_seq AUTO_INCREMENT = ' . $maxId;
-                
+
                 if ($seqTableRowCount > 1)
                 {
                     $sqlFixes[] = 'DELETE FROM ' . $table . '_seq';
@@ -140,12 +133,12 @@ foreach ($tables as $table)
                 $css = 'style="color: red"';
                 $operand = '<';
             }
-            
+
             if ($seqTableRowCount != 1)
             {
                 $css = 'style="color: red"';
             }
-            
+
             echo "<tr $css>" . PHP_EOL;
             echo '<td>' . $table . '</td>' . PHP_EOL;
             echo '<td>' . $maxId . '</td>' . PHP_EOL;
@@ -167,3 +160,4 @@ foreach ($sqlFixes as $sqlFix)
     echo $sqlFix . ';' . PHP_EOL;
 }
 echo '</pre>' . PHP_EOL;
+mysqli_close($conn);

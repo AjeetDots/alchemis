@@ -242,19 +242,24 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 	}
 
 	/**
-	 * Constructs filter export results.
-	 * @return raw array of app_mapper_FilterBuilderCollection -
+	 * Builds the export SQL for a given filter and results format.
+	 * Shared by getFilterExport() and getFilterExportCursor().
+	 * @return string SQL query
 	 */
-	public function getFilterExport($filter_id, $results_format)
+	private function buildFilterExportQuery($filter_id, $results_format)
 	{
         $session = Auth_Session::singleton();
         $user = $session->getSessionUser();
+        $fid = self::$DB->quote($filter_id, 'integer');
+        $ownerClause = !empty($user['client_id'])
+            ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
+            : 'AND p.data_owner_id IS NULL ';
 
 		switch ($results_format)
 		{
 			case 'Company':
 			case 'Site':
-				$query = 	'SELECT c.id as company_id, c.name as company_name, c.website, c.telephone as company_telephone, ' .
+				return 'SELECT c.id as company_id, c.name as company_name, c.website, c.telephone as company_telephone, ' .
 							's.id as site_id, s.address_1, s.address_2, s.town, s.city, s.postcode, ' .
 							'lkp_cty.name as county, lkp_ctry.name as country ' .
 							'FROM tbl_filter_results fr ' .
@@ -262,16 +267,14 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN tbl_sites s on s.company_id = c.id ' .
 							'LEFT JOIN tbl_lkp_counties AS lkp_cty ON lkp_cty.id = s.county_id ' .
 							'LEFT JOIN tbl_lkp_countries AS lkp_ctry ON lkp_ctry.id = s.country_id ' .
-							'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
+							'WHERE fr.filter_id = ' . $fid . ' ' .
 							'group by c.id, c.name, c.website, c.telephone, ' .
 							's.id, s.address_1, s.address_2, s.town, s.city, s.postcode, ' .
 							'lkp_cty.name, lkp_ctry.name ' .
 							'order by c.name';
-//				echo $query;
-				break;
 			case 'Company and posts':
 			case 'Site and posts':
-				$query = 	'SELECT c.id as company_id, c.name as company_name, c.website, c.telephone as company_telephone, ' .
+				return 'SELECT c.id as company_id, c.name as company_name, c.website, c.telephone as company_telephone, ' .
 							's.id as site_id, s.address_1, s.address_2, s.town, s.city, s.postcode, ' .
 							'lkp_cty.name as county, lkp_ctry.name as country, ' .
 							'p.id as post_id, p.job_title, p.telephone_1 as post_telephone_1, p.telephone_2 as post_telephone_2, ' .
@@ -284,17 +287,13 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN vw_contacts con on p.id = con.post_id ' .
 							'LEFT JOIN tbl_lkp_counties AS lkp_cty ON lkp_cty.id = s.county_id ' .
 							'LEFT JOIN tbl_lkp_countries AS lkp_ctry ON lkp_ctry.id = s.country_id ' .
-                            'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
-                            (!empty($user['client_id']) 
-                                ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
-                                : 'AND p.data_owner_id IS NULL ') .
+                            'WHERE fr.filter_id = ' . $fid . ' ' . $ownerClause .
 							'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
 							'p.job_title, con.surname, con.first_name';
-				break;
 			case 'Client initiative':
 			case 'Client initiative with last note':
 			case 'Mailer':
-				$query = 	'SELECT c.id as company_id, c.name as company_name, c.website, c.telephone as company_telephone, ' .
+				return 'SELECT c.id as company_id, c.name as company_name, c.website, c.telephone as company_telephone, ' .
 							's.id as site_id, s.address_1, s.address_2, s.town, s.city, s.postcode, ' .
 							'lkp_cty.name as county, lkp_ctry.name as country, ' .
 							'p.id as post_id, p.job_title, p.telephone_1 as post_telephone_1, p.telephone_2 as post_telephone_2, ' .
@@ -308,7 +307,7 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN tbl_sites s on s.company_id = c.id ' .
 							'LEFT JOIN tbl_posts p on fr.post_id = p.id ' .
 							'LEFT JOIN vw_contacts con on p.id = con.post_id ' .
-							'LEFT JOIN tbl_post_initiatives pi on fr.post_initiative_id = pi.id '.
+							'LEFT JOIN tbl_post_initiatives pi on fr.post_initiative_id = pi.id ' .
 							'LEFT JOIN tbl_initiatives i on pi.initiative_id = i.id ' .
 							'LEFT JOIN tbl_campaigns camp on camp.id = i.campaign_id ' .
 							'LEFT JOIN tbl_clients cl on camp.client_id = cl.id ' .
@@ -317,15 +316,11 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN tbl_post_initiative_notes pin ON pin.id = com.note_id ' .
 							'LEFT JOIN tbl_lkp_counties AS lkp_cty ON lkp_cty.id = s.county_id ' .
 							'LEFT JOIN tbl_lkp_countries AS lkp_ctry ON lkp_ctry.id = s.country_id ' .
-                            'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
-                            (!empty($user['client_id']) 
-                                ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
-                                : 'AND p.data_owner_id IS NULL ') .
+                            'WHERE fr.filter_id = ' . $fid . ' ' . $ownerClause .
 							'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
 							'p.job_title, con.surname, con.first_name';
-				break;
 			case 'Meeting':
-                $query =    'SELECT c.id as company_id, c.name as company_name, c.website, c.telephone as company_telephone, ' .
+                return 'SELECT c.id as company_id, c.name as company_name, c.website, c.telephone as company_telephone, ' .
                             's.id as site_id, s.address_1, s.address_2, s.town, s.city, s.postcode, ' .
                             'lkp_cty.name as county, lkp_ctry.name as country, ' .
                             'p.id as post_id, p.job_title, p.telephone_1 as post_telephone_1, p.telephone_2 as post_telephone_2, ' .
@@ -343,7 +338,7 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
                             'LEFT JOIN tbl_sites s on s.company_id = c.id ' .
                             'LEFT JOIN tbl_posts p on fr.post_id = p.id ' .
                             'LEFT JOIN vw_contacts con on p.id = con.post_id ' .
-                            'LEFT JOIN tbl_post_initiatives pi on fr.post_initiative_id = pi.id '.
+                            'LEFT JOIN tbl_post_initiatives pi on fr.post_initiative_id = pi.id ' .
                             'LEFT JOIN tbl_initiatives i on pi.initiative_id = i.id ' .
                             'LEFT JOIN tbl_campaigns camp on camp.id = i.campaign_id ' .
                             'LEFT JOIN tbl_clients cl on camp.client_id = cl.id ' .
@@ -355,19 +350,32 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
                             'LEFT JOIN tbl_lkp_lead_source AS lkp_ls ON lkp_ls.id = pi.lead_source_id ' .
                             'LEFT JOIN tbl_rbac_users u on m.created_by = u.id ' .
                             'LEFT JOIN tbl_rbac_users u1 on m.modified_by = u1.id ' .
-                            'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
-                            (!empty($user['client_id']) 
-                                ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
-                                : 'AND p.data_owner_id IS NULL ') .
+                            'WHERE fr.filter_id = ' . $fid . ' ' . $ownerClause .
                             'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
                             'p.job_title, con.surname, con.first_name';
-                break;
 			default:
 				throw new Exception('No results format variable ($results_format) supplied.');
-				break;
-
 		}
+	}
 
+	/**
+	 * Returns a streaming MDB2 result cursor for the export query.
+	 * Use fetchRow() to iterate row-by-row — avoids loading all rows into memory.
+	 * @return MDB2_Result
+	 */
+	public function getFilterExportCursor($filter_id, $results_format)
+	{
+		$query = $this->buildFilterExportQuery($filter_id, $results_format);
+		return self::$DB->query($query);
+	}
+
+	/**
+	 * Constructs filter export results.
+	 * @return raw array of app_mapper_FilterBuilderCollection -
+	 */
+	public function getFilterExport($filter_id, $results_format)
+	{
+		$query = $this->buildFilterExportQuery($filter_id, $results_format);
 		return self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
 	}
 

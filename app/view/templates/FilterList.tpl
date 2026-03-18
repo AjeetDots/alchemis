@@ -161,17 +161,8 @@ function deleteFilter(id)
 
 function deleteRow(item_id)
 {
-	var tbl = document.getElementById('tbl_filter_list');
-	var lastRow = tbl.rows.length;
-	for (var i = 0; i < lastRow; i++)
-	{
-		var tempRow = tbl.rows[i];
-		if (tempRow.getAttribute("id") == "tr_" + item_id)
-		{
-			tbl.deleteRow(i);
-			break;
-		}
-	}
+	var row = document.getElementById('tr_' + item_id);
+	if (row) { row.parentNode.removeChild(row); }
 }
 
 function exportFilter(filter_id, format, file_format)

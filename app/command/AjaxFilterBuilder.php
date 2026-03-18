@@ -42,7 +42,6 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 	 */
 	public function execute()
 	{
-		error_reporting (E_ALL & ~E_NOTICE);
 
 		$this->filter_builder = new app_domain_FilterBuilder();
 
@@ -182,13 +181,9 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 				}
 				$smarty->assign('delete_restore_permission', $rbacUser->hasPermission('permission_deleted_restored_filters'));
 
-				$html = '';
-				foreach ($filters->toRawArray() as $filter) {
-					$smarty->assign('filter', $filter);
-					$html .= '<tr id="tr_' . $filter->getId() . '">' . $smarty->fetch('html_FilterListLine.tpl') . '</tr>';
-				}
+				$smarty->assign('filters', $filters->toRawArray());
 
-				$this->request->filter_rows_html = $html;
+				$this->request->filter_rows_html = $smarty->fetch('html_FilterListLines.tpl');
 				$this->request->type_id = $type_id;
 				break;
 
@@ -231,7 +226,7 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 			{
 
 				$options[] = array(	'value' => $item,
-									'text' 	=> @C_String::htmlDisplay($labels[$item] ? $labels[$item] : ucfirst($item)));
+									'text' 	=> C_String::htmlDisplay($labels[$item] ? $labels[$item] : ucfirst($item)));
 			}
 			return $options;
 		}
@@ -253,7 +248,7 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 	            {
 
 	                $options[] = array( 'value' => $item['id'],
-	                                    'text'  => @C_String::htmlDisplay(ucfirst($item['name'])));
+	                                    'text'  => C_String::htmlDisplay(ucfirst($item['name'])));
 	            }
         	} else {
         		$options = array();
@@ -310,7 +305,7 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 					$options = array();
 					foreach ($results as $item)
 					{
-						$options[$item[$field_spec['sql_value_field']]] = @C_String::htmlDisplay(ucfirst($item[$field_spec['sql_text_field']]));
+						$options[$item[$field_spec['sql_value_field']]] = C_String::htmlDisplay(ucfirst($item[$field_spec['sql_text_field']]));
 					}
 
 					$smarty = ViewHelper::getSmarty();
@@ -502,7 +497,7 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 		{
 
 			$options[] = array(	'value' => $item->getId(),
-								'text' 	=> @C_String::htmlDisplay(ucfirst($item->getName())));
+								'text' 	=> C_String::htmlDisplay(ucfirst($item->getName())));
 		}
 		return $options;
 
@@ -516,7 +511,7 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 		$options[0] = '-- select --';
 		foreach ($results as $item)
 		{
-			$options[$item->getId()] = @C_String::htmlDisplay(ucfirst($item->getName()));
+			$options[$item->getId()] = C_String::htmlDisplay(ucfirst($item->getName()));
 		}
 
 		require_once('app/view/ViewHelper.php');
