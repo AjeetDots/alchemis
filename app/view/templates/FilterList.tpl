@@ -78,10 +78,6 @@ function loadFilter(filter_id, action)
 	if (top.iframe_8.colln != undefined)
 	{
 		top.iframe_8.colln.clear();
-		while (top.iframe_8.colln.size() > 0)
-		{
-			// do nothing
-		}
 	}
 	top.responderFadeIn();
 	var href = "index.php?cmd=FilterResults&id=" + filter_id + "&action=" + action;
