@@ -172,11 +172,9 @@ function deleteRow(item_id)
 
 function exportFilter(filter_id, format, file_format)
 {
-	top.responderFadeIn();
 	if (!file_format) file_format = 'xls';
-	location.href = "index.php?cmd=FilterExport&id=" + filter_id + "&format=" + format + "&file_format=" + file_format;
 	setActiveRow(filter_id);
-	top.responderFadeOut();
+	top.startFileDownload("index.php?cmd=FilterExport&id=" + filter_id + "&format=" + format + "&file_format=" + file_format);
 }
 
 {/literal}

@@ -166,10 +166,8 @@ function deleteRow(item_id)
 
 function exportFilter(filter_id, format)
 {
-	top.responderFadeIn();
-	location.href = "index.php?cmd=FilterExport&id=" + filter_id + "&format=" + format;
 	setActiveRow(filter_id);
-	top.responderFadeOut();
+	top.startFileDownload("index.php?cmd=FilterExport&id=" + filter_id + "&format=" + format);
 }
 
 

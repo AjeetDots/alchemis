@@ -377,6 +377,93 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 		}
 	}
 	
+	// Trigger a file download with a professional progress-bar notification.
+	// Uses a hidden iframe so the page never navigates (no "Leave site?" dialog).
+	// The server sets a cookie with the token when it starts streaming; we poll
+	// for that cookie and complete the bar only when the file is actually ready.
+	function startFileDownload(url)
+	{
+		var token = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+		var separator = url.indexOf('?') === -1 ? '?' : '&';
+		var fullUrl = url + separator + 'download_token=' + token;
+
+		// Hidden iframe — file downloads work inside iframes and never fire
+		// the top-frame beforeunload, so no browser "Leave site?" dialog.
+		var iframe = document.createElement('iframe');
+		iframe.style.display = 'none';
+		iframe.src = fullUrl;
+		top.document.body.appendChild(iframe);
+
+		// Show the progress-bar notification in the bottom bar.
+		_activeLoads++;
+		var notification = top.$('notification');
+		if (notification) {
+			notification.style.padding  = '0';
+			notification.style.height   = '28px';
+			notification.innerHTML =
+				'<div style="position:relative;width:100%;height:100%;overflow:hidden;background:#fffde7;">' +
+					'<div id="dl_bar" style="position:absolute;top:0;left:0;height:100%;width:0%;' +
+						'background:linear-gradient(90deg,#66bb6a,#43a047);' +
+						'transition:width 30s linear;opacity:0.45;"></div>' +
+					'<div style="position:relative;z-index:1;padding:5px 0 0 0;font-size:12px;font-weight:bold;font-family:Verdana,Arial,sans-serif;">' +
+						'<img src="app/view/images/ajax_loader.gif" width="14" height="14" align="absmiddle" style="margin-right:5px;">' +
+						'Preparing download&hellip; please wait' +
+					'</div>' +
+				'</div>';
+			top.Effect.Appear('notification', {duration: 0.2, queue: 'end'});
+			// Kick off the slow fill (goes to 80 % over 30 s — simulated progress)
+			setTimeout(function() {
+				var bar = top.$('dl_bar');
+				if (bar) bar.style.width = '80%';
+			}, 80);
+		}
+
+		var maxWait = 60000;
+		var waited  = 0;
+		var interval = setInterval(function() {
+			waited += 500;
+			var cookies = document.cookie ? document.cookie.split(';') : [];
+			for (var i = 0; i < cookies.length; i++) {
+				var c = cookies[i].replace(/^\s+/, '');
+				if (c === 'fileDownloadToken=' + token) {
+					document.cookie = 'fileDownloadToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+					clearInterval(interval);
+					// Snap bar to 100 % and swap text to "Done"
+					var bar = top.$('dl_bar');
+					if (bar) { bar.style.transition = 'width 0.3s ease'; bar.style.width = '100%'; }
+					var n2 = top.$('notification');
+					if (n2) {
+						setTimeout(function() {
+							n2.innerHTML =
+								'<div style="position:relative;width:100%;height:100%;overflow:hidden;background:#e8f5e9;">' +
+									'<div style="position:absolute;top:0;left:0;height:100%;width:100%;' +
+										'background:linear-gradient(90deg,#66bb6a,#43a047);opacity:0.35;"></div>' +
+									'<div style="position:relative;z-index:1;padding:5px 0 0 0;font-size:12px;font-weight:bold;font-family:Verdana,Arial,sans-serif;">' +
+										'&#10003;&nbsp;Download started — your file is saving' +
+									'</div>' +
+								'</div>';
+							setTimeout(function() {
+								n2.style.padding = '';
+								n2.style.height  = '';
+								_activeLoads = Math.max(0, _activeLoads - 1);
+								top.Effect.Fade('notification', {duration: 1.5, queue: 'end'});
+							}, 2500);
+						}, 350);
+					}
+					setTimeout(function() {
+						if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+					}, 8000);
+					return;
+				}
+			}
+			if (waited >= maxWait) {
+				clearInterval(interval);
+				_activeLoads = Math.max(0, _activeLoads - 1);
+				top.responderFadeOut();
+			}
+		}, 500);
+	}
+
 	function left(str, n)
 	{
 		if (n <= 0)

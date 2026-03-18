@@ -55,6 +55,12 @@ class app_controller_Response
   
   public static function download($value, $filename)
   {
+    // Signal the browser-side startFileDownload() poller that the file is ready.
+    if (!empty($_GET['download_token'])) {
+      $token = preg_replace('/[^a-z0-9]/i', '', $_GET['download_token']);
+      setcookie('fileDownloadToken', $token, time() + 60, '/', '', false, false);
+    }
+
     $response = new app_controller_Response;
 
     $response->setHeader('Expires', '03 Jul 2001 06:00:00 GMT');

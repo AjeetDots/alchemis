@@ -181,10 +181,8 @@ function deleteRow(item_id)
 
 function exportMailer(mailer_id)
 {
-	top.responderFadeIn();
-	location.href = "index.php?cmd=MailerExport&id=" + mailer_id;
 	setActiveRow(mailer_id);
-	top.responderFadeOut();
+	top.startFileDownload("index.php?cmd=MailerExport&id=" + mailer_id);
 }
 
 {/literal}

@@ -36,6 +36,12 @@ class app_command_MailerExport extends app_command_Command
         $name = $mailer ? $mailer->getName() : ('mailer-' . $mailer_id);
         $safeName = preg_replace('/[^A-Za-z0-9 _.-]+/', '_', $name);
 
+        // Signal the browser-side startFileDownload() poller that the file is ready.
+        if (!empty($_GET['download_token'])) {
+            $token = preg_replace('/[^a-z0-9]/i', '', $_GET['download_token']);
+            setcookie('fileDownloadToken', $token, time() + 60, '/', '', false, false);
+        }
+
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $safeName . '.csv"');
         header('Cache-Control: no-store, no-cache, must-revalidate');
