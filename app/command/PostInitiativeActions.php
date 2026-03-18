@@ -25,7 +25,13 @@ class app_command_PostInitiativeActions extends app_command_Command
 			$request->addFeedback('Post initiative not found');
 			return self::statuses('CMD_OK');
 		}
-		$request->setObject('post', $post_initiative->getPost());
+		$post = $post_initiative->getPost();
+		if ($post === null)
+		{
+			$request->addFeedback('Post not found for this initiative');
+			return self::statuses('CMD_OK');
+		}
+		$request->setObject('post', $post);
 
 		$initiative_name = $post_initiative->getInitiative()->getClientName() . ': ' . $post_initiative->getInitiative()->getName();
 		$request->setProperty('initiative_name', $initiative_name);

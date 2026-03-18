@@ -3,9 +3,9 @@
 <fieldset class="adminform">
 
 	<legend>{if $action_type}{$action_type} a{else}A{/if}ctions for<br />
-	{$post->getJobTitle()}</legend>
+	{if $post}{$post->getJobTitle()}{/if}</legend>
 	<br />
-	<strong>Post holder: {if $post->getContactName()}{$post->getContactName()}{else}Unknown{/if}</strong>
+	<strong>Post holder: {if $post && $post->getContactName()}{$post->getContactName()}{else}Unknown{/if}</strong>
 	<br /><br />
 	<strong>Client: {$initiative_name}</strong>
 	<br /><br />

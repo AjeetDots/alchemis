@@ -190,7 +190,12 @@ class app_command_CommunicationEmailCreate extends app_command_ManipulationComma
 		
 		$request->setProperty('post_initiative_id', $post_initiative_id);
 		$post_initiative = app_domain_PostInitiative::find($post_initiative_id);
-		
+		if ($post_initiative === null)
+		{
+			$request->addFeedback('Post initiative not found');
+			return;
+		}
+
 		$post = app_domain_Post::findByPostInitiativeId($post_initiative_id);
 		$request->setObject('post', $post);
 
