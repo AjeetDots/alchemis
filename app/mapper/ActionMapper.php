@@ -49,8 +49,9 @@ class app_mapper_ActionMapper extends app_mapper_Mapper implements app_domain_Ac
 		$obj->setActionedByClient($array['actioned_by_client']);
 		
 		// get object resources
-		$obj->setResourceIds(self::findResourceIds($array['id']));
-		$obj->setResources(self::findResources($array['id']));
+		// Use $this-> (not self::) — these are non-static methods; static dispatch is deprecated in PHP 7/8
+		$obj->setResourceIds($this->findResourceIds($array['id']));
+		$obj->setResources($this->findResources($array['id']));
 		
 		$obj->markClean();
 		return $obj;
@@ -94,23 +95,22 @@ class app_mapper_ActionMapper extends app_mapper_Mapper implements app_domain_Ac
 		self::$DB->query($query);
 
 		// save any associated resources
-		$resources = $object->getResourceIds(); 
-		if (count($resources) > 0)
+		$resources = $object->getResourceIds();
+		if (is_array($resources) && count($resources) > 0)
 		{
 			// delete any existing records
-			$query = 'DELETE FROM tbl_action_resources WHERE action_id = ' .self::$DB->quote($object->getId(), 'integer');
+			$query = 'DELETE FROM tbl_action_resources WHERE action_id = ' . self::$DB->quote($object->getId(), 'integer');
 			self::$DB->query($query);
 
-			// insert new entries
-			foreach ($resources as $resource)	
+			// batch INSERT all resources in a single query instead of N individual queries
+			$action_id = self::$DB->quote($object->getId(), 'integer');
+			$value_parts = array();
+			foreach ($resources as $resource)
 			{
-				$query = 'INSERT INTO tbl_action_resources ' .
-					'(action_id, resource_id) ' .
-					'VALUES (' . 
-					self::$DB->quote($object->getId(), 'integer') . ', ' .
-					self::$DB->quote($resource['resource_id'], 'integer') . ')';
-				self::$DB->query($query);
+				$value_parts[] = '(' . $action_id . ', ' . self::$DB->quote($resource['resource_id'], 'integer') . ')';
 			}
+			$query = 'INSERT INTO tbl_action_resources (action_id, resource_id) VALUES ' . implode(', ', $value_parts);
+			self::$DB->query($query);
 		}
 	}
 
@@ -136,25 +136,24 @@ class app_mapper_ActionMapper extends app_mapper_Mapper implements app_domain_Ac
 					'communication_type_id = ' . self::$DB->quote($object->getCommunicationTypeId(), 'integer') . ' ' .
 					'WHERE id = ' . self::$DB->quote($object->getId(), 'integer');
 		self::$DB->query($query);
-		
+
 		// save any associated resources
 		$resources = $object->getResourceIds();
-		if (count($resources) > 0)
+		if (is_array($resources) && count($resources) > 0)
 		{
 			// delete any existing records
-			$query = 'DELETE FROM tbl_action_resources WHERE action_id = ' .self::$DB->quote($object->getId(), 'integer');
+			$query = 'DELETE FROM tbl_action_resources WHERE action_id = ' . self::$DB->quote($object->getId(), 'integer');
 			self::$DB->query($query);
-			
-			// insert new entries
-			foreach ($resources as $resource)	
+
+			// batch INSERT all resources in a single query instead of N individual queries
+			$action_id = self::$DB->quote($object->getId(), 'integer');
+			$value_parts = array();
+			foreach ($resources as $resource)
 			{
-				$query = 'INSERT INTO tbl_action_resources ' .
-					'(action_id, resource_id) ' .
-					'VALUES (' . 
-					self::$DB->quote($object->getId(), 'integer') . ', ' .
-					self::$DB->quote($resource['resource_id'], 'integer') . ')';
-				self::$DB->query($query);
+				$value_parts[] = '(' . $action_id . ', ' . self::$DB->quote($resource['resource_id'], 'integer') . ')';
 			}
+			$query = 'INSERT INTO tbl_action_resources (action_id, resource_id) VALUES ' . implode(', ', $value_parts);
+			self::$DB->query($query);
 		}
 	}
 

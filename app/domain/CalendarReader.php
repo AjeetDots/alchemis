@@ -46,7 +46,7 @@ class app_domain_CalendarReader extends app_domain_ReaderObject
 // 				echo '<hr /><pre>';
 // 				print_r($rows);
 // 				echo '</pre><hr />';
-                if (count($rows) > 0) {
+                if (is_array($rows) && count($rows) > 0) {
 					foreach ($rows as $row)
 					{
 						$entries[$date][] = array(	'id'                 => $row['id'],
@@ -100,10 +100,7 @@ class app_domain_CalendarReader extends app_domain_ReaderObject
 			while ($cursor <= $to)
 			{
 				$range[$cursor] = array();
-				$year   = substr($cursor, 0, 4);
-				$month  = substr($cursor, 5, 2);
-				$day    = substr($cursor, 8, 2);
-				$cursor = date('Y-m-d', mktime(0, 0, 1, $month, $day + 1, $year));
+				$cursor = date('Y-m-d', strtotime($cursor . ' +1 day'));
 			}
 
 			// Single query for the whole range instead of one query per day
@@ -155,12 +152,9 @@ class app_domain_CalendarReader extends app_domain_ReaderObject
 		// If $time is not in format yyyy-mm-dd
 		if (preg_match('/^\d{4}-\d{2}-\d{2}/', $date, $found))
 		{
-			// string format YYYY-MM
-			$year  = substr($date, 0, 4);
-			$month = substr($date, 5, 2);
-			$day = substr($date, 8, 2);
-			$from = date('Y-m-d', mktime(0, 0, 1, $month, $day, $year));
-			$to = date('Y-m-d', mktime(0, 0, 1, $month, $day + 6, $year));
+			// string format YYYY-MM-DD
+			$from = $date;
+			$to   = date('Y-m-d', strtotime($date . ' +6 days'));
 			return self::getDateRange($from, $to);
 		}
 		else
@@ -181,11 +175,8 @@ class app_domain_CalendarReader extends app_domain_ReaderObject
 		if (preg_match('/^\d{4}-\d{2}/', $year_month, $found))
 		{
 			// string format YYYY-MM
-			$year  = substr($year_month, 0, 4);
-			$month = substr($year_month, 5, 2);
-			$days_in_month = date('t', mktime (0, 0, 1, $month, 1, $year));
-			$from = date('Y-m-d', mktime(0, 0, 1, $month, 1, $year));
-			$to = date('Y-m-d', mktime(0, 0, 1, $month, $days_in_month, $year));
+			$from = $year_month . '-01';
+			$to   = date('Y-m-d', strtotime($from . ' +1 month -1 day'));
 			return self::getDateRange($from, $to, $nbm_id, $client_id);
 		}
 		else
@@ -211,8 +202,8 @@ class app_domain_CalendarReader extends app_domain_ReaderObject
 //			$from = date('Y-m-d', mktime(0, 0, 1, $month, 1, $year));
 //			$to = date('Y-m-d', mktime(0, 0, 1, $month, $days_in_month, $year));
 
-			$from = date('Y-m-d', mktime(0, 0, 1, 1, 1, $year));
-			$to = date('Y-m-d', mktime(0, 0, 1, 12, 31, $year));
+			$from = $year . '-01-01';
+			$to   = $year . '-12-31';
 
 			return self::getDateRange($from, $to, $nbm_id, $client_id);
 		}

@@ -38,6 +38,44 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 					'WHERE f.id = ?';
 		$types = array('integer');
 		$this->selectStmt = self::$DB->prepare($query, $types);
+
+		// Insert — prepared once to avoid re-preparing on every doInsert() call
+		$insertQuery = 'INSERT INTO tbl_filters (id, name, description, type_id, campaign_id, results_format, is_report_source, report_parameter_description, created_at, created_by) VALUES ' .
+				'(:id, :name, :description, :type_id, :campaign_id, :results_format, :is_report_source, :report_parameter_description, :created_at, :created_by)';
+		$insertTypes = array(
+			'id'                          => 'integer',
+			'name'                        => 'text',
+			'description'                 => 'text',
+			'type_id'                     => 'integer',
+			'campaign_id'                 => 'integer',
+			'results_format'              => 'text',
+			'is_report_source'            => 'integer',
+			'report_parameter_description'=> 'text',
+			'created_at'                  => 'date',
+			'created_by'                  => 'integer',
+		);
+		$this->insertStmt = self::$DB->prepare($insertQuery, $insertTypes, MDB2_PREPARE_MANIP);
+
+		// Update — prepared once to avoid re-preparing on every update() call
+		$updateQuery = 'UPDATE tbl_filters SET name = :name, ' .
+				'description = :description, type_id = :type_id, campaign_id = :campaign_id,' .
+				'results_format = :results_format, ' .
+				'is_report_source = :is_report_source, report_parameter_description = :report_parameter_description, ' .
+				'created_at = :created_at, created_by = :created_by, updated_at = NOW() ' .
+				'WHERE id = :id';
+		$updateTypes = array(
+			'id'                          => 'integer',
+			'name'                        => 'text',
+			'description'                 => 'text',
+			'type_id'                     => 'integer',
+			'campaign_id'                 => 'integer',
+			'results_format'              => 'text',
+			'is_report_source'            => 'integer',
+			'report_parameter_description'=> 'text',
+			'created_at'                  => 'date',
+			'created_by'                  => 'integer',
+		);
+		$this->updateStmt = self::$DB->prepare($updateQuery, $updateTypes, MDB2_PREPARE_MANIP);
 	}
 
 	/**
@@ -93,21 +131,7 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 	 */
 	function doInsert(app_domain_DomainObject $object)
 	{
-
-		$query = 'INSERT INTO tbl_filters (id, name, description, type_id, campaign_id, results_format, is_report_source, report_parameter_description, created_at, created_by) VALUES ' .
-				'(:id, :name, :description, :type_id, :campaign_id, :results_format, :is_report_source, :report_parameter_description, :created_at, :created_by)';
-		$types = array(	'id' => 'integer',
-						'name' => 'text',
-						'description' => 'text',
-						'type_id' => 'integer',
-						'campaign_id' => 'integer',
-		                'results_format' => 'text',
-		                'is_report_source' => 'integer',
-		                'report_parameter_description' => 'text',
-						'created_at' => 'date',
-						'created_by' => 'integer');
-		$this->insertStmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
-
+		// $this->insertStmt is prepared once in the constructor — no re-prepare on every call
 		$data = array(	'id' => $object->getId(),
 						'name' => $object->getName(),
 						'description' => $object->getDescription(),
@@ -127,25 +151,7 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 	 */
 	function update(app_domain_DomainObject $object)
 	{
-
-		$query = 		'UPDATE tbl_filters SET name = :name, ' .
-						'description = :description, type_id = :type_id, campaign_id = :campaign_id,' .
-		                'results_format = :results_format, ' .
-		                'is_report_source = :is_report_source, report_parameter_description = :report_parameter_description, ' .
-						'created_at = :created_at, created_by = :created_by ' .
-						'WHERE id = :id';
-		$types = array(	'id'	=> 'integer',
-						'name' => 'text',
-						'description' => 'text',
-						'type_id' => 'integer',
-						'campaign_id' => 'integer',
-						'results_format' => 'text',
-		                'is_report_source' => 'integer',
-		                'report_parameter_description' => 'text',
-						'created_at' => 'date',
-						'created_by' => 'integer');
-		$this->updateStmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
-
+		// $this->updateStmt is prepared once in the constructor (includes updated_at = NOW()) — no re-prepare
 		$data = array(	'id'	=> $object->getId(),
 						'name' => $object->getName(),
 						'description' => $object->getDescription(),

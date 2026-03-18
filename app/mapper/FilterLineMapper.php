@@ -26,9 +26,28 @@ class app_mapper_FilterLineMapper extends app_mapper_Mapper implements app_domai
 		// Select single
 		$query = 	'SELECT * FROM tbl_filter_lines ' .
 					'WHERE id = :id';
-				
 		$types = array('id' => 'integer');
 		$this->selectStmt = self::$DB->prepare($query, $types);
+
+		// Insert — prepared once here to avoid re-preparing on every doInsert() call
+		$insertQuery = 'INSERT INTO tbl_filter_lines (id, filter_id, table_name, field_name, params, params_display, ' .
+				'operator, concatenator, bracket_open, bracket_close, direction) VALUES ' .
+				'(:id, :filter_id, :table_name, :field_name, :params, :params_display, ' .
+				':operator, :concatenator, :bracket_open, :bracket_close, :direction)';
+		$insertTypes = array(
+			'id'             => 'integer',
+			'filter_id'      => 'integer',
+			'table_name'     => 'text',
+			'field_name'     => 'text',
+			'params'         => 'text',
+			'params_display' => 'text',
+			'operator'       => 'text',
+			'concatenator'   => 'text',
+			'bracket_open'   => 'text',
+			'bracket_close'  => 'text',
+			'direction'      => 'text',
+		);
+		$this->insertStmt = self::$DB->prepare($insertQuery, $insertTypes, MDB2_PREPARE_MANIP);
 	}
 
 	/**
@@ -38,7 +57,7 @@ class app_mapper_FilterLineMapper extends app_mapper_Mapper implements app_domai
 	 */
 	protected function doLoad($array)
 	{
-		$obj = new app_domain_Filter($array['id']);
+		$obj = new app_domain_FilterLine($array['id']);
 		$obj->setFilterId($array['filter_id']);
 		$obj->setTableName($array['table_name']);
 		$obj->setFieldName($array['field_name']);
@@ -79,24 +98,7 @@ class app_mapper_FilterLineMapper extends app_mapper_Mapper implements app_domai
 	 */
 	function doInsert(app_domain_DomainObject $object)
 	{
-		
-		$query = 'INSERT INTO tbl_filter_lines (id, filter_id, table_name, field_name, params, params_display, ' .
-				'operator, concatenator, bracket_open, bracket_close, direction) VALUES ' .
-				'(:id, :filter_id, :table_name, :field_name, :params, :params_display, ' .
-				':operator, :concatenator, :bracket_open, :bracket_close, :direction)';
-		$types = array(	'id' => 'integer', 
-						'filter_id' => 'integer', 
-						'table_name' => 'text', 
-						'field_name' => 'text', 
-						'params' => 'text', 
-						'params_display' => 'text',
-						'operator' => 'text',
-						'concatenator' => 'text',
-						'bracket_open' => 'text',
-						'bracket_close' => 'text',
-						'direction' => 'text');
-		$this->insertStmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
-
+		// $this->insertStmt is prepared once in the constructor — no re-prepare on every call
 		$data = array(	'id' => $object->getId(),
 						'filter_id' => $object->getFilterId(),
 						'table_name' => $object->getTableName(),
