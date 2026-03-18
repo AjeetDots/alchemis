@@ -99,7 +99,7 @@ function getFilterStatistics(filter_id)
 /* --- Ajax return data handlers --- */
 function AjaxFilterBuilder(data)
 {
-	for (i = 1; i < data.length + 1; i++) 
+	for (i = 1; i < data.length + 1; i++)
 	{
 		t = data[i-1];
 		switch (t.cmd_action)
@@ -117,11 +117,24 @@ function AjaxFilterBuilder(data)
 				$("span_company_count_" + t.item_id).innerHTML = t.company_count;
 				$("span_post_count_" + t.item_id).innerHTML = t.post_count;
 				break;
+			case "get_filter_rows_html":
+				var tbody = document.getElementById("tbody_filter_type_" + t.type_id);
+				if (tbody) { tbody.innerHTML = t.filter_rows_html; }
+				break;
 			default:
 				alert("No cmd_action specified");
 				break;
 		}
 	}
+}
+
+var filterRowsLoaded = {};
+function loadFilterRowsOnce(typeId)
+{
+	if (filterRowsLoaded[typeId]) { return; }
+	filterRowsLoaded[typeId] = true;
+	var params = { type_id: typeId };
+	getAjaxData("AjaxFilterBuilder", "", "get_filter_rows_html", params, "Loading...");
 }
 
 function addNewLine(table_name, id, html)
@@ -257,7 +270,7 @@ function exportFilter(filter_id, format, file_format)
 							
 							{* -- Campaign filters start here -- *}
 							<div class="panel">
-								<h3 class="moofx-toggler title" id="filter_type_2_count"><span>Campaign ({$filters_campaign_count})</span></h3>
+								<h3 class="moofx-toggler title" id="filter_type_2_count" onclick="javascript:loadFilterRowsOnce(2);"><span>Campaign ({$filters_campaign_count})</span></h3>
 								<div class="moofx-slider content">
 									{* -- The '2' part of the id on the following table (sortable_2) is the filter type_id.
 									This is used so that we can tell FilterBuilderCreate which table in FilterList to add the 
@@ -278,51 +291,16 @@ function exportFilter(filter_id, format, file_format)
 												{/if}
 											</tr>
 										</thead>
-										<tbody>
-											
-											{foreach name=fil from=$filters_campaign item=filter}
-											<tr id="tr_{$filter->getId()}">
-												<td>{$filter->getId()}</td>
-												<td><strong><span id="span_name_{$filter->getId()}">{$filter->getName()}</span></strong><br />
-													({$filter->getCreatedByName()})
-												</td>
-												<td>
-													<span id="span_campaign_{$filter->getId()}">{$filter->getCampaignName()}</span>
-												</td>
-												<td><span id="span_results_format_{$filter->getId()}">{$filter->getResultsFormat()}</span></td>
-												<td><span id="span_company_count_{$filter->getId()}">{$filter->getCompanyCount()}</span></td>
-												<td><span id="span_post_count_{$filter->getId()}">{$filter->getPostCount()}</span></td>
-												
-			{*									<td>{$filter->getCreatedAt()|date_format:"`$smarty.config.format_datetime_short`"}</td>*}
-												<td style="text-align: center; vertical-align: middle; background-color: #F3F3F3">
-													{*<a id="btn_display_{$filter->getId()}" title="Display current results" href="#" onclick="javascript:loadFilter({$filter->getId()}, 'reload');return false;"><img src="{$APP_URL}app/view/images/icons/table_go.png" alt="Display" title="Display currently saved results" /></a>&nbsp;*}
-													<a id="btn_refresh_{$filter->getId()}" title="Rebuild filter using saved parameters" href="#" onclick="javascript:loadFilter({$filter->getId()}, 'build');return false;"><img src="{$APP_URL}app/view/images/icons/table_refresh.png" alt="Re-generate" title="Re-generate filter from database and display results" /></a>&nbsp;
-													<a id="btn_statistics_{$filter->getId()}" title="Refresh Statistics" href="#" onclick="javascript:getFilterStatistics({$filter->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/chart_pie.png" alt="Statistics" title="Refresh statistics for this filter" /></a>&nbsp;
-													<a id="btn_edit_{$filter->getId()}" title="Edit Filter" href="#" onclick="javascript:editFilter({$filter->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/table_edit.png" alt="Edit" title="Edit/view parameters for this filter" /></a>&nbsp;
-													{if $can_export}
-													<a id="btn_export_{$filter->getId()}" title="Export Filter" href="#" onclick="javascript:exportFilter({$filter->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/page_white_excel.png" alt="Export" title="Export filter" /></a>&nbsp;
-													<a id="btn_export_{$filter->getId()}" title="Export Filter as CSV" href="#" onclick="javascript:exportFilter({$filter->getId()}, 'standard', 'csv');return false;"><img src="{$APP_URL}app/view/images/icons/csv.gif" alt="Export" title="Export filte as CSVr" /></a>&nbsp;
-													{/if}
-													{if $can_export}
-													<a id="btn_export_meeting_format_{$filter->getId()}" title="Export Meeting Report" href="#" onclick="javascript:exportFilter({$filter->getId()}, 'meeting_report');return false;"><img src="{$APP_URL}app/view/images/icons/chart_curve.png" alt="Export Meeting Report" title="Export Meeting Report" /></a>&nbsp;
-													{/if}		
-													{if $filter->getCreatedBy() == $user.id || $delete_restore_permission}
-													<a id="btn_delete_{$filter->getId()}" title="Delete filter" href="#" onclick="javascript:deleteFilter({$filter->getId()});return false"><img src="{$APP_URL}app/view/images/icons/table_delete.png" alt="Delete" title="Delete this filter" /></a>
-													{/if}
-												</td>
-												{if $delete_restore_permission}
-													<td><input class="checkbox" type="checkbox" style="text-align: center" name="filter_{$filter->getId()}"/></td>
-												{/if}
-											</tr>
-											{/foreach}
-										</tbody>
+										<tbody id="tbody_filter_type_2">
+										<tr><td colspan="8" style="text-align:center;color:#999;padding:8px;">Click header to load filters...</td></tr>
+									</tbody>
 									</table>
 								</div>
 							</div>
 							
 							{* -- Global filters start here -- *}
 							<div class="panel">
-								<h3 class="moofx-toggler title" id="filter_type_3_count"><span>Global ({$filters_global_count})</span></h3>
+								<h3 class="moofx-toggler title" id="filter_type_3_count" onclick="javascript:loadFilterRowsOnce(3);"><span>Global ({$filters_global_count})</span></h3>
 								<div class="moofx-slider content">
 									{* -- The '3' part of the id on the following table (sortable_3) is the filter type_id.
 									This is used so that we can tell FilterBuilderCreate which table in FilterList to add the 
@@ -343,39 +321,9 @@ function exportFilter(filter_id, format, file_format)
 												{/if}
 											</tr>
 										</thead>
-										<tbody>
-											
-											{foreach name=fil from=$filters_global item=filter}
-											<tr id="tr_{$filter->getId()}">
-												<td>{$filter->getId()}</td>
-												<td><strong><span id="span_name_{$filter->getId()}">{$filter->getName()}</span></strong><br />
-													({$filter->getCreatedByName()})
-												</td>
-												<td><span id="span_results_format_{$filter->getId()}">{$filter->getResultsFormat()}</span></td>
-												<td><span id="span_company_count_{$filter->getId()}">{$filter->getCompanyCount()}</span></td>
-												<td><span id="span_post_count_{$filter->getId()}">{$filter->getPostCount()}</span></td>
-												
-			{*									<td>{$filter->getCreatedAt()|date_format:"`$smarty.config.format_datetime_short`"}</td>*}
-												<td style="text-align: center; vertical-align: middle; background-color: #F3F3F3">
-													{*<a id="btn_display_{$filter->getId()}" title="Display current results" href="#" onclick="javascript:loadFilter({$filter->getId()}, 'reload');return false;"><img src="{$APP_URL}app/view/images/icons/table_go.png" alt="Display" title="Display currently saved results" /></a>&nbsp;*}
-													<a id="btn_refresh_{$filter->getId()}" title="Rebuild filter using saved parameters" href="#" onclick="javascript:loadFilter({$filter->getId()}, 'build');return false;"><img src="{$APP_URL}app/view/images/icons/table_refresh.png" alt="Re-generate" title="Re-generate filter from database and display results" /></a>&nbsp;
-													<a id="btn_statistics_{$filter->getId()}" title="Refresh Statistics" href="#" onclick="javascript:getFilterStatistics({$filter->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/chart_pie.png" alt="Statistics" title="Refresh statistics for this filter" /></a>&nbsp;
-													<a id="btn_edit_{$filter->getId()}" title="Edit Filter" href="#" onclick="javascript:editFilter({$filter->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/table_edit.png" alt="Edit" title="Edit/view parameters for this filter" /></a>&nbsp;
-													{if $can_export}
-													<a id="btn_export_{$filter->getId()}" title="Export Filter" href="#" onclick="javascript:exportFilter({$filter->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/page_white_excel.png" alt="Export" title="Export filter" /></a>&nbsp;
-													<a id="btn_export_{$filter->getId()}" title="Export Filter as CSV" href="#" onclick="javascript:exportFilter({$filter->getId()}, 'standard', 'csv');return false;"><img src="{$APP_URL}app/view/images/icons/csv.gif" alt="Export" title="Export filter as CSV" /></a>&nbsp;
-													<a id="btn_export_meeting_format_{$filter->getId()}" title="Export Meeting Report" href="#" onclick="javascript:exportFilter({$filter->getId()}, 'meeting_report');return false;"><img src="{$APP_URL}app/view/images/icons/chart_curve.png" alt="Export Meeting Report" title="Export Meeting Report" /></a>&nbsp;
-													{/if}		
-													{if $filter->getCreatedBy() == $user.id || $delete_restore_permission}
-													<a id="btn_delete_{$filter->getId()}" title="Delete filter" href="#" onclick="javascript:deleteFilter({$filter->getId()});return false"><img src="{$APP_URL}app/view/images/icons/table_delete.png" alt="Delete" title="Delete this filter" /></a>
-													{/if}
-												</td>
-												{if $delete_restore_permission}
-													<td><input class="checkbox" type="checkbox" style="text-align: center" name="filter_{$filter->getId()}"/></td>
-												{/if}
-											</tr>
-											{/foreach}
-										</tbody>
+										<tbody id="tbody_filter_type_3">
+										<tr><td colspan="7" style="text-align:center;color:#999;padding:8px;">Click header to load filters...</td></tr>
+									</tbody>
 									</table>
 								</div>
 							</div>

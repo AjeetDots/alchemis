@@ -37,22 +37,20 @@ class app_command_FilterList extends app_command_Command
 
 		$delete_restore_permission = $this->session_user->hasPermission('permission_deleted_restored_filters');
 		$request->setProperty('delete_restore_permission', $delete_restore_permission);
-		
+
+		// Personal filters: small set, always load fully for immediate display
 		$filters_personal = app_domain_Filter::findPersonalByUserId($user['id']);
 		$request->setObject('filters_personal', $filters_personal);
 		$request->setProperty('filters_personal_count', count($filters_personal->toRawArray()));
-				
-		$filters_campaign = app_domain_Filter::findCampaignFiltersByUserId($user['id']);
-		$request->setObject('filters_campaign', $filters_campaign);
-		$request->setProperty('filters_campaign_count', count($filters_campaign->toRawArray()));
-		
-		$filters_global = app_domain_Filter::findGlobalFilters();
-		$request->setObject('filters_global', $filters_global);
-		$request->setProperty('filters_global_count', count($filters_global->toRawArray()));
-		
+
+		// Campaign and Global: potentially thousands of rows — use fast COUNT queries only.
+		// Full data is lazy-loaded via AJAX when the accordion section is expanded.
+		$request->setProperty('filters_campaign_count', app_domain_Filter::countCampaignFiltersByUserId($user['id']));
+		$request->setProperty('filters_global_count', app_domain_Filter::countGlobalFilters());
+
 		if ($this->session_user->hasPermission('permission_admin_users'))
 		{
-			$request->setProperty('can_export',true); 
+			$request->setProperty('can_export',true);
 		}
 	}
 	

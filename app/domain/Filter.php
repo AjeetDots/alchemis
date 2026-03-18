@@ -396,6 +396,24 @@ class app_domain_Filter extends app_domain_DomainObject
 		return $finder->findGlobalFilters();
 	}
 
+	public static function countPersonalByUserId($user_id)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->countPersonalByUserId($user_id);
+	}
+
+	public static function countCampaignFiltersByUserId($user_id)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->countCampaignFiltersByUserId($user_id);
+	}
+
+	public static function countGlobalFilters()
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->countGlobalFilters();
+	}
+
 	/**
 	 * Find by user id
 	 * @param integer $user_id

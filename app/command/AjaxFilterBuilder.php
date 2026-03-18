@@ -156,6 +156,42 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 				}
 				$this->request->filter_name = $this->filter->getName();
 				break;
+			case 'get_filter_rows_html':
+				$type_id = (int)$this->request->type_id;
+				require_once('Auth/Session.php');
+				$session = Auth_Session::singleton();
+				$user    = $session->getSessionUser();
+
+				if ($type_id == 2) {
+					$filters = app_domain_Filter::findCampaignFiltersByUserId($user['id']);
+				} elseif ($type_id == 3) {
+					$filters = app_domain_Filter::findGlobalFilters();
+				} else {
+					$filters = app_domain_Filter::findPersonalByUserId($user['id']);
+				}
+
+				require_once('app/view/ViewHelper.php');
+				$smarty = ViewHelper::getSmarty();
+
+				require_once('app/domain/RbacUser.php');
+				$rbacUser = app_domain_RbacUser::find($user['id']);
+				if ($rbacUser->hasPermission('permission_admin_users')) {
+					$smarty->assign('can_export', true);
+				} else {
+					$smarty->assign('can_export', false);
+				}
+				$smarty->assign('delete_restore_permission', $rbacUser->hasPermission('permission_deleted_restored_filters'));
+
+				$html = '';
+				foreach ($filters->toRawArray() as $filter) {
+					$smarty->assign('filter', $filter);
+					$html .= '<tr id="tr_' . $filter->getId() . '">' . $smarty->fetch('html_FilterListLine.tpl') . '</tr>';
+				}
+
+				$this->request->filter_rows_html = $html;
+				$this->request->type_id = $type_id;
+				break;
+
 			case 'delete_filter':
 				if ($filter_id)
 				{

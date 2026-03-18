@@ -23,8 +23,11 @@ class app_command_FilterExport extends app_command_Command
 			// and copies it during BIFF chunking, so effective memory usage is
 			// ~3-4x the raw data size.  Text-heavy columns (comments, notes) mean
 			// even modest row counts can exceed the 1 GB PHP memory limit.
-			// 5 000 rows is a safe upper bound before forcing CSV.
-			$maxXlsRows = 5000;
+			// 1 000 rows is a safe upper bound before forcing CSV.
+			// NOTE: getFilterResultCount counts tbl_filter_results rows, but
+			// export queries JOIN tbl_sites (company → many sites), which can
+			// multiply the actual row count by 5-10x.  Keep the threshold low.
+			$maxXlsRows = 1000;
 			if ($file_format === 'xls') {
 				$resultCount = app_domain_FilterBuilder::getFilterResultCount($filter_id);
 				if ($resultCount > $maxXlsRows) {
@@ -44,12 +47,10 @@ class app_command_FilterExport extends app_command_Command
 
 	function exportXLS($filter_id, $export_format)
   {
-		// Allow larger XLS exports without exhausting memory_limit
+		// Allow larger XLS exports without exhausting memory_limit.
+		// The PEAR BIFF writer can use 3-4x the raw data size in RAM.
 		if (function_exists('ini_set')) {
-			// Increase memory limit specifically for heavy XLS exports.
-			// If ini_set is disabled or capped in php.ini, PHP will keep
-			// the lower effective limit.
-			@ini_set('memory_limit', '1024M');
+			@ini_set('memory_limit', '2048M');
 		}
 
 		$filter = app_domain_Filter::find($filter_id);

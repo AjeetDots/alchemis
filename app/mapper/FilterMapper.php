@@ -235,6 +235,27 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 		return new app_mapper_FilterCollection($result, $this);
 	}
 
+	public function countPersonalByUserId($user_id)
+	{
+		$query = 'SELECT COUNT(*) FROM tbl_filters WHERE created_by = ' . self::$DB->quote($user_id, 'integer') . ' AND type_id = 1 AND deleted = 0';
+		return (int)self::$DB->queryOne($query);
+	}
+
+	public function countCampaignFiltersByUserId($user_id)
+	{
+		$query = 'SELECT COUNT(DISTINCT f.id) FROM tbl_filters f ' .
+					'JOIN tbl_campaign_nbms cn ON f.campaign_id = cn.campaign_id ' .
+					'WHERE f.type_id = 2 AND cn.user_id = ' . self::$DB->quote($user_id, 'integer') . ' ' .
+					'AND cn.deactivated_date = \'0000-00-00\' AND f.deleted = 0';
+		return (int)self::$DB->queryOne($query);
+	}
+
+	public function countGlobalFilters()
+	{
+		$query = 'SELECT COUNT(*) FROM tbl_filters WHERE type_id = 3 AND deleted = 0';
+		return (int)self::$DB->queryOne($query);
+	}
+
  	/** Find campaign filters which are available to the specified user id
 	 * @param integer $user_id
 	 * @return filter domain collection
