@@ -2071,7 +2071,13 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 	* Assembles the main SQL query to be used in the filter builder. This is all standard SQL so no input params
 	* The SQL queries are saved into a class-wide variable (array) ready to be passed to MDB2
 	*/
-	public function makeMainSQL($filter_id, $display_results=true)
+	/**
+	 * @param bool $statistics_only When true, skip building t_include_post_count and
+	 *   the tbl_filter_results delete/insert — only update company_count/post_count on
+	 *   tbl_filters.  Much faster for Refresh Statistics since it avoids the expensive
+	 *   mass-delete + mass-insert on tbl_filter_results.
+	 */
+	public function makeMainSQL($filter_id, $display_results=true, $statistics_only=false)
 	{
 		$debug = false;
 // 		$debug = true;
@@ -2181,37 +2187,41 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 				'group by company_id, post_id';
 		$this->sql_query[1] = $sql;
 
-		$sql = 'create temporary table t_include_post_count ( ' .
-						'company_id int(11), ' .
-						'post_id int(11), ' .
-						'post_count int(11), ' .
-						'propensity_sum int(11), ' .
-						'propensity_max int(11), ' .
-						'propensity_avg int(11), ' .
-						'propensity_min int(11), ' .
-						'key `ix_t_include_count_company_id` (company_id), ' .
-						'key `ix_t_include_count_post_id` (post_id), ' .
-						'key `ix_t_include_count_post_count` (post_count), ' .
-						'key `ix_t_include_count_propensity_sum` (propensity_sum), ' .
-						'key `ix_t_include_count_propensity_max` (propensity_max), ' .
-						'key `ix_t_include_count_propensity_avg` (propensity_avg), ' .
-						'key `ix_t_include_count_propensity_min` (propensity_min) ' .
-						')';
-// 						') TYPE= InnoDB';
-		$this->sql_query[2] = $sql;
+		if (!$statistics_only)
+		{
+			// t_include_post_count is only needed when we are writing results to tbl_filter_results
+			$sql = 'create temporary table t_include_post_count ( ' .
+							'company_id int(11), ' .
+							'post_id int(11), ' .
+							'post_count int(11), ' .
+							'propensity_sum int(11), ' .
+							'propensity_max int(11), ' .
+							'propensity_avg int(11), ' .
+							'propensity_min int(11), ' .
+							'key `ix_t_include_count_company_id` (company_id), ' .
+							'key `ix_t_include_count_post_id` (post_id), ' .
+							'key `ix_t_include_count_post_count` (post_count), ' .
+							'key `ix_t_include_count_propensity_sum` (propensity_sum), ' .
+							'key `ix_t_include_count_propensity_max` (propensity_max), ' .
+							'key `ix_t_include_count_propensity_avg` (propensity_avg), ' .
+							'key `ix_t_include_count_propensity_min` (propensity_min) ' .
+							')';
+	// 						') TYPE= InnoDB';
+			$this->sql_query[2] = $sql;
 
-		$sql =	'insert into t_include_post_count ' .
-				'select p.company_id, p.id as post_id, count(ti.post_id) as post_count, ' .
-				'sum(p.propensity) as propensity_sum, max(p.propensity) as propensity_max, avg(p.propensity) as propensity_avg, ' .
-				'min(p.propensity) as propensity_min ' .
-				'from t_include_count ti ' .
-                'left join tbl_posts p on ti.post_id = p.id ' .
-                (!empty($user['client_id']) 
-                    ? 'WHERE p.data_owner_id = ' . $user['client_id'] . ' '
-                    : 'WHERE p.data_owner_id IS NULL ') .
-				'group by ti.company_id';
+			$sql =	'insert into t_include_post_count ' .
+					'select p.company_id, p.id as post_id, count(ti.post_id) as post_count, ' .
+					'sum(p.propensity) as propensity_sum, max(p.propensity) as propensity_max, avg(p.propensity) as propensity_avg, ' .
+					'min(p.propensity) as propensity_min ' .
+					'from t_include_count ti ' .
+	                'left join tbl_posts p on ti.post_id = p.id ' .
+	                (!empty($user['client_id'])
+	                    ? 'WHERE p.data_owner_id = ' . $user['client_id'] . ' '
+	                    : 'WHERE p.data_owner_id IS NULL ') .
+					'group by ti.company_id';
 
-		$this->sql_query[3] = $sql;
+			$this->sql_query[3] = $sql;
+		}
 
 		// make temporary stats tables
 		$sql = 	'create temporary table t_filter_stats ' .
@@ -2229,44 +2239,46 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 
 		$this->sql_query[5] = $sql;
 
-		$sql =	'delete from tbl_filter_results ' .
-				'where filter_id = ' . $filter_id;
-		$this->sql_query[6] = $sql;
-
-
-		// insert into tbl_filter_results - switch on results_format as different formats will have different columns in t_include
-		switch ($results_format)
+		if (!$statistics_only)
 		{
-			case 'Client initiative':
-			case 'Client initiative with last note':
-			case 'Meeting':
-				$sql = 	'insert into tbl_filter_results ' .
-				'(filter_id, company_id, post_id, post_initiative_id, meeting_id, propensity_sum, propensity_max, propensity_avg, propensity_min, ' .
-				'post_count) ' .
-				'select ' .	$filter_id . ', ti.company_id, ti.post_id, post_initiative_id, meeting_id, propensity_sum, propensity_max, propensity_avg, ' .
-				'propensity_min, post_count ' .
-				'from t_include ti ' .
-				'left join t_include_post_count tipc on ti.company_id = tipc.company_id';
-				break;
-			case 'Company':
-			case 'Site':
-			case 'Company and posts':
-			case 'Site and posts':
-			case 'Mailer':
-				$sql = 	'insert into tbl_filter_results ' .
-				'(filter_id, company_id, post_id, propensity_sum, propensity_max, propensity_avg, propensity_min, ' .
-				'post_count) ' .
-				'select ' . $filter_id . ', ti.company_id, ti.post_id, propensity_sum, propensity_max, propensity_avg, propensity_min, ' .
-				'post_count ' .
-				'from t_include ti ' .
-				'left join t_include_post_count tipc on ti.company_id = tipc.company_id';
-				break;
-			default:
-				throw new Exception('No results format variable ($results_format) supplied.');
-				break;
+			$sql =	'delete from tbl_filter_results ' .
+					'where filter_id = ' . $filter_id;
+			$this->sql_query[6] = $sql;
 
+			// insert into tbl_filter_results - switch on results_format as different formats will have different columns in t_include
+			switch ($results_format)
+			{
+				case 'Client initiative':
+				case 'Client initiative with last note':
+				case 'Meeting':
+					$sql = 	'insert into tbl_filter_results ' .
+					'(filter_id, company_id, post_id, post_initiative_id, meeting_id, propensity_sum, propensity_max, propensity_avg, propensity_min, ' .
+					'post_count) ' .
+					'select ' .	$filter_id . ', ti.company_id, ti.post_id, post_initiative_id, meeting_id, propensity_sum, propensity_max, propensity_avg, ' .
+					'propensity_min, post_count ' .
+					'from t_include ti ' .
+					'left join t_include_post_count tipc on ti.company_id = tipc.company_id';
+					break;
+				case 'Company':
+				case 'Site':
+				case 'Company and posts':
+				case 'Site and posts':
+				case 'Mailer':
+					$sql = 	'insert into tbl_filter_results ' .
+					'(filter_id, company_id, post_id, propensity_sum, propensity_max, propensity_avg, propensity_min, ' .
+					'post_count) ' .
+					'select ' . $filter_id . ', ti.company_id, ti.post_id, propensity_sum, propensity_max, propensity_avg, propensity_min, ' .
+					'post_count ' .
+					'from t_include ti ' .
+					'left join t_include_post_count tipc on ti.company_id = tipc.company_id';
+					break;
+				default:
+					throw new Exception('No results format variable ($results_format) supplied.');
+					break;
+
+			}
+			$this->sql_query[7] = $sql;
 		}
-		$this->sql_query[7] = $sql;
 
 // 		echo '<pre>';
 // 		print_r($this->sql_query);
@@ -2565,6 +2577,12 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 	{
 		$finder = self::getFinder(__CLASS__);
 		return $finder->getFilterResultCount($filter_id);
+	}
+
+	public static function getFilterExportCount($filter_id, $results_format)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->getFilterExportCount($filter_id, $results_format);
 	}
 
 

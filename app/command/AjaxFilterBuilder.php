@@ -45,7 +45,9 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 
 		$this->filter_builder = new app_domain_FilterBuilder();
 
-		$filter_id = $this->request->item_id;
+		// item_id is not present for all actions (e.g. get_filter_rows_html only sends type_id)
+		// Use isset to avoid a PHP warning that would corrupt the JSON response
+		$filter_id = isset($this->request->item_id) ? $this->request->item_id : null;
 
 		switch ($this->request->cmd_action)
 		{
@@ -86,7 +88,7 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 				$this->filter_builder->makeSQLData($filter_id, $filter_lines_include, 'include');
 				$this->filter_builder->makeSQLData($filter_id, $filter_lines_exclude, 'exclude');
 
-				$t = $this->filter_builder->makeMainSQL($filter_id, false);
+				$t = $this->filter_builder->makeMainSQL($filter_id, false, true);
 
 				app_domain_ObjectWatcher::remove($this->filter);
 
@@ -181,7 +183,9 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 				}
 				$smarty->assign('delete_restore_permission', $rbacUser->hasPermission('permission_deleted_restored_filters'));
 
-				$smarty->assign('filters', $filters->toRawArray());
+				// Pass Collection directly — html_FilterListLines.tpl calls $filter->getId() etc so it
+			// needs domain objects, not plain arrays from toRawArray()
+			$smarty->assign('filters', $filters);
 
 				$this->request->filter_rows_html = $smarty->fetch('html_FilterListLines.tpl');
 				$this->request->type_id = $type_id;
@@ -202,7 +206,8 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 		// Return result data
 		// Update the item_id element of the request string in case we have added a
 		// new object. Useful to return the new id
-		if ($this->request->item_id == null && isset($this->filter))
+		$request_arr = (array)$this->request;
+		if (empty($request_arr['item_id']) && isset($this->filter))
 		{
 			$this->request->item_id = $this->filter->getId();
 		}

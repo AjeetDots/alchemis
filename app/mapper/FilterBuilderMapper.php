@@ -91,9 +91,8 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 		ksort($sql);
 		foreach ($sql as $query)
 		{
-			$stmt = self::$DB->prepare($query);
-			$data = array();
-			$this->doStatement($stmt, $data);
+			// Use exec() directly for non-parameterised DDL/DML — avoids prepare() overhead
+			self::$DB->exec($query);
 		}
 		return true;
 	}
@@ -356,6 +355,19 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 			default:
 				throw new Exception('No results format variable ($results_format) supplied.');
 		}
+	}
+
+	/**
+	 * Returns the number of rows the export query would actually produce.
+	 * This accounts for JOINs (e.g. tbl_sites) that multiply tbl_filter_results rows.
+	 * @return int
+	 */
+	public function getFilterExportCount($filter_id, $results_format)
+	{
+		$inner = $this->buildFilterExportQuery($filter_id, $results_format);
+		$query = 'SELECT COUNT(*) FROM (' . $inner . ') AS export_count_subquery';
+		$result = self::$DB->queryOne($query);
+		return (int) $result;
 	}
 
 	/**

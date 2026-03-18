@@ -21,15 +21,11 @@ class app_command_FilterExport extends app_command_Command
 			// Guard against huge XLS exports that would exhaust memory.
 			// The PEAR Spreadsheet_Excel_Writer keeps the full worksheet in RAM
 			// and copies it during BIFF chunking, so effective memory usage is
-			// ~3-4x the raw data size.  Text-heavy columns (comments, notes) mean
-			// even modest row counts can exceed the 1 GB PHP memory limit.
-			// 1 000 rows is a safe upper bound before forcing CSV.
-			// NOTE: getFilterResultCount counts tbl_filter_results rows, but
-			// export queries JOIN tbl_sites (company → many sites), which can
-			// multiply the actual row count by 5-10x.  Keep the threshold low.
-			$maxXlsRows = 1000;
+			// ~3-4x the raw data size. We count the actual export rows (after
+			// all JOINs) so that site-multiplied results are accounted for.
+			$maxXlsRows = 500;
 			if ($file_format === 'xls') {
-				$resultCount = app_domain_FilterBuilder::getFilterResultCount($filter_id);
+				$resultCount = app_domain_FilterBuilder::getFilterExportCount($filter_id, $filter->getResultsFormat());
 				if ($resultCount > $maxXlsRows) {
 					$file_format = 'csv';
 				}
@@ -47,12 +43,6 @@ class app_command_FilterExport extends app_command_Command
 
 	function exportXLS($filter_id, $export_format)
   {
-		// Allow larger XLS exports without exhausting memory_limit.
-		// The PEAR BIFF writer can use 3-4x the raw data size in RAM.
-		if (function_exists('ini_set')) {
-			@ini_set('memory_limit', '2048M');
-		}
-
 		$filter = app_domain_Filter::find($filter_id);
 
 		// Workbook requires a filename; '-' writes to stdout (captured by ob_start below)
