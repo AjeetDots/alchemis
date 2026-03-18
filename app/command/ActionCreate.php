@@ -211,7 +211,7 @@ class app_command_ActionCreate extends app_command_ManipulationCommand
 			$date = $request->getProperty('date');
 			if (preg_match(REGEX_MYSQL_DATE, $date))
 			{
-				$date = date($date, 'Y-m-d H:i:s');
+				$date = date('Y-m-d H:i:s', strtotime($date));
 			}
 			$fields = array();
 			$fields['app_domain_Action_due_date'] = $date;

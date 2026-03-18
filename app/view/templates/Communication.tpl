@@ -16,7 +16,7 @@ if (parent.tab_colln !== undefined && !parent.tab_colln.goToValue(4))
 	No company/post information specified - unable to log a communication. 
 	<br />
 	<br />
-	Please click a Call link from either the  Please click on either the <a href="#" onclick="javascript:parent.loadTab(5, 'WorkspaceSearch');">Search Workspace</a> or the <a href="#" onclick="javascript:parent.loadTab(7, 'FilterWorkspace');">Filter Workspace</a> tabs
+	Please click a Call link from either the  Please click on either the <a href="#" onclick="javascript:parent.loadTab(5, 'WorkspaceSearch');">Search Workspace</a> or the <a href="#" onclick="javascript:parent.loadTab(7, 'WorkspaceFilter');">Filter Workspace</a> tabs
 {else}
 	<table class="adminform">
 		<tr>
