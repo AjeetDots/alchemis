@@ -27,9 +27,8 @@ class app_command_DashboardGraph1 extends app_command_Command
 			ob_end_clean();
 		}
 		header('Content-Type: image/png');
-		header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-		header('Pragma: no-cache');
-		header('Expires: 0');
+		header('Cache-Control: public, max-age=300');
+		header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 300) . ' GMT');
 		echo base64_decode(
 			'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
 		);
@@ -49,9 +48,8 @@ class app_command_DashboardGraph1 extends app_command_Command
 			ob_end_clean();
 		}
 		header('Content-Type: image/png');
-		header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-		header('Pragma: no-cache');
-		header('Expires: 0');
+		header('Cache-Control: public, max-age=300');
+		header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 300) . ' GMT');
 		$w = 530;
 		$h = 220;
 		$img = @imagecreatetruecolor($w, $h);
@@ -82,9 +80,8 @@ class app_command_DashboardGraph1 extends app_command_Command
 			ob_end_clean();
 		}
 		header('Content-Type: image/png');
-		header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-		header('Pragma: no-cache');
-		header('Expires: 0');
+		header('Cache-Control: public, max-age=300');
+		header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 300) . ' GMT');
 		$w = 530;
 		$h = 220;
 		$img = @imagecreatetruecolor($w, $h);
@@ -135,9 +132,8 @@ class app_command_DashboardGraph1 extends app_command_Command
 			ob_end_clean();
 		}
 		header('Content-Type: image/png');
-		header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-		header('Pragma: no-cache');
-		header('Expires: 0');
+		header('Cache-Control: public, max-age=300');
+		header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 300) . ' GMT');
 		if (extension_loaded('gd')) {
 			$w = 320;
 			$h = 48;

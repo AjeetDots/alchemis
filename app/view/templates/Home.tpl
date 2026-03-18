@@ -36,6 +36,30 @@
 	
 	var current_tab_id = 1;
 
+	/**
+	 * Silently pre-load frequently used tabs so switching to them is instant.
+	 * Each tab is staggered to avoid hitting the server all at once.
+	 * We set the iframe src directly (no responderFadeIn) so the counter stays 0
+	 * and background load completions never dismiss a user "Working..." spinner.
+	 */
+	function preloadTabsBackground() {
+		var preloadQueue = [
+			[3, 'ActionsFrame'],
+			[2, 'NbmMonthlyPlanner'],
+			[4, 'Communication']
+		];
+		function loadNext(i) {
+			if (i >= preloadQueue.length) { return; }
+			var tab   = preloadQueue[i][0];
+			var cmd   = preloadQueue[i][1];
+			if (!tab_colln.goToValue(tab)) {
+				$('iframe_' + tab).src = 'index.php?cmd=' + cmd;
+			}
+			setTimeout(function() { loadNext(i + 1); }, 4000);
+		}
+		loadNext(0);
+	}
+
 	function loadHomeScoreboard() {
 		var ill_params = {};
 		getAjaxData("AjaxScoreboard", "", "get_home_scoreboard", ill_params, "");
@@ -57,7 +81,7 @@
 {/literal}
 </script>
 
-<body style="background-color: #003366" onload="loadTab(1, 'DashboardFrame');{if $redirect != ''}loadTab(3,'ActionsFrame&redirect={$redirect}', true){/if}; loadHomeScoreboard(); monitorCallBacks();"{*if $tab == "tabWorkspace"} onload="javascript:screenSize();"{/if*}>
+<body style="background-color: #003366" onload="loadTab(1, 'DashboardFrame');{if $redirect != ''}loadTab(3,'ActionsFrame&redirect={$redirect}', true){/if}; loadHomeScoreboard(); monitorCallBacks(); setTimeout(preloadTabsBackground, 6000);"{*if $tab == "tabWorkspace"} onload="javascript:screenSize();"{/if*}>
 
 	<form id="adminform">
 

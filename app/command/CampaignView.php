@@ -107,9 +107,9 @@ class app_command_CampaignView extends app_command_Command
 			$request->setObject('campaign_targets', $campaign_targets);
 
 			// user_ids
-			if ($items = app_domain_RbacUser::findAllActive())
+			$items = app_domain_RbacUser::findAllActiveArray();
+			if ($items)
 			{
-				$items = $items->toRawArray();
 				$options = array();
 				$options[0] = '-- select --';
 				foreach ($items as $item)

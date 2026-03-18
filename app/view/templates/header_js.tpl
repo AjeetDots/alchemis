@@ -345,8 +345,12 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 		iframeReload(top.frames[currFrame]);
 	}
 	
+	// Counter so background pre-loads don't dismiss a user-initiated "Working..." spinner
+	var _activeLoads = 0;
+
 	function responderFadeIn()
 	{
+		_activeLoads++;
 		if (top != null) {
 			var notification = $('notification');
 			if (!notification) {
@@ -356,9 +360,13 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 			Effect.Appear('notification',{duration: 0.25, queue: 'end'});
 		}
 	}
-	
+
 	function responderFadeOut()
 	{
+		// Ignore calls from background pre-loads (they never called responderFadeIn)
+		if (_activeLoads <= 0) { return; }
+		_activeLoads--;
+		if (_activeLoads > 0) { return; } // another user load still pending
 		if (top != null) {
 			var notification = $('notification');
 			if (!notification) {
@@ -367,7 +375,7 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 			notification.innerHTML = '&nbsp;Done.';
 			Effect.Fade('notification',{duration: 1.25, queue: 'end'});
 		}
-	}	
+	}
 	
 	function left(str, n)
 	{

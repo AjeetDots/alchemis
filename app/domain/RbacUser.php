@@ -349,6 +349,39 @@ class app_domain_RbacUser extends app_domain_DomainObject
 	}
 
 	/**
+	 * Returns the active users as a plain array, caching the result in the session for
+	 * 5 minutes so repeated tab loads don't re-query on every PHP request.
+	 * Drop-in replacement for: $items = self::findAllActive()->toRawArray();
+	 *
+	 * @param integer|null $client_id
+	 * @return array
+	 */
+	public static function findAllActiveArray($client_id = null)
+	{
+		$cache_key = '__rbac_active_' . ($client_id !== null ? (int)$client_id : 'all');
+		$ts_key    = $cache_key . '_ts';
+
+		if (session_status() === PHP_SESSION_ACTIVE
+			&& isset($_SESSION[$cache_key], $_SESSION[$ts_key])
+			&& (time() - $_SESSION[$ts_key]) < 300)
+		{
+			return $_SESSION[$cache_key];
+		}
+
+		$finder     = self::getFinder(__CLASS__);
+		$collection = $finder->findAllActive($client_id);
+		$raw        = $collection ? $collection->toRawArray() : array();
+
+		if (session_status() === PHP_SESSION_ACTIVE)
+		{
+			$_SESSION[$cache_key] = $raw;
+			$_SESSION[$ts_key]    = time();
+		}
+
+		return $raw;
+	}
+
+	/**
 	 * Return an array of user for drop-down.
 	 * @param boolean $include_select whether to include a 'select' option at the top of the list.
 	 * @return array

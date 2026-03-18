@@ -44,8 +44,7 @@ class app_command_ActionsFrame extends app_command_Command
 		$user_id = null;
 		if (true || $this->session_user->hasPermission('permission_admin_nbm_monthly_planner'))
 		{
-			$items = app_domain_RbacUser::findAllActive();
-			$items = $items->toRawArray();
+			$items = app_domain_RbacUser::findAllActiveArray();
 		}
 		else
 		{

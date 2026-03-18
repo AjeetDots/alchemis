@@ -24,10 +24,9 @@ class app_command_DashboardFrame extends app_command_Command
 		
 		// Find NBMs 
 		$user_id = null;
-		if ($this->session_user->hasPermission('permission_admin_nbm_monthly_planner'))
+		if (true || $this->session_user->hasPermission('permission_admin_nbm_monthly_planner'))
 		{
-			$items = app_domain_RbacUser::findAllActive();
-			$items = $items->toRawArray();
+			$items = app_domain_RbacUser::findAllActiveArray();
 		}
 		else
 		{
