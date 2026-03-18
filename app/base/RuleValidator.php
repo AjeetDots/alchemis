@@ -112,7 +112,7 @@ class app_base_RuleValidator
 //		echo '<pre>';
 		self::parseRules($rules);
 		
-		$errors = null;
+		$errors = [];
 
 		if (!$value)
 		{
