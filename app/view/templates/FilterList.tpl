@@ -137,6 +137,10 @@ function loadFilterRowsOnce(typeId)
 	getAjaxData("AjaxFilterBuilder", "", "get_filter_rows_html", params, "Loading...");
 }
 
+// Auto-load Campaign and Global filter rows when page loads
+setTimeout(function() { loadFilterRowsOnce(2); }, 300);
+setTimeout(function() { loadFilterRowsOnce(3); }, 800);
+
 
 function addNewLine(table_name, id, html)
 {
