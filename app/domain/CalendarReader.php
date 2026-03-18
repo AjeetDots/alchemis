@@ -46,7 +46,7 @@ class app_domain_CalendarReader extends app_domain_ReaderObject
 // 				echo '<hr /><pre>';
 // 				print_r($rows);
 // 				echo '</pre><hr />';
-                if (count($rows > 0)) {
+                if (count($rows) > 0) {
 					foreach ($rows as $row)
 					{
 						$entries[$date][] = array(	'id'                 => $row['id'],

@@ -58,7 +58,7 @@ function AjaxCommunication(data)
 	</span>
 </div>
 									
-{if $notes|@count == 0}
+{if !$notes || $notes|@count == 0}
 	<p style="text-align: center"><em>&lt;&mdash; No notes found &mdash;&gt;</em></p>
 {else}
 	<table style="width: 100%" class="default">

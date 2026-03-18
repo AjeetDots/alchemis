@@ -20,15 +20,20 @@ class app_command_PostInitiativeActions extends app_command_Command
 		$request->setProperty('post_initiative_id', $post_initiative_id);
 		
 		$post_initiative = app_domain_PostInitiative::find($post_initiative_id);
+		if ($post_initiative === null)
+		{
+			$request->addFeedback('Post initiative not found');
+			return self::statuses('CMD_OK');
+		}
 		$request->setObject('post', $post_initiative->getPost());
-		
-		$initiative_name = $post_initiative->getInitiative()->getClientName() . ': ' . $post_initiative->getInitiative()->getName(); 
-		$request->setProperty('initiative_name', $initiative_name);		
-		
+
+		$initiative_name = $post_initiative->getInitiative()->getClientName() . ': ' . $post_initiative->getInitiative()->getName();
+		$request->setProperty('initiative_name', $initiative_name);
+
 		$request->setProperty('referrer_type', $request->getProperty('referrer_type'));
-		
+
 		$request->setProperty('type_id', $request->getProperty('type_id'));
-		
+
 		$type_id = $request->getProperty('type_id');
 //		echo '$type_id null = ' . (is_null($type_id) ? 1: 0);
 //		echo '<br />';
