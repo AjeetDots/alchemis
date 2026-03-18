@@ -29,18 +29,24 @@ class app_command_PostInitiativeEdit extends app_command_ManipulationCommand
 		{
 			if ($errors = $this->getFormErrors($request))
 			{
-				$this->init($request);
+				if ($this->init($request) === false)
+				{
+					return self::statuses('CMD_ERROR');
+				}
 				return self::statuses('CMD_VALIDATION_ERROR');
 			}
 			elseif ($this->processForm($request))
 			{
-				$this->init($request);
+				if ($this->init($request) === false)
+				{
+					return self::statuses('CMD_ERROR');
+				}
 				$request->addFeedback('Save Successful');
-				
+
 				$user_id = $_SESSION['auth_session']['user']['id'];
 				$scoreboard = app_domain_Scoreboard::findByUserIdStartDateEndDate($user_id, date('Y-m-d') . ' 00:00:00', date('Y-m-d') . ' 23:59:59');
 				$request->setObject('scoreboard', $scoreboard);
-				
+
 				$request->setProperty('success', true);
 				return self::statuses('CMD_OK');
 			}
@@ -51,7 +57,10 @@ class app_command_PostInitiativeEdit extends app_command_ManipulationCommand
 		}
 		else
 		{
-			$this->init($request);
+			if ($this->init($request) === false)
+			{
+				return self::statuses('CMD_ERROR');
+			}
 			return self::statuses('CMD_OK');
 		}
 	}
@@ -121,7 +130,7 @@ class app_command_PostInitiativeEdit extends app_command_ManipulationCommand
 		if ($post_initiative === null)
 		{
 			$request->addFeedback('Post initiative not found');
-			return;
+			return false;
 		}
 		$request->setObject('post_initiative', $post_initiative);
 
