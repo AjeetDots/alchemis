@@ -221,12 +221,9 @@ class app_mapper_SiteMapper extends app_mapper_ShadowMapper implements app_domai
 	 */
 	public function findByCompanyId($company_id)
 	{
-		$query = 'SELECT * FROM tbl_sites WHERE company_id = ?';
-		$types = array('integer');
-		$selectByCompanyStmt = self::$DB->prepare($query, $types);
-		
-		$values = array($company_id);
-		$result = $this->doStatement($selectByCompanyStmt, $values);
+		$company_id_quoted = self::$DB->quote($company_id, 'integer');
+		$query = 'SELECT * FROM tbl_sites WHERE company_id = ' . $company_id_quoted;
+		$result = self::$DB->query($query);
 		return new app_mapper_SiteCollection($result, $this);
 	}
 

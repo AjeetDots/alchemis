@@ -178,21 +178,18 @@ class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domai
 	 */
 	public function findByCompanyId($company_id)
 	{
-
         $session = Auth_Session::singleton();
         $user = $session->getSessionUser();
-        
+
+        $company_id_quoted = self::$DB->quote($company_id, 'integer');
+
         if (!empty($user['client_id'])) {
-            $query = 'SELECT * FROM vw_posts_contacts WHERE company_id = ? AND data_owner_id = ? ORDER BY propensity DESC';
-            $types = array('integer', 'integer');
-            $values = array($company_id, $user['client_id']);
+            $client_id_quoted = self::$DB->quote($user['client_id'], 'integer');
+            $query = 'SELECT * FROM vw_posts_contacts WHERE company_id = ' . $company_id_quoted . ' AND data_owner_id = ' . $client_id_quoted . ' ORDER BY propensity DESC';
         } else {
-            $query = 'SELECT * FROM vw_posts_contacts WHERE company_id = ? AND data_owner_id IS NULL ORDER BY propensity DESC';
-            $types = array('integer');
-            $values = array($company_id);
+            $query = 'SELECT * FROM vw_posts_contacts WHERE company_id = ' . $company_id_quoted . ' AND data_owner_id IS NULL ORDER BY propensity DESC';
         }
-		$this->selectByCompanyStmt = self::$DB->prepare($query, $types);
-		$result = $this->doStatement($this->selectByCompanyStmt, $values);
+		$result = self::$DB->query($query);
 		return new app_mapper_PostCollection($result, $this);
 	}
 
