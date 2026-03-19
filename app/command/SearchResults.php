@@ -140,6 +140,7 @@ class app_command_SearchResults extends app_command_Command
 					break;				
 									
 				case 'project_ref_start':
+					if ($search_param === '') { break; }
 					$collection = app_domain_Tag::findByProjectRefStart($search_param)->toRawArray();
 					$this->getExtraCompanyInfo($collection);
 					$request->setObject('search_results', $collection);
@@ -148,6 +149,7 @@ class app_command_SearchResults extends app_command_Command
 					break;			
 				
 				case 'project_ref_includes':
+					if ($search_param === '') { break; }
 					$collection = app_domain_Tag::findByProjectRefIncludes($search_param)->toRawArray();
 					$this->getExtraCompanyInfo($collection);
 					$request->setObject('search_results', $collection);
@@ -156,6 +158,7 @@ class app_command_SearchResults extends app_command_Command
 					break;
 
 				case 'project_ref_equal':
+					if ($search_param === '') { break; }
 					$collection = app_domain_Tag::findByProjectRefEqual($search_param)->toRawArray();
 					$this->getExtraCompanyInfo($collection);
 					$request->setObject('search_results', $collection);
