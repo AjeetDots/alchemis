@@ -69,29 +69,21 @@ class EasySql
      */
     function __construct($dbuser, $dbpassword, $dbname, $dbhost)
     {
-        try {
-            // Use PDO connection string that matches your working test.php
-            $pdo = new PDO(
-                "mysql:host=$dbhost;charset=utf8mb4",
-                $dbuser,
-                $dbpassword,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_TIMEOUT => 60
-                ]
-            );
-            
-            // Select database after connection if specified
-            if ($dbname) {
-                $pdo->exec("USE `$dbname`");
-            }
-            
-            // Store PDO connection
-            $this->dbh = $pdo;
-            
-        } catch (Exception $e) {
-            die("Database connection failed: " . $e->getMessage());
+        $pdo = new PDO(
+            "mysql:host=$dbhost;charset=utf8mb4",
+            $dbuser,
+            $dbpassword,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_TIMEOUT => 60
+            ]
+        );
+
+        if ($dbname) {
+            $pdo->exec("USE `$dbname`");
         }
+
+        $this->dbh = $pdo;
     }
 
 

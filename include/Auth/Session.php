@@ -89,6 +89,9 @@ class Auth_Session implements app_base_Observable
         pr([], 'Session.php  authenticate()');
         //		echo "<p><b>Auth_Session::authenticate()</b></p>";
         $db = self::getDbConnection();
+        if ($db === null) {
+            return false;
+        }
         $db->debug_all = false;
 
         if (!session_id()) {

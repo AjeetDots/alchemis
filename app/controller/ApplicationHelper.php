@@ -119,9 +119,9 @@ class app_controller_ApplicationHelper
 		app_base_ApplicationRegistry::setItems($env_array);
 
 		$db = $env_array['database'];
-		// When running on host (not in Docker) with development, use ALCHEMIS_DB_HOST/ALCHEMIS_DB_PORT from .env.
+		// Allow ALCHEMIS_DB_HOST in .env to override the DB host for any environment (useful for local testing against aws config).
 		$isInDocker = file_exists('/.dockerenv');
-		if ($env === 'development' && !$isInDocker && !empty($_SERVER['ALCHEMIS_DB_HOST'])) {
+		if (!$isInDocker && !empty($_SERVER['ALCHEMIS_DB_HOST'])) {
 			$db['host'] = trim((string) $_SERVER['ALCHEMIS_DB_HOST']);
 			$db['port'] = isset($_SERVER['ALCHEMIS_DB_PORT']) ? (int) $_SERVER['ALCHEMIS_DB_PORT'] : 3307;
 			$env_array['database'] = $db;
