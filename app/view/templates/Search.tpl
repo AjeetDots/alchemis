@@ -8,6 +8,9 @@
 	 */
 function doSearch(search_item)
 {
+	if (!search_item.value || search_item.value.trim() === '') {
+		return;
+	}
 	top.responderFadeIn();
 	var href = "index.php?cmd=SearchResults&search_type=" + search_item.name + "&search_param=" +  encodeURIComponent(search_item.value);
 	iframeLocation(iframe1, href);
@@ -15,6 +18,9 @@ function doSearch(search_item)
 
 function doCompanySearch(search_item)
 {
+	if (!search_item.value || search_item.value.trim() === '') {
+		return;
+	}
 	top.responderFadeIn();
 	var href = 'index.php?cmd=ParentCompany&action=search' + search_item.name + '&query=' + encodeURIComponent(search_item.value);
 	iframeLocation(iframe1, href);
@@ -24,8 +30,12 @@ function doInitiativeCompanySearch()
 {
 	var company_name = $F("initiative_company_start");
 	var initiative_id = $F("initiative_list");
-	
-iframeLocation(	iframe1, "index.php?cmd=SearchResults&search_type=company_initiative&search_param=" + company_name + "&search_param_1=" + initiative_id);
+
+	if ((!company_name || company_name.trim() === '') && (!initiative_id || initiative_id == '0')) {
+		return;
+	}
+
+	iframeLocation(iframe1, "index.php?cmd=SearchResults&search_type=company_initiative&search_param=" + company_name + "&search_param_1=" + initiative_id);
 }
     
 // Maintain global tab collection (tab_colln) 

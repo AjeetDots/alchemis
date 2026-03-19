@@ -6,6 +6,7 @@ function getAjaxData(cmd, action, cmd_action, parameters, message, synchronous, 
 	if (cmd == "" || cmd == null || cmd == undefined)
 	{
 		alert("Exiting function as no command submitted");
+		return;
 	}
 
 	if (action == "" || action == null || action == undefined)
@@ -16,6 +17,7 @@ function getAjaxData(cmd, action, cmd_action, parameters, message, synchronous, 
 	if (cmd_action == "" || cmd_action == null || cmd_action == undefined)
 	{
 		alert("Exiting function as no cmd_action submitted");
+		return;
 	}
 
 	if (message == "" || message == null || message == undefined)
@@ -32,7 +34,7 @@ function getAjaxData(cmd, action, cmd_action, parameters, message, synchronous, 
 function doAjaxRequest(cmd, action, cmd_action, params, synchronous, done)
 {
 //	alert("params = " + params);
-	if (params == 'undefined')
+	if (params == null || params === undefined || params === 'undefined')
 	{
 		alert(" No params defined");
 		return;
@@ -77,13 +79,15 @@ function onSuccess(response, json, cmd, cmd_action)
 {
 //	alert("Raw response.responseText = " + response.responseText);
 
+	let jsonResponse;
 	try
 	{
-		var jsonResponse = response.responseText.evalJSON();
+		jsonResponse = response.responseText.evalJSON();
 	}
 	catch(e)
 	{
 		alert("Failed to parse response text\n\n" + response.responseText );
+		return;
 	}
 
 //	alert("Parsed jsonResponse.responseText = " + jsonResponse);
@@ -100,7 +104,7 @@ function onSuccess(response, json, cmd, cmd_action)
 		if (jsonResponse.notices.length > 0)
 		{
 			//handle notices
-			processNotices(jsonResponse.warnings);
+			processNotices(jsonResponse.notices);
 		}
 		else
 		{
@@ -118,11 +122,10 @@ function onFailure(response)
 function processWarnings(warnings)
 {
 	// get warnings
-	var msg = '';
+	let msg = '';
 
-	for (i = 0; i < warnings.length; i++)
+	for (const ts of warnings)
 	{
-		ts = warnings[i];
 		msg += ts;
 	}
 	if (msg != '')
@@ -136,15 +139,15 @@ function processWarnings(warnings)
 function processNotices(notices)
 {
 	// get notices
-	for (i = 0; i < notices.length; i++)
+	let msg = '';
+	for (const ts of notices)
 	{
-		ts = notices[i];
 		msg += ts;
 	}
 
 	if (msg != '')
 	{
-		alert("Notices from notices:\n" + msg);
+		alert("Notices from server:\n" + msg);
 	}
 //	return false;
 }

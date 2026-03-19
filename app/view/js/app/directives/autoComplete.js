@@ -35,11 +35,12 @@ module.exports = function ($http, $compile, $timeout, $parse, $q) {
         scope.hiddenEle = $compile(hidden)(scope);
       }
 
-      var canceler = null;
+      let canceler = null;
+      let debounceTimer = null;
       scope.getMatches = function (value) {
         if(canceler) canceler.resolve();
         if(!value){
-          scope.matches = matches;
+          scope.matches = [];
           scope.$apply();
           return;
         }
@@ -90,7 +91,10 @@ module.exports = function ($http, $compile, $timeout, $parse, $q) {
           return false;
         }
         scope.value = element.val();
-        scope.getMatches(scope.value);
+        if(debounceTimer) $timeout.cancel(debounceTimer);
+        debounceTimer = $timeout(function() {
+          scope.getMatches(scope.value);
+        }, 300);
       });
 
       element.on('keydown', function (e) {
