@@ -53,14 +53,7 @@ class app_mapper_ConfigurationMapper
 		if ($this->debug) echo "</pre>";
 		if ($this->debug) echo "\$sth type = " . get_class($sth);
 		
-		try
-		{
-			$res = $sth->execute($values);
-		}
-		catch (Exception $e)
-		{
-			exit($e->getMessage());
-		}
+		$res = $sth->execute($values);
 		
 		if (MDB2::isError($res))
 		{

@@ -167,15 +167,8 @@ abstract class app_mapper_Mapper implements app_domain_Finder
 		if ($this->debug) echo "</pre>";
 		if ($this->debug) echo "\$sth type = " . get_class($sth);
 
-		try
-		{
-			$res = $sth->execute($values);
-			$sth->free();
-		}
-		catch (Exception $e)
-		{
-			exit($e->getMessage());
-		}
+		$res = $sth->execute($values);
+		$sth->free();
 
 		if (MDB2::isError($res))
 		{

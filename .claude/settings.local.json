@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"foreach.*\\\\|while.*\\\\|for.*\\(\" /d/Projects/Alchemis/latest/latest_new_bkp/app/mapper/*.php)"
+    ]
+  }
+}

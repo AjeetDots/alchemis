@@ -43,14 +43,7 @@ abstract class app_mapper_ShadowMapper extends app_mapper_Mapper
 		// statements can be determined.
 		$stmt->db->setOption('debug', true);
 
-		try
-		{
-			$res = $stmt->execute($values);
-		}
-		catch (Exception $e)
-		{
-			exit($e->getMessage());
-		}
+		$res = $stmt->execute($values);
 
 		if (MDB2::isError($res))
 		{

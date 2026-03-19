@@ -153,14 +153,14 @@ class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domai
         $user = $session->getSessionUser();
         
         if (!empty($user['client_id'])) {
-            $query = 'SELECT p.*, lkp_ds.description AS data_source FROM tbl_posts AS p ' . 
-                'LEFT JOIN tbl_lkp_data_sources lkp_ds ON p.data_source_id = lkp_ds.id' .
+            $query = 'SELECT p.*, lkp_ds.description AS data_source FROM tbl_posts AS p ' .
+                'LEFT JOIN tbl_lkp_data_sources lkp_ds ON p.data_source_id = lkp_ds.id ' .
                 'WHERE p.data_owner_id = ? ORDER BY p.job_title';
             $types = array('integer');
             $values = array($user['client_id']);
         } else {
-            $query = 'SELECT p.*, lkp_ds.description AS data_source FROM tbl_posts AS p ' . 
-                'LEFT JOIN tbl_lkp_data_sources lkp_ds ON p.data_source_id = lkp_ds.id' .
+            $query = 'SELECT p.*, lkp_ds.description AS data_source FROM tbl_posts AS p ' .
+                'LEFT JOIN tbl_lkp_data_sources lkp_ds ON p.data_source_id = lkp_ds.id ' .
                 'WHERE p.data_owner_id IS NULL ORDER BY p.job_title';
             $types = array();
             $values = array();
