@@ -153,7 +153,7 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 					'com1.communication_date AS last_communication_date, ' .
 					'com2.communication_date AS last_effective_communication_date, ' .
 					'vw_ci.client_name, lkp_cs.description AS status, cn.user_alias AS last_communication_user_client_alias, ' .
-                    'lkp_ls.description as lead_source, ' .
+                    'lkp_ls.description as lead_source ' .
 					'FROM tbl_post_initiatives AS pi ' .
 					'INNER JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 					'INNER JOIN tbl_lkp_communication_status AS lkp_cs ON pi.status_id = lkp_cs.id ' .
@@ -188,7 +188,7 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 					'com1.communication_date AS last_communication_date, ' .
 					'com2.communication_date AS last_effective_communication_date, ' .
 					'vw_ci.client_name, lkp_cs.description AS status, cn.user_alias AS last_communication_user_client_alias, ' .
-                    'lkp_ls.description as lead_source, ' .
+                    'lkp_ls.description as lead_source ' .
 					'FROM tbl_post_initiatives AS pi ' .
 					'INNER JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 					'INNER JOIN tbl_lkp_communication_status AS lkp_cs ON pi.status_id = lkp_cs.id ' .
@@ -430,7 +430,7 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 					'com1.communication_date AS last_communication_date, ' .
 					'com2.communication_date AS last_effective_communication_date, ' .
 					'vw_ci.client_name, lkp_cs.description AS status, cn.user_alias AS last_communication_user_client_alias, ' .
-                    'lkp_ls.description as lead_source, ' .
+                    'lkp_ls.description as lead_source ' .
 					'FROM tbl_post_initiatives AS pi ' .
 					'INNER JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 					'INNER JOIN tbl_lkp_communication_status AS lkp_cs ON pi.status_id = lkp_cs.id ' .
