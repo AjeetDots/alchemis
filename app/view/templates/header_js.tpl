@@ -169,7 +169,9 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 	
 	function loadTab(tabToShow, UrlToLoad, forceLoad)
 	{
-		
+		// Block new tab load if one is already in progress (unless forced)
+		if (top._isLoading && !forceLoad) { return; }
+
 		// check if a communication is loaded
 		if (communication_loaded)
 		{
@@ -347,17 +349,101 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 	
 	// Counter so background pre-loads don't dismiss a user-initiated "Working..." spinner
 	var _activeLoads = 0;
+	var _isLoading   = false;
+	var _loadTimer   = null;
+	var _loadStartTime = null;
+
+	var _warnTimer = null;
+	function showAlcWarning(msg)
+	{
+		if (_isLoading) { return; }
+		if (_warnTimer) { clearTimeout(_warnTimer); }
+		var notification = $('notification');
+		if (!notification) { return; }
+		notification.innerHTML =
+			'<div class="alc-notif-inner">' +
+				'<span style="color:#b71c1c;font-size:16px;margin-right:6px;line-height:1;">&#9888;</span>' +
+				'<span style="font-size:12px;font-weight:600;color:#b71c1c;">' + msg + '</span>' +
+			'</div>';
+		notification.style.background = '#fff3f3';
+		notification.style.borderTopColor = '#e53935';
+		Effect.Appear('notification', {duration: 0.15, queue: 'end'});
+		_warnTimer = setTimeout(function() {
+			notification.style.background = '';
+			notification.style.borderTopColor = '';
+			Effect.Fade('notification', {duration: 0.8, queue: 'end'});
+		}, 2500);
+	}
+
+	function _alcLockUI()
+	{
+		$(document.body).addClassName('alc-loading');
+	}
+
+	function _alcUnlockUI()
+	{
+		$(document.body).removeClassName('alc-loading');
+		// Notify FilterList iframe to re-enable its action buttons
+		var _flFr = $('iframe_9');
+		if (_flFr && _flFr.contentWindow && typeof _flFr.contentWindow.unlockFilterActions === 'function') {
+			_flFr.contentWindow.unlockFilterActions();
+		}
+	}
+
+	function stopCurrentLoad()
+	{
+		// Stop all tab iframes
+		for (var _si = 1; _si <= 12; _si++) {
+			var _sfr = $('iframe_' + _si);
+			if (_sfr) { try { _sfr.contentWindow.stop(); } catch(e) {} }
+		}
+		// Stop search result iframe used inside Search tab
+		var _sfr1 = $('iframe1');
+		if (_sfr1) { try { _sfr1.contentWindow.stop(); } catch(e) {} }
+
+		_activeLoads   = 0;
+		_isLoading     = false;
+		_loadStartTime = null;
+		if (_loadTimer) { clearInterval(_loadTimer); _loadTimer = null; }
+		_alcUnlockUI();
+
+		var notification = $('notification');
+		if (notification) {
+			notification.innerHTML =
+				'<div class="alc-notif-inner">' +
+					'<span style="color:#c62828;font-weight:600;">&#9632;&nbsp;Stopped</span>' +
+				'</div>';
+			Effect.Fade('notification', {duration: 1.5, queue: 'end'});
+		}
+	}
 
 	function responderFadeIn()
 	{
 		_activeLoads++;
+		_isLoading = true;
+		if (!_loadStartTime) { _loadStartTime = new Date(); }
+		_alcLockUI();
+
 		if (top != null) {
 			var notification = $('notification');
-			if (!notification) {
-				return;
-			}
-			notification.innerHTML = '<img src="app/view/images/ajax_loader.gif" width="16" height="16" align="absmiddle">&nbsp;Working...';
-			Effect.Appear('notification',{duration: 0.25, queue: 'end'});
+			if (!notification) { return; }
+
+			notification.innerHTML =
+				'<div class="alc-notif-inner">' +
+					'<div class="alc-spinner"></div>' +
+					'<span style="font-size:12px;font-weight:600;color:#444;margin-left:8px;">Loading&hellip;</span>' +
+					'<span id="alc_notif_timer" style="font-size:11px;color:#888;margin-left:6px;">(0s)</span>' +
+				'</div>' +
+				'<button class="alc-stop-btn" onclick="stopCurrentLoad()">&#9632;&nbsp;Stop</button>';
+
+			Effect.Appear('notification', {duration: 0.2, queue: 'end'});
+
+			if (_loadTimer) { clearInterval(_loadTimer); }
+			_loadTimer = setInterval(function() {
+				var elapsed = Math.round((new Date() - _loadStartTime) / 1000);
+				var el = $('alc_notif_timer');
+				if (el) { el.innerHTML = '(' + elapsed + 's)'; }
+			}, 1000);
 		}
 	}
 
@@ -367,13 +453,20 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 		if (_activeLoads <= 0) { return; }
 		_activeLoads--;
 		if (_activeLoads > 0) { return; } // another user load still pending
+
+		_isLoading     = false;
+		_loadStartTime = null;
+		if (_loadTimer) { clearInterval(_loadTimer); _loadTimer = null; }
+		_alcUnlockUI();
+
 		if (top != null) {
 			var notification = $('notification');
-			if (!notification) {
-				return;
-			}
-			notification.innerHTML = '&nbsp;Done.';
-			Effect.Fade('notification',{duration: 1.25, queue: 'end'});
+			if (!notification) { return; }
+			notification.innerHTML =
+				'<div class="alc-notif-inner">' +
+					'<span style="color:#2e7d32;font-weight:600;">&#10003;&nbsp;Done.</span>' +
+				'</div>';
+			Effect.Fade('notification', {duration: 1.25, queue: 'end'});
 		}
 	}
 	

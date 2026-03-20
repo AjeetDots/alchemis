@@ -4,6 +4,16 @@
 {include file="header.tpl" title="User Filter List"}
 {strip}
 
+<style>
+{literal}
+	.adminlist.alc-fl-locked a[id^="btn_"] {
+		pointer-events: none !important;
+		opacity: 0.3 !important;
+		cursor: not-allowed !important;
+	}
+{/literal}
+</style>
+
 <script language="JavaScript" type="text/javascript">
 {literal}
 
@@ -21,6 +31,10 @@ var last_filter_class_change_id = "";
 
 function editFilter(filter_id)
 {
+	if (top._isLoading) {
+		top.showAlcWarning('Please wait \u2014 an action is already running.');
+		return;
+	}
 	//check if we actually need to reload the filter builder
 	var reload = true;
 	if (iframe1.location != 'about:blank')
@@ -73,12 +87,27 @@ iframeLocation(	iframe1, "index.php?cmd=FilterBuilderCreate");
 }
 
 
+function lockFilterActions()
+{
+	$$('.adminlist').each(function(tbl) { tbl.addClassName('alc-fl-locked'); });
+}
+
+function unlockFilterActions()
+{
+	$$('.adminlist').each(function(tbl) { tbl.removeClassName('alc-fl-locked'); });
+}
+
 function loadFilter(filter_id, action)
 {
+	if (top._isLoading) {
+		top.showAlcWarning('Please wait \u2014 an action is already running.');
+		return;
+	}
 	if (top.iframe_8.colln != undefined)
 	{
 		top.iframe_8.colln.clear();
 	}
+	lockFilterActions();
 	top.responderFadeIn();
 	var href = "index.php?cmd=FilterResults&id=" + filter_id + "&action=" + action;
 	iframeLocation(top.frames["iframe_8"], href);
@@ -89,6 +118,10 @@ function loadFilter(filter_id, action)
 
 function getFilterStatistics(filter_id)
 {
+	if (top._isLoading) {
+		top.showAlcWarning('Please wait \u2014 an action is already running.');
+		return;
+	}
 	var btn = $('btn_statistics_' + filter_id);
 	if (btn) {
 		var img = btn.down('img');
@@ -97,11 +130,12 @@ function getFilterStatistics(filter_id)
 		btn.onclick = function() { return false; };
 	}
 
+	lockFilterActions();
 	var ill_params = new Object;
-	//set item_id - the id of the object we are dealing with
 	ill_params.item_id = filter_id;
 
 	getAjaxData("AjaxFilterBuilder", "", "get_filter_statistics", ill_params, "Refreshing statistics...", false, function() {
+		unlockFilterActions();
 		if (btn) {
 			var img = btn.down('img');
 			img.src = img.src.replace('/ajax_loader.gif', '/icons/chart_pie.png');
@@ -168,6 +202,10 @@ function addNewLine(table_name, id, html)
 
 function deleteFilter(id)
 {
+	if (top._isLoading) {
+		top.showAlcWarning('Please wait \u2014 an action is already running.');
+		return;
+	}
 	if (confirm("Confirm delete?"))
 	{
 		$("iframe1").hide();

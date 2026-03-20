@@ -6,9 +6,25 @@
 	/**
 	 * @param search_item
 	 */
+function _alcHighlightEmpty(el)
+{
+	el.style.border = '2px solid #e53935';
+	el.style.background = '#fff3f3';
+	setTimeout(function() {
+		el.style.border = '';
+		el.style.background = '';
+	}, 2000);
+}
+
 function doSearch(search_item)
 {
 	if (!search_item.value || search_item.value.trim() === '') {
+		_alcHighlightEmpty(search_item);
+		top.showAlcWarning('Please enter a search value before searching.');
+		return;
+	}
+	if (top._isLoading) {
+		top.showAlcWarning('Please wait \u2014 a search is already running.');
 		return;
 	}
 	top.responderFadeIn();
@@ -19,6 +35,12 @@ function doSearch(search_item)
 function doCompanySearch(search_item)
 {
 	if (!search_item.value || search_item.value.trim() === '') {
+		_alcHighlightEmpty(search_item);
+		top.showAlcWarning('Please enter a search value before searching.');
+		return;
+	}
+	if (top._isLoading) {
+		top.showAlcWarning('Please wait \u2014 a search is already running.');
 		return;
 	}
 	top.responderFadeIn();
@@ -32,6 +54,11 @@ function doInitiativeCompanySearch()
 	var initiative_id = $F("initiative_list");
 
 	if ((!company_name || company_name.trim() === '') && (!initiative_id || initiative_id == '0')) {
+		top.showAlcWarning('Please enter a site name or select an initiative before searching.');
+		return;
+	}
+	if (top._isLoading) {
+		top.showAlcWarning('Please wait \u2014 a search is already running.');
 		return;
 	}
 

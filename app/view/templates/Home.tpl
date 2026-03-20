@@ -208,6 +208,69 @@
 	{/literal}
 	</script>
 
+	<style>
+	{literal}
+		#notification {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 32px;
+			background: #fffde7;
+			border-top: 2px solid #f9a825;
+			box-shadow: 0 -2px 8px rgba(0,0,0,0.18);
+			z-index: 9999;
+			font-family: Verdana, Arial, sans-serif;
+			font-size: 12px;
+			padding: 0 12px;
+			box-sizing: border-box;
+		}
+		.alc-notif-inner {
+			display: inline-flex;
+			align-items: center;
+			height: 32px;
+			vertical-align: top;
+		}
+		.alc-spinner {
+			width: 14px;
+			height: 14px;
+			border: 2px solid #f9a825;
+			border-top-color: #e65100;
+			border-radius: 50%;
+			animation: alc-spin 0.75s linear infinite;
+			flex-shrink: 0;
+		}
+		@keyframes alc-spin {
+			to { transform: rotate(360deg); }
+		}
+		.alc-stop-btn {
+			float: right;
+			margin-top: 5px;
+			background: #e53935;
+			color: #fff;
+			border: none;
+			border-radius: 3px;
+			padding: 3px 10px;
+			font-size: 11px;
+			font-family: Verdana, Arial, sans-serif;
+			font-weight: 600;
+			cursor: pointer;
+			line-height: 1.4;
+		}
+		.alc-stop-btn:hover { background: #b71c1c; }
+
+		/* Disable all nav tabs while loading */
+		body.alc-loading td[id^="tab_"] a,
+		body.alc-loading a[id^="ref_"] {
+			pointer-events: none !important;
+			opacity: 0.38 !important;
+			cursor: not-allowed !important;
+		}
+		body.alc-loading td[id^="tab_"] {
+			cursor: not-allowed;
+		}
+	{/literal}
+	</style>
 	<div id="notification" style="display: none;"></div>
 	
 </body>
