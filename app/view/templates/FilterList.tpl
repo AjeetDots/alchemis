@@ -226,6 +226,7 @@ function exportFilter(filter_id, format, file_format)
 {
 	if (!file_format) file_format = 'xls';
 	setActiveRow(filter_id);
+	unlockFilterActions();
 	top.startFileDownload("index.php?cmd=FilterExport&id=" + filter_id + "&format=" + format + "&file_format=" + file_format);
 }
 

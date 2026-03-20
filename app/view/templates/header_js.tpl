@@ -539,6 +539,7 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 								n2.style.padding = '';
 								n2.style.height  = '';
 								_activeLoads = Math.max(0, _activeLoads - 1);
+								if (_activeLoads <= 0) { _alcUnlockUI(); }
 								top.Effect.Fade('notification', {duration: 1.5, queue: 'end'});
 							}, 2500);
 						}, 350);
