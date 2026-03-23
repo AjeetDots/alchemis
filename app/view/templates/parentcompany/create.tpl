@@ -12,7 +12,7 @@
   
 {else}
 
-  <form action="index.php?cmd=ParentCompany" method="post" name="adminForm" autocomplete="off" ng-controller="ParentCompanyCreateController">
+  <form action="index.php?cmd=ParentCompany" method="post" name="adminForm" id="adminForm" autocomplete="off" ng-controller="ParentCompanyCreateController" onsubmit="return validateParentCompanyForm();">
   
     <fieldset class="adminform">
       <legend>Company</legend>
@@ -41,14 +41,14 @@
             <td style="vertical-align: top; width: 30%" {if $errors.category_id} class="key_error" title="{ $errors.category_id.0 }"{else}class="key"{/if}>Category *</td>
             <td style="vertical-align: top; width: 100%">
               <select style="width: 200px;" ng-model="category" ng-change="categoryChange()" ng-options="c.value for c in categories"></select>
-              <input  type="hidden" name="category_id" value="#(category.id)">
+              <input type="hidden" name="category_id" id="category_id" value="#(category.id)">
             </td>
           </tr>
           <tr>
             <td style="vertical-align: top; width: 30%" {if $errors.sub_category_id} class="key_error" title="{ $errors.sub_category_id.0 }"{else}class="key"{/if}>Sub Category</td>
             <td style="vertical-align: top; width: 100%">
               <select style="width: 200px;" ng-model="subcategory" ng-options="c.value for c in subcategories"></select>
-              <input type="hidden" name="subcategory_id" value="#(subcategory.id)">
+              <input type="hidden" name="subcategory_id" id="subcategory_id" value="#(subcategory.id)">
             </td>
           </tr>
           <tr>
@@ -157,6 +157,10 @@
     <br>
     
     
+    <div id="client_validation_message" style="display:none; margin: 8px 0; color: #b71c1c; background: #ffebee; border: 1px solid #ef9a9a; padding: 8px;">
+      <ul id="client_validation_message_list" style="margin: 0; padding-left: 18px;"></ul>
+    </div>
+
     <p></p>
 
     <input type="submit" value="Submit" />&nbsp;|&nbsp;
@@ -166,6 +170,68 @@
 
   <script>
   {literal}
+  function validateParentCompanyForm() {
+    var errors = [];
+    var nameInput = document.getElementById('name');
+    var categoryInput = document.getElementById('category_id');
+    var addSiteCheckbox = document.getElementById('add_site');
+    var siteNameInput = document.getElementById('site_name');
+    var subCategoryInput = document.getElementById('subcategory_id');
+    var addAddressCheckbox = document.getElementById('add_address');
+    var postcodeInput = document.getElementById('postcode');
+
+    var hasName = !!(nameInput && nameInput.value && nameInput.value.trim() !== '');
+    var hasCategory = !!(categoryInput && categoryInput.value && categoryInput.value.trim() !== '' && categoryInput.value !== '#(category.id)');
+    var addSite = !!(addSiteCheckbox && addSiteCheckbox.checked);
+    var hasSiteName = !!(siteNameInput && siteNameInput.value && siteNameInput.value.trim() !== '');
+    var hasSubCategory = !!(subCategoryInput && subCategoryInput.value && subCategoryInput.value.trim() !== '' && subCategoryInput.value !== '#(subcategory.id)');
+    var addAddress = !!(addAddressCheckbox && addAddressCheckbox.checked);
+    var hasPostcode = !!(postcodeInput && postcodeInput.value && postcodeInput.value.trim() !== '');
+
+    if (!hasName) {
+      errors.push('The name field is required.');
+    }
+    if (!hasCategory) {
+      errors.push('The category field is required.');
+    }
+    if (addSite && !hasSiteName) {
+      errors.push('The site name field is required when add site is selected.');
+    }
+    if (addSite && !hasSubCategory) {
+      errors.push('The sub category field is required when add site is selected.');
+    }
+    if (addAddress && !hasPostcode) {
+      errors.push('The postcode field is required when add address is selected.');
+    }
+
+    var messageWrap = document.getElementById('client_validation_message');
+    var messageList = document.getElementById('client_validation_message_list');
+
+    if (errors.length > 0) {
+      if (messageWrap && messageList) {
+        messageList.innerHTML = '';
+        for (var i = 0; i < errors.length; i++) {
+          var li = document.createElement('li');
+          li.appendChild(document.createTextNode(errors[i]));
+          messageList.appendChild(li);
+        }
+        messageWrap.style.display = 'block';
+      }
+
+      if (typeof top.showAlcWarning === 'function') {
+        top.showAlcWarning(errors[0]);
+      }
+
+      return false;
+    }
+
+    if (messageWrap) {
+      messageWrap.style.display = 'none';
+    }
+
+    return true;
+  }
+
   jQuery('#add_site').change(function () {
     jQuery('#site_name').val(jQuery('#name').val());
   });
