@@ -62,17 +62,6 @@ class app_command_NbmMonthlyPlanner extends app_command_ManipulationCommand
 	 */
 	private function init(app_controller_Request $request)
 	{
-		// Force recompile of NbmMonthlyPlanner so updated .tpl is always used (prevents array-to-string popup warnings).
-		$compileDir = (defined('APP_DIRECTORY') ? APP_DIRECTORY : '') . 'app' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'templates_c';
-		if (is_dir($compileDir)) {
-			$mask = $compileDir . DIRECTORY_SEPARATOR . '*NbmMonthlyPlanner*';
-			foreach (glob($mask) ?: [] as $file) {
-				if (is_file($file)) {
-					@unlink($file);
-				}
-			}
-		}
-
 		// Pass-through parameters
 		$user_id = $request->getProperty('user_options');
 		$session = Auth_Session::singleton();

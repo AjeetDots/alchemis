@@ -147,14 +147,11 @@ class app_command_Dashboard extends app_command_Command
 		$start_date = date('Y-m-d', mktime(0, 0, 0, date('m'), 1, date('Y')));
 //		$end_date   = date('Y-m-d', mktime(0, 0, 0, date('m') + 1, 0, date('Y')));
 		$end_date   = date('Y-m-d');
-		$recommended_calls          = app_domain_ReportReader::getRequiredCalls($start_date, $end_date, null, $nbm_id);
-		$recommended_effectives     = app_domain_ReportReader::getRequiredEffectives($start_date, $end_date, null, $nbm_id);
-		$recommended_meets_set      = app_domain_ReportReader::getRequiredMeetingsSet($start_date, $end_date, null, $nbm_id);
-		$recommended_meets_attended = app_domain_ReportReader::getRequiredMeetingsAttended($start_date, $end_date, null, $nbm_id);
-		$request->setObject('recommended_calls',          $recommended_calls);
-		$request->setObject('recommended_effectives',     $recommended_effectives);
-		$request->setObject('recommended_meets_set',      $recommended_meets_set);
-		$request->setObject('recommended_meets_attended', $recommended_meets_attended);
+		$recommended_stats          = app_domain_ReportReader::getRequiredStats($start_date, $end_date, null, $nbm_id);
+		$request->setObject('recommended_calls',          $recommended_stats['calls']);
+		$request->setObject('recommended_effectives',     $recommended_stats['effectives']);
+		$request->setObject('recommended_meets_set',      $recommended_stats['meetings_set']);
+		$request->setObject('recommended_meets_attended', $recommended_stats['meetings_attended']);
 
 		
 		// Get calendar data

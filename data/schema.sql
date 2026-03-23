@@ -77,6 +77,8 @@ CREATE TABLE `tbl_actions` (
   KEY `ix_tbl_actions_type_id` (`type_id`),
   KEY `ix_tbl_actions_communication_type_id` (`communication_type_id`),
   KEY `ix_tbl_actions_post_initiative_id` (`post_initiative_id`),
+  KEY `ix_tbl_actions_due_date` (`due_date`),
+  KEY `ix_tbl_actions_completed_date` (`completed_date`),
   CONSTRAINT `ix_tbl_actions_ibfk1` FOREIGN KEY (`user_id`) REFERENCES `tbl_rbac_users` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `tbl_actions_ibfk_2` FOREIGN KEY (`meeting_id`) REFERENCES `tbl_meetings` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `tbl_actions_ibfk_3` FOREIGN KEY (`information_request_id`) REFERENCES `tbl_information_requests` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,

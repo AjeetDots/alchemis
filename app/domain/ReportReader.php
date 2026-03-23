@@ -854,6 +854,43 @@ class app_domain_ReportReader extends app_domain_ReaderObject
 		return $number / $working_days;
 	}
 
+	/**
+	 * Returns all four required-per-day stats (calls, effectives, meetings set, meetings attended)
+	 * using two DB queries instead of the eight that calling each getRequired* method separately would use.
+	 *
+	 * @param string  $start_date 'YYYY-MM-DD' — first day of reporting period
+	 * @param string  $end_date   'YYYY-MM-DD' — last day of reporting period (typically today)
+	 * @param integer $team_id
+	 * @param integer $nbm_id
+	 * @return array  keys: calls, effectives, meetings_set, meetings_attended
+	 */
+	public static function getRequiredStats($start_date, $end_date, $team_id = null, $nbm_id = null)
+	{
+		$month_end_date = date('Y-m-d', mktime(0, 0, 0, date('m', strtotime($end_date)) + 1, 0, date('Y', strtotime($end_date))));
+		$working_days_remaining = Utils::getWorkingDays($end_date, $month_end_date) - 1;
+
+		$reader = self::getReader(__CLASS__);
+
+		// One query for all four actuals
+		$actuals = $reader->getActualStats($start_date, $end_date, $team_id, $nbm_id);
+
+		if ($working_days_remaining <= 0) {
+			return array('calls' => 0, 'effectives' => 0, 'meetings_set' => 0, 'meetings_attended' => 0);
+		}
+
+		$calls_target      = self::getTargetCalls($start_date, $month_end_date, $team_id, $nbm_id);
+		$effectives_target = self::getTargetEffectives($start_date, $month_end_date, $team_id, $nbm_id);
+		$meets_set_target  = self::getTargetMeetingsSet($start_date, $month_end_date, $team_id, $nbm_id);
+		$meets_att_target  = self::getTargetMeetingsAttended($start_date, $month_end_date, $team_id, $nbm_id);
+
+		return array(
+			'calls'            => round(($calls_target      - $actuals['calls'])            / $working_days_remaining),
+			'effectives'       => round(($effectives_target - $actuals['effectives'])       / $working_days_remaining),
+			'meetings_set'     => round(($meets_set_target  - $actuals['meetings_set'])     / $working_days_remaining),
+			'meetings_attended'=> ($meets_att_target        - $actuals['meetings_attended'])/ $working_days_remaining,
+		);
+	}
+
 }
 
 ?>

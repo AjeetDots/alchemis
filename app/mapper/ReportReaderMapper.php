@@ -3801,6 +3801,58 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 		return self::$DB->queryOne($sql);
 	}
 
+	/**
+	 * Returns call_count, call_effective_count, meeting_set_count, and meeting_attended_count
+	 * for the given period in a single query, replacing four separate getActual* calls.
+	 *
+	 * @param string  $start_date  'YYYY-MM-DD'
+	 * @param string  $end_date    'YYYY-MM-DD'
+	 * @param integer $team_id
+	 * @param integer $nbm_id
+	 * @return array  keys: calls, effectives, meetings_set, meetings_attended
+	 */
+	public function getActualStats($start_date, $end_date, $team_id = null, $nbm_id = null)
+	{
+		if (!is_null($nbm_id))
+		{
+			$sql = 'SELECT IFNULL(SUM(call_count), 0) AS calls, ' .
+			       'IFNULL(SUM(call_effective_count), 0) AS effectives, ' .
+			       'IFNULL(SUM(meeting_set_count), 0) AS meetings_set, ' .
+			       'IFNULL(SUM(meeting_attended_count), 0) AS meetings_attended ' .
+			       'FROM tbl_data_statistics_daily ' .
+			       'WHERE `date` >= ' . self::$DB->quote($start_date, 'date') . ' ' .
+			       'AND `date` <= ' . self::$DB->quote($end_date, 'date') . ' ' .
+			       'AND user_id = ' . self::$DB->quote($nbm_id, 'integer');
+		}
+		elseif (!is_null($team_id))
+		{
+			$sql = 'SELECT IFNULL(SUM(dsd.call_count), 0) AS calls, ' .
+			       'IFNULL(SUM(dsd.call_effective_count), 0) AS effectives, ' .
+			       'IFNULL(SUM(dsd.meeting_set_count), 0) AS meetings_set, ' .
+			       'IFNULL(SUM(dsd.meeting_attended_count), 0) AS meetings_attended ' .
+			       'FROM tbl_data_statistics_daily AS dsd ' .
+			       'INNER JOIN tbl_team_nbms AS tn ON dsd.user_id = tn.user_id ' .
+			       'WHERE dsd.`date` >= ' . self::$DB->quote($start_date, 'date') . ' ' .
+			       'AND dsd.`date` <= ' . self::$DB->quote($end_date, 'date') . ' ' .
+			       'AND tn.team_id = ' . self::$DB->quote($team_id, 'integer');
+		}
+		else
+		{
+			$sql = 'SELECT IFNULL(SUM(call_count), 0) AS calls, ' .
+			       'IFNULL(SUM(call_effective_count), 0) AS effectives, ' .
+			       'IFNULL(SUM(meeting_set_count), 0) AS meetings_set, ' .
+			       'IFNULL(SUM(meeting_attended_count), 0) AS meetings_attended ' .
+			       'FROM tbl_data_statistics_daily ' .
+			       'WHERE `date` >= ' . self::$DB->quote($start_date, 'date') . ' ' .
+			       'AND `date` <= ' . self::$DB->quote($end_date, 'date');
+		}
+		$row = self::$DB->queryRow($sql, null, MDB2_FETCHMODE_ASSOC);
+		if (!is_array($row)) {
+			$row = array('calls' => 0, 'effectives' => 0, 'meetings_set' => 0, 'meetings_attended' => 0);
+		}
+		return $row;
+	}
+
 }
 
 ?>

@@ -32,6 +32,28 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 	}
 
 	/**
+	 * Returns an inline subquery fragment for LEFT JOIN that counts how many times
+	 * each meeting has been rearranged within the given datetime range.
+	 * Replaces the previous pattern of creating/dropping two temporary tables per request
+	 * (4 extra round-trips: CREATE t2, CREATE t1, DROP t1, DROP t2).
+	 *
+	 * @param string $from_dt  datetime 'YYYY-MM-DD HH:MM:SS'
+	 * @param string $to_dt    datetime 'YYYY-MM-DD HH:MM:SS'
+	 * @return string  SQL fragment suitable for use as: LEFT JOIN {result} ON m.id = t1.id
+	 */
+	private function rearrangedJoin($from_dt, $to_dt)
+	{
+		return '(SELECT id, COUNT(id) AS rearranged_count ' .
+		       'FROM (SELECT id FROM tbl_meetings_shadow ' .
+		       'WHERE status_id IN (18, 19) ' .
+		       "AND shadow_type = 'u' " .
+		       'AND date >= ' . self::$DB->quote($from_dt, 'timestamp') . ' ' .
+		       'AND date <= ' . self::$DB->quote($to_dt, 'timestamp') . ' ' .
+		       'GROUP BY id, date) AS _ms ' .
+		       'GROUP BY id) AS t1';
+	}
+
+	/**
 	 * Finds the meetings and information requests on a given date, filtered by to either NBM or client.  If neither
 	 * $nbm_id or $client_id is supplied, the function does not filter and pulls all (i.e. global) results.
 	 * @param string $date
@@ -44,25 +66,8 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 
 		$from = $date . ' 00:00:00';
 		$to   = $date . ' 23:59:59';
-		$data = array('from' => $from, 'to' => $to);
 
-		// Create temporary table of number of times meetings have been rearranged
-		$sql = 'CREATE TEMPORARY TABLE findByDate_t2 ' .
-				'SELECT id ' .
-				'FROM tbl_meetings_shadow ' .
-				'WHERE status_id IN (18, 19) ' .
-				"AND shadow_type = 'u' " .
-				'AND date >= ' . self::$DB->quote($from, 'timestamp') . ' ' .
-				'AND date <= ' . self::$DB->quote($to, 'timestamp') . ' ' .
-				'GROUP BY id, date';
-		self::$DB->query($sql);
-
-		$sql = 'CREATE TEMPORARY TABLE findByDate_t1 ' .
-                'SELECT id, count(id) AS rearranged_count ' .
-                'FROM findByDate_t2 ' .
-                'GROUP BY id';
-        self::$DB->query($sql);
-
+		$rearranged_join = $this->rearrangedJoin($from, $to);
 
 		if (!is_null($nbm_id))
 		{
@@ -74,7 +79,7 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 					'false AS completed, m.status_id AS status_id, ' .
 					'IFNULL(t1.rearranged_count, 0) AS rearranged_count ' .
 					'FROM vw_calendar_meetings AS m ' .
-					'LEFT JOIN findByDate_t1 AS t1 ON m.id = t1.id ' .
+					'LEFT JOIN ' . $rearranged_join . ' ON m.id = t1.id ' .
 					'WHERE (m.`date` >= ' . self::$DB->quote($from, 'timestamp') . ' ' .
 					'AND m.`date` <= ' . self::$DB->quote($to, 'timestamp') . ') ' .
 			        'AND (m.created_by = ' . self::$DB->quote($nbm_id, 'integer') . ' ' .
@@ -121,7 +126,7 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 					'false AS completed, m.status_id AS status_id, ' .
 					'IFNULL(t1.rearranged_count, 0) AS rearranged_count ' .
 					'FROM vw_calendar_meetings AS m ' .
-					'LEFT JOIN findByDate_t1 AS t1 ON m.id = t1.id ' .
+					'LEFT JOIN ' . $rearranged_join . ' ON m.id = t1.id ' .
 					'WHERE (m.`date` >= ' . self::$DB->quote($from, 'timestamp') . ' AND m.`date` <= ' . self::$DB->quote($to, 'timestamp') . ') AND m.client_id = ' . self::$DB->quote($client_id, 'integer') . ' ' .
 					'UNION ' .
 
@@ -161,7 +166,7 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 					'false AS completed, m.status_id AS status_id, ' .
 					'IFNULL(t1.rearranged_count, 0) AS rearranged_count ' .
 					'FROM vw_calendar_meetings AS m ' .
-					'LEFT JOIN findByDate_t1 AS t1 ON m.id = t1.id ' .
+					'LEFT JOIN ' . $rearranged_join . ' ON m.id = t1.id ' .
 					'WHERE (m.`date` >= ' . self::$DB->quote($from, 'timestamp') . ' AND `date` <= ' . self::$DB->quote($to, 'timestamp') . ') ' .
 					'UNION ' .
 
@@ -194,11 +199,7 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 					'ORDER BY `completed`, `date`, `type_priority`';
 		}
 //		echo $sql;
-		$result = self::$DB->queryAll($sql, null, MDB2_FETCHMODE_ASSOC);
-
-		self::$DB->query('DROP TEMPORARY TABLE findByDate_t2');
-		self::$DB->query('DROP TEMPORARY TABLE findByDate_t1');
-		return $result;
+		return self::$DB->queryAll($sql, null, MDB2_FETCHMODE_ASSOC);
 	}
 
 	/**
@@ -217,19 +218,7 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 		$from_dt = $from . ' 00:00:00';
 		$to_dt   = $to   . ' 23:59:59';
 
-		$sql = 'CREATE TEMPORARY TABLE findByDate_t2 ' .
-				'SELECT id FROM tbl_meetings_shadow ' .
-				'WHERE status_id IN (18, 19) ' .
-				"AND shadow_type = 'u' " .
-				'AND date >= ' . self::$DB->quote($from_dt, 'timestamp') . ' ' .
-				'AND date <= ' . self::$DB->quote($to_dt, 'timestamp') . ' ' .
-				'GROUP BY id, date';
-		self::$DB->query($sql);
-
-		$sql = 'CREATE TEMPORARY TABLE findByDate_t1 ' .
-				'SELECT id, count(id) AS rearranged_count ' .
-				'FROM findByDate_t2 GROUP BY id';
-		self::$DB->query($sql);
+		$rearranged_join = $this->rearrangedJoin($from_dt, $to_dt);
 
 		if (!is_null($nbm_id))
 		{
@@ -239,7 +228,7 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 				'false AS completed, m.status_id AS status_id, ' .
 				'IFNULL(t1.rearranged_count, 0) AS rearranged_count ' .
 				'FROM vw_calendar_meetings AS m ' .
-				'LEFT JOIN findByDate_t1 AS t1 ON m.id = t1.id ' .
+				'LEFT JOIN ' . $rearranged_join . ' ON m.id = t1.id ' .
 				'WHERE (m.`date` >= ' . self::$DB->quote($from_dt, 'timestamp') . ' AND m.`date` <= ' . self::$DB->quote($to_dt, 'timestamp') . ') ' .
 				'AND (m.created_by = ' . self::$DB->quote($nbm_id, 'integer') . ' OR m.modified_by = ' . self::$DB->quote($nbm_id, 'integer') . ') ' .
 				'UNION ' .
@@ -274,7 +263,7 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 				'false AS completed, m.status_id AS status_id, ' .
 				'IFNULL(t1.rearranged_count, 0) AS rearranged_count ' .
 				'FROM vw_calendar_meetings AS m ' .
-				'LEFT JOIN findByDate_t1 AS t1 ON m.id = t1.id ' .
+				'LEFT JOIN ' . $rearranged_join . ' ON m.id = t1.id ' .
 				'WHERE (m.`date` >= ' . self::$DB->quote($from_dt, 'timestamp') . ' AND m.`date` <= ' . self::$DB->quote($to_dt, 'timestamp') . ') AND m.client_id = ' . self::$DB->quote($client_id, 'integer') . ' ' .
 				'UNION ' .
 				"SELECT a.id, a.due_date AS `date`, a.reminder_date, a.subject, a.notes, 'action' AS type, a.type_id AS type_id, " .
@@ -308,7 +297,7 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 				'false AS completed, m.status_id AS status_id, ' .
 				'IFNULL(t1.rearranged_count, 0) AS rearranged_count ' .
 				'FROM vw_calendar_meetings AS m ' .
-				'LEFT JOIN findByDate_t1 AS t1 ON m.id = t1.id ' .
+				'LEFT JOIN ' . $rearranged_join . ' ON m.id = t1.id ' .
 				'WHERE (m.`date` >= ' . self::$DB->quote($from_dt, 'timestamp') . ' AND `date` <= ' . self::$DB->quote($to_dt, 'timestamp') . ') ' .
 				'UNION ' .
 				"SELECT a.id, a.due_date AS `date`, a.reminder_date, a.subject, a.notes, 'action' AS type, a.type_id AS type_id, " .
@@ -335,54 +324,28 @@ class app_mapper_CalendarReaderMapper extends app_mapper_ReaderMapper implements
 				'ORDER BY `completed`, `date`, `type_priority`';
 		}
 
-		$result = self::$DB->queryAll($sql, null, MDB2_FETCHMODE_ASSOC);
-
-		self::$DB->query('DROP TEMPORARY TABLE findByDate_t2');
-		self::$DB->query('DROP TEMPORARY TABLE findByDate_t1');
-		return $result;
+		return self::$DB->queryAll($sql, null, MDB2_FETCHMODE_ASSOC);
 	}
 
 	public function findMeetingsByClient($client_id, $returnSqlOnly = false)
 	{
-		// Create temporary table of number of times meetings have been rearranged
-		$sql = 'CREATE TEMPORARY TABLE findByDate_t2 ' .
-						'SELECT id ' .
-						'FROM tbl_meetings_shadow ' .
-						'WHERE status_id IN (18, 19) ' .
-						"AND shadow_type = 'u' " .
-						'GROUP BY id, date';
-		self::$DB->query($sql);
-		
-// 		echo $sql . '<br />';
-		
-		$sql = 'CREATE TEMPORARY TABLE findByDate_t1 ' .
-		                'SELECT id, count(id) AS rearranged_count ' .
-		                'FROM findByDate_t2 ' .
-		                'GROUP BY id';
-		self::$DB->query($sql);
-	
-// 		echo  $sql . '<br />';
-		
+		$date_floor = '2011-01-01 00:00:00';
+
+		$rearranged_join = $this->rearrangedJoin($date_floor, '9999-12-31 23:59:59');
+
 		$sql = 'SELECT m.id, m.date, ADDTIME(m.date, \'01:00:00\') AS end_date, m.reminder_date, CONCAT(m.client, \' / \', m.company) AS subject, m.notes, \'meeting\' AS type, m.status_id AS status_id, ' .
 				'IFNULL(t1.rearranged_count, 0) AS rearranged_count, m.created_at, m.client_id, RIGHT(RAND(), 10) as random_number ' .
-// 				'from ((((((`tbl_meetings` `m` join `tbl_post_initiatives` `pi` on((`m`.`post_initiative_id` = `pi`.`id`))) join `tbl_posts` `p` on((`pi`.`post_id` = `p`.`id`))) join `tbl_companies` `c` on((`p`.`company_id` = `c`.`id`))) join `tbl_initiatives` `i` on((`pi`.`initiative_id` = `i`.`id`))) join `tbl_campaigns` `cam` on((`i`.`campaign_id` = `cam`.`id`))) join `tbl_clients` `cli` on((`cam`.`client_id` = `cli`.`id`))) ' . 
 				'FROM vw_calendar_meetings AS m ' .
-				'LEFT JOIN findByDate_t1 AS t1 ON m.id = t1.id ' .
+				'LEFT JOIN ' . $rearranged_join . ' ON m.id = t1.id ' .
 				'WHERE m.client_id = ' . self::$DB->quote($client_id, 'integer') . ' ' .
-				'AND m.date >= \'2011-01-01 00:00:00\' ' .
+				'AND m.date >= \'' . $date_floor . '\' ' .
 				'ORDER BY m.date DESC LIMIT 15';
-// 		echo $sql;
-		
-		$result = self::$DB->queryAll($sql, null, MDB2_FETCHMODE_ASSOC);
-		
-		self::$DB->query('DROP TEMPORARY TABLE findByDate_t2');
-		self::$DB->query('DROP TEMPORARY TABLE findByDate_t1');
-		return $result;
-				
+
+		return self::$DB->queryAll($sql, null, MDB2_FETCHMODE_ASSOC);
 	}
-	
-	
-	
+
+
+
 }
 
 ?>
