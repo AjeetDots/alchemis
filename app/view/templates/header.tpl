@@ -100,6 +100,20 @@
 function init()
 {
 	top.responderFadeOut();
+	// iframeLocation() shows #alch-loader in the parent frame; iframe onload can miss
+	// in some browsers, so always clear local + ancestor overlays when this page finishes.
+	if (typeof hideLoader === 'function') {
+		hideLoader();
+	}
+	try {
+		var w = window;
+		while (w.parent && w.parent !== w) {
+			w = w.parent;
+			if (typeof w.hideLoader === 'function') {
+				w.hideLoader();
+			}
+		}
+	} catch (e) {}
 }
 {/literal}
 </script>

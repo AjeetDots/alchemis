@@ -449,8 +449,18 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 
 	function responderFadeOut()
 	{
-		// Ignore calls from background pre-loads (they never called responderFadeIn)
-		if (_activeLoads <= 0) { return; }
+		// Prototype Ajax (ajaxClient.js + responder.js) shows "Working..." without
+		// responderFadeIn(), so _activeLoads stays 0 — still must dismiss that bar.
+		if (_activeLoads <= 0) {
+			try {
+				var n = (typeof top !== 'undefined' && top.$) ? top.$('notification') : null;
+				if (n && n.innerHTML && n.innerHTML.indexOf('Working') !== -1) {
+					n.innerHTML = '&nbsp;Done.';
+					top.Effect.Fade('notification', {duration: 1.25, queue: 'end'});
+				}
+			} catch (e) {}
+			return;
+		}
 		_activeLoads--;
 		if (_activeLoads > 0) { return; } // another user load still pending
 
