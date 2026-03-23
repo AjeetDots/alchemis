@@ -284,7 +284,7 @@ function smarty_function_calendar_day($params, &$smarty)
 				}
 
 				// Get the 'to' time
-				if (preg_match('/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/', $entry['to']))
+				if (!empty($entry['to']) && preg_match('/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/', $entry['to']))
 				{
 					$entry['to'] = date('G:i', strtotime($entry['to']));
 				}

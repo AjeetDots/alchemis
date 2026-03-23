@@ -186,23 +186,23 @@ function submitform(pressbutton)
 			<legend>Action</legend>
 			<table>
 				<tr>
-					<td style="width: 110px" {if $errors.app_domain_Action_subject} class="key_error" title="{$errors.app_domain_Action_subject->getTip()}"{else}class="key"{/if}>
+					<td style="width: 110px" {if !empty($errors.app_domain_Action_subject)} class="key_error" title="{$errors.app_domain_Action_subject->getTip()}"{else}class="key"{/if}>
 						<label for="app_domain_Action_subject">Subject *</label>
 					</td>
-					<td><input type="text" name="app_domain_Action_subject" id="app_domain_Action_subject" style="width: 200px" value="{$app_domain_Action_subject}" maxlength="100" /></td>
+					<td><input type="text" name="app_domain_Action_subject" id="app_domain_Action_subject" style="width: 200px" value="{$app_domain_Action_subject|default:''}" maxlength="100" /></td>
 				</tr>
 				<tr>
-					<td style="width: 110px" {if $errors.app_domain_Action_notes} class="key_error" title="{$errors.app_domain_Action_notes->getTip()}"{else}class="key"{/if}>
+					<td style="width: 110px" {if !empty($errors.app_domain_Action_notes)} class="key_error" title="{$errors.app_domain_Action_notes->getTip()}"{else}class="key"{/if}>
 						<label for="app_domain_Action_notes">Notes</label>
 					</td>
-					<td><textarea name="app_domain_Action_notes" id="app_domain_Action_notes" rows="5" style="width: 200px">{$app_domain_Action_notes}</textarea></td>
+					<td><textarea name="app_domain_Action_notes" id="app_domain_Action_notes" rows="5" style="width: 200px">{$app_domain_Action_notes|default:''}</textarea></td>
 				</tr>
 				<tr>
-					<td style="width: 110px" rowspan="2" {if $errors.app_domain_Action_due_date} class="key_error" title="{$errors.app_domain_Action_due_date->getTip()}"{else}class="key"{/if}>
+					<td style="width: 110px" rowspan="2" {if !empty($errors.app_domain_Action_due_date)} class="key_error" title="{$errors.app_domain_Action_due_date->getTip()}"{else}class="key"{/if}>
 						<label for="app_domain_Action_due_date">Due Date *</label>
 					</td>
 					<td>
-						<input type="text" id="app_domain_Action_due_date" name="app_domain_Action_due_date" value="{$app_domain_Action_due_date|date_format:"%d/%m/%Y"}" />
+						<input type="text" id="app_domain_Action_due_date" name="app_domain_Action_due_date" value="{if !empty($app_domain_Action_due_date)}{$app_domain_Action_due_date|date_format:"%d/%m/%Y"}{/if}" />
 						<input type="button" value="..." onclick="javascript:updateDueDate();" />
 						<a href="#" onclick="javascript:clearDate('app_domain_Action_due_date');">[clear]</a> <a href="#" onclick="javascript:new Effect.BlindUp($('app_domain_Action_due_date_calendar_display'), {literal}{duration: 0.3}{/literal}); return false;">[close]</a>
 						<div id="app_domain_Action_due_date_calendar_display" style="display: none">
@@ -226,24 +226,24 @@ function submitform(pressbutton)
 					</td>
 				</tr>
 				<tr>
-					<td style="width: 110px" {if $errors.app_domain_Action_reminder} class="key_error" title="{$errors.app_domain_Action_reminder->getTip()}"{else}class="key"{/if}>
+					<td style="width: 110px" {if !empty($errors.app_domain_Action_reminder)} class="key_error" title="{$errors.app_domain_Action_reminder->getTip()}"{else}class="key"{/if}>
 						<label for="app_domain_Action_reminder">Set Reminder?</label>
 
 					</td>
 					<td>
-						<input type="checkbox" id="chk_display_reminder" name="chk_display_reminder"{if $chk_display_reminder} checked="checked"{/if} onchange="javascript: new Effect.toggle($('div_display_reminder'), 'blind', {literal}{duration: 0.3}{/literal});return false;" />
+						<input type="checkbox" id="chk_display_reminder" name="chk_display_reminder"{if !empty($chk_display_reminder)} checked="checked"{/if} onchange="javascript: new Effect.toggle($('div_display_reminder'), 'blind', {literal}{duration: 0.3}{/literal});return false;" />
 					</td>
 				</tr>
 			</table>
 
-			<div id="div_display_reminder" style="display: {if $app_domain_Action_reminder_date}block{else}none{/if}">
+			<div id="div_display_reminder" style="display: {if !empty($app_domain_Action_reminder_date)}block{else}none{/if}">
 				<table>
 					<tr>
-						<td style="width: 110px" rowspan="2" {if $errors.app_domain_Action_reminder_date} class="key_error" title="{$errors.app_domain_Action_reminder_date->getTip()}"{else}class="key"{/if}>
+						<td style="width: 110px" rowspan="2" {if !empty($errors.app_domain_Action_reminder_date)} class="key_error" title="{$errors.app_domain_Action_reminder_date->getTip()}"{else}class="key"{/if}>
 							<label for="app_domain_Action_reminder_date">Reminder Date *</label>
 						</td>
 						<td>
-							<input type="text" id="app_domain_Action_reminder_date" name="app_domain_Action_reminder_date" value="{$app_domain_Action_reminder_date|date_format:"%d/%m/%Y"}" />
+							<input type="text" id="app_domain_Action_reminder_date" name="app_domain_Action_reminder_date" value="{if !empty($app_domain_Action_reminder_date)}{$app_domain_Action_reminder_date|date_format:"%d/%m/%Y"}{/if}" />
 							<input type="button" value="..." onclick="javascript:updateReminderDate();" />
 							<a href="#" onclick="javascript:clearDate('app_domain_Action_reminder_date');">[clear]</a> <a href="#" onclick="javascript:new Effect.BlindUp($('app_domain_Action_reminder_date_calendar_display'), {literal}{duration: 0.3}{/literal}); return false;">[close]</a>
 							<div id="app_domain_Action_reminder_date_calendar_display" style="display: none">
@@ -275,7 +275,7 @@ function submitform(pressbutton)
 						<label for="app_domain_Action_is_completed">Completed?</label>
 					</td>
 					<td>
-						<input type="checkbox" id="app_domain_Action_is_completed" name="app_domain_Action_is_completed"{if $app_domain_Action_is_completed} checked="checked"{/if} />
+						<input type="checkbox" id="app_domain_Action_is_completed" name="app_domain_Action_is_completed"{if !empty($app_domain_Action_is_completed)} checked="checked"{/if} />
 					</td>
 				</tr>
 			</table>

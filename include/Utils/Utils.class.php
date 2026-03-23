@@ -618,7 +618,7 @@ class Utils
 	 * @access public
 	 * @static
 	 */
-	function getFormTimeSmarty($field)
+	static function getFormTimeSmarty($field)
 	{
 		$hour   = $field.'_Hour';
 		$minute = $field.'_Minute';

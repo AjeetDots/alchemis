@@ -106,7 +106,7 @@ class app_command_ActionCreate extends app_command_ManipulationCommand
 		{
 			$action = app_domain_Action::find($id);
 		}
-		else
+		if (empty($action))
 		{
 			$action = new app_domain_Action();
 		}
