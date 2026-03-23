@@ -469,7 +469,7 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 	{
 		// Select By project ref equal
 		$query = 'SELECT vw_c.id, vw_c.name, vw_c.website, vw_c.telephone, vw_c.telephone_tps, ' .
-				'vw_pc.id as post_id, vw_pc.first_name, vw_pc.surname, vw_pc.job_title, vw_cl.initiative_id, vw_cl.initiative_name, vw_cl.client_name, ' .
+				'vw_pc.id as post_id, vw_pc.first_name, vw_pc.surname, vw_pc.job_title, vw_pc.propensity, vw_cl.initiative_id, vw_cl.initiative_name, vw_cl.client_name, ' .
 				'lkp_cs.description as status, pi.id as post_initiative_id ' .
 				'FROM vw_companies_sites AS vw_c ' .
 				'INNER JOIN vw_posts_contacts AS vw_pc ON vw_pc.company_id = vw_c.id ' .
@@ -480,7 +480,8 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 				'INNER JOIN vw_client_initiatives vw_cl on vw_cl.initiative_id = pi.initiative_id ' .
 				'WHERE t.value = ' . self::$DB->quote($project_ref, 'text') . ' ' .
 				'AND t.category_id = 3 ' .
-				'ORDER BY vw_c.name, vw_pc.propensity';
+				'ORDER BY vw_c.name, vw_pc.propensity ' .
+				'LIMIT 500';
 		$result = self::$DB->query($query);
 		return new app_mapper_TagCollection($result, $this);
 	}
@@ -505,7 +506,8 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 				'INNER JOIN vw_client_initiatives vw_cl on vw_cl.initiative_id = pi.initiative_id ' .
 				'WHERE t.value like ' . self::$DB->quote($project_ref . '%', 'text') . ' ' .
 				'AND t.category_id = 3 ' .
-				'ORDER BY vw_c.name, vw_pc.propensity';
+				'ORDER BY vw_c.name, vw_pc.propensity ' .
+				'LIMIT 500';
 		$result = self::$DB->query($query);
 		return new app_mapper_TagCollection($result, $this);
 	}
@@ -530,7 +532,8 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 				'INNER JOIN vw_client_initiatives vw_cl on vw_cl.initiative_id = pi.initiative_id ' .
 				'WHERE t.value like ' . self::$DB->quote('%' . $project_ref . '%', 'text') . ' ' .
 				'AND t.category_id = 3 ' .
-				'ORDER BY vw_c.name, vw_pc.propensity';
+				'ORDER BY vw_c.name, vw_pc.propensity ' .
+				'LIMIT 500';
 		$result = self::$DB->query($query);
 		return new app_mapper_TagCollection($result, $this);
 	}

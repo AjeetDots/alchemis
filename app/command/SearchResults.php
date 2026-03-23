@@ -149,8 +149,8 @@ class app_command_SearchResults extends app_command_Command
 					break;			
 				
 				case 'project_ref_includes':
-					if ($search_param === '') { break; }
-					$collection = app_domain_Tag::findByProjectRefIncludes($search_param)->toRawArray();
+					if (strlen($search_param) < 3) { break; }
+					$collection = app_domain_Tag::findByProjectRefInclude($search_param)->toRawArray();
 					$this->getExtraCompanyInfo($collection);
 					$request->setObject('search_results', $collection);
 					$request->setObject('object_type', 'project refs');
@@ -235,7 +235,11 @@ class app_command_SearchResults extends app_command_Command
 									'city'      => $sites[0]['city'],
 									'postcode'  => $sites[0]['postcode']);
 				$company['site_address'] = app_domain_Site::formatAddress($address, 'paragraph');
-			}					
+			}
+			else
+			{
+				$company['site_address'] = '';
+			}
 
 			// Posts
 			$finder = new app_mapper_PostMapper();
