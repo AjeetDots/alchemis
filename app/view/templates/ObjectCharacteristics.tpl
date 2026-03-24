@@ -449,12 +449,12 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 										{if $characteristic.attributes && !$characteristic.options}
 
 											{foreach name=element_loop from=$characteristic.elements item=element}
-												{if $element.data_type == 'boolean' && $element.value == "1"}
+												{if $element.data_type == 'boolean' && isset($element.value) && $element.value == "1"}
 												<tr style="height: 20px">
 												<td>
 													{$element.name}
 												</td>
-												{elseif $element.data_type != 'boolean' && $element.value != ""}
+												{elseif $element.data_type != 'boolean' && isset($element.value) && $element.value != ""}
 												<tr style="height: 20px">
 												<td>
 													{$element.name}
@@ -462,14 +462,14 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 												{/if}
 
 												{if $element.data_type == 'boolean'}
-													{if $element.value == "1"}
+													{if isset($element.value) && $element.value == "1"}
 														<td><img src="{$ROOT_PATH}app/view/images/icons/tick.png" alt="Yes" title="Yes" /></td>
 													</tr>
 													{/if}
-												{elseif $element.data_type == 'date' && $element.value != ""}
+												{elseif $element.data_type == 'date' && isset($element.value) && $element.value != ""}
 													<td>{$element.value|date_format:"%d %B %Y"}</td>
 												</tr>
-												{elseif $element.data_type == 'text' && $element.value != ""}
+												{elseif $element.data_type == 'text' && isset($element.value) && $element.value != ""}
 													<td><em>{$element.value}</em></td>
 												</tr>
 												{/if}
@@ -481,12 +481,12 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 
 											{if $characteristic.multiple_select}
 												{foreach name=element_loop from=$characteristic.elements item=element}
-													{if $element.data_type == 'boolean' && $element.value == "1"}
+													{if $element.data_type == 'boolean' && isset($element.value) && $element.value == "1"}
 													<tr style="height: 20px">
 														<td>
 															{$element.name}
 														</td>
-													{elseif $element.data_type != 'boolean' && $element.value != ""}
+													{elseif $element.data_type != 'boolean' && isset($element.value) && $element.value != ""}
 													<tr style="height: 20px">
 														<td>
 															{$element.name}
@@ -495,14 +495,14 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 
 
 													{if $element.data_type == 'boolean'}
-														{if $element.value == "1"}
+														{if isset($element.value) && $element.value == "1"}
 															<td><img src="{$ROOT_PATH}app/view/images/icons/tick.png" alt="Yes" title="Yes" /></td>
 														</tr>
 														{/if}
-													{elseif $element.data_type == 'date' && $element.value != ""}
+													{elseif $element.data_type == 'date' && isset($element.value) && $element.value != ""}
 														<td>{$element.value|date_format:"%d %B %Y"}</td>
 													</tr>
-													{elseif $element.data_type == 'text' && $element.value != ""}
+													{elseif $element.data_type == 'text' && isset($element.value) && $element.value != ""}
 														<td>{$element.value}</td>
 													</tr>
 													{/if}
@@ -511,12 +511,12 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 												{/foreach}
 											{else}
 												{foreach name=element_loop from=$characteristic.elements item=element}
-													{if $element.data_type == 'boolean' && $element.value == "1"}
+													{if $element.data_type == 'boolean' && isset($element.value) && $element.value == "1"}
 														<tr style="height: 20px">
 															<td>
 																{$element.name}
 															</td>
-													{elseif $element.data_type != 'boolean' && $element.value != ""}
+													{elseif $element.data_type != 'boolean' && isset($element.value) && $element.value != ""}
 														<tr style="height: 20px">
 															<td>
 																{$element.name}
@@ -524,14 +524,14 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 													{/if}
 
 													{if $element.data_type == 'boolean'}
-														{if $element.value == "1"}
+														{if isset($element.value) && $element.value == "1"}
 															<td><img src="{$ROOT_PATH}app/view/images/icons/tick.png" alt="Yes" title="Yes" /></td>
 														</tr>
 														{/if}
-													{elseif $element.data_type == 'date' && $element.value != ""}
+													{elseif $element.data_type == 'date' && isset($element.value) && $element.value != ""}
 														<td>{$element.value|date_format:"%d %B %Y"}</td>
 														</tr>
-													{elseif $element.data_type == 'text' && $element.value != ""}
+													{elseif $element.data_type == 'text' && isset($element.value) && $element.value != ""}
 														<td>{$element.value}</td>
 														</tr>
 													{/if}
@@ -545,15 +545,15 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 											<tr style="height: 15px">
 												<td>
 												{if $characteristic.data_type == 'boolean'}
-													{if $characteristic.value == 0}
+													{if !isset($characteristic.value) || $characteristic.value == 0}
 														<img src="{$ROOT_PATH}app/view/images/icons/cross.png" alt="No" title="No" />
 													{else}
 														<img src="{$ROOT_PATH}app/view/images/icons/tick.png" alt="Yes" title="Yes" />
 													{/if}
 												{elseif $characteristic.data_type == 'date'}
-													{$characteristic.value|date_format:"%d %B %Y"}
+													{$characteristic.value|default:''|date_format:"%d %B %Y"}
 												{elseif $characteristic.data_type == 'text'}
-													{$characteristic.value}
+													{$characteristic.value|default:''}
 												{/if}
 												</td>
 											</tr>

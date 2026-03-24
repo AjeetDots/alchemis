@@ -33,6 +33,9 @@ class app_view_CompanyCreate extends app_view_ManipulationView
 		$this->smarty->assign('success', $this->request->getProperty('success'));
 		$this->smarty->assign('feedback', $this->request->getFeedbackString('</li><li>'));
 		
+		// Always assign defaults so template variables are defined on initial load
+		$this->smarty->assign('errors', []);
+
 		// Handle any validation errors
 		if ($this->request->isValidationError())
 		{
