@@ -84,7 +84,7 @@
 						</td>
 					</tr>
 					<tr>
-						 <td style="vertical-align: top; width: 30%" {if isset($errors.app_domain_Company_subcategory_id)} class="key_error" title="{ $errors.sub_category_id.0 }"{else}class="key"{/if}>Sub Category *</td>
+						 <td style="vertical-align: top; width: 30%" {if isset($errors.app_domain_Company_subcategory_id)} class="key_error" title="{ $errors.app_domain_Company_subcategory_id.0 }"{else}class="key"{/if}>Sub Category *</td>
 						<td style="vertical-align: top; width: 70%">
 							<select style="width: 200px;" ng-model="subcategory" ng-options="c.value for c in subcategories"></select>
 							<input type="hidden" name="tiered_characteristic_id" value="#(subcategory.id)">

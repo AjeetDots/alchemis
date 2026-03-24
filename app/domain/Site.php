@@ -405,7 +405,7 @@ class app_domain_Site extends app_domain_DomainObject
 				$postcode = trim($postcode);
 				preg_match('/^[A-Z]{1,2}[0-9][0-9A-Z]?/i', $postcode, $matches);
 				
-				if (isset($matches[0]) || !is_null($matches[0]))
+				if (isset($matches[0]))
 				{
 					$postcode_count = self::countPostcodeByPostcode($matches[0]); 
 					if ($postcode_count >= 1)

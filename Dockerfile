@@ -1,6 +1,6 @@
 FROM php:8.4-apache
 
-# Install required system packages and PHP extensions
+# Install system packages, PHP extensions, enable OPcache, and configure Apache
 RUN apt-get update && apt-get install -y \
         libpng-dev \
         libjpeg-dev \
@@ -10,10 +10,16 @@ RUN apt-get update && apt-get install -y \
             --with-freetype=/usr/include/ \
             --with-jpeg=/usr/include/ \
         && docker-php-ext-install gd mysqli pdo pdo_mysql \
+        && docker-php-ext-enable opcache \
+        && { \
+            echo 'opcache.enable=1'; \
+            echo 'opcache.memory_consumption=128'; \
+            echo 'opcache.max_accelerated_files=10000'; \
+            echo 'opcache.revalidate_freq=0'; \
+            echo 'opcache.validate_timestamps=1'; \
+        } > /usr/local/etc/php/conf.d/opcache.ini \
+        && a2enmod rewrite \
         && rm -rf /var/lib/apt/lists/*
-
-# Enable Apache mod_rewrite (needed for legacy .htaccess routing)
-RUN a2enmod rewrite
 
 # Set working directory
 WORKDIR /var/www/html

@@ -25,6 +25,15 @@ class app_controller_Response
 
   public function fire()
   {
+    // For JSON responses, discard any buffered output (e.g. PHP warnings from
+    // display_errors=1) so warnings never corrupt the JSON body.
+    if (isset($this->headers['Content-Type']) &&
+        strpos($this->headers['Content-Type'], 'application/json') !== false) {
+      while (ob_get_level() > 0) {
+        ob_end_clean();
+      }
+    }
+
     foreach($this->headers as $key => $value){
       header($key . ': ' . $value);
     }

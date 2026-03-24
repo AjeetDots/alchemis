@@ -1,5 +1,7 @@
 <?php
 
+ob_start();
+
 session_start();
 
 // Ensure a consistent timezone across environments so all date('...')
