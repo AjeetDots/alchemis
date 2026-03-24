@@ -1708,3 +1708,21 @@ Stack trace:
 #6 /var/www/html/index.php(161): app_controller_Controller::run()
 #7 {main}
 
+[2026-03-24 11:26:03] Unknown column 'parent_company_id' in 'field list' in /var/www/html/include/pear/MDB2/Driver/mysqli.php on line 781
+Stack trace:
+#0 /var/www/html/include/pear/MDB2/Driver/mysqli.php(781): mysqli_query(Object(mysqli), 'PREPARE MDB2_SH...')
+#1 /var/www/html/include/pear/MDB2.php(2560): MDB2_Driver_mysqli->_doQuery('PREPARE MDB2_SH...', true, Object(mysqli), 'alchemis')
+#2 /var/www/html/app/mapper/ShadowMapper.php(287): MDB2_Driver_Common->exec('PREPARE MDB2_SH...')
+#3 /var/www/html/app/mapper/ShadowMapper.php(61): app_mapper_ShadowMapper->doShadow(Object(MDB2_Driver_mysqli), Array)
+#4 /var/www/html/app/mapper/CompanyMapper.php(88): app_mapper_ShadowMapper->doStatement(Object(MDB2_Statement_mysqli), Array)
+#5 /var/www/html/app/mapper/Mapper.php(136): app_mapper_CompanyMapper->doInsert(Object(app_domain_Company))
+#6 /var/www/html/app/domain/ObjectWatcher.php(207): app_mapper_Mapper->insert(Object(app_domain_Company))
+#7 /var/www/html/app/domain/DomainObject.php(47): app_domain_ObjectWatcher::commit(Object(app_domain_Company))
+#8 /var/www/html/app/command/CompanyCreate.php(180): app_domain_DomainObject->commit()
+#9 /var/www/html/app/command/CompanyCreate.php(49): app_command_CompanyCreate->processForm(Object(app_controller_Request))
+#10 /var/www/html/app/command/Command.php(48): app_command_CompanyCreate->doExecute(Object(app_controller_Request))
+#11 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#12 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#13 /var/www/html/index.php(163): app_controller_Controller::run()
+#14 {main}
+

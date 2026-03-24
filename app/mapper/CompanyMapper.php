@@ -15,12 +15,16 @@ require_once('app/mapper/ShadowMapper.php');
  */
 class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_domain_CompanyFinder
 {
+	protected $hasParentCompanyIdColumn = null;
+
 	public function __construct()
 	{
 		if (!self::$DB)
 		{
 			self::$DB = app_controller_ApplicationHelper::instance()->DB();
 		}
+
+		$this->hasParentCompanyIdColumn = $this->hasTableColumn('tbl_companies', 'parent_company_id');
 
 		// Select all
 		$this->selectAllStmt = self::$DB->prepare('SELECT * FROM vw_companies ORDER BY name');
@@ -49,7 +53,10 @@ class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_do
 		$obj = new app_domain_Company($array['id']);
 		$obj->setName($array['name']);
 		$obj->setWebsite($array['website']);
-		$obj->setParentCompany($array['parent_company_id']);
+		if (array_key_exists('parent_company_id', $array))
+		{
+			$obj->setParentCompany($array['parent_company_id']);
+		}
 		$obj->setTelephone($array['telephone']);
 		$obj->setTelephoneTps($array['telephone_tps']);
 		$obj->setAdditionalInfo($array['additional_info']);
@@ -75,16 +82,31 @@ class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_do
 	 */
 	function doInsert(app_domain_DomainObject $object)
 	{
-		$query = 'INSERT INTO tbl_companies (id, name, telephone, website, parent_company_id) VALUES (?, ?, ?, ?, ?)';
-		$types = array('integer', 'text', 'text', 'text');
+		if ($this->hasParentCompanyIdColumn)
+		{
+			$query = 'INSERT INTO tbl_companies (id, name, telephone, website, parent_company_id) VALUES (?, ?, ?, ?, ?)';
+			$types = array('integer', 'text', 'text', 'text', 'integer');
+			$data = array(
+				$object->getId(),
+				$object->getName(),
+				$object->getTelephone(),
+				$object->getWebsite(),
+				$object->getParentCompany()
+			);
+		}
+		else
+		{
+			$query = 'INSERT INTO tbl_companies (id, name, telephone, website) VALUES (?, ?, ?, ?)';
+			$types = array('integer', 'text', 'text', 'text');
+			$data = array(
+				$object->getId(),
+				$object->getName(),
+				$object->getTelephone(),
+				$object->getWebsite()
+			);
+		}
+
 		$insertStmt = self::$DB->prepare($query, $types);
-		$data = array(
-			$object->getId(),
-			$object->getName(),
-			$object->getTelephone(),
-			$object->getWebsite(),
-			$object->getParentCompany()
-		);
 		$this->doStatement($insertStmt, $data);
 	}
 
@@ -94,10 +116,20 @@ class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_do
 	 */
 	function update(app_domain_DomainObject $object)
 	{
-		$query = 'UPDATE tbl_companies SET name = ?, website = ?, telephone = ?, telephone_tps = ?, parent_company_id = ?, additional_info = ? WHERE id = ?';
-		$types = array('text', 'text', 'text', 'boolean', 'text', 'integer');
+		if ($this->hasParentCompanyIdColumn)
+		{
+			$query = 'UPDATE tbl_companies SET name = ?, website = ?, telephone = ?, telephone_tps = ?, parent_company_id = ?, additional_info = ? WHERE id = ?';
+			$types = array('text', 'text', 'text', 'boolean', 'integer', 'text', 'integer');
+			$data = array($object->getName(), $object->getWebsite(), $object->getTelephone(), $object->getTelephoneTps(), $object->getParentCompany(), $object->getAdditionalInfo(), $object->getId());
+		}
+		else
+		{
+			$query = 'UPDATE tbl_companies SET name = ?, website = ?, telephone = ?, telephone_tps = ?, additional_info = ? WHERE id = ?';
+			$types = array('text', 'text', 'text', 'boolean', 'text', 'integer');
+			$data = array($object->getName(), $object->getWebsite(), $object->getTelephone(), $object->getTelephoneTps(), $object->getAdditionalInfo(), $object->getId());
+		}
+
 		$updateStmt = self::$DB->prepare($query, $types);
-		$data = array($object->getName(), $object->getWebsite(), $object->getTelephone(), $object->getTelephoneTps(), $object->getParentCompany(), $object->getAdditionalInfo(), $object->getId());
 		$this->doStatement($updateStmt, $data);
 
 		// Notes
@@ -109,6 +141,24 @@ class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_do
 				// TODO
 			}
 		}
+	}
+
+	/**
+	 * Check whether a table contains a given column.
+	 * @param string $table
+	 * @param string $column
+	 * @return boolean
+	 */
+	protected function hasTableColumn($table, $column)
+	{
+		$query = 'SHOW COLUMNS FROM ' . $table . ' LIKE ' . self::$DB->quote($column, 'text');
+		$result = self::$DB->query($query);
+		if (MDB2::isError($result))
+		{
+			return false;
+		}
+		$row = $result->fetchRow(MDB2_FETCHMODE_ASSOC);
+		return !empty($row);
 	}
 
 	/**

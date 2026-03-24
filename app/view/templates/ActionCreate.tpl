@@ -177,10 +177,10 @@ function submitform(pressbutton)
 
 	<form action="index.php?cmd=ActionCreate" method="post" name="adminForm" autocomplete="off">
 		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="referrer" value="{$referrer}" />
-		<input type="hidden" name="client_id" value="{$client_id}" />
-		<input type="hidden" name="nbm_id" value="{$nbm_id}" />
-		<input type="hidden" name="app_domain_Action_id" value="{$app_domain_Action_id}" />
+		<input type="hidden" name="referrer" value="{$referrer|default:''}" />
+		<input type="hidden" name="client_id" value="{$client_id|default:''}" />
+		<input type="hidden" name="nbm_id" value="{$nbm_id|default:''}" />
+		<input type="hidden" name="app_domain_Action_id" value="{$app_domain_Action_id|default:''}" />
 
 		<fieldset class="adminform">
 			<legend>Action</legend>
@@ -212,7 +212,7 @@ function submitform(pressbutton)
 				</tr>
 				<tr>
 					<td>
-						{if $app_domain_Action_due_date}
+						{if !empty($app_domain_Action_due_date)}
 							{assign var=due_date_time value=$app_domain_Action_due_date|date_format:'%H:%M'}
 						{else}
 							{assign var=due_date_time value="00:00"}
@@ -253,7 +253,7 @@ function submitform(pressbutton)
 					</tr>
 					<tr>
 						<td>
-							{if $app_domain_Action_reminder_date}
+							{if !empty($app_domain_Action_reminder_date)}
 								{assign var=reminder_date_time value=$app_domain_Action_reminder_date|date_format:'%H:%M'}
 							{else}
 								{assign var=reminder_date_time value="00:00"}
