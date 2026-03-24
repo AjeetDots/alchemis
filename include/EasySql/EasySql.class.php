@@ -69,15 +69,19 @@ class EasySql
      */
     function __construct($dbuser, $dbpassword, $dbname, $dbhost)
     {
-        $pdo = new PDO(
-            "mysql:host=$dbhost;charset=utf8mb4",
-            $dbuser,
-            $dbpassword,
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_TIMEOUT => 60
-            ]
-        );
+       $hostParts = explode(':', $dbhost);
+$host = $hostParts[0];
+$port = $hostParts[1] ?? 3306;
+
+$pdo = new PDO(
+    "mysql:host=$host;port=$port;charset=utf8mb4",
+    $dbuser,
+    $dbpassword,
+    [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_TIMEOUT => 6000
+    ]
+);
 
         if ($dbname) {
             $pdo->exec("USE `$dbname`");
@@ -94,14 +98,10 @@ class EasySql
      * @return boolean
      * @access public
      */
-    public function select($dbname)
-    {
-        if (!mysqli_select_db($this->dbh, $dbname)) {
-            $this->print_error("<ol><b>Error selecting database <u>$dbname</u>!</b><li>Are you sure it exists?<li>Are you sure there is a valid database connection?</ol>");
-            return false;
-        }
-        return true;
-    }
+ public function select($dbname)
+{
+    return $this->dbh->exec("USE `$dbname`");
+}
 
 
     /**
@@ -115,11 +115,10 @@ class EasySql
      * @param  string
      * @access private 
      */
-    private function escape($str)
-    {
-        return mysqli_escape_string($this->dbh, stripslashes($str));
-    }
-
+   public function escape($str)
+{
+    return substr($this->dbh->quote($str), 1, -1);
+}
 
     /**
      * Print SQL/DB error.

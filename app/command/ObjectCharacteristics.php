@@ -64,7 +64,14 @@ class app_command_ObjectCharacteristics extends app_command_Command
     public static function getObjectCharacteristicsByTypeAndId($type, $id)
     {
         $connection = self::getDbConnection();
-        $db = new EasySql($connection['username'], $connection['password'], $connection['database'], $connection['hostname']);
+       $dbhost = $connection['hostname'] . ':' . $connection['port'];
+
+$db = new EasySql(
+    $connection['username'],
+    $connection['password'],
+    $connection['database'],
+    $dbhost
+);
         $db->debug_all = false;
 
         if ($type == 'company') {
@@ -84,9 +91,12 @@ class app_command_ObjectCharacteristics extends app_command_Command
                         $characteristic['object_characteristic_value_id'] = null;
                     }
                 } else {
-                    $sql = "SELECT * FROM `tbl_object_characteristics` WHERE characteristic_id = " . $characteristic['id'] . " and company_id = " . $id . ";";
+                    $charId    = (int)$characteristic['id'];
+                    $companyId = (int)$id;
+                    $sql = "SELECT * FROM `tbl_object_characteristics` WHERE characteristic_id = $charId AND company_id = $companyId";
                     $db->query($sql);
-                    $sql = "SELECT * FROM `tbl_object_characteristic_elements_boolean` WHERE object_characteristic_id = " . $db->last_result[0]->id;
+                    $ocId = (int)($db->last_result[0]->id ?? 0);
+                    $sql = "SELECT * FROM `tbl_object_characteristic_elements_boolean` WHERE object_characteristic_id = $ocId";
                     $db->query($sql);
                     $temp_data = $db->last_result;
                     if ($temp_data) {
@@ -100,9 +110,11 @@ class app_command_ObjectCharacteristics extends app_command_Command
 
                     foreach ($characteristic['elements'] as $key => &$element) {
 
-                        $element['value']                            = $temp_data_all[$element['id']]['value'];
-                        $element['object_characteristic_id']         = $temp_data_all[$element['id']]['object_characteristic_id'];
-                        $element['object_characteristic_element_id'] = $temp_data_all[$element['id']]['id'];
+                        if (isset($temp_data_all[$element['id']])) {
+                            $element['value']                            = $temp_data_all[$element['id']]['value'];
+                            $element['object_characteristic_id']         = $temp_data_all[$element['id']]['object_characteristic_id'];
+                            $element['object_characteristic_element_id'] = $temp_data_all[$element['id']]['id'];
+                        }
                         if ($record = app_domain_ObjectCharacteristicElementHelper::getRecordByCompanyId($element['id'], $element['data_type'], $id)) {
                             $element['value']                            = $record['value'];
                             $element['object_characteristic_id']         = $record['object_characteristic_id'];
@@ -194,19 +206,20 @@ class app_command_ObjectCharacteristics extends app_command_Command
      * @access protected
      * @static
      */
-    protected static function getDbConnection()
-    {
-        include_once 'app/base/Registry.php';
-        $dsn = app_base_ApplicationRegistry::getDSN();
-        $username = preg_replace('/^.+:\/\/|:.+@.+\/.+$/i', '', $dsn);
-        $password = preg_replace('/^.+:\/\/.+:|@.+\/.+$/i', '', $dsn);
-        $database = preg_replace('/^.+:\/\/.+:.+@.+\//i', '', $dsn);
-        $hostname = preg_replace('/^.+:\/\/.+:.+@|\/.+$/i', '', $dsn);
-        return array(
-            'username' => $username,
-            'password' => $password,
-            'database' => $database,
-            'hostname' => $hostname,
-        );
-    }
+  protected static function getDbConnection()
+{
+    include_once 'app/base/Registry.php';
+
+    $dsn = app_base_ApplicationRegistry::getDSN();
+
+    $parts = parse_url($dsn);
+
+    return array(
+        'username' => $parts['user'] ?? '',
+        'password' => $parts['pass'] ?? '',
+        'database' => isset($parts['path']) ? ltrim($parts['path'], '/') : '',
+        'hostname' => $parts['host'] ?? '',
+        'port'     => $parts['port'] ?? 3306,
+    );
+}
 }
