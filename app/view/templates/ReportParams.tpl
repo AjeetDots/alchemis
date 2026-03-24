@@ -289,6 +289,17 @@ function updateDateTo()
 
 function init()
 {
+	// Dismiss the parent-frame loader overlay (overrides header2.tpl init which is overwritten by this function)
+	top.responderFadeOut();
+	if (typeof hideLoader === 'function') { hideLoader(); }
+	try {
+		var w = window;
+		while (w.parent && w.parent !== w) {
+			w = w.parent;
+			if (typeof w.hideLoader === 'function') { w.hideLoader(); }
+		}
+	} catch (e) {}
+
 	// Due date
 	YAHOO.example.calendar.cal_date_from = new YAHOO.widget.Calendar("cal_date_from", "div_cal_date_from");
 	YAHOO.example.calendar.cal_date_from.cfg.setProperty("START_WEEKDAY", 1);
