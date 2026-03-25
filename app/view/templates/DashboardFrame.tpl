@@ -1,5 +1,21 @@
 {include file="header.tpl" title="Dashboard"}
 
+<style>
+{literal}
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+table.adminform {
+    width: 100%;
+    border-collapse: collapse;
+    height: 100%;
+}
+{/literal}
+</style>
+
 <script language="JavaScript" type="text/javascript">
 {literal}
 
@@ -135,8 +151,8 @@ function doNbmDashboard(nbm_id)
 	</tr>
 	<tr>
 		<td>
-			<iframe id="ifr_admin" name="ifr_admin" src="" scrolling="yes" 
-			border="0" frameborder="no" style="height: 720px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+			<iframe id="ifr_admin" name="ifr_admin" src="" scrolling="auto"
+			border="0" frameborder="no" style="height: calc(100vh - 100px); width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 		</td>
 	</tr>
 </table>
