@@ -806,3 +806,19 @@ hr
 	font-style: italic;
 	text-align: center;
 }
+
+/* Global Responsive Enhancements */
+@media screen and (max-width: 1200px) {
+    table.adminlist, table.adminform, table.sortable {
+        display: block !important;
+        width: 100% !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure inputs don't blowout their containers */
+    input[type="text"], input[type="password"], textarea, select {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
