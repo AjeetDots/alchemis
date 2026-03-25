@@ -144,13 +144,17 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
     protected function _assignTag($object)
     {
 		// insert the tag into the relevant table to associate it with a parent object - eg company or post
+		$parentDomainObject = $object->getParentDomainObject();
+		if (!is_object($parentDomainObject)) {
+			return;
+		}
 		foreach (app_domain_Tag::getValidTypes() as $key => $value)
 		{
 
 //			echo "<pre>";
 //			echo '$key = ' . $key . '\n';
 //			echo "</pre>";
-			if ($key == get_class($object->getParentDomainObject()))
+			if ($key == get_class($parentDomainObject))
 			{
 
 				$query = 	'INSERT INTO '. $value['table'] .' (tag_id, ' .$value['field'] . ') ' .
@@ -163,7 +167,7 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 
 				$stmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
 
-				$data = array('tag_id' => $object->getId(), 'object_id' => $object->getParentDomainObject()->getId());
+				$data = array('tag_id' => $object->getId(), 'object_id' => $parentDomainObject->getId());
 
 //				echo '$object->getId() = ' . $object->getId() . '<br />';
 //				echo '$object->getparentDomainObject()->getId() = ' . $object->getparentDomainObject()->getId() . '<br />';
@@ -208,6 +212,8 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 		$deleteStmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
 
 		// delete the tag from the relevant table which associates it with a parent object - eg company or post
+		$parentDomainObject = $object->getParentDomainObject();
+		if (is_object($parentDomainObject)) {
 		foreach (app_domain_Tag::getValidTypes() as $key => $value)
 		{
 
@@ -215,7 +221,7 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 //			echo '$key = ' . $key . '<br />';
 //			echo "</pre>";
 
-			if ($key == get_class($object->getParentDomainObject()))
+			if ($key == get_class($parentDomainObject))
 			{
 
 				$query = 	'DELETE FROM '. $value['table'] .' WHERE  tag_id = :tag_id ' .
@@ -227,7 +233,7 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 
 				$stmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
 
-				$values = array('tag_id' => $object->getId(), 'object_id' => $object->getParentDomainObject()->getId());
+				$values = array('tag_id' => $object->getId(), 'object_id' => $parentDomainObject->getId());
 
 //				echo '$object->getId() = ' . $object->getId() . '<br />';
 //				echo '$object->getparentDomainObject()->getId() = ' . $object->getparentDomainObject()->getId() . '<br />';
@@ -239,6 +245,7 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 			}
 
 		}
+		} // end if (is_object($parentDomainObject))
 
 		// delete the tag
 		$values = array('id' => $object->getId());

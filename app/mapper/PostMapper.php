@@ -15,6 +15,20 @@ require_once('app/mapper/ShadowMapper.php');
  */
 class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domain_PostFinder
 {
+	/**
+	 * Whether post and post_shadow tables support data source columns.
+	 * Null means unknown and will be lazy-evaluated.
+	 * @var bool|null
+	 */
+	protected $supports_data_source_columns = null;
+
+	/**
+	 * Whether post and post_shadow tables support additional_info column.
+	 * Null means unknown and will be lazy-evaluated.
+	 * @var bool|null
+	 */
+	protected $supports_additional_info_column = null;
+
 	public function __construct()
 	{
 		if (!self::$DB)
@@ -73,16 +87,73 @@ class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domai
 	{
 		if (!isset($this->insertStmt))
 		{
-			$query = 'INSERT INTO tbl_posts (id, company_id, job_title, telephone_1, telephone_2, ' .
-						'telephone_switchboard, telephone_fax, data_source_id, data_source_updated, data_owner_id, additional_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-			$types = array('integer', 'integer', 'text', 'text', 'text', 'text', 'text', 'integer', 'timestamp', 'integer', 'text');
+			if ($this->supportsDataSourceColumns())
+			{
+				if ($this->supportsAdditionalInfoColumn())
+				{
+					$query = 'INSERT INTO tbl_posts (id, company_id, job_title, telephone_1, telephone_2, ' .
+								'telephone_switchboard, telephone_fax, data_source_id, data_source_updated, data_owner_id, additional_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+					$types = array('integer', 'integer', 'text', 'text', 'text', 'text', 'text', 'integer', 'timestamp', 'integer', 'text');
+				}
+				else
+				{
+					$query = 'INSERT INTO tbl_posts (id, company_id, job_title, telephone_1, telephone_2, ' .
+								'telephone_switchboard, telephone_fax, data_source_id, data_source_updated, data_owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+					$types = array('integer', 'integer', 'text', 'text', 'text', 'text', 'text', 'integer', 'timestamp', 'integer');
+				}
+			}
+			else
+			{
+				if ($this->supportsAdditionalInfoColumn())
+				{
+					$query = 'INSERT INTO tbl_posts (id, company_id, job_title, telephone_1, telephone_2, ' .
+								'telephone_switchboard, telephone_fax, data_owner_id, additional_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+					$types = array('integer', 'integer', 'text', 'text', 'text', 'text', 'text', 'integer', 'text');
+				}
+				else
+				{
+					$query = 'INSERT INTO tbl_posts (id, company_id, job_title, telephone_1, telephone_2, ' .
+								'telephone_switchboard, telephone_fax, data_owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+					$types = array('integer', 'integer', 'text', 'text', 'text', 'text', 'text', 'integer');
+				}
+			}
 			$this->insertStmt = self::$DB->prepare($query, $types);
 		}
 
-		$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
-						$object->getTelephone1(), $object->getTelephone2(),
-                        $object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
-                        $object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getDataOwnerId(), $object->getAdditionalInfo());
+		if ($this->supportsDataSourceColumns())
+		{
+			if ($this->supportsAdditionalInfoColumn())
+			{
+				$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
+								$object->getTelephone1(), $object->getTelephone2(),
+								$object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
+								$object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getDataOwnerId(), $object->getAdditionalInfo());
+			}
+			else
+			{
+				$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
+								$object->getTelephone1(), $object->getTelephone2(),
+								$object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
+								$object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getDataOwnerId());
+			}
+		}
+		else
+		{
+			if ($this->supportsAdditionalInfoColumn())
+			{
+				$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
+								$object->getTelephone1(), $object->getTelephone2(),
+								$object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
+								$object->getDataOwnerId(), $object->getAdditionalInfo());
+			}
+			else
+			{
+				$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
+								$object->getTelephone1(), $object->getTelephone2(),
+								$object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
+								$object->getDataOwnerId());
+			}
+		}
 		$this->doStatement($this->insertStmt, $data);
 	}
 
@@ -94,22 +165,143 @@ class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domai
 	{
 		if (!isset($this->updateStmt))
 		{
-			$query = 'UPDATE tbl_posts SET company_id = ?, job_title = ?, propensity = ?, ' .
-						'telephone_1 = ?, telephone_2 = ?, telephone_switchboard = ?, ' .
-                        'telephone_fax = ?, deleted = ?, '.
-                        'data_source_id = ?, data_source_updated = ?, additional_info = ? '.
-						'WHERE id = ?';
-			$types = array('integer', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'integer', 'timestamp', 'text', 'integer');
+			if ($this->supportsDataSourceColumns())
+			{
+				if ($this->supportsAdditionalInfoColumn())
+				{
+					$query = 'UPDATE tbl_posts SET company_id = ?, job_title = ?, propensity = ?, ' .
+								'telephone_1 = ?, telephone_2 = ?, telephone_switchboard = ?, ' .
+								'telephone_fax = ?, deleted = ?, '.
+								'data_source_id = ?, data_source_updated = ?, additional_info = ? '.
+								'WHERE id = ?';
+					$types = array('integer', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'integer', 'timestamp', 'text', 'integer');
+				}
+				else
+				{
+					$query = 'UPDATE tbl_posts SET company_id = ?, job_title = ?, propensity = ?, ' .
+								'telephone_1 = ?, telephone_2 = ?, telephone_switchboard = ?, ' .
+								'telephone_fax = ?, deleted = ?, data_source_id = ?, data_source_updated = ? ' .
+								'WHERE id = ?';
+					$types = array('integer', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'integer', 'timestamp', 'integer');
+				}
+			}
+			else
+			{
+				if ($this->supportsAdditionalInfoColumn())
+				{
+					$query = 'UPDATE tbl_posts SET company_id = ?, job_title = ?, propensity = ?, ' .
+								'telephone_1 = ?, telephone_2 = ?, telephone_switchboard = ?, ' .
+								'telephone_fax = ?, deleted = ?, additional_info = ? '.
+								'WHERE id = ?';
+					$types = array('integer', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'text', 'integer');
+				}
+				else
+				{
+					$query = 'UPDATE tbl_posts SET company_id = ?, job_title = ?, propensity = ?, ' .
+								'telephone_1 = ?, telephone_2 = ?, telephone_switchboard = ?, ' .
+								'telephone_fax = ?, deleted = ? WHERE id = ?';
+					$types = array('integer', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'integer');
+				}
+			}
 			$this->updateStmt = self::$DB->prepare($query, $types);
 		}
 
-		$data = array($object->getCompanyId(), $object->getJobTitle(),
-						$object->getPropensity(), $object->getTelephone1(),
-						$object->getTelephone2(), $object->getTelephoneSwitchboard(),
-                        $object->getTelephoneFax(), $object->getDeleted(),
-                        $object->getDataSourceId(), $object->getDataSourceChangedDate(), 
-                        $object->getAdditionalInfo(), $object->getId());
+		if ($this->supportsDataSourceColumns())
+		{
+			if ($this->supportsAdditionalInfoColumn())
+			{
+				$data = array($object->getCompanyId(), $object->getJobTitle(),
+								$object->getPropensity(), $object->getTelephone1(),
+								$object->getTelephone2(), $object->getTelephoneSwitchboard(),
+								$object->getTelephoneFax(), $object->getDeleted(),
+								$object->getDataSourceId(), $object->getDataSourceChangedDate(), 
+								$object->getAdditionalInfo(), $object->getId());
+			}
+			else
+			{
+				$data = array($object->getCompanyId(), $object->getJobTitle(),
+								$object->getPropensity(), $object->getTelephone1(),
+								$object->getTelephone2(), $object->getTelephoneSwitchboard(),
+								$object->getTelephoneFax(), $object->getDeleted(),
+								$object->getDataSourceId(), $object->getDataSourceChangedDate(),
+								$object->getId());
+			}
+		}
+		else
+		{
+			if ($this->supportsAdditionalInfoColumn())
+			{
+				$data = array($object->getCompanyId(), $object->getJobTitle(),
+								$object->getPropensity(), $object->getTelephone1(),
+								$object->getTelephone2(), $object->getTelephoneSwitchboard(),
+								$object->getTelephoneFax(), $object->getDeleted(),
+								$object->getAdditionalInfo(), $object->getId());
+			}
+			else
+			{
+				$data = array($object->getCompanyId(), $object->getJobTitle(),
+								$object->getPropensity(), $object->getTelephone1(),
+								$object->getTelephone2(), $object->getTelephoneSwitchboard(),
+								$object->getTelephoneFax(), $object->getDeleted(),
+								$object->getId());
+			}
+		}
 		$this->doStatement($this->updateStmt, $data);
+	}
+
+	/**
+	 * Determine whether data source fields can be safely written to both base and shadow tables.
+	 * @return bool
+	 */
+	protected function supportsDataSourceColumns()
+	{
+		if (!is_null($this->supports_data_source_columns))
+		{
+			return $this->supports_data_source_columns;
+		}
+
+		$base_has_data_source = $this->hasTableColumn('tbl_posts', 'data_source_id');
+		$base_has_updated = $this->hasTableColumn('tbl_posts', 'data_source_updated');
+		$shadow_has_data_source = $this->hasTableColumn('tbl_posts_shadow', 'data_source_id');
+		$shadow_has_updated = $this->hasTableColumn('tbl_posts_shadow', 'data_source_updated');
+
+		$this->supports_data_source_columns = ($base_has_data_source && $base_has_updated && $shadow_has_data_source && $shadow_has_updated);
+		return $this->supports_data_source_columns;
+	}
+
+	/**
+	 * Determine whether additional_info can be safely written to both base and shadow tables.
+	 * @return bool
+	 */
+	protected function supportsAdditionalInfoColumn()
+	{
+		if (!is_null($this->supports_additional_info_column))
+		{
+			return $this->supports_additional_info_column;
+		}
+
+		$base_has_additional_info = $this->hasTableColumn('tbl_posts', 'additional_info');
+		$shadow_has_additional_info = $this->hasTableColumn('tbl_posts_shadow', 'additional_info');
+		$this->supports_additional_info_column = ($base_has_additional_info && $shadow_has_additional_info);
+		return $this->supports_additional_info_column;
+	}
+
+	/**
+	 * Check whether a table contains a given column.
+	 * @param string $table
+	 * @param string $column
+	 * @return bool
+	 */
+	protected function hasTableColumn($table, $column)
+	{
+		$query = 'SHOW COLUMNS FROM ' . $table . ' LIKE ' . self::$DB->quote($column, 'text');
+		$result = self::$DB->query($query);
+		if (MDB2::isError($result))
+		{
+			return false;
+		}
+		$row = $result->fetchRow(MDB2_FETCHMODE_ASSOC);
+		return !empty($row);
 	}
 
 	/** Update the existing database record for the object.

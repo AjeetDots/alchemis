@@ -16,8 +16,6 @@ require_once 'app/command/ObjectCharacteristics.php';
 require_once 'app/mapper/ObjectCharacteristicHelperMapper.php';
 require_once 'app/domain/ObjectCharacteristicElementHelper.php';
 
-require_once 'include/EasySql/EasySql.class.php';
-
 /**
  * @package Alchemis
  */
@@ -185,9 +183,7 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
         // error_reporting(E_ALL);
         // echo 'df';
         // print_r($field_data);
-        $connection = $this->getDbConnection();
-        $db = new EasySql($connection['username'], $connection['password'], $connection['database'], $connection['hostname']);
-        $db->debug_all = false;
+        $db = app_controller_ApplicationHelper::instance()->DB();
 
 
 
@@ -198,7 +194,10 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
 
 			if($field_data[0][6] == 'boolean') {
 				$query = "UPDATE `".$temp_table."` SET `value` = '0' WHERE `".$temp_table."`.`object_characteristic_id` = ".$field_data[0][3];
-				$db->query($query);
+				$res = $db->exec($query);
+				if (MDB2::isError($res)) {
+					throw new app_base_MDB2Exception($res);
+				}
 			}
 
             foreach($field_data as $item){
@@ -208,7 +207,7 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                 if($item['5'] != null) {
                     $query = "UPDATE `".$temp_table."` SET `value` = '".$item[7]."' WHERE `".$temp_table."`.`id` = ".$item[5];
                 }else{
-                    $query = "INSERT INTO `".$temp_table."` (`id`, `object_characteristic_id`, `characteristic_element_id`, `value`) VALUES(null, '".$item[3]."', '".$item[2]."', '".$item[7]."')";
+                    $query = "INSERT INTO `".$temp_table."` (`id`, `object_characteristic_id`, `characteristic_element_id`, `value`) VALUES(null, '".$item[3]."', '".$item[2]."', '".$item[7]."') ON DUPLICATE KEY UPDATE `value` = '".$item[7]."'";
                 }
 				if ($item[6] == 'date') {
                     $temp_table = "tbl_object_characteristics_date";
@@ -220,7 +219,10 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                     }
                 }
                 // print_r($query);die;
-                $db->query($query);
+                $res = $db->exec($query);
+                if (MDB2::isError($res)) {
+                    throw new app_base_MDB2Exception($res);
+                }
             }
         }
         return;

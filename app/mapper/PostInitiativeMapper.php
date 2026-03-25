@@ -15,6 +15,13 @@ require_once('app/mapper/ShadowMapper.php');
  */
 class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements app_domain_PostInitiativeFinder
 {
+	/**
+	 * Whether post initiative and shadow tables both support data source columns.
+	 * Null means unknown and will be lazy-evaluated.
+	 * @var bool|null
+	 */
+	protected $supports_data_source_columns = null;
+
 	public function __construct()
 	{
 		if (!self::$DB)
@@ -73,15 +80,30 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 	 */
 	function doInsert(app_domain_DomainObject $object)
 	{
-		$query = 'INSERT INTO tbl_post_initiatives (id, post_id, initiative_id, status_id, comment, next_action_by, last_effective_communication_id, ' .
-					'last_communication_id, last_mailer_communication_id, next_communication_date, lead_source_id, data_source_id, data_source_updated, priority_callback) VALUES ' .
-					'(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-		$types = array('integer', 'integer', 'integer', 'integer', 'text', 'integer', 'integer', 'integer', 'integer', 'date', 'integer', 'integer', 'timestamp', 'integer');
+		if ($this->supportsDataSourceColumns())
+		{
+			$query = 'INSERT INTO tbl_post_initiatives (id, post_id, initiative_id, status_id, comment, next_action_by, last_effective_communication_id, ' .
+						'last_communication_id, last_mailer_communication_id, next_communication_date, lead_source_id, data_source_id, data_source_updated, priority_callback) VALUES ' .
+						'(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+			$types = array('integer', 'integer', 'integer', 'integer', 'text', 'integer', 'integer', 'integer', 'integer', 'date', 'integer', 'integer', 'timestamp', 'integer');
+			$data = array($object->getId(), $object->getPostId(), $object->getInitiativeId(), $object->getStatusId(),
+							$object->getComment(), $object->getNextActionBy(),
+							$object->getLastEffectiveCommunicationId(), $object->getLastCommunicationId(), $object->getLastMailerCommunicationId(),
+							$object->getNextCommunicationDate(), $object->getLeadSourceId(), $object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getPriorityCallBack());
+		}
+		else
+		{
+			$query = 'INSERT INTO tbl_post_initiatives (id, post_id, initiative_id, status_id, comment, next_action_by, last_effective_communication_id, ' .
+						'last_communication_id, last_mailer_communication_id, next_communication_date, lead_source_id, priority_callback) VALUES ' .
+						'(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+			$types = array('integer', 'integer', 'integer', 'integer', 'text', 'integer', 'integer', 'integer', 'integer', 'date', 'integer', 'integer');
+			$data = array($object->getId(), $object->getPostId(), $object->getInitiativeId(), $object->getStatusId(),
+							$object->getComment(), $object->getNextActionBy(),
+							$object->getLastEffectiveCommunicationId(), $object->getLastCommunicationId(), $object->getLastMailerCommunicationId(),
+							$object->getNextCommunicationDate(), $object->getLeadSourceId(), $object->getPriorityCallBack());
+		}
+
 		$this->insertStmt = self::$DB->prepare($query, $types);
-		$data = array($object->getId(), $object->getPostId(), $object->getInitiativeId(), $object->getStatusId(),
-						$object->getComment(), $object->getNextActionBy(),
-						$object->getLastEffectiveCommunicationId(), $object->getLastCommunicationId(), $object->getLastMailerCommunicationId(),
-						$object->getNextCommunicationDate(), $object->getLeadSourceId(), $object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getPriorityCallBack());
 		$this->doStatement($this->insertStmt, $data);
 	}
 
@@ -91,18 +113,71 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 	 */
 	function update(app_domain_DomainObject $object)
 	{
-		$query = 'UPDATE tbl_post_initiatives ' .
-					'SET post_id = ?, initiative_id = ?, status_id = ?, comment = ?, next_action_by = ?, last_effective_communication_id = ?, ' .
-					'last_communication_id = ?, last_mailer_communication_id = ?, next_communication_date = ?, lead_source_id = ?, data_source_id = ?, data_source_updated = ?, priority_callback = ? ' .
-					'WHERE id = ?';
-		$types = array('integer', 'integer', 'integer', 'text', 'integer', 'integer', 'integer', 'integer', 'date', 'integer', 'integer', 'timestamp', 'integer', 'integer');
+		if ($this->supportsDataSourceColumns())
+		{
+			$query = 'UPDATE tbl_post_initiatives ' .
+						'SET post_id = ?, initiative_id = ?, status_id = ?, comment = ?, next_action_by = ?, last_effective_communication_id = ?, ' .
+						'last_communication_id = ?, last_mailer_communication_id = ?, next_communication_date = ?, lead_source_id = ?, data_source_id = ?, data_source_updated = ?, priority_callback = ? ' .
+						'WHERE id = ?';
+			$types = array('integer', 'integer', 'integer', 'text', 'integer', 'integer', 'integer', 'integer', 'date', 'integer', 'integer', 'timestamp', 'integer', 'integer');
+			$data = array($object->getPostId(), $object->getInitiativeId(), $object->getStatusId(),
+							$object->getComment(), $object->getNextActionBy(),
+							$object->getLastEffectiveCommunicationId(), $object->getLastCommunicationId(), $object->getLastMailerCommunicationId(),
+							$object->getNextCommunicationDate(), $object->getLeadSourceId(), $object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getPriorityCallBack(), $object->getId());
+		}
+		else
+		{
+			$query = 'UPDATE tbl_post_initiatives ' .
+						'SET post_id = ?, initiative_id = ?, status_id = ?, comment = ?, next_action_by = ?, last_effective_communication_id = ?, ' .
+						'last_communication_id = ?, last_mailer_communication_id = ?, next_communication_date = ?, lead_source_id = ?, priority_callback = ? ' .
+						'WHERE id = ?';
+			$types = array('integer', 'integer', 'integer', 'text', 'integer', 'integer', 'integer', 'integer', 'date', 'integer', 'integer', 'integer');
+			$data = array($object->getPostId(), $object->getInitiativeId(), $object->getStatusId(),
+							$object->getComment(), $object->getNextActionBy(),
+							$object->getLastEffectiveCommunicationId(), $object->getLastCommunicationId(), $object->getLastMailerCommunicationId(),
+							$object->getNextCommunicationDate(), $object->getLeadSourceId(), $object->getPriorityCallBack(), $object->getId());
+		}
 		$this->updateStmt = self::$DB->prepare($query, $types);
 
-		$data = array($object->getPostId(), $object->getInitiativeId(), $object->getStatusId(),
-						$object->getComment(), $object->getNextActionBy(),
-						$object->getLastEffectiveCommunicationId(), $object->getLastCommunicationId(), $object->getLastMailerCommunicationId(),
-						$object->getNextCommunicationDate(), $object->getLeadSourceId(), $object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getPriorityCallBack(), $object->getId());
 		$this->doStatement($this->updateStmt, $data);
+	}
+
+	/**
+	 * Determine whether data source fields can be safely written to both base and shadow tables.
+	 * @return bool
+	 */
+	protected function supportsDataSourceColumns()
+	{
+		if (!is_null($this->supports_data_source_columns))
+		{
+			return $this->supports_data_source_columns;
+		}
+
+		$base_has_data_source = $this->hasTableColumn('tbl_post_initiatives', 'data_source_id');
+		$base_has_updated = $this->hasTableColumn('tbl_post_initiatives', 'data_source_updated');
+		$shadow_has_data_source = $this->hasTableColumn('tbl_post_initiatives_shadow', 'data_source_id');
+		$shadow_has_updated = $this->hasTableColumn('tbl_post_initiatives_shadow', 'data_source_updated');
+
+		$this->supports_data_source_columns = ($base_has_data_source && $base_has_updated && $shadow_has_data_source && $shadow_has_updated);
+		return $this->supports_data_source_columns;
+	}
+
+	/**
+	 * Check whether a table contains a given column.
+	 * @param string $table
+	 * @param string $column
+	 * @return bool
+	 */
+	protected function hasTableColumn($table, $column)
+	{
+		$query = 'SHOW COLUMNS FROM ' . $table . ' LIKE ' . self::$DB->quote($column, 'text');
+		$result = self::$DB->query($query);
+		if (MDB2::isError($result))
+		{
+			return false;
+		}
+		$row = $result->fetchRow(MDB2_FETCHMODE_ASSOC);
+		return !empty($row);
 	}
 
 	/**

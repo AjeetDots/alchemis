@@ -11,12 +11,21 @@
 
 require_once 'app/domain/Characteristic.php';
 require_once 'app/domain/ObjectCharacteristicHelper.php';
-require_once 'include/EasySql/EasySql.class.php';
 /**
  * @package Alchemis
  */
 class app_command_ObjectCharacteristics extends app_command_Command
 {
+
+    /**
+     * Normalize helper result to array for PHP 8+ count() safety.
+     * @param mixed $value
+     * @return array
+     */
+    protected static function asArray($value)
+    {
+        return is_array($value) ? $value : array();
+    }
 
     public function doExecute(app_controller_Request $request)
     {
@@ -63,16 +72,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
      */
     public static function getObjectCharacteristicsByTypeAndId($type, $id)
     {
-        $connection = self::getDbConnection();
-       $dbhost = $connection['hostname'] . ':' . $connection['port'];
-
-$db = new EasySql(
-    $connection['username'],
-    $connection['password'],
-    $connection['database'],
-    $dbhost
-);
-        $db->debug_all = false;
+        $db = app_controller_ApplicationHelper::instance()->DB();
 
         if ($type == 'company') {
             // echo $id;
@@ -82,8 +82,8 @@ $db = new EasySql(
             $characteristics = $collection->toRawArray();
             foreach ($characteristics as &$characteristic) {
                 if ($characteristic['attributes'] == 0 && $characteristic['options'] == 0) {
-                    $characteristic_item = app_domain_ObjectCharacteristicHelper::getValueByCompanyId($characteristic['id'], $characteristic['data_type'], $id);
-                    if (count($characteristic_item)) {
+                    $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByCompanyId($characteristic['id'], $characteristic['data_type'], $id));
+                    if (count($characteristic_item) > 0) {
                         $characteristic['value']                          = $characteristic_item[0]['value'];
                         $characteristic['object_characteristic_value_id'] = $characteristic_item[0]['id'];
                     } else {
@@ -93,15 +93,17 @@ $db = new EasySql(
                 } else {
                     $charId    = (int)$characteristic['id'];
                     $companyId = (int)$id;
-                    $sql = "SELECT * FROM `tbl_object_characteristics` WHERE characteristic_id = $charId AND company_id = $companyId";
-                    $db->query($sql);
-                    $ocId = (int)($db->last_result[0]->id ?? 0);
-                    $sql = "SELECT * FROM `tbl_object_characteristic_elements_boolean` WHERE object_characteristic_id = $ocId";
-                    $db->query($sql);
-                    $temp_data = $db->last_result;
+                    $sql = "SELECT id FROM tbl_object_characteristics WHERE characteristic_id = $charId AND company_id = $companyId";
+                    $ocId = (int)$db->queryOne($sql);
+
+                    $temp_data = array();
+                    if ($ocId > 0) {
+                        $sql = "SELECT * FROM tbl_object_characteristic_elements_boolean WHERE object_characteristic_id = $ocId";
+                        $temp_data = $db->queryAll($sql, null, MDB2_FETCHMODE_ASSOC);
+                    }
                     if ($temp_data) {
                         foreach ($temp_data as $item) {
-                            $temp_data_all[$item->characteristic_element_id] = (array) $item;
+                            $temp_data_all[$item['characteristic_element_id']] = $item;
                         }
                     }
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
@@ -135,8 +137,8 @@ $db = new EasySql(
             $characteristics = $collection->toRawArray();
             foreach ($characteristics as &$characteristic) {
                 if ($characteristic['attributes'] == 0 && $characteristic['options'] == 0) {
-                    $characteristic_item = app_domain_ObjectCharacteristicHelper::getValueByPostId($characteristic['id'], $characteristic['data_type'], $id);
-                    if (count($characteristic_item)) {
+                    $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByPostId($characteristic['id'], $characteristic['data_type'], $id));
+                    if (count($characteristic_item) > 0) {
                         $characteristic['value']                          = $characteristic_item[0]['value'];
                         $characteristic['object_characteristic_value_id'] = $characteristic_item[0]['id'];
                     } else {
@@ -163,8 +165,8 @@ $db = new EasySql(
             $characteristics = $collection->toRawArray();
             foreach ($characteristics as &$characteristic) {
                 if ($characteristic['attributes'] == 0 && $characteristic['options'] == 0) {
-                    $characteristic_item = app_domain_ObjectCharacteristicHelper::getValueByPostInitiativeId($characteristic['id'], $characteristic['data_type'], $id);
-                    if (count($characteristic_item)) {
+                    $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByPostInitiativeId($characteristic['id'], $characteristic['data_type'], $id));
+                    if (count($characteristic_item) > 0) {
                         $characteristic['value']                          = $characteristic_item[0]['value'];
                         $characteristic['object_characteristic_value_id'] = $characteristic_item[0]['id'];
                     } else {
