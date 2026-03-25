@@ -95,6 +95,19 @@ function init()
 
 <body onload="javascript:init()">
 
+<script type="text/javascript">
+{literal}
+	if (typeof hideLoader === 'function') { hideLoader(); }
+	try {
+		var w = window;
+		while (w.parent && w.parent !== w) {
+			w = w.parent;
+			if (typeof w.hideLoader === 'function') { w.hideLoader(); }
+		}
+	} catch (e) {}
+{/literal}
+</script>
+
 <div id="alch-loader" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.65);z-index:9999;pointer-events:all;">
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-family:Arial,sans-serif;font-size:13px;color:#444;">
     <img src="{$APP_URL}app/view/images/ajax_loader.gif" width="32" height="32" alt="" /><br />Loading...
