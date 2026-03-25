@@ -166,18 +166,18 @@
 		<div class="border">
 			<div class="padding">
 				<div class="clr">
-					<iframe id="iframe_1" name="iframe_1" src="" scrolling="yes" border="0" frameborder="no" style="display: block; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_2" name="iframe_2" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_3" name="iframe_3" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_4" name="iframe_4" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_5" name="iframe_5" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_6" name="iframe_6" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_7" name="iframe_7" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_8" name="iframe_8" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_9" name="iframe_9" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_10" name="iframe_10" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_11" name="iframe_11" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
-					<iframe id="iframe_12" name="iframe_12" src="" scrolling="yes" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_1" name="iframe_1" src="" scrolling="auto" border="0" frameborder="no" style="display: block; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_2" name="iframe_2" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_3" name="iframe_3" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_4" name="iframe_4" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_5" name="iframe_5" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_6" name="iframe_6" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_7" name="iframe_7" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_8" name="iframe_8" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_9" name="iframe_9" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_10" name="iframe_10" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_11" name="iframe_11" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					<iframe id="iframe_12" name="iframe_12" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 				</div>
 			</div>
 		</div>
@@ -268,6 +268,18 @@
 		}
 		body.alc-loading td[id^="tab_"] {
 			cursor: not-allowed;
+		}
+
+		/* Prevent the outer body scrollbar */
+		body { overflow-y: hidden; }
+		
+		/* Remove ugly browser scrollbars but preserve scrolling */
+		iframe {
+			scrollbar-width: none; /* Firefox */
+			-ms-overflow-style: none; /* IE/Edge */
+		}
+		iframe::-webkit-scrollbar {
+			display: none; /* Chrome/Safari */
 		}
 	{/literal}
 	</style>

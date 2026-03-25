@@ -9,6 +9,30 @@
 <link href="{$APP_URL}app/view/styles/calendar.css" rel="stylesheet" type="text/css" />
 <link href="{$APP_URL}app/view/styles/calendar_day.css" rel="stylesheet" type="text/css" />
 
+<style>
+{literal}
+/* Compact rendering to keep the dashboard entirely above the fold */
+table.dashboard { border-collapse: separate; border-spacing: 10px !important; }
+h3 { margin: 5px 0 2px 0 !important; font-size: 13px !important; }
+table.adminlist th, table.adminlist td { padding: 2px 4px !important; font-size: 11px !important; }
+.dashboard > tbody > tr > td > br { display: none; } /* Strip physical spacer breaks */
+
+/* Modern Responsive fallback */
+@media screen and (max-width: 1366px) {
+    table.dashboard { display: block; width: 100%; }
+    table.dashboard > tbody, table.dashboard > tbody > tr { display: flex; flex-direction: row; flex-wrap: wrap; width: 100%; }
+    table.dashboard > tbody > tr > td { display: block; width: 100% !important; margin-bottom: 15px; }
+}
+
+/* Restrict graph sizing */
+.dashboard img[src*="DashboardGraph"] {
+    max-width: 100%;
+    height: auto;
+    max-height: 150px;
+}
+{/literal}
+</style>
+
 <script language="JavaScript" type="text/javascript">
 {literal}
 

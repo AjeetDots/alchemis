@@ -89,11 +89,24 @@
 	<!-- End Ajax css elements -->
 
 
-<!-- -->
+	<!-- -->
 <script type="text/javascript" src="{$APP_URL}app/view/js/moofx/moo.fx.js"></script>
 <script type="text/javascript" src="{$APP_URL}app/view/js/moofx/moo.fx.pack.js"></script>
 <script type="text/javascript" src="{$APP_URL}app/view/js/moofx/moo.fx.slide.js"></script>
 <!-- -->
+
+<style>
+{literal}
+	/* Remove ugly webkit and firefox scrollbars globally inside frames to clean design */
+	html, body {
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE/Edge */
+	}
+	::-webkit-scrollbar {
+		display: none; /* Chrome/Safari */
+	}
+{/literal}
+</style>
 
 <script language="JavaScript" type="text/javascript">
 {literal}
