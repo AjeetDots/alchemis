@@ -71,9 +71,9 @@ opener.top.$("span_callback_count").innerHTML = "Today's Callbacks: " + {$scoreb
 		<p style="margin-left: 10px">You have <strong>{$call_back_count}</strong> call back{if $call_back_count != 1}s{/if} due today</p>
 		
 		{if $call_backs}
-		<table id="table1" class="adminlist sortable" id="sortable_{$result.id}"cellspacing="1">
+		<table id="table1" class="adminlist sortable" cellspacing="1">
 			<thead>
-				<tr class="sortable" id="sortable_{$result.id}">
+				<tr class="sortable">
 					<th style="width: 1%; text-align: center">#</th>
 					<th style="text-align: left">Company</th>
 					<th style="text-align: left">Job Title</th>
@@ -91,7 +91,7 @@ opener.top.$("span_callback_count").innerHTML = "Today's Callbacks: " + {$scoreb
 					<tr id="tr_post_{$result.post_id}" style="vertical-align:top">
 						<td>{$smarty.foreach.timed_call_back_loop.iteration}</td>
 						<td>
-							<span id="client_{$result.id}"><strong>{$result.company_name}</strong></span>
+							<span id="client_{$result.post_initiative_id}"><strong>{$result.company_name}</strong></span>
 							<br />
 							{$result.company_telephone}
 							<br />
@@ -139,7 +139,7 @@ opener.top.$("span_callback_count").innerHTML = "Today's Callbacks: " + {$scoreb
 			 				{/if}	
 			 			</td>
 						<td style="text-align: center; background-color: #F3F3F3">
-							<a id="detailsBtn_{$result.id}" title="Edit" href="#" onclick="javascript:showPost({$result.company_id}, {$result.post_id}, {$result.initiative_id});return false;"><img src="{$APP_URL}app/view/images/icons/database_table.png" alt="Details" title="Details" /></a>
+							<a id="detailsBtn_{$result.post_initiative_id}" title="Edit" href="#" onclick="javascript:showPost({$result.company_id}, {$result.post_id}, {$result.initiative_id});return false;"><img src="{$APP_URL}app/view/images/icons/database_table.png" alt="Details" title="Details" /></a>
 						</td>
 					</tr>
 				{/foreach}
