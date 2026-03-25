@@ -102,7 +102,7 @@ opener.top.$("span_callback_count").innerHTML = "Today's Callbacks: " + {$scoreb
 						</td>
 						<td><strong>{$result.job_title}</strong>
 							<br />
-							<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align: middle" alt="Propensity {$result.propensity}" title="Propensity {$result.propensity}" />
+							<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align: middle" alt="Propensity {$result.propensity|default:0}" title="Propensity {$result.propensity|default:0}" />
 							<br />
 							{$result.telephone_1}
 						</td>

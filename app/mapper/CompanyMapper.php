@@ -319,7 +319,7 @@ class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_do
 	public function findByNameStartAndInitiativeId($name, $initiative_id)
 	{
 		$query = 'SELECT vw_c.id, vw_c.name, vw_c.website, vw_c.telephone, vw_c.telephone_tps, ' .
-				'vw_pc.id as post_id, vw_pc.first_name, vw_pc.surname, vw_pc.job_title, vw_cl.initiative_id, vw_cl.initiative_name, vw_cl.client_name, ' .
+				'vw_pc.id as post_id, vw_pc.first_name, vw_pc.surname, vw_pc.job_title, COALESCE(vw_pc.propensity, 0) as propensity, vw_cl.initiative_id, vw_cl.initiative_name, vw_cl.client_name, ' .
 				'lkp_cs.description as status, pi.id as post_initiative_id ' .
 				'FROM vw_companies_sites AS vw_c ' .
 				'INNER JOIN vw_posts_contacts AS vw_pc ON vw_pc.company_id = vw_c.id ' .

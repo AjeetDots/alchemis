@@ -663,7 +663,7 @@ iframeLocation(				parent.information, src);
 
 										 		<br />
 
-										 		<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align:middle">
+										 		<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align:middle">
 
 								 				{$result.telephone_1}
 
@@ -755,7 +755,7 @@ iframeLocation(				parent.information, src);
 
 										 		<br />
 
-										 		<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align:middle">
+										 		<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align:middle">
 
 								 				{$result.telephone_1}
 

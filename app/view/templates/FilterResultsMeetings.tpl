@@ -663,7 +663,7 @@ page_isloaded = false;
 								<span style="float:right"><input id="chk_post_{$result.post_id}" name="chk_post_{$result.post_id}" type="checkbox" /></span>
 							</span>	
 							<br />
-			 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align:middle" alt="Propensity {$result.propensity}" title="Propensity {$result.propensity}" />
+			 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align:middle" alt="Propensity {$result.propensity|default:0}" title="Propensity {$result.propensity|default:0}" />
 			 				{$result.telephone_1}
 			 				{if $result.telephone_1 != ''}&nbsp;&nbsp;<a href="#">Dial</a>{/if}
 		 				{/if}

@@ -30,8 +30,8 @@
 					<td>{$result.full_name}</td>
 					<td>{$result.date|date_format:$smarty.config.FORMAT_DATETIME_SHORT}</td>
 		 			<td style="text-align: center">
-		 				<span style="display: none">{$result.propensity}</span>
-		 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align: middle" alt="Propensity {$result.propensity}" title="Propensity {$result.propensity}" />
+		 				<span style="display: none">{$result.propensity|default:0}</span>
+		 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align: middle" alt="Propensity {$result.propensity|default:0}" title="Propensity {$result.propensity|default:0}" />
 		 			</td>
 					<td>{$result.notes}</td>
 					<td style="text-align: center; background-color: #F3F3F3">

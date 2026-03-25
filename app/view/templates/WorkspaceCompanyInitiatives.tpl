@@ -19,8 +19,8 @@ Posts contacted for <strong>{$initiative_name}</strong><br/><br/>{if $posts}
     <td>{$result.status} ({$result.status_id})</td>
     <td>{$result.next_comm_date_period}</td>
     <td>{* Note: need to inlcude the follwing span so that sortable.js can sort correctly on the propensity column*}
-      <span style="display: none">{$result.propensity}</span>
-      <img src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align:middle" alt="Propensity {$result.propensity}" title="Propensity {$result.propensity}"/>
+      <span style="display: none">{$result.propensity|default:0}</span>
+      <img src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align:middle" alt="Propensity {$result.propensity|default:0}" title="Propensity {$result.propensity|default:0}"/>
     </td>
     <td nowrap="nowrap">{$result.last_effective_communication_date|date_format:"%d %b %y"}</td>
     <td nowrap="nowrap">{$result.next_communication_date|date_format:"%d %b %y"}</td>

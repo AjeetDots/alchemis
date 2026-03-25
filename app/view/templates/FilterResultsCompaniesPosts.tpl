@@ -660,7 +660,7 @@ iframeLocation(			top.frames["iframe_7"], "index.php?cmd=WorkspaceFilter&id=" + 
 								</span>	
 								<br />
 
-				 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align:middle" alt="Propensity {$result.propensity}" title="Propensity {$result.propensity}" />
+				 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align:middle" alt="Propensity {$result.propensity|default:0}" title="Propensity {$result.propensity|default:0}" />
 
 				 				{$result.telephone_1}
 
@@ -684,9 +684,9 @@ iframeLocation(			top.frames["iframe_7"], "index.php?cmd=WorkspaceFilter&id=" + 
 
 							{if $result.job_title}
 
-								<span style="display: none">{$result.propensity}</span>
+								<span style="display: none">{$result.propensity|default:0}</span>
 
-								<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align:middle" alt="Propensity {$result.propensity}" title="Propensity {$result.propensity}" />
+								<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align:middle" alt="Propensity {$result.propensity|default:0}" title="Propensity {$result.propensity|default:0}" />
 
 							{/if}
 

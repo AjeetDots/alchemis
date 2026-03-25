@@ -137,8 +137,8 @@ iframeLocation(		top.frames["iframe_5"], "index.php?cmd=WorkspaceSearch&id=" + c
 					<td>{$result.first_name}&nbsp;{$result.surname}</td>
 					<td>{$result.job_title}</td>
 		 			<td style="text-align: center">
-		 				<span style="display: none">{$result.propensity}</span>
-		 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity}.gif" style="vertical-align: middle" alt="Propensity {$result.propensity}" title="Propensity {$result.propensity}" />
+		 				<span style="display: none">{$result.propensity|default:0}</span>
+		 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$result.propensity|default:0}.gif" style="vertical-align: middle" alt="Propensity {$result.propensity|default:0}" title="Propensity {$result.propensity|default:0}" />
 		 			</td>
 		 			<td>{$result.client_name}: {$result.initiative_name}</td>
 					<td>{$result.status}</td>

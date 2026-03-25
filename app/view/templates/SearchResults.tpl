@@ -186,8 +186,8 @@
 							 			<td>{$post.full_name}</td>
 							 			<td>{$post.telephone_1}</td>
 							 			<td style="text-align: center">
-							 				<span style="display: none">{$post.propensity}</span>
-							 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$post.propensity}.gif" style="vertical-align: middle" alt="Propensity {$post.propensity}" title="Propensity {$post.propensity}" />
+							 				<span style="display: none">{$post.propensity|default:0}</span>
+							 				<img id="img_propensity" src="{$APP_URL}app/view/images/propensity_{$post.propensity|default:0}.gif" style="vertical-align: middle" alt="Propensity {$post.propensity|default:0}" title="Propensity {$post.propensity|default:0}" />
 							 			</td>
 							 			<td class="button">
 											<a id="detailsBtn_{$post.id}" title="Details" onclick="javascript:showPost({$result.id}, {$post.id});return false;"><img src="{$APP_URL}app/view/images/icons/database_table.png" alt="Details" title="Details" /></a><br />
