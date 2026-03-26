@@ -465,7 +465,7 @@ iframeLocation(		top.frames["iframe_3"], "index.php?cmd=Calendar&date=" + date +
 			</table>
 			<!-- /Team Zone -->
 			
-			<div style="{*border: 1px solid red; *}text-align: center">
+			<div style="text-align: center; margin-top: 16px;">
 				<img src="{$APP_URL}index.php?cmd=DashboardGraph2&amp;v={$APP_VERSION|default:'1'}" alt="Team Zone KPI chart" />
 			</div>
 
