@@ -26,17 +26,23 @@ function submitbutton(pressbutton)
 	}
 }
 
+window.addEventListener('load', function() {
+    if (typeof parent !== 'undefined' && typeof parent.hideMailerListLoader === 'function') {
+        parent.hideMailerListLoader();
+    }
+});
+
 {/literal}
 </script>
 
 {if $feedback == "Mailer added successfully"}
 	<p>
-		<a href="index.php?cmd=MailerItemCreate&mailer_id={$new_mailer->getId()}&initiative_id={$new_mailer->getClientInitiativeId()}">
+		<a href="index.php?cmd=MailerItemCreate&mailer_id={$new_mailer->getId()}&initiative_id={$new_mailer->getClientInitiativeId()}" onclick="if (typeof parent.showMailerListLoader === 'function') parent.showMailerListLoader();">
 			Add new recipients to this mailer
 		</a>
 	</p>
 	
-	<p><a href="index.php?cmd=MailerList" target="_parent">Refresh the mailer list</a></p>
+	<p><a href="index.php?cmd=MailerList" target="_parent" onclick="if (typeof parent.showMailerListLoader === 'function') parent.showMailerListLoader();">Refresh the mailer list</a></p>
 	
 {else}
 	

@@ -42,7 +42,7 @@ function highlightSelectedRow(row_id)
 {/literal}
 
 //display filter name in menu bar
-top.$('loaded_filter_name').innerHTML = "{$filter->getName()}";
+try { if (top.$('loaded_filter_name')) top.$('loaded_filter_name').innerHTML = "{$filter->getName()}"; } catch(e) {}
 
 </script>
 

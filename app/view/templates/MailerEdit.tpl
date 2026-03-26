@@ -26,11 +26,17 @@ function submitbutton(pressbutton)
 	}
 }
 
+window.addEventListener('load', function() {
+    if (typeof parent !== 'undefined' && typeof parent.hideMailerListLoader === 'function') {
+        parent.hideMailerListLoader();
+    }
+});
+
 {/literal}
 </script>
 
 {if $feedback == "Mailer updated successfully"}
-	<p><a href="index.php?cmd=MailerList" target="_parent">Refresh the mailer list</a></p>
+	<p><a href="index.php?cmd=MailerList" target="_parent" onclick="if (typeof parent.showMailerListLoader === 'function') parent.showMailerListLoader();">Refresh the mailer list</a></p>
 {else}
 	
 	<form id="frm_mailer_edit" name="frm_mailer_edit" action="index.php?cmd=MailerEdit" method="post">

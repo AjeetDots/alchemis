@@ -2,8 +2,38 @@
 
 {include file="header.tpl" title="User Filter List"}
 
+<style>
+{literal}
+#mailer_list_loader {
+	display: none;
+	position: fixed;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	background: rgba(255,255,255,0.7);
+	z-index: 9999;
+}
+#mailer_list_loader .loader_inner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+}
+{/literal}
+</style>
+
 <script language="JavaScript" type="text/javascript">
 {literal}
+
+function showMailerListLoader() {
+	var el = document.getElementById('mailer_list_loader');
+	if (el) el.style.display = 'block';
+}
+
+function hideMailerListLoader() {
+	var el = document.getElementById('mailer_list_loader');
+	if (el) el.style.display = 'none';
+}
 
 /* --- Standard functions --- */
 // Maintain global tab collection (tab_colln) 
@@ -26,7 +56,8 @@ function openInfoPane(src)
 	else
 	{
 		//alert("Here1");
-iframeLocation(		iframe1, src);
+		showMailerListLoader();
+		iframeLocation(iframe1, src);
 	}
 		
 }
@@ -65,6 +96,7 @@ function editMailer(mailer_id)
 	
 	if (reload)
 	{
+		showMailerListLoader();
 		iframeLocation(iframe1, "index.php?cmd=MailerItemList&mailer_id=" + mailer_id);
 	}
 	
@@ -74,6 +106,7 @@ function editMailer(mailer_id)
 
 function showStatistics(mailer_id)
 {
+	showMailerListLoader();
 	iframeLocation(	iframe1, "index.php?cmd=MailerStatistics&id=" + mailer_id);
 }
 
@@ -114,7 +147,8 @@ function updateMailer(mailer_id)
 
 function refreshMailerList(display)
 {
-	location.href = 'index.php?cmd=MailerList&display=' + display;	
+	showMailerListLoader();
+	location.href = 'index.php?cmd=MailerList&display=' + display;
 }
 
 
@@ -188,6 +222,12 @@ function exportMailer(mailer_id)
 {/literal}
 </script>
 
+<div id="mailer_list_loader">
+	<div class="loader_inner">
+		<img src="{$APP_URL}app/view/images/ajax_loader.gif" alt="Loading..." />
+	</div>
+</div>
+
 <table class="adminform">
 	<tr>
 		<td width="34%" valign="top">
@@ -249,7 +289,7 @@ function exportMailer(mailer_id)
 		
 		<td width="66%" valign="top">
 			<div style="height:730px;">
-				<iframe id="iframe1" name="iframe1" src="" scrolling="no" border="0" frameborder="no" style="height: 720px; width: 100%; "></iframe>
+				<iframe id="iframe1" name="iframe1" src="about:blank" scrolling="no" border="0" frameborder="no" style="height: 720px; width: 100%; " onload="hideMailerListLoader();"></iframe>
 			</div>
 		</td>
 	</tr>
