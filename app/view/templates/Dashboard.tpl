@@ -9,30 +9,6 @@
 <link href="{$APP_URL}app/view/styles/calendar.css" rel="stylesheet" type="text/css" />
 <link href="{$APP_URL}app/view/styles/calendar_day.css" rel="stylesheet" type="text/css" />
 
-<style>
-{literal}
-/* Compact rendering to keep the dashboard entirely above the fold */
-table.dashboard { border-collapse: separate; border-spacing: 10px !important; }
-h3 { margin: 5px 0 2px 0 !important; font-size: 13px !important; }
-table.adminlist th, table.adminlist td { padding: 2px 4px !important; font-size: 11px !important; }
-.dashboard > tbody > tr > td > br { display: none; } /* Strip physical spacer breaks */
-
-/* Modern Responsive fallback */
-@media screen and (max-width: 1366px) {
-    table.dashboard { display: block; width: 100%; }
-    table.dashboard > tbody, table.dashboard > tbody > tr { display: flex; flex-direction: row; flex-wrap: wrap; width: 100%; }
-    table.dashboard > tbody > tr > td { display: block; width: 100% !important; margin-bottom: 15px; }
-}
-
-/* Restrict graph sizing */
-.dashboard img[src*="DashboardGraph"] {
-    max-width: 100%;
-    height: auto;
-    max-height: 150px;
-}
-{/literal}
-</style>
-
 <script language="JavaScript" type="text/javascript">
 {literal}
 
@@ -257,7 +233,7 @@ iframeLocation(		top.frames["iframe_3"], "index.php?cmd=Calendar&date=" + date +
 
 			<h3>Summary of progress this month to date</h3>
 			
-			<div style="{*border: 1px solid red; *}text-align: center">
+			<div style="text-align: center;">
 				<img src="{$APP_URL}index.php?cmd=DashboardGraph1&amp;client_id={$client_selected|default:0}&amp;v={$APP_VERSION|default:'1'}" alt="Set and Attended chart" />
 			</div>
 

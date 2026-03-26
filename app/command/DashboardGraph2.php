@@ -272,7 +272,7 @@ class app_command_DashboardGraph2 extends app_command_Command
 
             $b1plot = new BarPlot($attended);
             $b1plot->SetFillColor('#A4C5E8');
-            $b1plot->SetWidth(0.6);
+            $b1plot->SetWidth(0.2);
             $b1plot->value->Show(true);
             $b1plot->value->SetFormat('%d');
             $b1plot->value->SetColor('#333333');
