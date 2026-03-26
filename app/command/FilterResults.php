@@ -25,6 +25,10 @@ class app_command_FilterResults extends app_command_Command
 			$filter_builder = new app_domain_FilterBuilder();
 
 			$filter = app_domain_Filter::find($id);
+			if (is_null($filter))
+			{
+				return self::statuses('CMD_OK');
+			}
 			$results_format = $filter->getResultsFormat();
 
 			if ($action == 'reload')

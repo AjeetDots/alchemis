@@ -23,6 +23,7 @@ class app_view_MailerCreate extends app_view_ManipulationView
 		$this->smarty->assign('mailer_response_groups', $this->request->getObject('mailer_response_groups'));
 		
 		$this->smarty->assign('new_mailer', $this->request->getObject('new_mailer'));
+		$this->smarty->assign('source_tab', $this->request->getProperty('source_tab'));
 		
 		// Get any feedback
 		$this->smarty->assign('feedback', $this->request->getFeedbackString('</li><li>'));
