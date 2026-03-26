@@ -2,6 +2,7 @@
 
 require_once('include/Utils/Utils.class.php');
 require_once('include/Utils/String.class.php');
+require_once('app/base/ValidationError.php');
 
 /**
  * Extends the base Command object by adding function(s) to handle validation 
@@ -22,13 +23,18 @@ class app_command_ClientCreate extends app_command_ManipulationCommand
 		}
 		elseif ($task == 'save')
 		{
-			if ($this->processForm($request))
+			if ($errors = $this->getFormErrors($request))
+			{
+				$this->handleValidationErrors($request, $errors);
+				$this->init($request);
+				return self::statuses('CMD_VALIDATION_ERROR');
+			}
+			elseif ($this->processForm($request))
 			{
 				$request->addFeedback('Save Successful');
 				$request->setProperty('success', true);
 				$request->setProperty('id',$this->clientId);
 				return self::statuses('CMD_OK');
-
 			}
 			else
 			{
@@ -40,6 +46,21 @@ class app_command_ClientCreate extends app_command_ManipulationCommand
 			$this->init($request);
 			return self::statuses('CMD_OK');
 		}
+	}
+
+	/**
+	 * Checks form fields against validation rules.
+	 * @param app_controller_Request $request
+	 * @return array an array of errors, empty if none found
+	 */
+	protected function getFormErrors(app_controller_Request $request)
+	{
+		$errors = array();
+		if (empty(trim($request->getProperty('client_name'))))
+		{
+			$errors['client_name'] = new app_base_ValidationError('Client name is required');
+		}
+		return $errors;
 	}
 
 	/**
