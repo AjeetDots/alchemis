@@ -75,10 +75,21 @@ class app_command_MailerItemCreate extends app_command_ManipulationCommand
 		$properties = $request->getProperties();
 		foreach ($properties as $key => $item)
 		{
-			$temp = strpos($key, 'chk_post_id_');
-			if ($temp !== false)
+			// Supported checkbox naming:
+			// - MailerItemCreateResults.tpl: chk_post_id_{post_id}
+			// - FilterResultsCompaniesPosts.tpl: chk_post_{post_id}
+			$post_id = null;
+			if (strpos($key, 'chk_post_id_') === 0)
 			{
-				$post_id = trim(substr($key,12));
+				$post_id = trim(substr($key, 12));
+			}
+			elseif (strpos($key, 'chk_post_') === 0)
+			{
+				$post_id = trim(substr($key, 9));
+			}
+
+			if (!is_null($post_id))
+			{
 				if (is_numeric($post_id))
 				{
 					// Create mailer item

@@ -38,6 +38,8 @@ class app_view_FilterResults extends app_view_View
 			$this->smarty->assign('filter', $filter);
 			$this->smarty->assign('client_name', $this->request->getProperty('client_name'));
 			$this->smarty->assign('results', $collection);
+			$this->smarty->assign('results_truncated', $this->request->getObject('results_truncated'));
+			$this->smarty->assign('results_max', $this->request->getObject('results_max'));
 
 			switch ($filter->getResultsFormat())
 			{

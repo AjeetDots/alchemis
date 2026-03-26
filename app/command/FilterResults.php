@@ -14,6 +14,9 @@ class app_command_FilterResults extends app_command_Command
 {
 	public function doExecute(app_controller_Request $request)
 	{
+		// Large filters can return many rows; avoid PHP memory exhaustion on the results page.
+		@ini_set('memory_limit', '512M');
+
 		if ($request->getProperty('id') == '' || is_null($request->getProperty('id')))
 		{
 			// do nothing
@@ -30,12 +33,15 @@ class app_command_FilterResults extends app_command_Command
 				return self::statuses('CMD_OK');
 			}
 			$results_format = $filter->getResultsFormat();
+			$results_max = app_mapper_FilterBuilderMapper::MAX_FILTER_RESULTS_FOR_DISPLAY;
 
 			if ($action == 'reload')
 			{
 				// Display existing saved results without rebuilding — fast path
 				$results = app_domain_FilterBuilder::getFilterBuilderResults($id, $results_format);
 				$request->setObject('results', $results);
+				$request->setObject('results_max', $results_max);
+				$request->setObject('results_truncated', is_array($results) && count($results) >= $results_max);
 			}
 			else
 			{
@@ -59,6 +65,8 @@ class app_command_FilterResults extends app_command_Command
 				}
 
 				$request->setObject('results', $t['results']);
+				$request->setObject('results_max', $results_max);
+				$request->setObject('results_truncated', is_array($t['results']) && count($t['results']) >= $results_max);
 				// need to get the filter again as we may have updated the filter statistics
 				// NOTE: Need to remove existing filter object from the collection and then
 				// replace with a new one which will have the correct statistics

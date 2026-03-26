@@ -6,16 +6,35 @@
 function submitform(pressbutton)
 {
 	var doc = iframe1.document || iframe1.contentWindow.document;
-	doc.mailer_results.task.value = pressbutton;
+	var frm = doc.mailer_results || doc.frm_results || doc.form_results;
+	if (!frm)
+	{
+		alert("Mailer results are not loaded yet. Please build/reload the selected filter first.");
+		return false;
+	}
+
+	// Ensure a hidden 'task' field exists.
+	var taskEl = frm.elements['task'];
+	if (!taskEl)
+	{
+		taskEl = document.createElement('input');
+		taskEl.type = 'hidden';
+		taskEl.name = 'task';
+		frm.appendChild(taskEl);
+	}
+	taskEl.value = pressbutton;
 	
 	try
 	{
-		doc.mailer_results.onsubmit();
+		if (frm.onsubmit)
+		{
+			frm.onsubmit();
+		}
 	}
 	catch(e)
 	{}
 	
-	doc.mailer_results.submit();
+	frm.submit();
 }
 
 function submitbutton(pressbutton)
@@ -38,11 +57,30 @@ iframeLocation(	iframe1, "index.php?cmd=FilterResults&id=" + filter_id + "&actio
 function addPosts()
 {
 	var doc = iframe1.document || iframe1.contentWindow.document;
-	var frm = doc.mailer_results;
+	var frm = doc.mailer_results || doc.frm_results || doc.form_results;
+	if (!frm)
+	{
+		alert("Mailer results are not loaded yet. Please build/reload the selected filter first.");
+		return false;
+	}
+
+	function setHiddenField(frmRef, name, value)
+	{
+		var el = frmRef.elements[name];
+		if (!el)
+		{
+			el = document.createElement('input');
+			el.type = 'hidden';
+			el.name = name;
+			frmRef.appendChild(el);
+		}
+		el.value = value;
+	}
+
 	frm.action = "index.php?cmd=MailerItemCreate";
 	{/literal}
-	frm.mailer_id.value = {$mailer_id};
-	frm.initiative_id.value = {$initiative_id};
+	setHiddenField(frm, 'mailer_id', {$mailer_id});
+	setHiddenField(frm, 'initiative_id', {$initiative_id});
 	{literal}
 	submitform('save');
 }

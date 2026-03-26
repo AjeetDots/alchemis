@@ -11,6 +11,12 @@ require_once('app/domain.php');
  */
 class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_domain_FilterBuilderFinder
 {
+	/**
+	 * Hard cap for rendering filter results in the browser.
+	 * Without this, returning too many rows via queryAll() can exhaust PHP memory.
+	 */
+	public const MAX_FILTER_RESULTS_FOR_DISPLAY = 5000;
+
 	protected static $DB;
 
 	public function __construct()
@@ -216,6 +222,9 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 
 		}
 //		echo $query;
+
+		// Limit the rows returned for on-screen rendering (prevents PHP OOM).
+		$query .= ' LIMIT ' . (int) self::MAX_FILTER_RESULTS_FOR_DISPLAY;
 
 		return self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
 

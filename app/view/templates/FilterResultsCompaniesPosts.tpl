@@ -5,7 +5,7 @@
 
 {if !isset($filter) || $filter == null || $filter == ""}
 
-	No filter results loaded. Please click on the <a href="#" onclick="javascript:parent.loadTab(9, 'FilterList');">Filters</a> tab to load a filter.
+	No filter results loaded. Please click on the <a href="#" onclick="javascript:var lt=(top&&typeof top.loadTab==='function')?top.loadTab:(top.parent&&typeof top.parent.loadTab==='function')?top.parent.loadTab:null; if(lt) lt(9,'FilterList'); return false;">Filters</a> tab to load a filter.
 
 {else}
 
@@ -519,6 +519,12 @@ iframeLocation(			top.frames["iframe_7"], "index.php?cmd=WorkspaceFilter&id=" + 
 		<input type="hidden" name="filter_id" id="filter_id" value="{$filter->getId()}" />
 
 		Results for the filter <strong>{$filter->getName()}</strong>
+
+		{if isset($results_truncated) && $results_truncated}
+			<div style="color: #b00; margin: 8px 0;">
+				Showing the first {$results_max} results due to a large filter. Refine your filter to see more.
+			</div>
+		{/if}
 
 		<br />
 

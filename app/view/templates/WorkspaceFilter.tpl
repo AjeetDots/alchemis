@@ -1,7 +1,7 @@
 {include file="header.tpl" title="Workspace Filter"}
 
 {if !isset($company_id) || $company_id == null || $company_id == ""}
-	No filter loaded. Please click on the <a href="#" onclick="javascript:parent.loadTab(9, 'FilterList');">Filters</a> tab to load a filter.
+	No filter loaded. Please click on the <a href="#" onclick="javascript:var lt=(top&&typeof top.loadTab==='function')?top.loadTab:(top.parent&&typeof top.parent.loadTab==='function')?top.parent.loadTab:null; if(lt) lt(9,'FilterList'); return false;">Filters</a> tab to load a filter.
 {else}
 	<script type="text/javascript" src="{$APP_URL}app/view/templates/WorkspaceFilter.js"></script>
 	<script type="text/javascript" src="{$APP_URL}app/view/templates/Workspace.js?date=03Sept2021"></script>

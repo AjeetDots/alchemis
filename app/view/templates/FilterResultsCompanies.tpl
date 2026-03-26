@@ -5,7 +5,7 @@
 
 {if $filter == null || $filter == ""}
 
-	No filter results loaded. Please click on the <a href="#" onclick="javascript:parent.loadTab(9, 'FilterList');">Filters</a> tab to load a filter.
+	No filter results loaded. Please click on the <a href="#" onclick="javascript:var lt=(top&&typeof top.loadTab==='function')?top.loadTab:(top.parent&&typeof top.parent.loadTab==='function')?top.parent.loadTab:null; if(lt) lt(9,'FilterList'); return false;">Filters</a> tab to load a filter.
 
 {else}
 
