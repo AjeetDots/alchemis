@@ -12,7 +12,7 @@ function openInfoPane(src)
 	}
 	else
 	{
-		iframeLocation(parent.ifr_info, src);
+		parent.iframeLocation(parent.ifr_info, src);
 	}
 }
 	

@@ -677,8 +677,10 @@ function formatYear(str)
  */
 function launchReport(source)
 {
-	//alert(source);
-	reportWindow = window.open(source, "", "width=720,height=600,resizable=yes,toolbar=no,scrollbars=yes");
+	reportWindow = window.open('', "", "width=720,height=600,resizable=yes,toolbar=no,scrollbars=yes");
+	reportWindow.document.write('<html><head><title>Generating Report</title></head><body style="font-family:Arial,sans-serif;text-align:center;padding-top:120px;color:#444;"><p style="font-size:15px;font-weight:bold;">Generating report, please wait...</p><p><img src="{/literal}{$APP_URL}{literal}app/view/images/ajax_loader.gif" alt="" width="32" height="32" /></p></body></html>');
+	reportWindow.document.close();
+	reportWindow.location.href = source;
 	reportWindow.focus();
 	if (window.event) window.event.cancelBubble = true;
 }
