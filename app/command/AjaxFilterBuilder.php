@@ -232,8 +232,10 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 			foreach ($items as $item)
 			{
 
+				// Avoid "Undefined array key" notices which can corrupt JSON responses.
+				$label = isset($labels[$item]) && $labels[$item] ? $labels[$item] : ucfirst($item);
 				$options[] = array(	'value' => $item,
-									'text' 	=> C_String::htmlDisplay($labels[$item] ? $labels[$item] : ucfirst($item)));
+									'text' 	=> C_String::htmlDisplay($label));
 			}
 			return $options;
 		}
