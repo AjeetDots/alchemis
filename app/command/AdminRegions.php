@@ -72,11 +72,16 @@ class app_command_AdminRegions extends app_command_Command
 	 */
 	protected function processForm(app_controller_Request $request)
 	{
+		$name = $request->getProperty('region_name');
 		
+		if (empty($name)) {
+			$request->addError('Region name is required');
+			return false;
+		}
 		
 		$region = new app_domain_Region();
 		
-		$region->setName($request->getProperty('region_name'));
+		$region->setName($name);
 		$region->setDescription($request->getProperty('region_description'));
 		$region->commit();
 		

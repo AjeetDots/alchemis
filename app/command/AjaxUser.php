@@ -23,7 +23,7 @@ class app_command_AjaxUser extends app_command_AjaxCommand
 	 */
 	public function execute()
 	{
-		error_reporting (E_ALL & ~E_NOTICE);
+		error_reporting (E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 		
 		$debug = false;
 		if ($debug) echo "<pre>";
@@ -31,17 +31,17 @@ class app_command_AjaxUser extends app_command_AjaxCommand
 		if ($debug) echo "</pre>";
 		
 		// Instantiate the object
-		$id = $this->request->item_id;
+		$id = isset($this->request->item_id) ? $this->request->item_id : null;
 			
-		switch ($this->request->cmd_action)
+		switch (isset($this->request->cmd_action) ? $this->request->cmd_action : null)
 		{
 			case 'add_user':
 				$user = new app_domain_RbacUser();
-				$user->setName($this->request->name);
-				$user->setHandle($this->request->handle);
-				$user->setPassword(md5($this->request->password));
-				$user->setActive($this->request->active);
-				$client_id = $this->request->client_id ? $this->request->client_id : null;
+				$user->setName(isset($this->request->name) ? $this->request->name : null);
+				$user->setHandle(isset($this->request->handle) ? $this->request->handle : null);
+				$user->setPassword(md5(isset($this->request->password) ? $this->request->password : ''));
+				$user->setActive(isset($this->request->active) ? $this->request->active : 0);
+				$client_id = (isset($this->request->client_id) && $this->request->client_id) ? $this->request->client_id : null;
 				$user->setClientId($client_id);
 				$user->commit();
 				$this->request->line_html = $this->getUserListLine($user);

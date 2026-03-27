@@ -24,22 +24,28 @@ class app_command_AjaxRegion extends app_command_AjaxCommand
 	 */
 	public function execute()
 	{
-		error_reporting (E_ALL & ~E_NOTICE);
+		error_reporting (E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 		
-		switch ($this->request->cmd_action)
+		switch (isset($this->request->cmd_action) ? $this->request->cmd_action : null)
 		{
 			case 'get_postcodes_start_with':
-				$results = app_domain_Region::findPostcodesStartWith($this->request->search_item);
+				$results = app_domain_Region::findPostcodesStartWith(isset($this->request->search_item) ? $this->request->search_item : '');
 				$this->request->results = $this->getPostcodeResults($results);
 				break;
 			case 'delete_region':
-				$region = app_domain_Region::find($this->request->item_id);
-				$region->markDeleted();
-				$region->commit();
+				$regions = app_domain_Region::find(isset($this->request->item_id) ? $this->request->item_id : null);
+				$region = $regions->current();
+				if ($region) {
+					$region->markDeleted();
+					$region->commit();
+				}
 				break;
 			case 'delete_region_postcode':
-				$region = app_domain_Region::find($this->request->region_id);
-				$region->deletePostcode($this->request->postcode_id);
+				$regions = app_domain_Region::find(isset($this->request->region_id) ? $this->request->region_id : null);
+				$region = $regions->current();
+				if ($region) {
+					$region->deletePostcode(isset($this->request->postcode_id) ? $this->request->postcode_id : null);
+				}
 				break;
 			default:
 				break;

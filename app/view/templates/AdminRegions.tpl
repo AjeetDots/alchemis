@@ -119,13 +119,13 @@ function deleteRow(item_id)
 						<span style="text-align: right"><strong>{$regions|@count}</strong> record{if $regions|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
 						<input type="button" id="add_new_region" name="add_new_region" value="Add New Region" onclick="javascript:$('div_new_region').show();$('region_name').focus();" />
 						<div id="div_new_region" style="display: none; margin-top: 10px">
-							<form id="form_new_region" name="form_new_region" action="index.php?cmd=AdminRegions" method="post">
+							<form id="form_new_region" name="form_new_region" action="index.php?cmd=AdminRegions" method="post" onsubmit="showLoader()">
 								<input type="hidden" name="task" value="" />
 								
 								<table class="ianlist">
 									<tr>
 										<th style="vertical-align: top; width: 20%">Name</th>
-										<td colspan="2" style="vertical-align: top; width: 80%"><input type="text" id="region_name" name="region_name" style="width: 250px;" /></td>
+										<td colspan="2" style="vertical-align: top; width: 80%"><input type="text" id="region_name" name="region_name" style="width: 250px;" required="required" /></td>
 									</tr>
 									<tr>
 										<th style="vertical-align: top; width: 20%">Description</th>

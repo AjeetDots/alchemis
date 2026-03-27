@@ -1742,3 +1742,54 @@ Stack trace:
 #11 /var/www/html/index.php(163): app_controller_Controller::run()
 #12 {main}
 
+[2026-03-27 11:31:03] Column 'handle' cannot be null in /var/www/html/include/pear/MDB2/Driver/mysqli.php on line 781
+Stack trace:
+#0 /var/www/html/include/pear/MDB2/Driver/mysqli.php(781): mysqli_query(Object(mysqli), 'EXECUTE mdb2_st...')
+#1 /var/www/html/include/pear/MDB2/Driver/mysqli.php(1798): MDB2_Driver_mysqli->_doQuery('EXECUTE mdb2_st...', false, Object(mysqli))
+#2 /var/www/html/include/pear/MDB2.php(4127): MDB2_Statement_mysqli->_execute(true, false)
+#3 /var/www/html/app/mapper/Mapper.php(170): MDB2_Statement_Common->execute(Array)
+#4 /var/www/html/app/mapper/RbacUserMapper.php(127): app_mapper_Mapper->doStatement(Object(MDB2_Statement_mysqli), Array)
+#5 /var/www/html/app/mapper/Mapper.php(136): app_mapper_RbacUserMapper->doInsert(Object(app_domain_RbacUser))
+#6 /var/www/html/app/domain/ObjectWatcher.php(207): app_mapper_Mapper->insert(Object(app_domain_RbacUser))
+#7 /var/www/html/app/domain/DomainObject.php(47): app_domain_ObjectWatcher::commit(Object(app_domain_RbacUser))
+#8 /var/www/html/app/command/AjaxUser.php(46): app_domain_DomainObject->commit()
+#9 /var/www/html/app/controller/Controller.php(330): app_command_AjaxUser->execute()
+#10 /var/www/html/app/controller/Controller.php(235): app_controller_Controller->handleAjaxRequest(Object(app_controller_Request))
+#11 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#12 /var/www/html/index.php(163): app_controller_Controller::run()
+#13 {main}
+
+[2026-03-27 11:31:09] Column 'handle' cannot be null in /var/www/html/include/pear/MDB2/Driver/mysqli.php on line 781
+Stack trace:
+#0 /var/www/html/include/pear/MDB2/Driver/mysqli.php(781): mysqli_query(Object(mysqli), 'EXECUTE mdb2_st...')
+#1 /var/www/html/include/pear/MDB2/Driver/mysqli.php(1798): MDB2_Driver_mysqli->_doQuery('EXECUTE mdb2_st...', false, Object(mysqli))
+#2 /var/www/html/include/pear/MDB2.php(4127): MDB2_Statement_mysqli->_execute(true, false)
+#3 /var/www/html/app/mapper/Mapper.php(170): MDB2_Statement_Common->execute(Array)
+#4 /var/www/html/app/mapper/RbacUserMapper.php(127): app_mapper_Mapper->doStatement(Object(MDB2_Statement_mysqli), Array)
+#5 /var/www/html/app/mapper/Mapper.php(136): app_mapper_RbacUserMapper->doInsert(Object(app_domain_RbacUser))
+#6 /var/www/html/app/domain/ObjectWatcher.php(207): app_mapper_Mapper->insert(Object(app_domain_RbacUser))
+#7 /var/www/html/app/domain/DomainObject.php(47): app_domain_ObjectWatcher::commit(Object(app_domain_RbacUser))
+#8 /var/www/html/app/command/AjaxUser.php(46): app_domain_DomainObject->commit()
+#9 /var/www/html/app/controller/Controller.php(330): app_command_AjaxUser->execute()
+#10 /var/www/html/app/controller/Controller.php(235): app_controller_Controller->handleAjaxRequest(Object(app_controller_Request))
+#11 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#12 /var/www/html/index.php(163): app_controller_Controller::run()
+#13 {main}
+
+[2026-03-27 11:37:12] Column 'name' cannot be null in /var/www/html/include/pear/MDB2/Driver/mysqli.php on line 1813
+Stack trace:
+#0 /var/www/html/include/pear/MDB2/Driver/mysqli.php(1813): mysqli_stmt_execute(Object(mysqli_stmt))
+#1 /var/www/html/include/pear/MDB2.php(4127): MDB2_Statement_mysqli->_execute(true, false)
+#2 /var/www/html/app/mapper/Mapper.php(170): MDB2_Statement_Common->execute(Array)
+#3 /var/www/html/app/mapper/RegionMapper.php(90): app_mapper_Mapper->doStatement(Object(MDB2_Statement_mysqli), Array)
+#4 /var/www/html/app/mapper/Mapper.php(136): app_mapper_RegionMapper->doInsert(Object(app_domain_Region))
+#5 /var/www/html/app/domain/ObjectWatcher.php(207): app_mapper_Mapper->insert(Object(app_domain_Region))
+#6 /var/www/html/app/domain/DomainObject.php(47): app_domain_ObjectWatcher::commit(Object(app_domain_Region))
+#7 /var/www/html/app/command/AdminRegions.php(81): app_domain_DomainObject->commit()
+#8 /var/www/html/app/command/AdminRegions.php(50): app_command_AdminRegions->processForm(Object(app_controller_Request))
+#9 /var/www/html/app/command/Command.php(48): app_command_AdminRegions->doExecute(Object(app_controller_Request))
+#10 /var/www/html/app/controller/Controller.php(240): app_command_Command->execute(Object(app_controller_Request))
+#11 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#12 /var/www/html/index.php(163): app_controller_Controller::run()
+#13 {main}
+
