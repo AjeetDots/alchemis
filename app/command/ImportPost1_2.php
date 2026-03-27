@@ -100,15 +100,14 @@ class app_command_ImportPost1_2 extends app_command_ManipulationCommand
     {
     	require_once('app/base/Registry.php');
     	$dsn = app_base_ApplicationRegistry::getDSN();
-    	$username = preg_replace('/^.+:\/\/|:.+@.+\/.+$/i', '', $dsn);
-    	$password = preg_replace('/^.+:\/\/.+:|@.+\/.+$/i', '', $dsn);
-    	$database = preg_replace('/^.+:\/\/.+:.+@.+\//i', '', $dsn);
-    	$hostname = preg_replace('/^.+:\/\/.+:.+@|\/.+$/i', '', $dsn);
+    	$parts = parse_url($dsn);
+    	
     	return array(
-    				'username' => $username, 
-    				'password' => $password,
-    				'database' => $database,
-    				'hostname' => $hostname,
+    		'username' => $parts['user'] ?? '',
+    		'password' => $parts['pass'] ?? '',
+    		'database' => isset($parts['path']) ? ltrim($parts['path'], '/') : '',
+    		'hostname' => $parts['host'] ?? '',
+    		'port'     => $parts['port'] ?? 3306,
     	);
     }
 
