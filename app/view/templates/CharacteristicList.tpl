@@ -140,7 +140,7 @@ function toggleCharacteristicDataType()
 				<tr class="hdr">
 					<td>
 						Characteristics &nbsp;&nbsp;|&nbsp;&nbsp;
-						<span style="text-align: right"><strong>{$characteristics|@count}</strong> record{if $characteristics|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
+						<span style="text-align: right"><strong>{if $characteristics}{$characteristics|@count}{else}0{/if}</strong> record{if !$characteristics || $characteristics|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
 						<input type="button" id="add_new_characteristic" name="add_new_characteristic" value="Add New Characteristic" onclick="javascript:$('div_new_characteristic').show();" />
 						<div id="div_new_characteristic" style="display: none; margin-top: 10px">
 							<form id="form_new_characteristic" name="form_new_characteristic">

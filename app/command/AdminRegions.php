@@ -55,6 +55,7 @@ class app_command_AdminRegions extends app_command_Command
 			}
 			else
 			{
+				$this->init($request);
 				return self::statuses('CMD_ERROR');
 			}
 		}

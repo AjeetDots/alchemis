@@ -20,10 +20,14 @@ function submitform(pressbutton){
 
 function submitbutton(pressbutton)
 {
-//	alert('submitbutton(' + pressbutton + ')');
-	
 	if (pressbutton == 'save') 
 	{
+		if ($('region_name').value.trim() == '')
+		{
+			alert('Region name is required');
+			$('region_name').focus();
+			return;
+		}
 		submitform( pressbutton );
 		return;
 	}
@@ -116,7 +120,7 @@ function deleteRow(item_id)
 				<tr class="hdr">
 					<td>
 						Regions &nbsp;&nbsp;|&nbsp;&nbsp;
-						<span style="text-align: right"><strong>{$regions|@count}</strong> record{if $regions|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
+						<span style="text-align: right"><strong>{if $regions}{$regions|@count}{else}0{/if}</strong> record{if !$regions || $regions|@count != 1}s{/if}</span> &nbsp;&nbsp;|&nbsp;&nbsp;
 						<input type="button" id="add_new_region" name="add_new_region" value="Add New Region" onclick="javascript:$('div_new_region').show();$('region_name').focus();" />
 						<div id="div_new_region" style="display: none; margin-top: 10px">
 							<form id="form_new_region" name="form_new_region" action="index.php?cmd=AdminRegions" method="post" onsubmit="showLoader()">
