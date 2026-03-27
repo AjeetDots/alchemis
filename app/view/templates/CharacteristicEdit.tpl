@@ -213,11 +213,11 @@ function removeInitiative(id, element) {
 </script>
 
 
-<form action="index.php?cmd=CharacteristicEdit" method="post" id="characteristic_form">
+<form action="index.php?cmd=CharacteristicEdit" method="post" id="characteristic_form" onsubmit="showLoader()">
 
-	<input type="hidden" id="parent_object_type" value="{$parent_object_type}" />
-	<input type="hidden" id="parent_object_id" value="{$parent_object_id}" />
-	<input type="hidden" id="category_id" value="{$category_id}" />
+	<input type="hidden" id="parent_object_type" value="{$parent_object_type|default:''}" />
+	<input type="hidden" id="parent_object_id" value="{$parent_object_id|default:''}" />
+	<input type="hidden" id="category_id" value="{$category_id|default:''}" />
 
 	<h2>Characteristic: {$characteristic->getId()} {$characteristic->getName()}</h2>
 	
@@ -238,7 +238,7 @@ function removeInitiative(id, element) {
 			<th style="vertical-align: top; width: 20%">Type</th>
 			<td colspan="2" style="vertical-align: top; width: 80%">
 				<select id="type" name="type" onchange="javascript:switchTypeIcon();">
-					{html_options values=$types output=$types selected=$type}
+					{html_options values=$types output=$types selected=$type|default:''}
 				</select>
 				&nbsp;&nbsp;&nbsp;<img id="img_type" src="" />
 			</td>
@@ -291,7 +291,7 @@ function removeInitiative(id, element) {
 				<option value="{$result.campaign_id}">{$result.client_initiative_display}</option>
 			{/foreach}
 		</select>
-		<input type="text" name="selected_initiatives" id="selected_initiatives" value="{$campaignList}" style="display: none;">
+		<input type="text" name="selected_initiatives" id="selected_initiatives" value="{$campaignList|default:''}" style="display: none;">
 
 		<p><a href="javascript:;" onclick="addInitiative()"><img src="{$APP_URL}app/view/images/icons/cog_add.png"
 																 alt="Add" title="Add"/> Add campaign</a></p>
@@ -322,7 +322,7 @@ function removeInitiative(id, element) {
 
 	switchTypeIcon();
 
-{if $elements}
+{if isset($elements) && $elements}
 	{foreach name=element_loop from=$elements item=element}
 	loadElement('{$element.id|escape:'javascript'}', '{$element.name|escape:'javascript'}', '{$element.data_type|escape:'javascript'}');
 	{/foreach}

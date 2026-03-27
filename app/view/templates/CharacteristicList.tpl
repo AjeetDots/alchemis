@@ -27,6 +27,12 @@ function setActiveRow(id)
 
 function saveCharacteristic()
 {
+	if ($('name').value.trim() == '')
+	{
+		alert('Characteristic name is required');
+		$('name').focus();
+		return;
+	}
 //	alert('saveCharacteristic()');
 	var ill_params = new Object;
 	ill_params.name            = $F('name');

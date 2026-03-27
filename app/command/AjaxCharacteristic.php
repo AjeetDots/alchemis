@@ -23,7 +23,7 @@ class app_command_AjaxCharacteristic extends app_command_AjaxCommand
 	 */
 	public function execute()
 	{
-		error_reporting (E_ALL & ~E_NOTICE);
+		error_reporting (E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 		
 		$debug = false;
 		if ($debug) echo "<pre>";
@@ -31,19 +31,24 @@ class app_command_AjaxCharacteristic extends app_command_AjaxCommand
 		if ($debug) echo "</pre>";
 		
 		// Instantiate the object
-		$id = $this->request->item_id;
+		$id = isset($this->request->item_id) ? $this->request->item_id : null;
 			
-		switch ($this->request->cmd_action)
+		switch (isset($this->request->cmd_action) ? $this->request->cmd_action : null)
 		{
 			case 'add_characteristic':
+				if (!isset($this->request->name) || empty(trim($this->request->name))) {
+					$this->request->success = false;
+					$this->request->feedback = "Characteristic name is required";
+					break;
+				}
 				$characteristic = new app_domain_Characteristic();
-				$characteristic->setName($this->request->name);
-				$characteristic->setDescription($this->request->description);
-				$characteristic->setType($this->request->type);
-				$characteristic->setAttributes((bool)$this->request->attributes);
-				$characteristic->setOptions((bool)$this->request->options);
-				$characteristic->setMultipleSelect((bool)$this->request->multiple_select);
-				$characteristic->setDataType($this->request->data_type);
+				$characteristic->setName(isset($this->request->name) ? $this->request->name : null);
+				$characteristic->setDescription(isset($this->request->description) ? $this->request->description : null);
+				$characteristic->setType(isset($this->request->type) ? $this->request->type : null);
+				$characteristic->setAttributes(isset($this->request->attributes) ? (bool)$this->request->attributes : false);
+				$characteristic->setOptions(isset($this->request->options) ? (bool)$this->request->options : false);
+				$characteristic->setMultipleSelect(isset($this->request->multiple_select) ? (bool)$this->request->multiple_select : false);
+				$characteristic->setDataType(isset($this->request->data_type) ? $this->request->data_type : null);
 				$characteristic->commit();
 				$this->request->line_html = $this->getCharacteristicListLine($characteristic);
 				$this->request->success = true;
