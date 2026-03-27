@@ -8,7 +8,7 @@
 
 {else}
 
-<form action="index.php?cmd=UserEdit" method="post">
+<form action="index.php?cmd=UserEdit" method="post" onsubmit="showLoader()">
 
 	<input type="hidden" id="user_id" name="user_id" value="{$user->getId()}" />
 
@@ -16,21 +16,21 @@
 	
 	<table class="ianlist">
 		<tr>
-			<th style="vertical-align: top; width: 20%"{if $errors.app_domain_RbacUser_name} class="key_error" title="{$errors.app_domain_RbacUser_name->getTip()}"{/if}>Name</th>
+			<th style="vertical-align: top; width: 20%"{if !empty($errors) && isset($errors.app_domain_RbacUser_name)} class="key_error" title="{$errors.app_domain_RbacUser_name->getTip()}"{/if}>Name</th>
 			<td colspan="2" style="vertical-align: top; width: 80%">
-				<input type="text" id="app_domain_RbacUser_name" name="app_domain_RbacUser_name" value="{$app_domain_RbacUser_name}" maxlength="255" style="width: 250px" />
+				<input type="text" id="app_domain_RbacUser_name" name="app_domain_RbacUser_name" value="{$app_domain_RbacUser_name|default:''}" maxlength="255" style="width: 250px" />
 			</td>
 		</tr>
 		<tr>
-			<th style="vertical-align: top; width: 20%"{if $errors.app_domain_RbacUser_handle} class="key_error" title="{$errors.app_domain_RbacUser_handle->getTip()}"{/if}>Username</th>
+			<th style="vertical-align: top; width: 20%"{if !empty($errors) && isset($errors.app_domain_RbacUser_handle)} class="key_error" title="{$errors.app_domain_RbacUser_handle->getTip()}"{/if}>Username</th>
 			<td colspan="2" style="vertical-align: top; width: 80%">
-				<input type="text" id="app_domain_RbacUser_handle" name="app_domain_RbacUser_handle" value="{$app_domain_RbacUser_handle}" maxlength="100" style="width: 250px" />
+				<input type="text" id="app_domain_RbacUser_handle" name="app_domain_RbacUser_handle" value="{$app_domain_RbacUser_handle|default:''}" maxlength="100" style="width: 250px" />
 			</td>
 		</tr>
 		<tr>
-			<th style="vertical-align: top; width: 20%"{if $errors.app_domain_RbacUser_email} class="key_error" title="{$errors.app_domain_RbacUser_email->getTip()}"{/if}>Email</th>
+			<th style="vertical-align: top; width: 20%"{if !empty($errors) && isset($errors.app_domain_RbacUser_email)} class="key_error" title="{$errors.app_domain_RbacUser_email->getTip()}"{/if}>Email</th>
 			<td colspan="2" style="vertical-align: top; width: 80%">
-				<input type="text" id="app_domain_RbacUser_email" name="app_domain_RbacUser_email" value="{$app_domain_RbacUser_email}" maxlength="100" style="width: 250px" />
+				<input type="text" id="app_domain_RbacUser_email" name="app_domain_RbacUser_email" value="{$app_domain_RbacUser_email|default:''}" maxlength="100" style="width: 250px" />
 			</td>
 		</tr>
 	</table>
@@ -46,8 +46,8 @@
 	<div id="div_password" style="display: none; padding: 0px">
 		<table class="ianlist" style="border-collapse: collapse; padding: 0px">
 			<tr>
-				<th style="vertical-align: top; width: 20%"{if $errors.app_domain_RbacUser_password} class="key_error" title="{$errors.app_domain_RbacUser_password->getTip()}"{/if}>Password</th>
-				<td><input type="text" id="app_domain_RbacUser_password" name="app_domain_RbacUser_password" value="{$app_domain_RbacUser_password}" maxlength="32" style="width: 250px" /></td>
+				<th style="vertical-align: top; width: 20%"{if !empty($errors) && isset($errors.app_domain_RbacUser_password)} class="key_error" title="{$errors.app_domain_RbacUser_password->getTip()}"{/if}>Password</th>
+				<td><input type="text" id="app_domain_RbacUser_password" name="app_domain_RbacUser_password" value="{$app_domain_RbacUser_password|default:''}" maxlength="32" style="width: 250px" /></td>
 			</tr>
 		</table>
 	</div>
@@ -55,7 +55,7 @@
 		<tr>
 			<th style="vertical-align: top; width: 20%">Active</th>
 			<td colspan="2" style="vertical-align: top; width: 80%">
-				<input type="checkbox" id="app_domain_RbacUser_is_active" name="app_domain_RbacUser_is_active"{if $app_domain_RbacUser_is_active} checked="checked"{/if} />
+				<input type="checkbox" id="app_domain_RbacUser_is_active" name="app_domain_RbacUser_is_active"{if isset($app_domain_RbacUser_is_active) && $app_domain_RbacUser_is_active} checked="checked"{/if} />
 			</td>
 		</tr>
 	</table>
@@ -66,7 +66,7 @@
 				<select id="app_domain_RbacUser_client_id" name="app_domain_RbacUser_client_id">
 					<option selected value="0">&mdash; Alchemis User &mdash;</option>
 					{foreach name="result_loop" from=$clients item=client}
-						<option value="{$client.id}" {if $app_domain_RbacUser_client_id == $client.id}selected{/if}>{$client.name}</option>
+						<option value="{$client.id}" {if isset($app_domain_RbacUser_client_id) && $app_domain_RbacUser_client_id == $client.id}selected{/if}>{$client.name}</option>
 					{/foreach}
 				</select>
 			</td>

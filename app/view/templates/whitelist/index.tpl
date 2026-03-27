@@ -1,6 +1,6 @@
 {include file="header.tpl" title="Whitelist"}
 
-<form action="index.php?cmd=Whitelist&action=store" method="post" name="adminForm" autocomplete="off">
+<form action="index.php?cmd=Whitelist&action=store" method="post" name="adminForm" autocomplete="off" onsubmit="showLoader()">
  <fieldset class="adminform">
     <legend>Add IP to Whitelist</legend>
    <table>
@@ -8,7 +8,7 @@
         <td style="width: 80px" {if isset($errors.ip)} class="key_error" title="{$errors.ip.0}"{else}class="key"{/if}>
           <label for="ip">IP *</label>
         </td>
-        <td><input type="text" name="ip" id="ip" style="width: 200px" value="{$input.ip|default:''}" /></td>
+        <td><input type="text" name="ip" id="ip" style="width: 200px" value="{$input.ip|default:''}" required="required" /></td>
       </tr>
       <tr>
         <td style="width: 80px" {if isset($errors.description)} class="key_error" title="{$errors.description.0}"{else}class="key"{/if}>

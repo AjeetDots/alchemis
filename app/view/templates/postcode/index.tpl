@@ -1,6 +1,6 @@
 {include file="header.tpl" title="Postcode"}
 
-<form action="index.php?cmd=Postcode&action=store" method="post" name="adminForm" autocomplete="off">
+<form action="index.php?cmd=Postcode&action=store" method="post" name="adminForm" autocomplete="off" onsubmit="showLoader()">
  <fieldset class="adminform">
     <legend>Add Postcode</legend>
    <table>
@@ -8,7 +8,7 @@
         <td style="width: 80px" {if isset($errors.postcode)} class="key_error" title="{$errors.postcode.0}"{else}class="key"{/if}>
           <label for="postcode">Postcode *</label>
         </td>
-        <td><input type="text" name="postcode" id="postcode" style="width: 200px" value="{$input.postcode|default:''}" /></td>
+        <td><input type="text" name="postcode" id="postcode" style="width: 200px" value="{$input.postcode|default:''}" required="required" /></td>
       </tr>
    </table>
  </fieldset>
