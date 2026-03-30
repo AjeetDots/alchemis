@@ -42,6 +42,31 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 	 */
 	public function execute()
 	{
+		// Debug log (runtime evidence) - written as NDJSON for this debug session.
+		// #region agent log: AjaxFilterBuilder request observed
+		try {
+			$logPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'debug-651a1a.log';
+			$cmdAction = isset($this->request->cmd_action) ? $this->request->cmd_action : null;
+			$itemId = isset($this->request->item_id) ? $this->request->item_id : null;
+			$groupLevel = isset($this->request->group_level) ? $this->request->group_level : null;
+			$fieldType = isset($this->request->field_type) ? $this->request->field_type : null;
+			$line = json_encode([
+				'sessionId' => '651a1a',
+				'runId' => 'before_debug',
+				'hypothesisId' => 'H_ENDPOINT_HIT',
+				'location' => 'app/command/AjaxFilterBuilder.php:execute',
+				'message' => 'AjaxFilterBuilder execute() entered',
+				'data' => [
+					'cmd_action' => $cmdAction,
+					'item_id' => $itemId,
+					'group_level' => $groupLevel,
+					'field_type' => $fieldType
+				],
+				'timestamp' => (int) (microtime(true) * 1000)
+			], JSON_UNESCAPED_SLASHES);
+			@file_put_contents($logPath, $line . PHP_EOL, FILE_APPEND | LOCK_EX);
+		} catch (_e) {}
+		// #endregion
 
 		$this->filter_builder = new app_domain_FilterBuilder();
 

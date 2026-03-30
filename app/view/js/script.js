@@ -2,11 +2,17 @@
 
 // --- Loader helpers ---
 function showLoader() {
+	// #region agent log: loader shown
+	try{fetch('http://127.0.0.1:7520/ingest/4ceb35f8-bc50-4bc1-8562-a13e600978c3',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'651a1a'},body:JSON.stringify({sessionId:'651a1a',location:'app/view/js/script.js:showLoader',message:'showLoader() called',data:{},timestamp:Date.now(),runId:'pre_hypotheses',hypothesisId:'H_LOADER_ONLOAD_NOT_FIRED'})}).catch(()=>{});}catch(_e){}
+	// #endregion
   const el = document.getElementById('alch-loader');
   if (el) el.style.display = 'block';
 }
 
 function hideLoader() {
+	// #region agent log: loader hidden
+	try{fetch('http://127.0.0.1:7520/ingest/4ceb35f8-bc50-4bc1-8562-a13e600978c3',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'651a1a'},body:JSON.stringify({sessionId:'651a1a',location:'app/view/js/script.js:hideLoader',message:'hideLoader() called',data:{},timestamp:Date.now(),runId:'pre_hypotheses',hypothesisId:'H_LOADER_ONLOAD_NOT_FIRED'})}).catch(()=>{});}catch(_e){}
+	// #endregion
   const el = document.getElementById('alch-loader');
   if (el) el.style.display = 'none';
 }
@@ -31,7 +37,12 @@ function iframeLocation(iframe, href) {
   }
 
   showLoader();
-  target.onload = function() { hideLoader(); };
+  target.onload = function() {
+		// #region agent log: iframe onload fired
+		try{fetch('http://127.0.0.1:7520/ingest/4ceb35f8-bc50-4bc1-8562-a13e600978c3',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'651a1a'},body:JSON.stringify({sessionId:'651a1a',location:'app/view/js/script.js:iframeLocation:onload',message:'iframe onload fired',data:{href:href},timestamp:Date.now(),runId:'pre_hypotheses',hypothesisId:'H_LOADER_ONLOAD_NOT_FIRED'})}).catch(()=>{});}catch(_e){}
+		// #endregion
+		hideLoader();
+	};
 
   if (target.contentWindow && target.contentWindow.location) {
     target.contentWindow.location.href = href;
