@@ -37,12 +37,15 @@ function iframeLocation(iframe, href) {
   }
 
   showLoader();
-  target.onload = function() {
-		// #region agent log: iframe onload fired
-		try{fetch('http://127.0.0.1:7520/ingest/4ceb35f8-bc50-4bc1-8562-a13e600978c3',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'651a1a'},body:JSON.stringify({sessionId:'651a1a',location:'app/view/js/script.js:iframeLocation:onload',message:'iframe onload fired',data:{href:href},timestamp:Date.now(),runId:'pre_hypotheses',hypothesisId:'H_LOADER_ONLOAD_NOT_FIRED'})}).catch(()=>{});}catch(_e){}
-		// #endregion
-		hideLoader();
-	};
+  // When target is a named-frame Window (e.g. parent.iframe_edit_pane), setting
+  // target.onload sets window.onload on the child window, which gets overwritten by
+  // the loaded page's <body onload="...">. Use frameElement to get the actual iframe
+  // element in the parent DOM so the handler survives page navigation.
+  const _loaderEl = (target?.nodeType === undefined && target?.frameElement)
+      ? target.frameElement : target;
+  if (_loaderEl) {
+    _loaderEl.onload = function() { hideLoader(); };
+  }
 
   if (target.contentWindow && target.contentWindow.location) {
     target.contentWindow.location.href = href;

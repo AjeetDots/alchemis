@@ -117,6 +117,12 @@ function updateReminderDate()
 
 function init()
 {
+	if (typeof hideLoader === 'function') { hideLoader(); }
+	try {
+		var w = window;
+		while (w.parent && w.parent !== w) { w = w.parent; if (typeof w.hideLoader === 'function') { w.hideLoader(); } }
+	} catch(e) {}
+	top.responderFadeOut();
 	// Due date
 	YAHOO.example.calendar.cal_app_domain_Action_due_date = new YAHOO.widget.Calendar("cal_app_domain_Action_due_date", "div_cal_app_domain_Action_due_date");
 	YAHOO.example.calendar.cal_app_domain_Action_due_date.cfg.setProperty("START_WEEKDAY", 1);
