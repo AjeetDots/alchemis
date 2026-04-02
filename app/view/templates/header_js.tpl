@@ -27,6 +27,7 @@
 	<link rel="stylesheet" type="text/css" href="{$APP_URL}app/view/javascript/subModal/subModal.css" />
 
 	<script src="{$APP_URL}app/view/components/jquery/dist/jquery.min.js"></script>
+	<script>{literal}if(window.jQuery){jQuery(window).off('unload');}{/literal}</script>
 	<script src="{$APP_URL}app/view/components/angular/angular.min.js"></script>
 	<script src="{$APP_URL}app/view/js/script.js"></script>
 	<script src="{$APP_URL}app/view/js/bundle.js"></script>

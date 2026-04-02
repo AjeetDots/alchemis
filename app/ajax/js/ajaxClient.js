@@ -87,24 +87,6 @@ function onSuccess(response, json, cmd, cmd_action)
 	catch(e)
 	{
 		alert("Failed to parse response text\n\n" + response.responseText );
-		// #region agent log: json parse failure
-		try {
-			const prefix = (response && response.responseText) ? response.responseText.slice(0, 250) : '';
-			fetch('http://127.0.0.1:7520/ingest/4ceb35f8-bc50-4bc1-8562-a13e600978c3', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '651a1a' },
-				body: JSON.stringify({
-					sessionId: '651a1a',
-					runId: 'before_debug',
-					hypothesisId: 'H_JSON_PARSE_HTML',
-					location: 'app/ajax/js/ajaxClient.js:onSuccess:evalJSON',
-					message: 'evalJSON failed; response likely starts with HTML/warnings',
-					data: { cmd: cmd, cmd_action: cmd_action, responsePrefix: prefix },
-					timestamp: Date.now()
-				})
-			}).catch(()=>{});
-		} catch(_e) {}
-		// #endregion
 		return;
 	}
 
