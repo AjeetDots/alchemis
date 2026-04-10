@@ -2,18 +2,18 @@
 
 // --- Loader helpers ---
 function showLoader() {
-  const el = document.getElementById('alch-loader');
+  var el = document.getElementById('alch-loader');
   if (el) el.style.display = 'block';
 }
 
 function hideLoader() {
-  const el = document.getElementById('alch-loader');
+  var el = document.getElementById('alch-loader');
   if (el) el.style.display = 'none';
 }
 
 // Patch form.submit() so programmatic submits also show the loader
 (function() {
-  const _submit = HTMLFormElement.prototype.submit;
+  var _submit = HTMLFormElement.prototype.submit;
   HTMLFormElement.prototype.submit = function() {
     showLoader();
     _submit.call(this);
@@ -35,7 +35,7 @@ function iframeLocation(iframe, href) {
   // target.onload sets window.onload on the child window, which gets overwritten by
   // the loaded page's <body onload="...">. Use frameElement to get the actual iframe
   // element in the parent DOM so the handler survives page navigation.
-  const _loaderEl = (target?.nodeType === undefined && target?.frameElement)
+  var _loaderEl = (target && target.nodeType === undefined && target.frameElement)
       ? target.frameElement : target;
   if (_loaderEl) {
     _loaderEl.onload = function() { hideLoader(); };

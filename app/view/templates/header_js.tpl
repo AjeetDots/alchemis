@@ -11,7 +11,7 @@
 	{else}
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	{/if}
-	<meta name="robots" content="noindex,nofollow" /
+	<meta name="robots" content="noindex,nofollow" />
 	<meta name="keywords" content="alchemis" />
 	<meta name="description" content="{$APP_NAME} - {$APP_DESCRIPTION}" />
 	<meta name="referrer" content="no-referrer" />
