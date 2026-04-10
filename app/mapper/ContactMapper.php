@@ -78,9 +78,9 @@ class app_mapper_ContactMapper extends app_mapper_ShadowMapper implements app_do
 		$types = array('integer', 'integer', 'text', 'text', 'text', 'text', 'text', 'text', 'text');
 		$this->insertStmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
 
-		$data = array($object->getId(), $object->getPostId(), $object->getTitle(),
-						$object->getFirstName(), $object->getSurname(), $object->getName(),
-						$object->getTelephoneMobile(), $object->getEmail(), $object->getLinkedIn());
+		$data = array($object->getId(), $object->getPostId(), (string)$object->getTitle(),
+						(string)$object->getFirstName(), (string)$object->getSurname(), (string)$object->getName(),
+						(string)$object->getTelephoneMobile(), (string)$object->getEmail(), (string)$object->getLinkedIn());
 		$this->doStatement($this->insertStmt, $data);
 	}
 
@@ -96,9 +96,9 @@ class app_mapper_ContactMapper extends app_mapper_ShadowMapper implements app_do
 		$types = array('integer', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'integer', 'integer');
 		$this->updateStmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
 
-		$data = array($object->getPostId(), $object->getTitle(), $object->getFirstName(),
-						$object->getSurname(), $object->getName(), $object->getTelephoneMobile(),
-						$object->getEmail(), $object->getLinkedIn(), $object->getDeleted(), $object->getId());
+		$data = array($object->getPostId(), (string)$object->getTitle(), (string)$object->getFirstName(),
+						(string)$object->getSurname(), (string)$object->getName(), (string)$object->getTelephoneMobile(),
+						(string)$object->getEmail(), (string)$object->getLinkedIn(), $object->getDeleted(), $object->getId());
 		$this->doStatement($this->updateStmt, $data);
 	}
 

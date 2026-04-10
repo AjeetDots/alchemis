@@ -124,16 +124,16 @@ class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domai
 		{
 			if ($this->supportsAdditionalInfoColumn())
 			{
-				$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
-								$object->getTelephone1(), $object->getTelephone2(),
-								$object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
-								$object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getDataOwnerId(), $object->getAdditionalInfo());
+				$data = array($object->getId(), $object->getCompanyId(), (string)$object->getJobTitle(),
+								(string)$object->getTelephone1(), (string)$object->getTelephone2(),
+								(string)$object->getTelephoneSwitchboard(), (string)$object->getTelephoneFax(),
+								$object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getDataOwnerId(), (string)$object->getAdditionalInfo());
 			}
 			else
 			{
-				$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
-								$object->getTelephone1(), $object->getTelephone2(),
-								$object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
+				$data = array($object->getId(), $object->getCompanyId(), (string)$object->getJobTitle(),
+								(string)$object->getTelephone1(), (string)$object->getTelephone2(),
+								(string)$object->getTelephoneSwitchboard(), (string)$object->getTelephoneFax(),
 								$object->getDataSourceId(), $object->getDataSourceChangedDate(), $object->getDataOwnerId());
 			}
 		}
@@ -141,16 +141,16 @@ class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domai
 		{
 			if ($this->supportsAdditionalInfoColumn())
 			{
-				$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
-								$object->getTelephone1(), $object->getTelephone2(),
-								$object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
-								$object->getDataOwnerId(), $object->getAdditionalInfo());
+				$data = array($object->getId(), $object->getCompanyId(), (string)$object->getJobTitle(),
+								(string)$object->getTelephone1(), (string)$object->getTelephone2(),
+								(string)$object->getTelephoneSwitchboard(), (string)$object->getTelephoneFax(),
+								$object->getDataOwnerId(), (string)$object->getAdditionalInfo());
 			}
 			else
 			{
-				$data = array($object->getId(), $object->getCompanyId(), $object->getJobTitle(),
-								$object->getTelephone1(), $object->getTelephone2(),
-								$object->getTelephoneSwitchboard(), $object->getTelephoneFax(),
+				$data = array($object->getId(), $object->getCompanyId(), (string)$object->getJobTitle(),
+								(string)$object->getTelephone1(), (string)$object->getTelephone2(),
+								(string)$object->getTelephoneSwitchboard(), (string)$object->getTelephoneFax(),
 								$object->getDataOwnerId());
 			}
 		}
@@ -210,19 +210,19 @@ class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domai
 		{
 			if ($this->supportsAdditionalInfoColumn())
 			{
-				$data = array($object->getCompanyId(), $object->getJobTitle(),
-								$object->getPropensity(), $object->getTelephone1(),
-								$object->getTelephone2(), $object->getTelephoneSwitchboard(),
-								$object->getTelephoneFax(), $object->getDeleted(),
+				$data = array($object->getCompanyId(), (string)$object->getJobTitle(),
+								$object->getPropensity(), (string)$object->getTelephone1(),
+								(string)$object->getTelephone2(), (string)$object->getTelephoneSwitchboard(),
+								(string)$object->getTelephoneFax(), $object->getDeleted(),
 								$object->getDataSourceId(), $object->getDataSourceChangedDate(), 
-								$object->getAdditionalInfo(), $object->getId());
+								(string)$object->getAdditionalInfo(), $object->getId());
 			}
 			else
 			{
-				$data = array($object->getCompanyId(), $object->getJobTitle(),
-								$object->getPropensity(), $object->getTelephone1(),
-								$object->getTelephone2(), $object->getTelephoneSwitchboard(),
-								$object->getTelephoneFax(), $object->getDeleted(),
+				$data = array($object->getCompanyId(), (string)$object->getJobTitle(),
+								$object->getPropensity(), (string)$object->getTelephone1(),
+								(string)$object->getTelephone2(), (string)$object->getTelephoneSwitchboard(),
+								(string)$object->getTelephoneFax(), $object->getDeleted(),
 								$object->getDataSourceId(), $object->getDataSourceChangedDate(),
 								$object->getId());
 			}
@@ -231,18 +231,18 @@ class app_mapper_PostMapper extends app_mapper_ShadowMapper implements app_domai
 		{
 			if ($this->supportsAdditionalInfoColumn())
 			{
-				$data = array($object->getCompanyId(), $object->getJobTitle(),
-								$object->getPropensity(), $object->getTelephone1(),
-								$object->getTelephone2(), $object->getTelephoneSwitchboard(),
-								$object->getTelephoneFax(), $object->getDeleted(),
-								$object->getAdditionalInfo(), $object->getId());
+				$data = array($object->getCompanyId(), (string)$object->getJobTitle(),
+								$object->getPropensity(), (string)$object->getTelephone1(),
+								(string)$object->getTelephone2(), (string)$object->getTelephoneSwitchboard(),
+								(string)$object->getTelephoneFax(), $object->getDeleted(),
+								(string)$object->getAdditionalInfo(), $object->getId());
 			}
 			else
 			{
-				$data = array($object->getCompanyId(), $object->getJobTitle(),
-								$object->getPropensity(), $object->getTelephone1(),
-								$object->getTelephone2(), $object->getTelephoneSwitchboard(),
-								$object->getTelephoneFax(), $object->getDeleted(),
+				$data = array($object->getCompanyId(), (string)$object->getJobTitle(),
+								$object->getPropensity(), (string)$object->getTelephone1(),
+								(string)$object->getTelephone2(), (string)$object->getTelephoneSwitchboard(),
+								(string)$object->getTelephoneFax(), $object->getDeleted(),
 								$object->getId());
 			}
 		}

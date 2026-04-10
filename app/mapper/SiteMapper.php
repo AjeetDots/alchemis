@@ -85,9 +85,9 @@ class app_mapper_SiteMapper extends app_mapper_ShadowMapper implements app_domai
 			
 				$this->insertStmt = self::$DB->prepare($query, $types);
 			
-				$data = array($object->getId(), $object->getCompanyId(), $object->getAddress1(), 
-						$object->getAddress2(), $object->getTown(), $object->getCity(), 
-						$object->getPostcode());	
+				$data = array($object->getId(), $object->getCompanyId(), (string)$object->getAddress1(), 
+						(string)$object->getAddress2(), (string)$object->getTown(), (string)$object->getCity(), 
+						(string)$object->getPostcode());	
 			}
 			elseif ((is_null($object->getCountyId()) || $object->getCountyId() == 0) && !(is_null($object->getCountryId()) || $object->getCountryId() == 0))
 			{
@@ -100,9 +100,9 @@ class app_mapper_SiteMapper extends app_mapper_ShadowMapper implements app_domai
 			
 				$this->insertStmt = self::$DB->prepare($query, $types);
 			
-				$data = array($object->getId(), $object->getCompanyId(), $object->getAddress1(), 
-						$object->getAddress2(), $object->getTown(), $object->getCity(), 
-						$object->getPostcode(), $object->getCountryId());	
+				$data = array($object->getId(), $object->getCompanyId(), (string)$object->getAddress1(), 
+						(string)$object->getAddress2(), (string)$object->getTown(), (string)$object->getCity(), 
+						(string)$object->getPostcode(), $object->getCountryId());	
 			}
 			elseif (!(is_null($object->getCountyId()) || $object->getCountyId() == 0) && (is_null($object->getCountryId()) || $object->getCountryId() == 0))
 			{
@@ -115,9 +115,9 @@ class app_mapper_SiteMapper extends app_mapper_ShadowMapper implements app_domai
 			
 				$this->insertStmt = self::$DB->prepare($query, $types);
 			
-				$data = array($object->getId(), $object->getCompanyId(), $object->getAddress1(), 
-						$object->getAddress2(), $object->getTown(), $object->getCity(), 
-						$object->getPostcode(), $object->getCountyId());	
+				$data = array($object->getId(), $object->getCompanyId(), (string)$object->getAddress1(), 
+						(string)$object->getAddress2(), (string)$object->getTown(), (string)$object->getCity(), 
+						(string)$object->getPostcode(), $object->getCountyId());	
 			}
 			else
 			{
@@ -130,9 +130,9 @@ class app_mapper_SiteMapper extends app_mapper_ShadowMapper implements app_domai
 			
 				$this->insertStmt = self::$DB->prepare($query, $types);
 				
-				$data = array($object->getId(), $object->getCompanyId(), $object->getAddress1(), 
-						$object->getAddress2(), $object->getTown(), $object->getCity(), 
-						$object->getPostcode(), $object->getCountyId(), $object->getCountryId());
+				$data = array($object->getId(), $object->getCompanyId(), (string)$object->getAddress1(), 
+						(string)$object->getAddress2(), (string)$object->getTown(), (string)$object->getCity(), 
+						(string)$object->getPostcode(), $object->getCountyId(), $object->getCountryId());
 			}
 		}
 		
@@ -153,8 +153,8 @@ class app_mapper_SiteMapper extends app_mapper_ShadowMapper implements app_domai
 			$types = array('integer', 'text', 'text', 'text', 'text', 'text', 'integer');
 			$this->updateStmt = self::$DB->prepare($query, $types);
 			
-			$data = array($object->getCompanyId(), $object->getAddress1(), $object->getAddress2(), 
-							$object->getTown(), $object->getCity(), $object->getPostcode(), 
+			$data = array($object->getCompanyId(), (string)$object->getAddress1(), (string)$object->getAddress2(), 
+							(string)$object->getTown(), (string)$object->getCity(), (string)$object->getPostcode(), 
 							$object->getId());
 		}
 		elseif ((is_null($object->getCountyId()) || $object->getCountyId() == 0) && !(is_null($object->getCountryId()) || $object->getCountryId() == 0))
@@ -165,8 +165,8 @@ class app_mapper_SiteMapper extends app_mapper_ShadowMapper implements app_domai
 			$types = array('integer', 'text', 'text', 'text', 'text', 'text', 'integer', 'integer');
 			$this->updateStmt = self::$DB->prepare($query, $types);
 			
-			$data = array($object->getCompanyId(), $object->getAddress1(), $object->getAddress2(), 
-							$object->getTown(), $object->getCity(), $object->getPostcode(), 
+			$data = array($object->getCompanyId(), (string)$object->getAddress1(), (string)$object->getAddress2(), 
+							(string)$object->getTown(), (string)$object->getCity(), (string)$object->getPostcode(), 
 							$object->getCountryId(), $object->getId());
 		}
 		elseif (!(is_null($object->getCountyId()) || $object->getCountyId() == 0) && (is_null($object->getCountryId()) || $object->getCountryId() == 0))
@@ -189,8 +189,8 @@ class app_mapper_SiteMapper extends app_mapper_ShadowMapper implements app_domai
 			$types = array('integer', 'text', 'text', 'text', 'text', 'text', 'integer', 'integer', 'integer');
 			$this->updateStmt = self::$DB->prepare($query, $types);
 			
-			$data = array($object->getCompanyId(), $object->getAddress1(), $object->getAddress2(), 
-							$object->getTown(), $object->getCity(), $object->getPostcode(), 
+			$data = array($object->getCompanyId(), (string)$object->getAddress1(), (string)$object->getAddress2(), 
+							(string)$object->getTown(), (string)$object->getCity(), (string)$object->getPostcode(), 
 							$object->getCountyId(), $object->getCountryId(), $object->getId());
 		}
 		

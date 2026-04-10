@@ -88,9 +88,9 @@ class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_do
 			$types = array('integer', 'text', 'text', 'text', 'integer');
 			$data = array(
 				$object->getId(),
-				$object->getName(),
-				$object->getTelephone(),
-				$object->getWebsite(),
+				(string)$object->getName(),
+				(string)$object->getTelephone(),
+				(string)$object->getWebsite(),
 				$object->getParentCompany()
 			);
 		}
@@ -100,9 +100,9 @@ class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_do
 			$types = array('integer', 'text', 'text', 'text');
 			$data = array(
 				$object->getId(),
-				$object->getName(),
-				$object->getTelephone(),
-				$object->getWebsite()
+				(string)$object->getName(),
+				(string)$object->getTelephone(),
+				(string)$object->getWebsite()
 			);
 		}
 
@@ -120,13 +120,13 @@ class app_mapper_CompanyMapper extends app_mapper_ShadowMapper implements app_do
 		{
 			$query = 'UPDATE tbl_companies SET name = ?, website = ?, telephone = ?, telephone_tps = ?, parent_company_id = ?, additional_info = ? WHERE id = ?';
 			$types = array('text', 'text', 'text', 'boolean', 'integer', 'text', 'integer');
-			$data = array($object->getName(), $object->getWebsite(), $object->getTelephone(), $object->getTelephoneTps(), $object->getParentCompany(), $object->getAdditionalInfo(), $object->getId());
+			$data = array((string)$object->getName(), (string)$object->getWebsite(), (string)$object->getTelephone(), $object->getTelephoneTps(), $object->getParentCompany(), (string)$object->getAdditionalInfo(), $object->getId());
 		}
 		else
 		{
 			$query = 'UPDATE tbl_companies SET name = ?, website = ?, telephone = ?, telephone_tps = ?, additional_info = ? WHERE id = ?';
 			$types = array('text', 'text', 'text', 'boolean', 'text', 'integer');
-			$data = array($object->getName(), $object->getWebsite(), $object->getTelephone(), $object->getTelephoneTps(), $object->getAdditionalInfo(), $object->getId());
+			$data = array((string)$object->getName(), (string)$object->getWebsite(), (string)$object->getTelephone(), $object->getTelephoneTps(), (string)$object->getAdditionalInfo(), $object->getId());
 		}
 
 		$updateStmt = self::$DB->prepare($query, $types);
