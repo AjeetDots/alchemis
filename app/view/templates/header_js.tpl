@@ -407,6 +407,7 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 		_loadStartTime = null;
 		if (_loadTimer) { clearInterval(_loadTimer); _loadTimer = null; }
 		_alcUnlockUI();
+		if (typeof hideLoader === 'function') { hideLoader(); }
 
 		var notification = $('notification');
 		if (notification) {

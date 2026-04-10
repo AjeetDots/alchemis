@@ -215,22 +215,19 @@
 					row.post_id = "";
 					row.post_initiative_id = "";
 					colln.add(row);
-					
-					{* if just one company in the results then redirect to that company*}
-					{if $search_results|@count == 1}
-						showCompany({$result.id});
-					{else}
-						// hide the responder div
-						top.responderFadeOut();
-					{/if}
-					
-
 				</script>
 				{/foreach}
 			</tbody>
 		</table>
 	</div>
 	</form>
+
+	<script type="text/javascript">
+		{if $search_results|@count == 1}
+			showCompany({$search_results[0].id});
+		{/if}
+		top.responderFadeOut();
+	</script>
 
 {/if}
 
