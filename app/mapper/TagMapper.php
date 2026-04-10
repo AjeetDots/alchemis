@@ -470,9 +470,11 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 	/**
 	 * Find all initiative records which equal a given string.
 	 * @param string $project_ref project ref
+	 * @param integer $limit limit
+	 * @param integer $offset offset
 	 * @return app_mapper_TagCollection collection of app_domain_Tag objects
 	 */
-	public function findByProjectRefEqual($project_ref)
+	public function findByProjectRefEqual($project_ref, $limit = 500, $offset = 0)
 	{
 		// Select By project ref equal
 		$query = 'SELECT vw_c.id, vw_c.name, vw_c.website, vw_c.telephone, vw_c.telephone_tps, ' .
@@ -488,7 +490,7 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 				'WHERE t.value = ' . self::$DB->quote($project_ref, 'text') . ' ' .
 				'AND t.category_id = 3 ' .
 				'ORDER BY vw_c.name, vw_pc.propensity ' .
-				'LIMIT 500';
+				'LIMIT ' . (int)$offset . ', ' . (int)$limit;
 		$result = self::$DB->query($query);
 		return new app_mapper_TagCollection($result, $this);
 	}
@@ -496,9 +498,11 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 	/**
 	 * Find all initiative records which start with a given string.
 	 * @param string $project_ref project ref
+	 * @param integer $limit limit
+	 * @param integer $offset offset
 	 * @return app_mapper_TagCollection collection of app_domain_Tag objects
 	 */
-	public function findByProjectRefStart($project_ref)
+	public function findByProjectRefStart($project_ref, $limit = 500, $offset = 0)
 	{
 		// Select By project ref equal
 		$query = 'SELECT vw_c.id, vw_c.name, vw_c.website, vw_c.telephone, vw_c.telephone_tps, ' .
@@ -514,7 +518,7 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 				'WHERE t.value like ' . self::$DB->quote($project_ref . '%', 'text') . ' ' .
 				'AND t.category_id = 3 ' .
 				'ORDER BY vw_c.name, vw_pc.propensity ' .
-				'LIMIT 500';
+				'LIMIT ' . (int)$offset . ', ' . (int)$limit;
 		$result = self::$DB->query($query);
 		return new app_mapper_TagCollection($result, $this);
 	}
@@ -522,9 +526,11 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 	/**
 	 * Find all initiative records which include a given string.
 	 * @param string $project_ref project ref
+	 * @param integer $limit limit
+	 * @param integer $offset offset
 	 * @return app_mapper_TagCollection collection of app_domain_Tag objects
 	 */
-	public function findByProjectRefInclude($project_ref)
+	public function findByProjectRefInclude($project_ref, $limit = 500, $offset = 0)
 	{
 		// Select By project ref equal
 		$query = 'SELECT vw_c.id, vw_c.name, vw_c.website, vw_c.telephone, vw_c.telephone_tps, ' .
@@ -540,9 +546,69 @@ class app_mapper_TagMapper extends app_mapper_Mapper implements app_domain_TagFi
 				'WHERE t.value like ' . self::$DB->quote('%' . $project_ref . '%', 'text') . ' ' .
 				'AND t.category_id = 3 ' .
 				'ORDER BY vw_c.name, vw_pc.propensity ' .
-				'LIMIT 500';
+				'LIMIT ' . (int)$offset . ', ' . (int)$limit;
 		$result = self::$DB->query($query);
 		return new app_mapper_TagCollection($result, $this);
+	}
+
+	/**
+	 * Counts initiative records which equal a given string.
+	 * @param string $project_ref project ref
+	 * @return integer count
+	 */
+	public function countByProjectRefEqual($project_ref)
+	{
+		$query = 'SELECT count(*) ' .
+				'FROM vw_companies_sites AS vw_c ' .
+				'INNER JOIN vw_posts_contacts AS vw_pc ON vw_pc.company_id = vw_c.id ' .
+				'INNER JOIN tbl_post_initiatives pi on vw_pc.id = pi.post_id ' .
+				'INNER JOIN tbl_post_initiative_tags pit ON pi.id = pit.post_initiative_id ' .
+				'INNER JOIN tbl_tags t on pit.tag_id = t.id ' .
+				'INNER JOIN tbl_lkp_communication_status lkp_cs on lkp_cs.id = pi.status_id ' .
+				'INNER JOIN vw_client_initiatives vw_cl on vw_cl.initiative_id = pi.initiative_id ' .
+				'WHERE t.value = ' . self::$DB->quote($project_ref, 'text') . ' ' .
+				'AND t.category_id = 3';
+		return self::$DB->queryOne($query);
+	}
+
+	/**
+	 * Counts initiative records which start with a given string.
+	 * @param string $project_ref project ref
+	 * @return integer count
+	 */
+	public function countByProjectRefStart($project_ref)
+	{
+		$query = 'SELECT count(*) ' .
+				'FROM vw_companies_sites AS vw_c ' .
+				'INNER JOIN vw_posts_contacts AS vw_pc ON vw_pc.company_id = vw_c.id ' .
+				'INNER JOIN tbl_post_initiatives pi on vw_pc.id = pi.post_id ' .
+				'INNER JOIN tbl_post_initiative_tags pit ON pi.id = pit.post_initiative_id ' .
+				'INNER JOIN tbl_tags t on pit.tag_id = t.id ' .
+				'INNER JOIN tbl_lkp_communication_status lkp_cs on lkp_cs.id = pi.status_id ' .
+				'INNER JOIN vw_client_initiatives vw_cl on vw_cl.initiative_id = pi.initiative_id ' .
+				'WHERE t.value like ' . self::$DB->quote($project_ref . '%', 'text') . ' ' .
+				'AND t.category_id = 3';
+		return self::$DB->queryOne($query);
+	}
+
+	/**
+	 * Counts initiative records which include a given string.
+	 * @param string $project_ref project ref
+	 * @return integer count
+	 */
+	public function countByProjectRefInclude($project_ref)
+	{
+		$query = 'SELECT count(*) ' .
+				'FROM vw_companies_sites AS vw_c ' .
+				'INNER JOIN vw_posts_contacts AS vw_pc ON vw_pc.company_id = vw_c.id ' .
+				'INNER JOIN tbl_post_initiatives pi on vw_pc.id = pi.post_id ' .
+				'INNER JOIN tbl_post_initiative_tags pit ON pi.id = pit.post_initiative_id ' .
+				'INNER JOIN tbl_tags t on pit.tag_id = t.id ' .
+				'INNER JOIN tbl_lkp_communication_status lkp_cs on lkp_cs.id = pi.status_id ' .
+				'INNER JOIN vw_client_initiatives vw_cl on vw_cl.initiative_id = pi.initiative_id ' .
+				'WHERE t.value like ' . self::$DB->quote('%' . $project_ref . '%', 'text') . ' ' .
+				'AND t.category_id = 3';
+		return self::$DB->queryOne($query);
 	}
 
 	/** Find all company records which equal a given string.

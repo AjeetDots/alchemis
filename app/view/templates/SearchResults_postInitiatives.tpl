@@ -98,10 +98,31 @@ iframeLocation(		top.frames["iframe_5"], "index.php?cmd=WorkspaceSearch&id=" + c
 {/literal}
 </script>
 
-<p><strong>{$search_results|@count}</strong> result{if $search_results|@count != 1}s{/if} for <strong>{$object_type}</strong> which <strong>{$search_type_friendly}</strong> the text <strong>{$search_param}</strong></p>
+<p>
+	<strong>
+		{if $total_results}
+			Showing {$start_result} to {$end_result} of {$total_results}
+		{else}
+			{$search_results|@count}
+		{/if}
+	</strong> result{if $search_results|@count != 1}s{/if} for <strong>{$object_type}</strong> which <strong>{$search_type_friendly}</strong> the text <strong>{$search_param}</strong>
+</p>
+{if $total_pages > 1}
+<div class="pagination" style="margin-bottom: 10px; padding: 5px; text-align: center; background: #f9f9f9; border: 1px solid #ccc; font-weight: bold;">
+    {if $page > 1}
+        <a href="index.php?cmd=SearchResults&search_type={$search_type}&search_param={$search_param|escape:'url'}&page={$page-1}" style="text-decoration: none; color: #0066cc; margin-right: 15px;">&laquo; Previous</a>
+    {/if}
+    
+    <span style="margin: 0 10px;">Page {$page} of {$total_pages}</span>
+    
+    {if $page < $total_pages}
+        <a href="index.php?cmd=SearchResults&search_type={$search_type}&search_param={$search_param|escape:'url'}&page={$page+1}" style="text-decoration: none; color: #0066cc; margin-left: 15px;">Next &raquo;</a>
+    {/if}
+</div>
+{/if}
 
 {if $search_results}
-<div id="div_results" class="cfg" style="border: solid 1px #ccc; padding: 2px; width: 100%; height: 715px; overflow: auto;">
+<div id="div_results" class="cfg" style="border: solid 1px #ccc; padding: 2px; width: 100%; height: 600px; overflow: auto;">
 	<table id="table1" class="adminlist sortable" id="sortable_1"cellspacing="1">
 		<thead>
 			<tr class="sortable" {*id="sortable_{$result.id}"*}>
@@ -163,6 +184,20 @@ iframeLocation(		top.frames["iframe_5"], "index.php?cmd=WorkspaceSearch&id=" + c
 		</tbody>
 	</table>
 </div>
+
+{if $total_pages > 1}
+<div class="pagination" style="margin-top: 10px; padding: 10px; text-align: center; background: #f9f9f9; border: 1px solid #ccc; font-weight: bold;">
+    {if $page > 1}
+        <a href="index.php?cmd=SearchResults&search_type={$search_type}&search_param={$search_param|escape:'url'}&page={$page-1}" style="text-decoration: none; color: #0066cc; margin-right: 15px;">&laquo; Previous</a>
+    {/if}
+    
+    <span style="margin: 0 10px;">Page {$page} of {$total_pages}</span>
+    
+    {if $page < $total_pages}
+        <a href="index.php?cmd=SearchResults&search_type={$search_type}&search_param={$search_param|escape:'url'}&page={$page+1}" style="text-decoration: none; color: #0066cc; margin-left: 15px;">Next &raquo;</a>
+    {/if}
+</div>
+{/if}
 {/if}
 
 {include file="footer2.tpl"}

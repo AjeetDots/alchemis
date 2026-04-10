@@ -25,6 +25,18 @@ class app_view_SearchResults extends app_view_View
 		$this->smarty->assign('tab', 'Search');
 		
 		$this->smarty->assign('search_results', $collection);
+		$this->smarty->assign('total_results', $this->request->getObject('total_results'));
+		$this->smarty->assign('page', $this->request->getObject('page'));
+		$this->smarty->assign('page_size', $this->request->getObject('page_size'));
+		$this->smarty->assign('total_pages', $this->request->getObject('total_pages'));
+		
+		$page = $this->request->getObject('page');
+		$page_size = $this->request->getObject('page_size');
+		$total_results = $this->request->getObject('total_results');
+		if ($total_results) {
+			$this->smarty->assign('start_result', (($page - 1) * $page_size) + 1);
+			$this->smarty->assign('end_result', min($page * $page_size, $total_results));
+		}
 		
 		switch ($this->request->getObject('object_type'))
 		{

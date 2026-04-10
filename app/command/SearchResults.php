@@ -24,6 +24,11 @@ class app_command_SearchResults extends app_command_Command
 		$search_param = trim($request->getProperty('search_param'));
 		$search_param_1 = trim($request->getProperty('search_param_1'));
 		
+		$page = (int)$request->getProperty('page');
+		if ($page < 1) { $page = 1; }
+		$page_size = 500;
+		$offset = ($page - 1) * $page_size;
+		
 		if (!is_null($search_type) && !is_null($search_param))
 		{
 			switch ($search_type)
@@ -141,29 +146,35 @@ class app_command_SearchResults extends app_command_Command
 									
 				case 'project_ref_start':
 					if ($search_param === '') { break; }
-					$collection = app_domain_Tag::findByProjectRefStart($search_param)->toRawArray();
+					$total_results = app_domain_Tag::countByProjectRefStart($search_param);
+					$collection = app_domain_Tag::findByProjectRefStart($search_param, $page_size, $offset)->toRawArray();
 					$this->getExtraCompanyInfo($collection);
 					$request->setObject('search_results', $collection);
 					$request->setObject('object_type', 'project refs');
 					$request->setObject('search_type_friendly', 'start with');
+					$request->setObject('total_results', $total_results);
 					break;			
 				
 				case 'project_ref_includes':
 					if (strlen($search_param) < 3) { break; }
-					$collection = app_domain_Tag::findByProjectRefInclude($search_param)->toRawArray();
+					$total_results = app_domain_Tag::countByProjectRefInclude($search_param);
+					$collection = app_domain_Tag::findByProjectRefInclude($search_param, $page_size, $offset)->toRawArray();
 					$this->getExtraCompanyInfo($collection);
 					$request->setObject('search_results', $collection);
 					$request->setObject('object_type', 'project refs');
 					$request->setObject('search_type_friendly', 'include');
+					$request->setObject('total_results', $total_results);
 					break;
-
+//
 				case 'project_ref_equal':
 					if ($search_param === '') { break; }
-					$collection = app_domain_Tag::findByProjectRefEqual($search_param)->toRawArray();
+					$total_results = app_domain_Tag::countByProjectRefEqual($search_param);
+					$collection = app_domain_Tag::findByProjectRefEqual($search_param, $page_size, $offset)->toRawArray();
 					$this->getExtraCompanyInfo($collection);
 					$request->setObject('search_results', $collection);
 					$request->setObject('object_type', 'project refs');
 					$request->setObject('search_type_friendly', 'equal');
+					$request->setObject('total_results', $total_results);
 					break;
 					
 				case 'company_brand_equal':
@@ -210,6 +221,11 @@ class app_command_SearchResults extends app_command_Command
 			// Pass on request params
 			$request->setObject('search_type', $search_type);
 			$request->setObject('search_param', $search_param);
+			$request->setObject('page', $page);
+			$request->setObject('page_size', $page_size);
+			if (isset($total_results)) {
+				$request->setObject('total_pages', ceil($total_results / $page_size));
+			}
 		}
 		
 		return self::statuses('CMD_OK');

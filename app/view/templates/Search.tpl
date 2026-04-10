@@ -368,7 +368,7 @@ function AjaxCampaignCompanyDoNotCall(data)
 	<tr>
 		<td width="67%" valign="top">
 			<div class="module_content" tabindex="-1">
-				<iframe id="iframe1" name="iframe1" src="" scrolling="no" border="0" tabindex="-1" 	frameborder="no" style="height: 760px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+				<iframe id="iframe1" name="iframe1" src="" scrolling="auto" border="0" tabindex="-1" 	frameborder="no" style="height: 800px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 			</div>
 		</td>
 		<td width="33%" valign="top">

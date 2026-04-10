@@ -227,32 +227,71 @@ class app_domain_Tag extends app_domain_DomainObject
 
 	/** Find all records for a project ref which equals the query string
 	 * @param string $project_ref
+	 * @param integer $limit limit
+	 * @param integer $offset offset
 	 * @return app_mapper_TagCollection collection of app_domain_Tag objects
 	 */
-	public static function findByProjectRefEqual($project_ref)
+	public static function findByProjectRefEqual($project_ref, $limit = 500, $offset = 0)
 	{
 		$finder = self::getFinder(__CLASS__);
-		return $finder->findByProjectRefEqual($project_ref);
+		return $finder->findByProjectRefEqual($project_ref, $limit, $offset);
 	}
 
 	/** Find all records for a project ref which starts with the query string
 	 * @param string $project_ref
+	 * @param integer $limit limit
+	 * @param integer $offset offset
 	 * @return app_mapper_TagCollection collection of app_domain_Tag objects
 	 */
-	public static function findByProjectRefStart($project_ref)
+	public static function findByProjectRefStart($project_ref, $limit = 500, $offset = 0)
 	{
 		$finder = self::getFinder(__CLASS__);
-		return $finder->findByProjectRefStart($project_ref);
+		return $finder->findByProjectRefStart($project_ref, $limit, $offset);
 	}
 
 	/** Find all records for a project ref which includes the query string
 	 * @param string $project_ref
+	 * @param integer $limit limit
+	 * @param integer $offset offset
 	 * @return app_mapper_TagCollection collection of app_domain_Tag objects
 	 */
-	public static function findByProjectRefInclude($project_ref)
+	public static function findByProjectRefInclude($project_ref, $limit = 500, $offset = 0)
 	{
 		$finder = self::getFinder(__CLASS__);
-		return $finder->findByProjectRefInclude($project_ref);
+		return $finder->findByProjectRefInclude($project_ref, $limit, $offset);
+	}
+
+	/**
+	 * Counts project ref records which equal a given string.
+	 * @param string $project_ref
+	 * @return integer count
+	 */
+	public static function countByProjectRefEqual($project_ref)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->countByProjectRefEqual($project_ref);
+	}
+
+	/**
+	 * Counts project ref records which start with a given string.
+	 * @param string $project_ref
+	 * @return integer count
+	 */
+	public static function countByProjectRefStart($project_ref)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->countByProjectRefStart($project_ref);
+	}
+
+	/**
+	 * Counts project ref records which include a given string.
+	 * @param string $project_ref
+	 * @return integer count
+	 */
+	public static function countByProjectRefInclude($project_ref)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->countByProjectRefInclude($project_ref);
 	}
 
 	/** Find all records for a company tag which equals the query string
