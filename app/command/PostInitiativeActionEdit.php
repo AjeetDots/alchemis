@@ -296,6 +296,9 @@ class app_command_PostInitiativeActionEdit extends app_command_ManipulationComma
 		$request->setProperty('post_initiative_id', $request->getProperty('post_initiative_id'));
 
 		$post_initiative = app_domain_PostInitiative::find($request->getProperty('post_initiative_id'));
+		if ($post_initiative === null) {
+			throw new Exception('PostInitiative not found for id: ' . $request->getProperty('post_initiative_id'));
+		}
 		$request->setObject('post', $post_initiative->getPost());
 		
 		$initiative_name = $post_initiative->getInitiative()->getClientName() . ': ' . $post_initiative->getInitiative()->getName(); 
