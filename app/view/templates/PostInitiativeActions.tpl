@@ -15,12 +15,12 @@
 		Add new action
 	</a>
 	{if $actions && $actions->toArray()|@count > 0}
-		<table id="table1" class="adminlist sortable" border="0" cellpadding="0" cellspacing="1" width="100%">
+		<table id="table1" class="adminlist sortable" border="0" cellpadding="0" cellspacing="1" width="100%" style="table-layout: auto;">
 			<thead>
 				<tr>
-					<th style="width: 50%; text-align:left">Type</th>
-					<th style="width: 30%; text-align:left">Due Date</th>
-					<th style="width: 20%;">&nbsp;</th>
+					<th style="text-align:left; white-space: nowrap;">Type</th>
+					<th style="text-align:left; white-space: nowrap;">Due Date</th>
+					<th style="width: 1%; white-space: nowrap;">&nbsp;</th>
 				</tr>
 			<tfoot>
 				<tr>
@@ -30,8 +30,8 @@
 			<tbody>
 				{foreach name=actions_loop from=$actions item=action}
 					<tr>
-						<td{if $action->isOverdue() && !$action->getIsCompleted()} style="color:red"{elseif $action->getIsCompleted()} style="text-decoration:line-through"{/if}>{$action->getTypeName()}</td>
-						<td{if $action->isOverdue() && !$action->getIsCompleted()} style="color:red"{elseif $action->getIsCompleted()} style="text-decoration:line-through"{/if}>{$action->getDueDate()|date_format:"%d %B %Y"}</td>
+						<td style="white-space: nowrap;{if $action->isOverdue() && !$action->getIsCompleted()} color:red;{elseif $action->getIsCompleted()} text-decoration:line-through;{/if}">{$action->getTypeName()}</td>
+						<td style="white-space: nowrap;{if $action->isOverdue() && !$action->getIsCompleted()} color:red;{elseif $action->getIsCompleted()} text-decoration:line-through;{/if}">{$action->getDueDate()|date_format:"%d %B %Y"}</td>
 						<td>
 						{if !$action->getIsCompleted()}
 							<a href="#" onclick="javascript:document.location.href='index.php?cmd=PostInitiativeActionEdit&post_initiative_id={$post_initiative_id}&referrer_type={$referrer_type}&action_id={$action->getId()}&type_id={$type_id}'">
