@@ -149,7 +149,7 @@ class app_command_ParentCompany extends app_command_ResourceCommand
   public function searchByNameStartsWith()
   {
     $query = $this->request->input->get('query');
-    $companies = app_model_ParentCompany::where('name', 'LIKE', $query.'%')->has('companies')->get();
+    $companies = app_model_ParentCompany::where('name', 'LIKE', $query.'%')->get();
 
     $session = Auth_Session::singleton();
     $user = $session->getSessionUser();
@@ -174,7 +174,7 @@ class app_command_ParentCompany extends app_command_ResourceCommand
   public function searchByName()
   {
     $query = $this->request->input->get('query');
-    $companies = app_model_ParentCompany::where('name', $query)->has('companies')->get();
+    $companies = app_model_ParentCompany::where('name', $query)->get();
 
     $session = Auth_Session::singleton();
     $user = $session->getSessionUser();
