@@ -34,7 +34,7 @@ class app_command_Meetings extends app_command_Command
         $initiative = $post_initiative->getInitiative();
         $campaign_id = $initiative->getCampaignId();
         $campaign = app_domain_Campaign::find($campaign_id);
-        $initiative_name = $campaign->getClientName()  . ': ' .  $campaign->getClientName();
+        $initiative_name = $campaign->getClientName() . ': ' . $initiative->getName();
 
 		$request->setProperty('initiative_name', $initiative_name);
 		$request->setProperty('referrer_type', $request->getProperty('referrer_type'));
