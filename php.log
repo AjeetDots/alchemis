@@ -9421,3 +9421,17 @@ Apr 17 06:50:14  [info] 4.103 Communication
 Apr 17 06:50:25  [info] 5.21 Calendar
 Apr 17 06:50:30  [info] 4.64 NbmMonthlyPlannerGraph4
 Apr 17 06:50:34  [info] 4.121 CalendarDay
+Apr 17 06:56:16  [info] 4.951 Search
+Apr 17 06:56:21  [info] 4.99 Home
+Apr 17 06:56:28  [info] 6.661 CompanyCreate
+Apr 17 06:56:34  [info] 5.836 ParentCompany
+Apr 17 06:56:39  [info] 5.245 DashboardFrame
+Apr 17 06:56:50  [info] 10.544 AjaxScoreboard
+Apr 17 06:56:52  [info] 2.113 AjaxDashboard
+Apr 17 06:56:58  [info] 5.227 ActionsFrame
+Apr 17 06:57:08  [info] 9.67 NbmMonthlyPlanner
+Apr 17 06:57:12  [info] 4.13 Communication
+Apr 17 06:57:35  [info] 22.584 Dashboard
+Apr 17 06:57:40  [info] 4.984 Calendar
+Apr 17 06:57:57  [info] 4.33 CalendarDay
+Apr 17 06:58:00  [info] 2.934 Login

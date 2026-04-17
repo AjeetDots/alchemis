@@ -208,16 +208,20 @@ class app_command_MeetingEdit extends app_command_ManipulationCommand
 		else
 		{
 			$meeting = new app_domain_Meeting();
-		} 
-		
-		
+		}
+
+		if (!is_object($meeting))
+		{
+			$meeting = new app_domain_Meeting();
+		}
+
 		$request->setObject('meeting', $meeting);
-		
+
 		// Get company
 		$company_id = $request->getProperty('company_id');
 		$company = app_domain_Company::find($company_id);
-		$request->setProperty('company_name', $company->getName());
-		
+		$request->setProperty('company_name', $company ? $company->getName() : '');
+
 		$post_initiative_id = $meeting->getPostInitiativeId();
 		
 		// Pass post_id

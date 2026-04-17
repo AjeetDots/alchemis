@@ -23,7 +23,7 @@ class app_view_MeetingHistory extends app_view_View
 		// Get history
 		$collection = $this->request->getObject('history');
 //		$this->smarty->assign('history', $collection->toArray());
-		$this->smarty->assign('history', $collection);
+		$this->smarty->assign('history', $collection ?? []);
 //		echo '<pre>';
 //		print_r($collection);
 //		echo '</pre>';

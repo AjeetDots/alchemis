@@ -44,7 +44,7 @@ class app_mapper_MeetingMapper extends app_mapper_ShadowMapper implements app_do
 		// Select single
 		$query = 'SELECT m.*, u.name AS created_by_name ' .
 				'FROM tbl_meetings m ' .
-				'JOIN tbl_rbac_users AS u ON m.created_by = u.id ' .
+				'LEFT JOIN tbl_rbac_users AS u ON m.created_by = u.id ' .
 				'WHERE m.id = ?';
 		$this->selectStmt = self::$DB->prepare($query);
 	}
