@@ -220,7 +220,8 @@ class app_command_ParentCompany extends app_command_ResourceCommand
   {
     $input = $this->request->input;
     $data = $input->all();
-    echo '<pre>';print_r($data);echo '</pre>';die;
+    $redirect_url = !empty($data['_referrer']) ? $data['_referrer'] : 'index.php?cmd=Home';
+
     // validation
     $validator = new Validator($data, [
       'id' => 'required',
@@ -228,7 +229,7 @@ class app_command_ParentCompany extends app_command_ResourceCommand
     ]);
 
     if($validator->fails()){
-      return Response::redirect(['url' => $this->request->referrer]);
+      return Response::redirect(['url' => $redirect_url]);
     }
 
     $company = app_model_ParentCompany::find($data['id']);
@@ -238,17 +239,18 @@ class app_command_ParentCompany extends app_command_ResourceCommand
       $company->save();
     }
 
-    return Response::redirect(['url' => $this->request->referrer]);
+    return Response::redirect(['url' => $redirect_url]);
   }
 
   public function removeParentCompany()
   {
     $input = $this->request->input;
     $data = $input->all();
+    $redirect_url = !empty($data['_referrer']) ? $data['_referrer'] : 'index.php?cmd=Home';
 
     $company = app_model_ParentCompany::find($data['id']);
     $company->parent_company_id = null;
     $company->save();
-    return Response::redirect(['url' => $this->request->referrer]);
+    return Response::redirect(['url' => $redirect_url]);
   }
 }

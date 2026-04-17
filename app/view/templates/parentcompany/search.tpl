@@ -62,15 +62,17 @@
             <a href="" ng-click="item_{$i}.showform = true" ng-hide="item_{$i}.showform">edit</a> 
             {if $parent_company.parent}
               <form ng-show="item_{$i}.showform" action="index.php?cmd=ParentCompany&action=removeParentCompany&id={$parent_company.id}" method="POST">
+                <input type="hidden" name="_referrer" value="{$smarty.server.REQUEST_URI}">
                 <a href="#" onclick="$(this).closest('form').submit()">remove</a>
               </form>
             {/if}
             <a href="" ng-click="item_{$i}.showform = false" ng-show="item_{$i}.showform">cancel</a>
             <form ng-show="item_{$i}.showform" action="index.php?cmd=ParentCompany&action=addParentCompany&id={$parent_company.id}" method="POST">
+              <input type="hidden" name="_referrer" value="{$smarty.server.REQUEST_URI}">
               <label for="">Select Parent Company</label>
               <input type="text" auto-complete="ParentCompany" ac-value="id" ac-text="name" ac-hidden="parent_company_id" ac-ignore="{$parent_company.id}" ac-hint="0">
               <input class="btn" style="width: 100px;" type="submit" value="Submit">
-            </form> 
+            </form>
           </td>
         </tr>
         <tr>
