@@ -61,6 +61,9 @@ abstract class app_mapper_ShadowMapper extends app_mapper_Mapper
 		$shadow_output = $stmt->db->getShadowOutput();
 		$stmt->db->flushShadowOutput();
 		self::doShadow($stmt->db, $shadow_output);
+		// The exec() calls inside doShadow are recorded by MDB2's debug handler (scope='query')
+		// back into $db->shadow. Flush them now so they don't pollute the next doStatement() call.
+		$stmt->db->flushShadowOutput();
 
 		return $res;
 	}
