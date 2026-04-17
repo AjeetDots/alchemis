@@ -8,6 +8,8 @@
  * @version   SVN: $Id$
  */
 
+require_once('app/domain/Post.php');
+require_once('app/mapper/PostMapper.php');
 require_once('app/domain/PostInitiative.php');
 require_once('app/mapper/PostInitiativeMapper.php');
 require_once('app/domain/Meeting.php');
@@ -68,9 +70,12 @@ class app_command_WorkspacePostInitiative extends app_command_Command
 		// ------------------------------------
 		if (!is_null($post_id) && !is_null($initiative_id))
 		{
-			
+
 			$post_initiative = app_domain_PostInitiative::findByPostAndInitiative($post_id, $initiative_id);
 			$request->setObject('post_initiative', $post_initiative);
+
+			$post = app_domain_Post::find($post_id);
+			$request->setObject('post', $post);
 			
 			// get project ref tag list
 			$project_refs = app_domain_PostInitiative::findTagsByPostInitiativeIdAndCategoryId($post_initiative->getId(), 3);
