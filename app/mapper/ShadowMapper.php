@@ -56,12 +56,11 @@ abstract class app_mapper_ShadowMapper extends app_mapper_Mapper
 			}
 		}
 
-		// Get the contents of the shadow array and pass to processing function
+		// Get the contents of the shadow array and flush it before processing
+		// (flush first so a doShadow failure cannot leave stale entries that cascade into the next call)
 		$shadow_output = $stmt->db->getShadowOutput();
-		self::doShadow($stmt->db, $shadow_output);
-
-		// Clear the shadow output ready for next time
 		$stmt->db->flushShadowOutput();
+		self::doShadow($stmt->db, $shadow_output);
 
 		return $res;
 	}
@@ -80,210 +79,116 @@ abstract class app_mapper_ShadowMapper extends app_mapper_Mapper
 		if ($debug) print_r($output);
 		if ($debug) echo '</pre>';
 
-		$key = null;
-		$shadow = array();
-		$param_count = 0;
-		$output_count = 0;
-		$current_named_statement = null;
+		isset($_SESSION['auth_session']['user']['id']) ? $updated_by = $_SESSION['auth_session']['user']['id'] : $updated_by = 1;
+
+		// Phase 1: parse every PREPARE in the output and build shadow versions for manipulation queries.
+		// Key: original MDB2 statement name  →  Value: ['key' => shadow_key, 'prepare' => shadow_PREPARE_sql]
+		$shadow_map = array();
 
 		foreach ($output as $out)
 		{
-			if ($debug) echo '<div style="border: 1px solid black; margin: 10px; padding: 10px">';
-			if ($debug) echo "<b>\$output[$output_count]:    $out</b><br />";
-
-			if (preg_match('/^INSERT/i', $out))
+			if (!preg_match('/^PREPARE\s+(MDB2\S*)\s+FROM\s+\'(.*)$/i', $out, $matches))
 			{
-				if ($debug) echo '<p style="color: red">INSERT query - do not add</p>';
-//				$table_name = self::getTableName($out);
-//				$table_name_shadow = $table_name . '_shadow';
-//				$upd = str_replace($table_name, $table_name_shadow, $out);
-//				$type = 'i';
-//				echo "<br />INSERT QUERY: $upd";
-//				$upd = preg_replace('/INSERT INTO \S* \(/i', "INSERT INTO $table_name_shadow (type, ", $upd);
-//				$upd = preg_replace('/\s*VALUES\s*\(/i', " VALUES ('i', ", $upd);
-//				$shadow[] = $upd;
+				continue;
 			}
-			elseif (preg_match('/^UPDATE/i', $out))
+
+			$orig_name  = $matches[1];
+			$my_query   = $matches[2]; // SQL text, includes the closing ' from the PREPARE string
+			$table_name = self::getTableName($my_query);
+
+			if ($table_name === null || $table_name === '')
 			{
-				if ($debug) echo '<p style="color: red">UPDATE query - do not add</p>';
-//				$table_name = self::getTableName($out);
-//				$table_name_shadow = $table_name . '_shadow';
-//				$upd = str_replace($table_name, $table_name_shadow, $out);
-//				if (preg_match('/UPDATE\s+\w+\s+SET\s+.*deleted\s*=\s*1.*/i', $upd))
-//				{
-//					echo "<br />deleted type";
-//					$type = 'd';
-//				}
-//				else
-//				{
-//					echo "<br />updated type";
-//					$type = 'u';
-//				}
-//				$upd = str_replace('UPDATE', 'INSERT INTO', $upd);
-////					$upd = preg_replace('/\s*WHERE.*/i', '\'', $upd);
-////					echo "<br />Q: $upd";
-////					$mats = preg_split('/(\s*WHERE\s*)/i', $upd);
-////					print_r($mats);
-////					echo "<br />Q: $upd";
-//				$upd = preg_replace('/\s*WHERE\s*/i', ", type = \'$type\', ", $upd);
-//				$upd = preg_replace('/deleted\s+=\s+1,?\s*/i', "", $upd);
-////				echo "<br />UPDATE QUERY: $upd";
-////				echo "<br />After:         <b>$upd</b>";
-////				$upd = $upd
+				continue; // SELECT or unrecognised — no shadow needed
 			}
-			elseif (preg_match('/^DELETE/i', $out))
+
+			$table_name_shadow = $table_name . '_shadow';
+			$upd = str_replace($table_name, $table_name_shadow, $my_query);
+			$key = md5(rand());
+			$add = false;
+
+			if (preg_match('/^INSERT/i', $upd))
 			{
-				if ($debug) echo '<p style="color: red">DELETE query - do not add</p>';
+				$upd = preg_replace('/INSERT INTO \S* \(/i', "INSERT INTO $table_name_shadow (shadow_type, shadow_updated_by, ", $upd);
+				$upd = preg_replace('/\s*VALUES\s*\(/i', " VALUES (\'i\', \'" . $updated_by . "\', ", $upd);
+				$add = true;
 			}
-			elseif (preg_match('/^SELECT/i', $out))
+			elseif (preg_match('/^UPDATE/i', $upd))
 			{
-				if ($debug) echo '<p style="color: red">SELECT query - do not add</p>';
+				$type = preg_match('/UPDATE\s+\w+\s+SET\s+.*deleted\s*=\s*1.*/i', $upd) ? 'd' : 'u';
+				$upd  = str_replace('UPDATE', 'INSERT INTO', $upd);
+				$upd  = preg_replace('/\s*WHERE\s*/i', ", shadow_type = \'$type\', shadow_updated_by = \'$updated_by\', ", $upd);
+				$add  = true;
 			}
-			elseif (preg_match('/^PREPARE MDB2\S* FROM \'(.*)$/i', $out, $matches))
+			elseif (preg_match('/^DELETE/i', $upd))
 			{
-				$param_count = 0;
-				$key = md5(rand());
-				$table_name = self::getTableName($matches[1]);
+				$upd = str_replace('DELETE FROM', 'INSERT INTO', $upd);
+				// Trailing ', ' keeps the WHERE condition as a valid column assignment in the SET list
+				$upd = preg_replace('/\s*WHERE\s*/i', " SET shadow_type = \'d\', shadow_updated_by = \'$updated_by\', ", $upd);
+				$add = true;
+			}
 
-				// If we can't safely determine a non-empty table name, skip shadow handling
-				if ($table_name === null || $table_name === '') {
-					if ($debug) echo '<p style="color: red">Do not add to shadow: unable to determine table name</p>';
-					continue;
-				}
+			if ($add)
+			{
+				$shadow_map[$orig_name] = array(
+					'key'     => $key,
+					'prepare' => 'PREPARE MDB2_SHADOW_STATEMENT_mysqli_' . $key . ' FROM \'' . $upd,
+				);
+				if ($debug) echo '<p style="color: green">Shadow prepared for: ' . $orig_name . '</p>';
+			}
+		}
 
-				$table_name_shadow = $table_name . '_shadow';
+		// Phase 2: walk through the output again, collecting SET statements into a buffer.
+		// When an EXECUTE is seen, check whether the executed statement name has a shadow.
+		// If so, emit: shadow PREPARE + buffered SETs + shadow EXECUTE.
+		// SET statements that belong to a non-shadowed statement are discarded.
+		$shadow       = array();
+		$pending_sets = array();
 
-				$q = 'PREPARE MDB2_SHADOW_STATEMENT_mysqli_' . $key . ' FROM \'';
+		foreach ($output as $out)
+		{
+			if (preg_match('/^SET/i', $out))
+			{
+				$pending_sets[] = $out;
+			}
+			elseif (preg_match('/^EXECUTE\s+(MDB2\S*)/i', $out, $matches))
+			{
+				$orig_name = $matches[1];
 
-				$my_query = $matches[1];
-				$upd = str_replace($table_name, $table_name_shadow, $my_query);
-
-				// Default is not to add to shadow
-				$add_to_shadow = false;
-
-				// Get ID of current user
-				// TODO
-				//  - update using SessionRegistry(?) object
-				isset($_SESSION['auth_session']['user']['id']) ? $updated_by = $_SESSION['auth_session']['user']['id'] : $updated_by = 1;
-
-				if (preg_match('/^INSERT/i', $upd))
+				if (isset($shadow_map[$orig_name]))
 				{
-					$current_named_statement = 'MDB2_SHADOW_STATEMENT_mysqli_' . $key;
-					$type = 'i';
-					if ($debug) echo "<br />INSERT QUERY: $upd";
-					$upd = preg_replace('/INSERT INTO \S* \(/i', "INSERT INTO $table_name_shadow (shadow_type, shadow_updated_by, ", $upd);
-					$upd = preg_replace('/\s*VALUES\s*\(/i', " VALUES (\'$type\', \'" . $updated_by . "\', ", $upd);
-					$add_to_shadow = true;
-				}
-				elseif (preg_match('/^UPDATE/i', $upd))
-				{
-					$current_named_statement = 'MDB2_SHADOW_STATEMENT_mysqli_' . $key;
+					$key         = $shadow_map[$orig_name]['key'];
+					$param_count = count($pending_sets);
 
-					// Determine the type of query being run
-					// Rather than actually deleting an original row, a 'deleted' field is set to '1'. By leaving the
-					// row in place, we can still take advantage of foreign key constraints.
-					if (preg_match('/UPDATE\s+\w+\s+SET\s+.*deleted\s*=\s*1.*/i', $upd))
+					$shadow[] = $shadow_map[$orig_name]['prepare'];
+					foreach ($pending_sets as $set)
 					{
-						$type = 'd';
-					}
-					else
-					{
-						$type = 'u';
+						$shadow[] = $set;
 					}
 
-					// Replace UPDATE of original query to INSERT INTO required for shadow table statement
-					$upd = str_replace('UPDATE', 'INSERT INTO', $upd);
-
-					// Add 'type' and 'updated_by' fields to the statement
-					$upd = preg_replace('/\s*WHERE\s*/i', ", shadow_type = \'$type\', shadow_updated_by = \'$updated_by\', ", $upd);
-
-					// Ensure any reference to a deleted column is removed
-//					$upd = preg_replace('/deleted\s+=\s+1,?\s*/i', "", $upd);
-
-					// Set flad to add to list of shadow statements
-					$add_to_shadow = true;
-				}
-				elseif (preg_match('/^DELETE/i', $upd))
-				{
-					$current_named_statement = 'MDB2_SHADOW_STATEMENT_mysqli_' . $key;
-					$type = 'd';
-					if ($debug) echo "<br />DELETE QUERY: $upd";
-					$upd = str_replace('DELETE FROM', 'INSERT INTO', $upd);
-					if ($debug) echo "<br />DELETE QUERY: $upd";
-
-					// Add 'type' and 'updated_by' fields
-					$upd = preg_replace('/\s*WHERE\s*/i', " SET shadow_type = \'d\', shadow_updated_by = \'$updated_by\'", $upd);
-					if ($debug) echo "<br />DELETE QUERY: $upd";
-					$add_to_shadow = true;
-				}
-				else
-				{
-					if ($debug) echo '<p style="color: red">Do not add to shadow: query is not INSERT, UPDATE or DELETE</p>';
-				}
-
-				if ($add_to_shadow)
-				{
-					$q .= $upd;
-					if ($debug) echo '<p style="color: green">Add to shadow: ' . $q . '</p>';
-					$shadow[] = $q;
-				}
-			}
-			elseif (preg_match('/^SET/i', $out))
-			{
-				if (!is_null($current_named_statement))
-				{
-					if ($debug) echo '<p style="color: green">Add SET to shadow: <strong>' . $out . '</strong></p>';
-					$shadow[] = $out;
-					$param_count++;
-					if ($debug) echo '<p style="color: green">Param Count: <strong>' . $param_count . '</strong></p>';
-				}
-				else
-				{
-					if ($debug) echo '<p style="color: red">Do not add SET to shadow: no statement prepared</p>';
-				}
-			}
-			elseif (preg_match('/^EXECUTE/i', $out))
-			{
-				if (!is_null($current_named_statement))
-				{
-					$str = 'EXECUTE MDB2_SHADOW_STATEMENT_mysqli_' . $key;
-
+					$exec_str = 'EXECUTE MDB2_SHADOW_STATEMENT_mysqli_' . $key;
 					if ($param_count > 0)
 					{
-						$str .= ' USING ';
-						for ($i = 0; $i < $param_count; $i++)
-						{
-							$str .= '@'. $i;
-							if ($i != $param_count-1)
-							{
-								$str .= ', ';
-							}
-						}
+						$exec_str .= ' USING @' . implode(', @', range(0, $param_count - 1));
 					}
-					if ($debug) echo '<p style="color: green">Add EXECUTE to shadow: <strong>' . $out . '</strong></p>';
-					$shadow[] = $str;
+					$shadow[] = $exec_str;
+
+					if ($debug) echo '<p style="color: green">Shadow EXECUTE for: ' . $orig_name . ' (' . $param_count . ' params)</p>';
 				}
 				else
 				{
-					if ($debug) echo '<p style="color: red">Do not add EXECUTE to shadow: no statement prepared</p>';
+					if ($debug) echo '<p style="color: red">No shadow for EXECUTE: ' . $orig_name . '</p>';
 				}
-			}
-			else
-			{
-				// TODO
-				//  - add exception / logging here?
-			}
 
-			if ($debug) echo "</div>";
-			$output_count++;
+				$pending_sets = array(); // consumed or discarded
+			}
 		}
 
 		if ($debug) echo '<div style="border: 5px solid green; margin: 10px; padding: 10px">';
 		if ($debug) echo '<p>Execute ' . count($shadow) . ' shadow statement(s):</p>';
 		if ($debug) echo "<blockquote><pre>";
-		foreach ($shadow as $key => $str)
+		foreach ($shadow as $idx => $str)
 		{
-			if ($debug) echo "<br />\$shadow[$key] = $str";
+			if ($debug) echo "<br />\$shadow[$idx] = $str";
 			$db->exec($str);
 		}
 		if ($debug) echo "</pre></blockquote>";
