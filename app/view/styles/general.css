@@ -530,6 +530,14 @@ table.adminlist th {
 	color: #666;
 }
 
+table.adminlist tr.hdr td {
+	background: #e6e6e6 url(../images/tile-0003.png) repeat-x;
+	font-weight: bold;
+	color: #666666;
+	padding: 5px 4px;
+	width: 100%;
+}
+
 table.adminlist thead th {
 	text-align: center;
 	background: #f0f0f0;
@@ -810,12 +818,10 @@ hr
 /* Global Responsive Enhancements */
 @media screen and (max-width: 1200px) {
     table.adminlist, table.adminform, table.sortable {
-        display: block !important;
         width: 100% !important;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        max-width: 100% !important;
     }
-    
+
     /* Ensure inputs don't blowout their containers */
     input[type="text"], input[type="password"], textarea, select {
         max-width: 100%;

@@ -72,7 +72,7 @@ class app_mapper_MeetingMapper extends app_mapper_ShadowMapper implements app_do
 		$obj->setCreatedBy($array['created_by']);
 		$obj->setModifiedAt($array['modified_at']);
         $obj->setModifiedBy($array['modified_by']);
-		$obj->setCreatedByName($array['created_by_name']);
+		$obj->setCreatedByName($array['created_by_name'] ?? null);
 		$obj->setFeedbackRating($array['feedback_rating']);
 		$obj->setFeedbackDecisionMaker($array['feedback_decision_maker']);
 		$obj->setFeedbackAgencyUser($array['feedback_agency_user']);

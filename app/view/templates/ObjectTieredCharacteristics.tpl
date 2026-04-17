@@ -227,8 +227,7 @@ function AjaxObjectTieredCharacteristic(data)
 	<a href="#" onclick="javascript:Effect.toggle($('div_add_top_level_characteristic'), 'blind', {literal}{duration: 0.3}{/literal});return false; ">[Add new category]</a>
 </span>
 {/if}
-<br />
-	<br />
+<br style="clear: both;" />
 <div id="div_add_top_level_characteristic" style="display: none">
 	
 	<span style="float: left">
@@ -245,14 +244,14 @@ function AjaxObjectTieredCharacteristic(data)
 </div>
 
 {if $company->parent_company_id}
-<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; width: 100%; clear: both;">
 	<tr class="hdr">
 		<td>
 			Company Categories &nbsp;&nbsp;|&nbsp;&nbsp;
 			<span style="text-align: right"><strong>{$parent_object_tiered_characteristics|@count}</strong> record{if $parent_object_tiered_characteristics|@count != 1}s{/if}</span>
 			{*if $available_for_selection*}
 			&nbsp;&nbsp;|&nbsp;&nbsp;
-			<input type="button" id="add_new_parent_characteristic" name="add_new_parent_characteristic" value="Add New Category" onclick="javascript:$('div_new_parent_characteristic').show();" />
+			<input type="button" id="add_new_parent_characteristic" name="add_new_parent_characteristic" value="Add New Category" style="background-color: #e8e8e8; color: #333; border: 1px solid #ccc; padding: 2px 10px; cursor: pointer;" onclick="javascript:$('div_new_parent_characteristic').show();" />
 			<div id="div_new_parent_characteristic" style="display: none; margin-top: 10px">
 				<form id="form_new_parent_characteristic" name="form_new_parent_characteristic">
 					<input type="hidden" id="parent_characteristic_type" name="parent_characteristic_type" value="{$type}" />
@@ -303,7 +302,7 @@ function AjaxObjectTieredCharacteristic(data)
 		<td>
 
 			{* List tiered characteristics associated with this object (company) *}
-			<table id="tbl_top_level_parent_characteristics" class="adminlist">
+			<table id="tbl_top_level_parent_characteristics" class="adminlist" style="width: 100%;">
 				<thead>
 					<tr>
 						<th style="text-align: left">Category</th>
@@ -344,14 +343,14 @@ function AjaxObjectTieredCharacteristic(data)
 {/if}
 
 
-<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0">
+<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0" style="width: 100%; clear: both;">
 	<tr class="hdr">
 		<td>
 			Site Categories &nbsp;&nbsp;|&nbsp;&nbsp;
 			<span style="text-align: right"><strong>{$object_tiered_characteristics|@count}</strong> record{if $object_tiered_characteristics|@count != 1}s{/if}</span>
 			{*if $available_for_selection*}
 			&nbsp;&nbsp;|&nbsp;&nbsp;
-			<input type="button" id="add_new_characteristic" name="add_new_characteristic" value="Add New Category" onclick="javascript:$('div_new_characteristic').show();" />
+			<input type="button" id="add_new_characteristic" name="add_new_characteristic" value="Add New Category" style="background-color: #e8e8e8; color: #333; border: 1px solid #ccc; padding: 2px 10px; cursor: pointer;" onclick="javascript:$('div_new_characteristic').show();" />
 			<div id="div_new_characteristic" style="display: none; margin-top: 10px">
 				<form id="form_new_characteristic" name="form_new_characteristic">
 					<input type="hidden" id="characteristic_type" name="characteristic_type" value="{$type}" />
@@ -399,12 +398,11 @@ function AjaxObjectTieredCharacteristic(data)
 			{*/if*}
 		</td>
 	</tr>
-	</table>
 	<tr valign="top">
 		<td>
 
 			{* List tiered characteristics associated with this object (company) *}
-			<table id="tbl_top_level_characteristics" class="adminlist">
+			<table id="tbl_top_level_characteristics" class="adminlist" style="width: 100%;">
 				<thead>
 					<tr>
 						<th style="text-align: left">Category</th>

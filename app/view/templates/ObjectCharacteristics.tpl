@@ -341,10 +341,10 @@ function addNewLine(id, html)
 
 {* NOTE: following span required in case this page is displayed in a popup box. Without this span the
 popup would close as soon as the mouse rolled off, rather than when the user clicks another link to close *}
-<span style="display:none;><a href="#" class="popup_closebox">Close</a></span>
+<span style="display:none;"><a href="#" class="popup_closebox">Close</a></span>
 
-<div ng-controller="CharacteristicController" ng-init="characteristicsSetUp({$initiative_id}, '{$parent_object_type}', {$parent_object_id})">
-	<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0">
+<div ng-controller="CharacteristicController" ng-init="characteristicsSetUp({$initiative_id}, '{$parent_object_type}', {$parent_object_id})" style="width: 100%;">
+	<table id="" class="adminlist" border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
 		<tr class="hdr">
 			<td>
 				Characteristics &nbsp;&nbsp;|&nbsp;&nbsp;

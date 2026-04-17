@@ -5,7 +5,7 @@
 	<input type="hidden" id="initiative_id" name="initiative_id" value="{if $initiative_id}{$initiative_id}{/if}" />
 	<input type="hidden" id="post_initiative_id" name="post_initiative_id" value="{if $post_initiative}{$post_initiative->getId()}{/if}" />
 	
-	<table class="adminlist" style="100%">
+	<table class="adminlist" style="width: 100%">
 		<tr>
 			<th style="vertical-align: top" colspan="2">
 				<!-- div for displaying post initiatives if they exist -->
