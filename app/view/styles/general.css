@@ -221,7 +221,7 @@ tr.keyRow td div.module_content
 	text-align: center;
 }
 
-#header-box  { border: 1px solid #ccc; background: #f0f0f0; margin-bottom: 3px; }
+#header-box  { border: 1px solid #ccc; background: #f0f0f0; margin-bottom: 3px;  margin-top: 30px; }
 
 #content-box {
 	background-color: #FFF;
