@@ -156,9 +156,9 @@ try {
 
     app_controller_Controller::run();
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
 
-    // Always log the full exception so production issues can be diagnosed.
+    // Always log the full exception/error so production issues can be diagnosed.
     $logMessage = sprintf(
         "[%s] %s in %s on line %s\nStack trace:\n%s\n\n",
         date('Y-m-d H:i:s'),
@@ -174,6 +174,19 @@ try {
         @file_put_contents($localLogFile, $logMessage, FILE_APPEND);
     } else {
         error_log($logMessage);
+    }
+
+    $isAjax = (
+        !empty($_GET['ajaxRequest']) ||
+        !empty($_POST['ajaxRequest']) ||
+        (isset($_GET['cmd']) && substr($_GET['cmd'], 0, 4) === 'Ajax')
+    );
+
+    if ($isAjax) {
+        ob_clean();
+        header('Content-Type: application/json');
+        echo json_encode(['error' => true, 'message' => 'A server error occurred. Please refresh and try again.']);
+        exit;
     }
 
     // Show detailed error output in development or when explicitly requested with ?debug=1.

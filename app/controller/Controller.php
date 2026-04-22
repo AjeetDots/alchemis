@@ -170,6 +170,12 @@ class app_controller_Controller implements app_base_Observable
 				else
 				{
 //					echo '<p>' . __FILE__ . ':' . __LINE__ . ' User not logged in</p>';
+					if (substr($classname, 0, 4) === 'Ajax') {
+						ob_clean();
+						header('Content-Type: application/json');
+						echo json_encode(['error' => 'session_expired', 'message' => 'Your session has expired. Please log in again.', 'redirect' => 'index.php?cmd=Login']);
+						exit;
+					}
 					header('Location: index.php?cmd=Login');
 					exit;
 				}
