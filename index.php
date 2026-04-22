@@ -2,6 +2,13 @@
 
 ob_start();
 
+spl_autoload_register(function ($classname) {
+    $path = str_replace('_', DIRECTORY_SEPARATOR, $classname) . '.php';
+    if (file_exists($path)) {
+        require_once $path;
+    }
+});
+
 session_start();
 
 // Ensure a consistent timezone across environments so all date('...')
@@ -62,7 +69,7 @@ if (file_exists($envFile)) {
 $env = $_SERVER['ALCHEMIS_ENV'] ?? 'aws';
 $_SERVER['ALCHEMIS_ENV'] = $env;
 
-$isDevelopment = ($env === 'aws');
+$isDevelopment = ($env === 'development');
 
 if ($isDevelopment) {
 
@@ -108,20 +115,7 @@ if (file_exists('vendor/autoload.php')) {
     require_once 'vendor/autoload.php';
 }
 
-/*
-|--------------------------------------------------------------------------
-| Legacy Autoloader
-|--------------------------------------------------------------------------
-*/
-
-spl_autoload_register(function ($classname) {
-
-    $path = str_replace('_', DIRECTORY_SEPARATOR, $classname) . '.php';
-
-    if (file_exists($path)) {
-        require_once $path;
-    }
-});
+// Legacy autoloader is registered before session_start() at the top of this file.
 
 /*
 |--------------------------------------------------------------------------

@@ -94,7 +94,7 @@ function doNbmDashboard(nbm_id)
 
 <table class="adminform">
 	<tr>
-		<td style="height:20px">
+		<td style="height:30px">
 
 			<div style="float: left; margin-right: 10px">
 				Choose administration option 

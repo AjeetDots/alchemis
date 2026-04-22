@@ -50,7 +50,7 @@ function doMenuItem(location)
 
 <table class="adminform">
 	<tr>
-		<td style="height:20px">
+		<td style="height:30px">
 			Choose administration option 
 			<select id="admin_menu" name="admin_menu" style="width:250px" onchange="javascript:doMenuItem($F('admin_menu'));">
 				<option value="0">-- select --</option>
