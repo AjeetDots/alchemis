@@ -56,6 +56,10 @@ error_reporting(E_ALL);
 				// Instantiate the tiered characteristic selected
 				$tiered_characteristic = app_domain_TieredCharacteristic::find($this->request->tiered_characteristic_id);
 
+				if ($tiered_characteristic === null) {
+					break;
+				}
+
 				// We may have to add the parent first before the select tiered characteristic can be added
 				if ($tiered_characteristic->hasParent() && !app_domain_ObjectTieredCharacteristicHelper::isAssociated($this->request->parent_object_id, $tiered_characteristic->getParentId()))
 				{
@@ -80,6 +84,10 @@ error_reporting(E_ALL);
 
 				// Instantiate the tiered characteristic selected
 				$tiered_characteristic = app_domain_TieredCharacteristic::find($this->request->tiered_characteristic_id);
+
+				if ($tiered_characteristic === null) {
+					break;
+				}
 
 				// We may have to add the parent first before the select tiered characteristic can be added
 				if ($tiered_characteristic->hasParent() && !app_domain_ObjectTieredCharacteristicHelper::isAssociatedParent($this->request->parent_company, $tiered_characteristic->getParentId()))

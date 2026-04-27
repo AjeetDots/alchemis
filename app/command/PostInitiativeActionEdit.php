@@ -51,6 +51,9 @@ class app_command_PostInitiativeActionEdit extends app_command_ManipulationComma
 		}
 		else
 		{
+			if (empty($request->getProperty('post_initiative_id'))) {
+				return self::statuses('CMD_ERROR');
+			}
 			$this->init($request);
 			return self::statuses('CMD_OK');
 		}
@@ -295,9 +298,13 @@ class app_command_PostInitiativeActionEdit extends app_command_ManipulationComma
 		$request->setProperty('referrer_type', $request->getProperty('referrer_type'));
 		$request->setProperty('post_initiative_id', $request->getProperty('post_initiative_id'));
 
-		$post_initiative = app_domain_PostInitiative::find($request->getProperty('post_initiative_id'));
+		$post_initiative_id = $request->getProperty('post_initiative_id');
+		if (empty($post_initiative_id)) {
+			throw new Exception('post_initiative_id is required but was not supplied.');
+		}
+		$post_initiative = app_domain_PostInitiative::find($post_initiative_id);
 		if ($post_initiative === null) {
-			throw new Exception('PostInitiative not found for id: ' . $request->getProperty('post_initiative_id'));
+			throw new Exception('PostInitiative not found for id: ' . $post_initiative_id);
 		}
 		$request->setObject('post', $post_initiative->getPost());
 		

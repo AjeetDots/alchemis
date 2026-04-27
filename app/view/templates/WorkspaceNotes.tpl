@@ -105,7 +105,7 @@ function AjaxCommunication(data)
 						</a>
 						&nbsp;|&nbsp;
 						{/if}
-						{if $result.information_request_id != ""}
+						{if $result.information_request_id != "" && $result.post_initiative_id != ""}
 						<a href="#" onclick="javascript:parent.openInfoPane('index.php?cmd=PostInitiativeActionEdit&post_initiative_id={$result.post_initiative_id}&referrer_type=workspace&action_id={$result.information_request_id }&type_id=');" title="Displays information request detail in info pane">
 							<img src="{$APP_URL}app/view/images/icons/script.png" style="vertical-align:middle" />
 						</a>
