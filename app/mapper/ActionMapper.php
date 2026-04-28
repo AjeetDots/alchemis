@@ -107,7 +107,8 @@ class app_mapper_ActionMapper extends app_mapper_Mapper implements app_domain_Ac
 			$value_parts = array();
 			foreach ($resources as $resource)
 			{
-				$value_parts[] = '(' . $action_id . ', ' . self::$DB->quote($resource['resource_id'], 'integer') . ')';
+				$rid = is_array($resource) ? $resource['resource_id'] : $resource;
+				$value_parts[] = '(' . $action_id . ', ' . self::$DB->quote($rid, 'integer') . ')';
 			}
 			$query = 'INSERT INTO tbl_action_resources (action_id, resource_id) VALUES ' . implode(', ', $value_parts);
 			self::$DB->query($query);
@@ -150,7 +151,8 @@ class app_mapper_ActionMapper extends app_mapper_Mapper implements app_domain_Ac
 			$value_parts = array();
 			foreach ($resources as $resource)
 			{
-				$value_parts[] = '(' . $action_id . ', ' . self::$DB->quote($resource['resource_id'], 'integer') . ')';
+				$rid = is_array($resource) ? $resource['resource_id'] : $resource;
+				$value_parts[] = '(' . $action_id . ', ' . self::$DB->quote($rid, 'integer') . ')';
 			}
 			$query = 'INSERT INTO tbl_action_resources (action_id, resource_id) VALUES ' . implode(', ', $value_parts);
 			self::$DB->query($query);
