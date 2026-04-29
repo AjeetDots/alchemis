@@ -2365,7 +2365,8 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7LeadNBMDisciplineAnalysis($start, $end, $client_id)
 	{
-//		$debug = true;
+		$debug = false;
+
 		$query = 'select user_id ' .
 				'from tbl_campaign_nbms cnbm ' .
 				'join tbl_campaigns c on c.id = cnbm.campaign_id ' .
@@ -2373,10 +2374,8 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 				'and cnbm.is_lead_nbm = true ' .
 				'and deactivated_date = \'0000-00-00\'';
 
-
-		$results = self::$DB->queryOne($query);
-		if ($debug) print_r($results);
-
+		$lead_nbm_id = self::$DB->queryOne($query);
+		if ($debug) print_r($lead_nbm_id);
 
 		$query = 'select u.id as user_id, ' .
 				'u.name AS nbm, ' .
@@ -2391,7 +2390,9 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 				'join tbl_rbac_users u on ds.user_id = u.id ' .
 				'join tbl_campaign_disciplines cd on cd.campaign_id = cam.id ' .
 				'join tbl_tiered_characteristics tc on tc.id = cd.tiered_characteristic_id ' .
-				'WHERE ds.user_id = ' . $results . ' ' .
+				'WHERE ds.user_id = ' . $lead_nbm_id . ' ' .
+				'AND ds.date >= ' . self::$DB->quote($start, 'timestamp') . ' ' .
+				'AND ds.date <= ' . self::$DB->quote($end, 'timestamp') . ' ' .
 				'GROUP BY cd.tiered_characteristic_id';
 
 		if ($debug) echo "<p>$query;</p>";
@@ -2402,7 +2403,8 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7LeadNBMSectorAnalysis($start, $end, $client_id)
 	{
-//		$debug = true;
+		$debug = false;
+
 		$query = 'select user_id ' .
 				'from tbl_campaign_nbms cnbm ' .
 				'join tbl_campaigns c on c.id = cnbm.campaign_id ' .
@@ -2410,9 +2412,8 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 				'and cnbm.is_lead_nbm = true ' .
 				'and deactivated_date = \'0000-00-00\'';
 
-
-		$results = self::$DB->queryOne($query);
-		if ($debug) print_r($results);
+		$lead_nbm_id = self::$DB->queryOne($query);
+		if ($debug) print_r($lead_nbm_id);
 
 		$values = array();
 
@@ -2446,8 +2447,9 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 				'join tbl_posts p on p.id = pi.post_id ' .
 				'left join tbl_object_tiered_characteristics otc on p.company_id = otc.company_id ' .
 				'left join tbl_tiered_characteristics tc on otc.tiered_characteristic_id = tc.id ' .
-				'WHERE com.user_id = ' . $results;
-
+				'WHERE com.user_id = ' . $lead_nbm_id . ' ' .
+				'AND com.communication_date >= ' . self::$DB->quote($start, 'timestamp') . ' ' .
+				'AND com.communication_date <= ' . self::$DB->quote($end, 'timestamp');
 
 		if ($debug) echo "<p>$query;</p>";
 		$stmt = self::$DB->prepare($query);
@@ -2467,7 +2469,9 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 		$query = 'insert into t1 ' .
 				'select m.id as meeting_id, m.communication_id ' .
 				'from tbl_meetings m  ' .
-				'WHERE created_by = ' . $results;
+				'WHERE created_by = ' . $lead_nbm_id . ' ' .
+				'AND m.created_at >= ' . self::$DB->quote($start, 'timestamp') . ' ' .
+				'AND m.created_at <= ' . self::$DB->quote($end, 'timestamp');
 
 		if ($debug) echo "<p>$query;</p>";
 		$stmt = self::$DB->prepare($query);
@@ -2502,9 +2506,7 @@ class app_mapper_ReportReaderMapper extends app_mapper_ReaderMapper
 
 	public function getReport7Pipeline($start, $end, $client_id)
 	{
-//		$debug = true;
-
-		self::$DB->prepare($query, $types);
+		$debug = false;
 
 		$values = array();
 		$query = 'create temporary table t ' .

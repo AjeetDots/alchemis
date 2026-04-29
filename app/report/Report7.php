@@ -40,6 +40,8 @@ class app_report_Report7 extends FPDF
                                 $pipeline_report = false,
                                 $effective_notes = false)
     {
+        set_time_limit(0);
+
         $this->params['start']                         = $start . ' 00:00:00';
         $this->params['end']                           = $end . ' 23:59:59';
         $this->params['client_id']                     = $client_id;
