@@ -93,14 +93,7 @@ class app_domain_ObjectCharacteristicElementHelper
 
 	public static function getRecordByCompanyId($element_id, $element_type, $company_id)
 	{
-		$element_type = 'text';
-		// print_r($element_id);
-		// print_r($element_type);
 		switch ($element_type) {
-			case 'boolean':
-				$finder = new app_mapper_ObjectCharacteristicElementBooleanMapper();
-				break;
-
 			case 'date':
 				$finder = new app_mapper_ObjectCharacteristicElementDateMapper();
 				break;
@@ -110,11 +103,43 @@ class app_domain_ObjectCharacteristicElementHelper
 				break;
 
 			default:
-				throw new Exception('Invalid characteristic element type');
+				return null;
 		}
-		// echo '<pre>';
-		// print_r($finder);
 		return $finder->getRecordByCompanyId($element_id, $company_id);
+	}
+
+	public static function getRecordByPostId($element_id, $element_type, $post_id)
+	{
+		switch ($element_type) {
+			case 'date':
+				$finder = new app_mapper_ObjectCharacteristicElementDateMapper();
+				break;
+
+			case 'text':
+				$finder = new app_mapper_ObjectCharacteristicElementTextMapper();
+				break;
+
+			default:
+				return null;
+		}
+		return $finder->getRecordByPostId($element_id, $post_id);
+	}
+
+	public static function getRecordByPostInitiativeId($element_id, $element_type, $post_initiative_id)
+	{
+		switch ($element_type) {
+			case 'date':
+				$finder = new app_mapper_ObjectCharacteristicElementDateMapper();
+				break;
+
+			case 'text':
+				$finder = new app_mapper_ObjectCharacteristicElementTextMapper();
+				break;
+
+			default:
+				return null;
+		}
+		return $finder->getRecordByPostInitiativeId($element_id, $post_initiative_id);
 	}
 
 	public static function getValueByPostId($id)

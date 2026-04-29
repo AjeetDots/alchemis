@@ -148,13 +148,13 @@ class app_command_ObjectCharacteristics extends app_command_Command
                 } else {
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
                     foreach ($characteristic['elements'] as &$element) {
-                        if ($record = app_domain_ObjectCharacteristicElementHelper::getRecordByCompanyId($element['id'], $element['data_type'], $id)) {
+                        if ($record = app_domain_ObjectCharacteristicElementHelper::getRecordByPostId($element['id'], $element['data_type'], $id)) {
                             $element['value']                            = $record['value'];
                             $element['object_characteristic_id']         = $record['object_characteristic_id'];
                             $element['object_characteristic_element_id'] = $record['id'];
                         } else {
-                            $record = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByCompanyIdAndCharacteristicId($id, $characteristic['id']);
-                            $element['object_characteristic_id'] = $record['object_characteristic_id'];
+                            $ocId = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostIdAndCharacteristicId($id, $characteristic['id']);
+                            $element['object_characteristic_id'] = $ocId;
                         }
                     }
                 }
@@ -176,13 +176,13 @@ class app_command_ObjectCharacteristics extends app_command_Command
                 } else {
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
                     foreach ($characteristic['elements'] as &$element) {
-                        if ($record = app_domain_ObjectCharacteristicElementHelper::getRecordByCompanyId($element['id'], $element['data_type'], $id)) {
+                        if ($record = app_domain_ObjectCharacteristicElementHelper::getRecordByPostInitiativeId($element['id'], $element['data_type'], $id)) {
                             $element['value']                            = $record['value'];
                             $element['object_characteristic_id']         = $record['object_characteristic_id'];
                             $element['object_characteristic_element_id'] = $record['id'];
                         } else {
-                            $record = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByCompanyIdAndCharacteristicId($id, $characteristic['id']);
-                            $element['object_characteristic_id'] = $record['object_characteristic_id'];
+                            $ocId = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostInitiativeIdAndCharacteristicId($id, $characteristic['id']);
+                            $element['object_characteristic_id'] = $ocId;
                         }
                     }
                 }

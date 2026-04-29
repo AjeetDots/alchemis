@@ -212,12 +212,13 @@ class app_mapper_ObjectCharacteristicMapper extends app_mapper_Mapper
 	{
 		$data = array($characteristic_id, $post_id);
 		$result = $this->doStatement($this->select_by_post_id_stmt, $data);
+		$raw = array();
 		while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC))
 		{
 			$raw[] = $row;
 			$result->nextResult();
 		}
-		return $raw; 
+		return $raw;
 	}
 
 	/**
@@ -230,12 +231,13 @@ class app_mapper_ObjectCharacteristicMapper extends app_mapper_Mapper
 	{
 		$data = array($characteristic_id, $post_initiative_id);
 		$result = $this->doStatement($this->select_by_post_initiative_id_stmt, $data);
+		$raw = array();
 		while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC))
 		{
 			$raw[] = $row;
 			$result->nextResult();
 		}
-		return $raw; 
+		return $raw;
 	}
 
 }

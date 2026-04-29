@@ -190,35 +190,63 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
 
         // print_r($characteristic);
         if($field_data) {
-            $temp_table = "tbl_object_characteristic_elements_".$field_data[0][6];
+            // For complex characteristics (with attributes/elements), item[3] holds the
+            // object_characteristic_id (non-zero). For simple characteristics it is "0".
+            $is_simple = ($field_data[0][3] == '0' || $field_data[0][3] == '' || $field_data[0][3] === null);
 
-			if($field_data[0][6] == 'boolean') {
-				$query = "UPDATE `".$temp_table."` SET `value` = '0' WHERE `".$temp_table."`.`object_characteristic_id` = ".$field_data[0][3];
-				$res = $db->exec($query);
-				if (MDB2::isError($res)) {
-					throw new app_base_MDB2Exception($res);
-				}
-			}
+            // Reset all boolean element values to 0 only for complex multi-element characteristics.
+            if ($field_data[0][6] == 'boolean' && !$is_simple) {
+                $elements_table = "tbl_object_characteristic_elements_boolean";
+                $query = "UPDATE `".$elements_table."` SET `value` = '0' WHERE `object_characteristic_id` = ".$field_data[0][3];
+                $res = $db->exec($query);
+                if (MDB2::isError($res)) {
+                    throw new app_base_MDB2Exception($res);
+                }
+            }
 
-            foreach($field_data as $item){
-                if($item[6] == 'boolean' && $item[7] == "on") {
+            foreach ($field_data as $item) {
+                if ($item[6] == 'boolean' && $item[7] == "on") {
                     $item[7] = 1;
                 }
-                if($item['5'] != null) {
-                    $query = "UPDATE `".$temp_table."` SET `value` = '".$item[7]."' WHERE `".$temp_table."`.`id` = ".$item[5];
-                }else{
-                    $query = "INSERT INTO `".$temp_table."` (`id`, `object_characteristic_id`, `characteristic_element_id`, `value`) VALUES(null, '".$item[3]."', '".$item[2]."', '".$item[7]."') ON DUPLICATE KEY UPDATE `value` = '".$item[7]."'";
-                }
-				if ($item[6] == 'date') {
-                    $temp_table = "tbl_object_characteristics_date";
-                    // $query = "UPDATE `" . $temp_table . "` SET `value` = '" . $item[7] . "' WHERE `" . $temp_table . "`.`id` = " . $item[4];
-                    if ($item[4] != null) {
-                        $query = "UPDATE `" . $temp_table . "` SET `value` = '" . $item[7] . "' WHERE `" . $temp_table . "`.`id` = " . $item[4];
+
+                $item_is_simple = ($item[3] == '0' || $item[3] == '' || $item[3] === null);
+
+                if ($item[6] == 'date') {
+                    // Dates always use the simple table regardless of attributes.
+                    $date_table = "tbl_object_characteristics_date";
+                    if (!empty($item[4]) && $item[4] != '0') {
+                        $query = "UPDATE `".$date_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$item[4];
                     } else {
-                        $query = "INSERT INTO `" . $temp_table . "` (`id`, `characteristic_id`, `company_id`, `value`) VALUES(null, '" . $item[1] . "', '" . $parent_object_id . "', '" . $item[7] . "')";
+                        $query = "INSERT INTO `".$date_table."` (`id`, `characteristic_id`, `company_id`, `value`) VALUES(null, '".$item[1]."', '".$parent_object_id."', '".$item[7]."')";
+                    }
+                } elseif ($item_is_simple) {
+                    // Simple characteristics (no attributes/elements) store values in
+                    // tbl_object_characteristics_{type}, using item[4] as the record ID.
+                    $simple_table = "tbl_object_characteristics_" . $item[6];
+                    if (!empty($item[4]) && $item[4] != '0') {
+                        $query = "UPDATE `".$simple_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$item[4];
+                    } else {
+                        switch ($parent_object_type) {
+                            case 'app_domain_Post':
+                                $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', NULL, '".$parent_object_id."', NULL, '".$item[7]."')";
+                                break;
+                            case 'app_domain_PostInitiative':
+                                $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', NULL, NULL, '".$parent_object_id."', '".$item[7]."')";
+                                break;
+                            default: // app_domain_Company
+                                $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', '".$parent_object_id."', NULL, NULL, '".$item[7]."')";
+                        }
+                    }
+                } else {
+                    // Complex characteristics with elements use tbl_object_characteristic_elements_{type}.
+                    $elements_table = "tbl_object_characteristic_elements_" . $item[6];
+                    if (!empty($item[5]) && $item[5] != '0') {
+                        $query = "UPDATE `".$elements_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$item[5];
+                    } else {
+                        $query = "INSERT INTO `".$elements_table."` (`id`, `object_characteristic_id`, `characteristic_element_id`, `value`) VALUES(null, '".$item[3]."', '".$item[2]."', '".$item[7]."') ON DUPLICATE KEY UPDATE `value` = '".$item[7]."'";
                     }
                 }
-                // print_r($query);die;
+
                 $res = $db->exec($query);
                 if (MDB2::isError($res)) {
                     throw new app_base_MDB2Exception($res);
