@@ -211,10 +211,11 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
 
                 $item_is_simple = ($item[3] == '0' || $item[3] == '' || $item[3] === null);
                 $is_complex_characteristic = $this->isComplexCharacteristicDefinition($db, (int) $item[1]);
+                $has_complex_elements = $this->hasAnyCharacteristicElements($db, (int) $item[1]);
 
                 // Some legacy rows render as simple text inputs but are configured as complex characteristics.
                 // In that case, write into element tables (which the screen reads) instead of simple tables.
-                if ($item_is_simple && $is_complex_characteristic && $item[6] == 'text') {
+                if ($item_is_simple && $is_complex_characteristic && $has_complex_elements && $item[6] == 'text') {
                     $this->upsertFirstTextElementForComplexCharacteristic(
                         $db,
                         (int) $item[1],
@@ -334,6 +335,24 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
             return false;
         }
         return ((int) $row['attributes'] === 1 || (int) $row['options'] === 1);
+    }
+
+    /**
+     * @param object $db
+     * @param int    $characteristicId
+     * @return bool
+     */
+    private function hasAnyCharacteristicElements($db, $characteristicId)
+    {
+        if ($characteristicId < 1) {
+            return false;
+        }
+        $sql = 'SELECT id FROM tbl_characteristic_elements WHERE characteristic_id = ' . (int) $characteristicId . ' LIMIT 1';
+        $id = $db->queryOne($sql);
+        if (MDB2::isError($id)) {
+            return false;
+        }
+        return ((int) $id > 0);
     }
 
     /**
