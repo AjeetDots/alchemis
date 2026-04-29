@@ -21,16 +21,16 @@ class app_mapper_ObjectCharacteristicTextMapper extends app_mapper_ObjectCharact
 		$query = 'SELECT * FROM tbl_object_characteristics_text WHERE id = ?';
 		$this->select_stmt = self::$DB->prepare($query);
 		
-		// Select by company ID
-		$query = 'SELECT id, value FROM tbl_object_characteristics_text WHERE characteristic_id = ? AND company_id = ?';
+		// Select by company ID (newest first — duplicates are possible without a unique key)
+		$query = 'SELECT id, value FROM tbl_object_characteristics_text WHERE characteristic_id = ? AND company_id = ? ORDER BY id DESC';
 		$this->select_by_company_id_stmt = self::$DB->prepare($query);
 		
 		// Select by post ID
-		$query = 'SELECT id, value FROM tbl_object_characteristics_text WHERE characteristic_id = ? AND post_id = ?';
+		$query = 'SELECT id, value FROM tbl_object_characteristics_text WHERE characteristic_id = ? AND post_id = ? ORDER BY id DESC';
 		$this->select_by_post_id_stmt = self::$DB->prepare($query);
 
 		// Select by post initiative ID
-		$query = 'SELECT id, value FROM tbl_object_characteristics_text WHERE characteristic_id = ? AND post_initiative_id = ?';
+		$query = 'SELECT id, value FROM tbl_object_characteristics_text WHERE characteristic_id = ? AND post_initiative_id = ? ORDER BY id DESC';
 		$this->select_by_post_initiative_id_stmt = self::$DB->prepare($query);
 		
 		// Insert

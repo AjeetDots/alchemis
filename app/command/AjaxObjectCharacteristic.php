@@ -217,7 +217,12 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                     if (!empty($item[4]) && $item[4] != '0') {
                         $query = "UPDATE `".$date_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$item[4];
                     } else {
-                        $query = "INSERT INTO `".$date_table."` (`id`, `characteristic_id`, `company_id`, `value`) VALUES(null, '".$item[1]."', '".$parent_object_id."', '".$item[7]."')";
+                        $existingId = $this->findExistingSimpleValueRowId($db, $date_table, $item, $parent_object_type, $parent_object_id);
+                        if ($existingId) {
+                            $query = "UPDATE `".$date_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$existingId;
+                        } else {
+                            $query = "INSERT INTO `".$date_table."` (`id`, `characteristic_id`, `company_id`, `value`) VALUES(null, '".$item[1]."', '".$parent_object_id."', '".$item[7]."')";
+                        }
                     }
                 } elseif ($item_is_simple) {
                     // Simple characteristics (no attributes/elements) store values in
@@ -226,15 +231,20 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                     if (!empty($item[4]) && $item[4] != '0') {
                         $query = "UPDATE `".$simple_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$item[4];
                     } else {
-                        switch ($parent_object_type) {
-                            case 'app_domain_Post':
-                                $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', NULL, '".$parent_object_id."', NULL, '".$item[7]."')";
-                                break;
-                            case 'app_domain_PostInitiative':
-                                $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', NULL, NULL, '".$parent_object_id."', '".$item[7]."')";
-                                break;
-                            default: // app_domain_Company
-                                $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', '".$parent_object_id."', NULL, NULL, '".$item[7]."')";
+                        $existingId = $this->findExistingSimpleValueRowId($db, $simple_table, $item, $parent_object_type, $parent_object_id);
+                        if ($existingId) {
+                            $query = "UPDATE `".$simple_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$existingId;
+                        } else {
+                            switch ($parent_object_type) {
+                                case 'app_domain_Post':
+                                    $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', NULL, '".$parent_object_id."', NULL, '".$item[7]."')";
+                                    break;
+                                case 'app_domain_PostInitiative':
+                                    $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', NULL, NULL, '".$parent_object_id."', '".$item[7]."')";
+                                    break;
+                                default: // app_domain_Company
+                                    $query = "INSERT INTO `".$simple_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', '".$parent_object_id."', NULL, NULL, '".$item[7]."')";
+                            }
                         }
                     }
                 } else {
@@ -256,114 +266,42 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
         return;
         die;
 
-        if ($has_multiple_elements) {
-            $object_characteristic_helper = new app_mapper_ObjectCharacteristicHelperMapper();
-            $objectCharacteristicId = $object_characteristic_helper->getObjectCharacteristicIdByParentObjectIdAndCharacteristicId($parent_object_id, $parent_object_type, $characteristic->getId());
-            $dbIds = app_domain_ObjectCharacteristicElementHelper::getAllRecordsByObjectCharacteristicId($objectCharacteristicId);
+    }
+
+    /**
+     * When the form has no value-row id, avoid inserting duplicate rows (same characteristic + parent):
+     * tbl_object_characteristics_* has no unique key, so repeated INSERTs leave stale rows that the reader may return first.
+     *
+     * @param object $db MDB2 connection
+     * @param string $simple_table e.g. tbl_object_characteristics_text
+     * @param array $item exploded field name + value
+     * @param string $parent_object_type
+     * @param int $parent_object_id
+     * @return int|null existing row id or null
+     */
+    private function findExistingSimpleValueRowId($db, $simple_table, $item, $parent_object_type, $parent_object_id)
+    {
+        $charId = (int) $item[1];
+        $parentId = (int) $parent_object_id;
+        if ($charId < 1 || $parentId < 1) {
+            return null;
         }
-
-        //        echo "<p>before</p>";
-        //        echo "<pre>";
-        //        print_r($dbIds);
-        //        echo "</pre>";
-
-        //        $dbIds = array('boolean' => array(1,2,3),
-        //                'date' => array(4, 6, 7))
-
-        // Loop through $field_data and process each field
-        foreach ($field_data as $field)
-        {
-            $iterator                         = $field[0];
-            $characteristic_id                = $field[1];
-            $element_id                       = $field[2];
-            $object_characteristic_id         = $field[3];
-            $object_characteristic_value_id   = $field[4];
-            $object_characteristic_element_id = $field[5];
-            $datatype                         = $field[6];
-            $value                            = $field[7];
-
-            if ($has_multiple_elements) {
-                $index = array_search($object_characteristic_element_id, $dbIds[$datatype]);
-                               echo '<pre>';
-                               echo 'Found index: ' . $index. '\n';
-                               echo '</pre>';
-                if (!empty($index)) {
-                    if ($index !== false) {
-                        unset($dbIds[$datatype][$index]);
-                    }
-                }
-
-                // do we have to insert or update this element
-                if (is_null($object_characteristic_element_id)) {
-                    $object_characteristic_element = app_domain_ObjectCharacteristicElementHelper::factory($datatype);
-                    // insert item
-                    // TODO: insert characteristic element value
-                }
-                else
-                {
-                    $object_characteristic_element = app_domain_ObjectCharacteristicElementHelper::factory($datatype, $object_characteristic_element_id);
-                    // update item
-                    // TODO: update characteristic element value
-                }
-
-                $object_characteristic_element->setObjectCharacteristicId($object_characteristic_id);
-                $object_characteristic_element->setCharacteristicElementId($element_id);
-
-                $object_characteristic_element->setValue($value);
-                $object_characteristic_element->commit();
-
-
-            }
-            else
-            {
-                // do we have to insert or update this characteristic
-                if (is_null($object_characteristic_value_id)) {
-                    // insert item
-                    $object_characteristic = app_domain_ObjectCharacteristicHelper::factory($datatype);
-                }
-                else
-                {
-                    // update item
-                    $object_characteristic = app_domain_ObjectCharacteristicHelper::factory($datatype, $object_characteristic_value_id);
-                }
-                $object_characteristic->setCharacteristicId($characteristic->getId());
-                $object_characteristic->setParentObjectId($parent_object_id);
-                $object_characteristic->setParentObjectType($parent_object_type);
-                $object_characteristic->setValue($value);
-                $object_characteristic->commit();
-            }
+        switch ($parent_object_type) {
+            case 'app_domain_Post':
+                $sql = 'SELECT id FROM `' . $simple_table . '` WHERE characteristic_id = ' . $charId . ' AND post_id = ' . $parentId . ' ORDER BY id DESC LIMIT 1';
+                break;
+            case 'app_domain_PostInitiative':
+                $sql = 'SELECT id FROM `' . $simple_table . '` WHERE characteristic_id = ' . $charId . ' AND post_initiative_id = ' . $parentId . ' ORDER BY id DESC LIMIT 1';
+                break;
+            default:
+                $sql = 'SELECT id FROM `' . $simple_table . '` WHERE characteristic_id = ' . $charId . ' AND company_id = ' . $parentId . ' ORDER BY id DESC LIMIT 1';
+                break;
         }
-        //        echo "<p>after</p>";
-        //        echo "<pre>";
-        //        print_r($dbIds);
-        //        echo "</pre>";
-
-        if ($has_multiple_elements) {
-            foreach ($dbIds['boolean'] as $dbId)
-            {
-                $object_characteristic_element = app_domain_ObjectCharacteristicElementHelper::factory('boolean', $dbId);
-                $object_characteristic_element->markDeleted();
-                $object_characteristic_element->commit();
-            }
-
-            foreach ($dbIds['date'] as $dbId)
-            {
-                $object_characteristic_element = app_domain_ObjectCharacteristicElementHelper::factory('date', $dbId);
-                $object_characteristic_element->markDeleted();
-                $object_characteristic_element->commit();
-            }
-
-            foreach ($dbIds['text'] as $dbId)
-            {
-                $object_characteristic_element = app_domain_ObjectCharacteristicElementHelper::factory('text', $dbId);
-                $object_characteristic_element->markDeleted();
-                $object_characteristic_element->commit();
-            }
-
+        $rowId = $db->queryOne($sql);
+        if (MDB2::isError($rowId)) {
+            return null;
         }
-
-
-
+        return $rowId ? (int) $rowId : null;
     }
 
     /**

@@ -607,6 +607,14 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 																	   name="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_{$element.data_type}"
 																	   value="{$element.value}" style="width: 90%"/>
 															</td>
+														{else}
+															<td>{$element.name}</td>
+															<td style="width: 100%">
+																<input type="text"
+																	   id="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_text"
+																	   name="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_text"
+																	   value="{$element.value}" style="width: 90%"/>
+															</td>
 														{/if}
 													</tr>
 												{/foreach}
@@ -667,6 +675,19 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 																		   name="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_{$element.data_type}"
 																		   value="{$element.value}" style="width: 90%"/>
 																</td>
+															{else}
+																<td><input type="checkbox"
+																		   id="ignore_{$characteristic.id}_{$smarty.foreach.element_loop.iteration}"
+																		   name="ignore_{$characteristic.id}_{$smarty.foreach.element_loop.iteration}"{if $element.value != ""} checked="checked"{/if}
+																		   onchange="javascript:toggleMultipleSelectItem(this.id, '{$smarty.foreach.element_loop.iteration}_{$element.object_characteristic_id}_{$element.object_characteristic_element_id}_', 'text');return false;"/>
+																</td>
+																<td>{$element.name}</td>
+																<td style="width:100%">
+																	<input type="text"
+																		   id="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_text"
+																		   name="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_text"
+																		   value="{$element.value}" style="width: 90%"/>
+																</td>
 															{/if}
 														</tr>
 													{/foreach}
@@ -715,6 +736,20 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 																	<input type="text"
 																		   id="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_{$element.data_type}"
 																		   name="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_{$element.data_type}"
+																		   value="{$element.value}"{if $element.value == ""} disabled="disabled"{/if}
+																		   style="width: 90%"/>
+																</td>
+															{else}
+																<td><input type="radio"
+																		   id="ignore_{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_text"
+																		   name="ignore_{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_text"{if $element.value != ""} checked="checked"{/if}
+																		   onchange="javascript:toggleSingleSelectItem('frm_elements_{$characteristic.id}', this.id, '{$smarty.foreach.element_loop.iteration}_{$element.object_characteristic_id}_{$element.object_characteristic_element_id}_', 'text');return false;"/>
+																</td>
+																<td>{$element.name}</td>
+																<td style="width: 100%">
+																	<input type="text"
+																		   id="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_text"
+																		   name="{$smarty.foreach.element_loop.iteration}_{$characteristic.id}_{$element.id}_{$element.object_characteristic_id}_0_{$element.object_characteristic_element_id}_text"
 																		   value="{$element.value}"{if $element.value == ""} disabled="disabled"{/if}
 																		   style="width: 90%"/>
 																</td>
@@ -768,6 +803,11 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 																   id="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_text"
 																   name="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_text"
 																   value="{$characteristic.value}"/>
+														{else}
+															<input type="text"
+																   id="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_text"
+																   name="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_text"
+																   value="{$characteristic.value|default:''}"/>
 														{/if}
 													</td>
 												</tr>

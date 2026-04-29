@@ -27,6 +27,87 @@ class app_command_ObjectCharacteristics extends app_command_Command
         return is_array($value) ? $value : array();
     }
 
+    /**
+     * Populate a simple characteristic value for a specific parent object.
+     *
+     * @param array  $characteristic
+     * @param string $type
+     * @param int    $id
+     * @return void
+     */
+    protected static function populateSimpleCharacteristicValue(array &$characteristic, $type, $id)
+    {
+        if (! isset($characteristic['data_type']) || $characteristic['data_type'] === '') {
+            $characteristic['data_type'] = 'text';
+        }
+        switch ($type) {
+            case 'post':
+                $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByPostId($characteristic['id'], $characteristic['data_type'], $id));
+                break;
+            case 'post_initiative':
+                $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByPostInitiativeId($characteristic['id'], $characteristic['data_type'], $id));
+                break;
+            case 'company':
+            default:
+                $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByCompanyId($characteristic['id'], $characteristic['data_type'], $id));
+                break;
+        }
+
+        if (count($characteristic_item) > 0) {
+            $characteristic['value']                          = $characteristic_item[0]['value'];
+            $characteristic['object_characteristic_value_id'] = $characteristic_item[0]['id'];
+        } else {
+            $characteristic['value']                          = null;
+            $characteristic['object_characteristic_value_id'] = null;
+        }
+    }
+
+    /**
+     * Characteristics that are marked as complex but have no elements render as blank panels.
+     * Fall back to simple text inputs so users can still edit values.
+     *
+     * @param array  $characteristic
+     * @param string $type
+     * @param int    $id
+     * @return void
+     */
+    protected static function applySimpleFallbackWhenNoElements(array &$characteristic, $type, $id)
+    {
+        if (!empty($characteristic['elements'])) {
+            return;
+        }
+
+        $characteristic['attributes']      = 0;
+        $characteristic['options']         = 0;
+        $characteristic['multiple_select'] = 0;
+        if (empty($characteristic['data_type'])) {
+            $characteristic['data_type'] = 'text';
+        }
+        self::populateSimpleCharacteristicValue($characteristic, $type, $id);
+    }
+
+    /**
+     * UI templates only render boolean/date/text. Missing types produce blank edit forms.
+     *
+     * @param array $characteristic
+     * @return void
+     */
+    protected static function normalizeCharacteristicDataTypes(array &$characteristic)
+    {
+        $simple = ($characteristic['attributes'] == 0 && $characteristic['options'] == 0);
+        if ($simple && (! isset($characteristic['data_type']) || $characteristic['data_type'] === '')) {
+            $characteristic['data_type'] = 'text';
+        }
+        if (! empty($characteristic['elements']) && is_array($characteristic['elements'])) {
+            foreach ($characteristic['elements'] as &$element) {
+                if (! isset($element['data_type']) || $element['data_type'] === '') {
+                    $element['data_type'] = 'text';
+                }
+            }
+            unset($element);
+        }
+    }
+
     public function doExecute(app_controller_Request $request)
     {
         $id   = $request->getProperty('id');
@@ -82,14 +163,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
             $characteristics = $collection->toRawArray();
             foreach ($characteristics as &$characteristic) {
                 if ($characteristic['attributes'] == 0 && $characteristic['options'] == 0) {
-                    $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByCompanyId($characteristic['id'], $characteristic['data_type'], $id));
-                    if (count($characteristic_item) > 0) {
-                        $characteristic['value']                          = $characteristic_item[0]['value'];
-                        $characteristic['object_characteristic_value_id'] = $characteristic_item[0]['id'];
-                    } else {
-                        $characteristic['value']                          = null;
-                        $characteristic['object_characteristic_value_id'] = null;
-                    }
+                    self::populateSimpleCharacteristicValue($characteristic, 'company', $id);
                 } else {
                     $charId    = (int)$characteristic['id'];
                     $companyId = (int)$id;
@@ -129,7 +203,9 @@ class app_command_ObjectCharacteristics extends app_command_Command
                     }
 
 
+                    self::applySimpleFallbackWhenNoElements($characteristic, 'company', $id);
                 }
+                self::normalizeCharacteristicDataTypes($characteristic);
             }
         } elseif ($type == 'post') {
             $available = app_domain_Characteristic::selectAvailableByPostId($id);
@@ -137,14 +213,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
             $characteristics = $collection->toRawArray();
             foreach ($characteristics as &$characteristic) {
                 if ($characteristic['attributes'] == 0 && $characteristic['options'] == 0) {
-                    $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByPostId($characteristic['id'], $characteristic['data_type'], $id));
-                    if (count($characteristic_item) > 0) {
-                        $characteristic['value']                          = $characteristic_item[0]['value'];
-                        $characteristic['object_characteristic_value_id'] = $characteristic_item[0]['id'];
-                    } else {
-                        $characteristic['value']                          = null;
-                        $characteristic['object_characteristic_value_id'] = null;
-                    }
+                    self::populateSimpleCharacteristicValue($characteristic, 'post', $id);
                 } else {
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
                     foreach ($characteristic['elements'] as &$element) {
@@ -157,7 +226,9 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             $element['object_characteristic_id'] = $ocId;
                         }
                     }
+                    self::applySimpleFallbackWhenNoElements($characteristic, 'post', $id);
                 }
+                self::normalizeCharacteristicDataTypes($characteristic);
             }
         } elseif ($type == 'post_initiative') {
             $available = app_domain_Characteristic::selectAvailableByPostInitiativeId($id);
@@ -165,14 +236,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
             $characteristics = $collection->toRawArray();
             foreach ($characteristics as &$characteristic) {
                 if ($characteristic['attributes'] == 0 && $characteristic['options'] == 0) {
-                    $characteristic_item = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByPostInitiativeId($characteristic['id'], $characteristic['data_type'], $id));
-                    if (count($characteristic_item) > 0) {
-                        $characteristic['value']                          = $characteristic_item[0]['value'];
-                        $characteristic['object_characteristic_value_id'] = $characteristic_item[0]['id'];
-                    } else {
-                        $characteristic['value']                          = null;
-                        $characteristic['object_characteristic_value_id'] = null;
-                    }
+                    self::populateSimpleCharacteristicValue($characteristic, 'post_initiative', $id);
                 } else {
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
                     foreach ($characteristic['elements'] as &$element) {
@@ -185,7 +249,9 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             $element['object_characteristic_id'] = $ocId;
                         }
                     }
+                    self::applySimpleFallbackWhenNoElements($characteristic, 'post_initiative', $id);
                 }
+                self::normalizeCharacteristicDataTypes($characteristic);
             }
         } else {
             throw new Exception('Invalid object type: ' . $type);
