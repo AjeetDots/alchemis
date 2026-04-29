@@ -84,6 +84,9 @@ class app_controller_ApplicationHelper
 			'password'  => $db['password'],
 			'charset'   => 'utf8mb4',
 			'collation' => 'utf8mb4_unicode_ci',
+			'options'   => [
+				PDO::ATTR_EMULATE_PREPARES => true,
+			],
 		];
 		if (isset($db['port'])) {
 			$capsuleConfig['port'] = (int) $db['port'];
@@ -217,6 +220,7 @@ class app_controller_ApplicationHelper
 		{
 			// Create MDB2 using factory
 			$this->db = MDB2::factory($dsn);
+			$this->db->setOption('emulate_prepares', true);
 			$this->db->query('SET NAMES utf8mb4');
 			// Only enable MDB2 debug in development; in production it adds overhead (query logging etc.)
 			$isDev = (isset($_SERVER['ALCHEMIS_ENV']) && $_SERVER['ALCHEMIS_ENV'] === 'development');

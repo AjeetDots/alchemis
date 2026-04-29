@@ -133,11 +133,11 @@ echo "<hr /><h2>Processing for the period $start_date to $end_date</h2>";
 // Solution is to create a temporary copy of tbl_meetings_shadow and in this copy to alter meeting set date to '01/01/2007' where meeting set date is < '01/01/2007'
 // and meeting attended date (date of the meeting) is >= '01/01/2007'
 
-$sql = 'DROP TABLE IF EXISTS `tbl_meetings_shadow_temp`;';
+$sql = 'DROP TEMPORARY TABLE IF EXISTS `tbl_meetings_shadow_temp`';
 $db->query($sql);
 echo "<p>$sql</p>";
 
-$sql = "CREATE TABLE `tbl_meetings_shadow_temp` ( " .
+$sql = "CREATE TEMPORARY TABLE `tbl_meetings_shadow_temp` ( " .
   "`shadow_id` int(11) NOT NULL auto_increment, " .
   "`shadow_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP, " .
   "`shadow_updated_by` int(11) NOT NULL, " .
@@ -880,8 +880,7 @@ $db->query($sql);
 //
 // Meeting timelag
 //
-$sql = 'drop table if exists t_meetings;';
-echo "<p>$sql</p>";
+$db->query('DROP TEMPORARY TABLE IF EXISTS `t_meetings`');
 $sql = 'create temporary table t_meetings ' .
 		'select i.campaign_id, m_sh.created_by as user_id, m_sh.id as id, ' .
 		'EXTRACT(YEAR_MONTH FROM m_sh.created_at) as `year_month`, ' .
@@ -891,9 +890,10 @@ $sql = 'create temporary table t_meetings ' .
 		'join tbl_initiatives i on pi.initiative_id = i.id ' .
 		'where m_sh.created_at >= \'' . $start_date . '\' ' .
 		'and m_sh.created_at <= \'' . $end_date . '\' ' .
-		'and m_sh.shadow_type = \'i\';';
+		'and m_sh.shadow_type = \'i\'';
 echo "<p>$sql</p>";
 $db->query($sql);
+$db->query('ALTER TABLE t_meetings ADD INDEX ix_time_lag (time_lag)');
 
 
 //
@@ -1004,6 +1004,7 @@ $db->query($sql);
 echo "<hr /><h2>Information Request Pending Count</h2>";
 
 // Get all the communications for post initiatives which occur after an information request
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
 $sql = 'CREATE TEMPORARY TABLE t1 ' .
 		'SELECT comm.* ' .
 		'FROM tbl_communications AS comm ' .
@@ -1014,6 +1015,7 @@ echo "<p>$sql</p>";
 $db->query($sql);
 
 // Get the post initiatives for which there is at least one effective following on from the information request
+$db->query('DROP TEMPORARY TABLE IF EXISTS t2');
 $sql = 'CREATE TEMPORARY TABLE t2 ' .
 		'SELECT post_initiative_id ' .
 		'FROM t1 ' .
@@ -1026,6 +1028,7 @@ $db->query($sql);
 $db->query('ALTER TABLE t2 ADD INDEX `ix_t2_1` (`post_initiative_id`)');
 
 // Subtract t2 from t1 to get the communications for which there are no effectives following on from an information request
+$db->query('DROP TEMPORARY TABLE IF EXISTS t3');
 $sql = 'CREATE TEMPORARY TABLE t3 ' .
 		'SELECT t1.*  ' .
 		'FROM t1 ' .
@@ -1046,9 +1049,9 @@ echo "<p>$sql</p>";
 $db->query($sql);
 
 // Drop temporary tables
-$db->query('DROP TEMPORARY TABLE t1');
-$db->query('DROP TEMPORARY TABLE t2');
-$db->query('DROP TEMPORARY TABLE t3');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t2');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t3');
 
 // Update tbl_data_statistics
 $sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
@@ -1065,6 +1068,7 @@ $db->query($sql);
 echo "<hr /><h2>Information Requests Failed Count</h2>";
 
 // Get the next effective communication for post initiatives which occur after an information request
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
 $sql = 'CREATE TEMPORARY TABLE t1 ' .
 		'SELECT MIN(comm.id) AS id ' .
 		'FROM tbl_communications AS comm ' .
@@ -1089,7 +1093,7 @@ echo "<p>$sql</p>";
 $db->query($sql);
 
 // Drop temporary tables
-$db->query('DROP TEMPORARY TABLE t1');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
 
 // Update tbl_data_statistics
 $sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
@@ -1106,6 +1110,7 @@ $db->query($sql);
 echo "<hr /><h2>Information Requests Converted Count</h2>";
 
 // Get the next effective communication for post initiatives which occur after an information request
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
 $sql = 'CREATE TEMPORARY TABLE t1 ' .
 		'SELECT MIN(comm.id) AS id ' .
 		'FROM tbl_communications AS comm ' .
@@ -1130,7 +1135,7 @@ echo "<p>$sql</p>";
 $db->query($sql);
 
 // Drop temporary tables
-$db->query('DROP TEMPORARY TABLE t1');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
 
 // Update tbl_data_statistics
 $sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
@@ -1161,7 +1166,7 @@ $db->query($sql);
 //
 // Total number of effectives made to NEW prospects.  No previous effective logged so a new contact
 //
-$db->debug_all = true;
+$db->debug_all = false;
 echo '<hr /><h2>Fresh Effectives</h2>';
 
 // Get minimum effective communication IDs for each post initiative / user
@@ -1191,8 +1196,8 @@ echo "<p>$sql</p>";
 $db->query($sql);
 
 // Drop temporary tables
-$db->query('DROP TEMPORARY TABLE t1');
-$db->query('DROP TEMPORARY TABLE t2');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t2');
 
 $sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
 		'SET ds.call_fresh_effective_count = ds_temp.`value`';
@@ -1207,16 +1212,18 @@ $db->query($sql);
 //
 //       call_fresh_effective_converted_count
 //
-$db->debug_all = true;
+$db->debug_all = false;
 echo '<hr /><h2>Fresh Effectives Converted</h2>';
 
 // Get minimum effective communication IDs for each post initiative / user
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
 $sql = 'CREATE TEMPORARY TABLE t1 ' .
 		'SELECT MIN(id) AS id FROM tbl_communications WHERE is_effective = 1 GROUP BY post_initiative_id, user_id';
 echo "<p>$sql</p>";
 $db->query($sql);
 
 // Reduce the communications to the first effectives
+$db->query('DROP TEMPORARY TABLE IF EXISTS t2');
 $sql = 'CREATE TEMPORARY TABLE t2 ' .
 		'SELECT comm.* ' .
 		'FROM tbl_communications AS comm ' .
@@ -1236,8 +1243,8 @@ echo "<p>$sql</p>";
 $db->query($sql);
 
 // Drop temporary tables
-$db->query('DROP TEMPORARY TABLE t1');
-$db->query('DROP TEMPORARY TABLE t2');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
+$db->query('DROP TEMPORARY TABLE IF EXISTS t2');
 
 $sql = 'UPDATE tbl_data_statistics AS ds JOIN tbl_data_statistics_temp AS ds_temp ON ds.campaign_id = ds_temp.campaign_id AND ds.user_id = ds_temp.user_id AND ds.year_month = ds_temp.year_month ' .
 		'SET ds.call_fresh_effective_converted_count = ds_temp.`value`';
@@ -1252,6 +1259,7 @@ $db->query($sql);
 echo '<hr /><h2>Call Back Effectives</h2>';
 
 // Get minimum effective communication IDs for each post initiative / user
+$db->query('DROP TEMPORARY TABLE IF EXISTS t1');
 $sql = 'CREATE TEMPORARY TABLE t1 ' .
 		'SELECT MIN(id) AS id FROM tbl_communications WHERE is_effective = 1 GROUP BY post_initiative_id, user_id';
 echo "<p>$sql</p>";
@@ -1263,6 +1271,7 @@ echo "<p>$sql</p>";
 $db->query($sql);
 
 // Reduce the communications to the remaining effectives
+$db->query('DROP TEMPORARY TABLE IF EXISTS t2');
 $sql = 'CREATE TEMPORARY TABLE t2 ' .
 		'SELECT comm.* ' .
 		'FROM tbl_communications AS comm ' .
@@ -1283,12 +1292,12 @@ echo "<p>$sql</p>";
 $db->query($sql);
 
 // Remove first temporary table
-$sql = 'DROP TEMPORARY TABLE t1';
+$sql = 'DROP TEMPORARY TABLE IF EXISTS t1';
 echo "<p>$sql</p>";
 $db->query($sql);
 
-// Remove secong temporary table
-$sql = 'DROP TEMPORARY TABLE t2';
+// Remove second temporary table
+$sql = 'DROP TEMPORARY TABLE IF EXISTS t2';
 echo "<p>$sql</p>";
 $db->query($sql);
 
@@ -1329,13 +1338,13 @@ $db->query($sql);
 //
 // Finish up
 //
-$sql = 'drop table if exists tbl_meetings_shadow_temp';
+$sql = 'drop temporary table if exists tbl_meetings_shadow_temp';
 $db->query($sql);
 echo "<p>$sql</p>";
-$sql = 'drop table if exists tbl_data_statistics_temp';
+$sql = 'drop temporary table if exists tbl_data_statistics_temp';
 $db->query($sql);
 echo "<p>$sql</p>";
-$sql = 'drop table if exists tbl_data_statistics_temp_1';
+$sql = 'drop temporary table if exists tbl_data_statistics_temp_1';
 $db->query($sql);
 echo "<p>$sql</p>";
 
@@ -1349,38 +1358,54 @@ echo '<div style="text-align: center; padding-bottom: 5px">Execution Time: ' . r
 
 function makeTemporaryTable($db)
 {
-	$sql =	'DROP TABLE IF EXISTS `tbl_data_statistics_temp`; ';
-	echo "<p>$sql</p>";
-	$db->query($sql);
+	static $created = false;
+	if (!$created) {
+		$sql = 'DROP TEMPORARY TABLE IF EXISTS `tbl_data_statistics_temp`';
+		echo "<p>$sql</p>";
+		$db->query($sql);
 
-	$sql = 	'CREATE TEMPORARY TABLE `tbl_data_statistics_temp` ( ' .
-			'`id` int(11) NOT NULL auto_increment, ' .
-			'`campaign_id` int(11) NOT NULL default \'0\', ' .
-			'`user_id` int(11) NOT NULL default \'0\', ' .
-			'`year_month` char(6) NOT NULL default \'\', ' .
-			'`value` int(11), ' .
-			'PRIMARY KEY  (`id`), ' .
-			'KEY `campaign_id` (`campaign_id`), ' .
-			'KEY `user_id` (`user_id`), ' .
-			'KEY `year_month` (`year_month`) ' .
-			');';
-	echo "<p>$sql</p>";
-	$db->query($sql);
+		$sql = 'CREATE TEMPORARY TABLE `tbl_data_statistics_temp` ( ' .
+				'`id` int(11) NOT NULL auto_increment, ' .
+				'`campaign_id` int(11) NOT NULL default \'0\', ' .
+				'`user_id` int(11) NOT NULL default \'0\', ' .
+				'`year_month` char(6) NOT NULL default \'\', ' .
+				'`value` int(11), ' .
+				'PRIMARY KEY  (`id`), ' .
+				'KEY `campaign_id` (`campaign_id`), ' .
+				'KEY `user_id` (`user_id`), ' .
+				'KEY `year_month` (`year_month`) ' .
+				')';
+		echo "<p>$sql</p>";
+		$db->query($sql);
+		$created = true;
+	} else {
+		$sql = 'TRUNCATE TABLE `tbl_data_statistics_temp`';
+		echo "<p>$sql</p>";
+		$db->query($sql);
+	}
 }
 
 function makeTemporaryTable_1($db)
 {
-	$sql =	'DROP TABLE IF EXISTS `tbl_data_statistics_temp_1`; ';
-	echo "<p>$sql</p>";
-	$db->query($sql);
+	static $created = false;
+	if (!$created) {
+		$sql = 'DROP TEMPORARY TABLE IF EXISTS `tbl_data_statistics_temp_1`';
+		echo "<p>$sql</p>";
+		$db->query($sql);
 
-	$sql = 	'CREATE TEMPORARY TABLE `tbl_data_statistics_temp_1` ( ' .
-			'`id` int(11) NOT NULL auto_increment, ' .
-			'`value` int(11), ' .
-			'PRIMARY KEY  (`id`) ' .
-			');';
-	echo "<p>$sql</p>";
-	$db->query($sql);
+		$sql = 'CREATE TEMPORARY TABLE `tbl_data_statistics_temp_1` ( ' .
+				'`id` int(11) NOT NULL auto_increment, ' .
+				'`value` int(11), ' .
+				'PRIMARY KEY  (`id`) ' .
+				')';
+		echo "<p>$sql</p>";
+		$db->query($sql);
+		$created = true;
+	} else {
+		$sql = 'TRUNCATE TABLE `tbl_data_statistics_temp_1`';
+		echo "<p>$sql</p>";
+		$db->query($sql);
+	}
 }
 
 ?>

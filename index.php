@@ -3,13 +3,11 @@
 ob_start();
 
 spl_autoload_register(function ($classname) {
-    $path = str_replace('_', DIRECTORY_SEPARATOR, $classname) . '.php';
+    $path = __DIR__ . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $classname) . '.php';
     if (file_exists($path)) {
         require_once $path;
     }
 });
-
-session_start();
 
 // Ensure a consistent timezone across environments so all date('...')
 // calls (used in dashboard reports, campaign progress and planners)
@@ -115,8 +113,6 @@ if (file_exists('vendor/autoload.php')) {
     require_once 'vendor/autoload.php';
 }
 
-// Legacy autoloader is registered before session_start() at the top of this file.
-
 /*
 |--------------------------------------------------------------------------
 | Include Paths
@@ -129,6 +125,51 @@ set_include_path(
     PATH_SEPARATOR . '.' . DIRECTORY_SEPARATOR . 'include/Zend' .
     PATH_SEPARATOR . get_include_path()
 );
+
+// session_start() is placed here — after include paths are configured — so
+// that when PHP deserializes session objects (e.g. app_domain_Action stored
+// in post_initiative_actions), the autoloader can resolve all class files and
+// their internal require_once calls without "incomplete object" errors.
+session_start();
+
+// Detect a corrupted session: if a previous request stored objects whose class
+// was not yet loaded at deserialise time, PHP marks them as __PHP_Incomplete_Class.
+// Calling any method on such an object causes a fatal error. Destroy the session
+// and send the user back to the login page with a clear explanation.
+if (strpos(serialize($_SESSION), '__PHP_Incomplete_Class') !== false) {
+    session_unset();
+    session_destroy();
+    setcookie(session_name(), '', ['expires' => time() - 3600, 'path' => '/', 'secure' => true, 'httponly' => true, 'samesite' => 'Lax']);
+    ob_clean();
+    echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Session Expired</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+  .box { background: #fff; border-radius: 8px; padding: 36px 44px; box-shadow: 0 2px 12px rgba(0,0,0,.15); text-align: center; max-width: 420px; }
+  h2 { color: #c0392b; margin-bottom: 12px; }
+  p  { color: #555; line-height: 1.6; }
+  a  { display: inline-block; margin-top: 20px; padding: 10px 28px; background: #2c3e7a; color: #fff; border-radius: 5px; text-decoration: none; font-weight: bold; }
+  a:hover { background: #1a2757; }
+</style>
+</head>
+<body>
+<div class="box">
+  <h2>Session Expired</h2>
+  <p>Your session has expired due to a system update or deployment.<br>
+     Please log in again &mdash; your data is safe.</p>
+  <a href="index.php?cmd=Login">Log In Again</a>
+</div>
+<script>
+  // Auto-redirect after 4 seconds so the user sees the message first.
+  setTimeout(function(){ window.location.href = "index.php?cmd=Login"; }, 4000);
+</script>
+</body>
+</html>';
+    exit;
+}
 
 /*
 |--------------------------------------------------------------------------

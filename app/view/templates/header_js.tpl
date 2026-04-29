@@ -409,6 +409,39 @@ iframeLocation(			popupWindow, 'index.php?cmd=TimedCallBacks');
 		_alcUnlockUI();
 		if (typeof hideLoader === 'function') { hideLoader(); }
 
+		// Hide stuck loaders inside tab iframes (iframeLocation shows the loader inside the
+		// calling iframe, not the parent — so stopCurrentLoad must clear them explicitly)
+		for (var _ci = 1; _ci <= 12; _ci++) {
+			var _cfr = $('iframe_' + _ci);
+			if (_cfr && _cfr.contentWindow && typeof _cfr.contentWindow.hideLoader === 'function') {
+				try { _cfr.contentWindow.hideLoader(); } catch(e) {}
+			}
+		}
+		var _cfr1 = $('iframe1');
+		if (_cfr1 && _cfr1.contentWindow && typeof _cfr1.contentWindow.hideLoader === 'function') {
+			try { _cfr1.contentWindow.hideLoader(); } catch(e) {}
+		}
+
+		// Restore any statistics buttons stuck showing ajax_loader.gif after a cancelled request
+		var _flFr = $('iframe_9');
+		if (_flFr && _flFr.contentWindow) {
+			try {
+				var _btns = _flFr.contentWindow.$$('a[id^="btn_statistics_"]');
+				if (_btns) {
+					_btns.each(function(btn) {
+						var img = btn.down('img');
+						if (img && img.src.indexOf('ajax_loader.gif') !== -1) {
+							var fid = btn.id.replace('btn_statistics_', '');
+							img.src = img.src.replace('ajax_loader.gif', 'icons/chart_pie.png');
+							btn.onclick = (function(id) {
+								return function() { getFilterStatistics(id); return false; };
+							})(fid);
+						}
+					});
+				}
+			} catch(e) {}
+		}
+
 		var notification = $('notification');
 		if (notification) {
 			notification.innerHTML =

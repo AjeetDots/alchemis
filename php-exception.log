@@ -2032,3 +2032,11 @@ Stack trace:
 #5 /var/www/html/index.php(163): app_controller_Controller::run()
 #6 {main}
 
+[2026-04-28 09:31:58] Class "Auth_Session_EasySql" not found in /var/www/html/include/Auth/Session.php on line 59
+Stack trace:
+#0 /var/www/html/include/Auth/Session.php(71): Auth_Session->__construct()
+#1 /var/www/html/app/controller/Controller.php(152): Auth_Session::singleton()
+#2 /var/www/html/app/controller/Controller.php(77): app_controller_Controller->validateSession()
+#3 /var/www/html/index.php(155): app_controller_Controller::run()
+#4 {main}
+

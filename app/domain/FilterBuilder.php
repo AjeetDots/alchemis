@@ -2168,27 +2168,38 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
         $session = Auth_Session::singleton();
         $user = $session->getSessionUser();
 
-		// The next SQL sets up a table with a row for each company/post combo in t_include.
-		// This is because otherwise our post/company counts and comm counts become skewed if
-		// we have the post_initiative_id field in t_include - because this duplicates the post
-		// information for as many rows as there are initiative_ids associated with that post
-		$sql = 'create temporary table t_include_count ( ' .
-						'company_id int(11), ' .
-						'post_id int(11), ' .
-						'key `ix_t_include_count_company_id` (company_id),' .
-						'key `ix_t_include_count_post_id` (post_id)' .
-						')';
-// 						') TYPE= InnoDB';
-		$this->sql_query[0] = $sql;
-
-		$sql =	'insert into t_include_count ' .
-				'select company_id, post_id ' .
-				'from t_include ' .
-				'group by company_id, post_id';
-		$this->sql_query[1] = $sql;
-
-		if (!$statistics_only)
+		if ($statistics_only)
 		{
+			// For Refresh Statistics: skip t_include_count and t_filter_stats temp tables entirely.
+			// COUNT(DISTINCT) directly on t_include gives identical company/post counts since
+			// t_include already uses SELECT DISTINCT. This replaces 4 queries (2 CREATE TEMP + 2 INSERT/SELECT)
+			// with a single UPDATE, significantly reducing DB load for large filters.
+			$sql = 'update tbl_filters f ' .
+					'join (select count(distinct company_id) as cc, count(distinct post_id) as pc from t_include) as stats ' .
+					'set f.company_count = stats.cc, f.post_count = stats.pc ' .
+					'where f.id = ' . $filter_id;
+			$this->sql_query[0] = $sql;
+		}
+		else
+		{
+			// The next SQL sets up a table with a row for each company/post combo in t_include.
+			// This is because otherwise our post/company counts and comm counts become skewed if
+			// we have the post_initiative_id field in t_include - because this duplicates the post
+			// information for as many rows as there are initiative_ids associated with that post
+			$sql = 'create temporary table t_include_count ( ' .
+							'company_id int(11), ' .
+							'post_id int(11), ' .
+							'key `ix_t_include_count_company_id` (company_id),' .
+							'key `ix_t_include_count_post_id` (post_id)' .
+							')';
+			$this->sql_query[0] = $sql;
+
+			$sql =	'insert into t_include_count ' .
+					'select company_id, post_id ' .
+					'from t_include ' .
+					'group by company_id, post_id';
+			$this->sql_query[1] = $sql;
+
 			// t_include_post_count is only needed when we are writing results to tbl_filter_results
 			$sql = 'create temporary table t_include_post_count ( ' .
 							'company_id int(11), ' .
@@ -2206,7 +2217,6 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 							'key `ix_t_include_count_propensity_avg` (propensity_avg), ' .
 							'key `ix_t_include_count_propensity_min` (propensity_min) ' .
 							')';
-	// 						') TYPE= InnoDB';
 			$this->sql_query[2] = $sql;
 
 			$sql =	'insert into t_include_post_count ' .
@@ -2219,31 +2229,34 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 	                    ? 'WHERE p.data_owner_id = ' . $user['client_id'] . ' '
 	                    : 'WHERE p.data_owner_id IS NULL ') .
 					'group by ti.company_id';
-
 			$this->sql_query[3] = $sql;
+
+			// make temporary stats tables
+			$sql = 	'create temporary table t_filter_stats ' .
+					'select ' .
+					'count(distinct company_id) as company_count, ' .
+					'count(distinct post_id) as post_count ' .
+					'from t_include_count';
+			$this->sql_query[4] = $sql;
+
+			$sql = 'update tbl_filters f, t_filter_stats fs ' .
+					'set ' .
+					'f.company_count = fs.company_count, ' .
+					'f.post_count = fs.post_count ' .
+					'where f.id = ' . $filter_id;
+			$this->sql_query[5] = $sql;
 		}
-
-		// make temporary stats tables
-		$sql = 	'create temporary table t_filter_stats ' .
-				'select ' .
-				'count(distinct company_id) as company_count, ' .
-				'count(distinct post_id) as post_count ' .
-				'from t_include_count';
-		$this->sql_query[4] = $sql;
-
-		$sql = 'update tbl_filters f, t_filter_stats fs ' .
-				'set ' .
-				'f.company_count = fs.company_count, ' .
-				'f.post_count = fs.post_count ' .
-				'where f.id = ' . $filter_id;
-
-		$this->sql_query[5] = $sql;
 
 		if (!$statistics_only)
 		{
+			// Disable FK checks for bulk delete+insert — data comes from validated temp tables
+			// so FK violations are impossible. Skipping checks + index validation cuts INSERT
+			// time dramatically for large filters (tens of thousands of rows).
+			$this->sql_query[6] = 'SET foreign_key_checks = 0';
+
 			$sql =	'delete from tbl_filter_results ' .
 					'where filter_id = ' . $filter_id;
-			$this->sql_query[6] = $sql;
+			$this->sql_query[7] = $sql;
 
 			// insert into tbl_filter_results - switch on results_format as different formats will have different columns in t_include
 			switch ($results_format)
@@ -2277,7 +2290,9 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 					break;
 
 			}
-			$this->sql_query[7] = $sql;
+			$this->sql_query[8] = $sql;
+
+			$this->sql_query[9] = 'SET foreign_key_checks = 1';
 		}
 
 // 		echo '<pre>';

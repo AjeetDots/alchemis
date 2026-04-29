@@ -79,7 +79,8 @@ $pdo = new PDO(
     $dbpassword,
     [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_TIMEOUT => 6000
+        PDO::ATTR_TIMEOUT => 6000,
+        PDO::ATTR_EMULATE_PREPARES => true,
     ]
 );
 
