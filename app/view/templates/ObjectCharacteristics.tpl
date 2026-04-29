@@ -477,7 +477,7 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 
 											{/foreach}
 
-										{elseif $characteristic.attributes && $characteristic.options}
+										{elseif $characteristic.options}
 
 											{if $characteristic.multiple_select}
 												{foreach name=element_loop from=$characteristic.elements item=element}
@@ -540,7 +540,7 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 												{/foreach}
 											{/if}
 
-										{elseif !$characteristic.attributes || $characteristic.options}
+										{elseif !$characteristic.attributes && !$characteristic.options}
 
 											<tr style="height: 15px">
 												<td>
@@ -631,7 +631,7 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 												</tr>
 											</table>
 										</form>
-									{elseif $characteristic.attributes && $characteristic.options}
+									{elseif $characteristic.options}
 										<form id="frm_elements_{$characteristic.id}"
 											  name="frm_elements_{$characteristic.id}" action="#">
 											<table class="adminlist" style="width:100%;">
@@ -769,7 +769,7 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 												</tr>
 											</table>
 										</form>
-									{elseif $characteristic.attributes == 0 || $characteristic.options == 0}
+									{elseif $characteristic.attributes == 0 && $characteristic.options == 0}
 										<form id="frm_characteristic_{$characteristic.id}"
 											  name="frm_characteristic_{$characteristic.id}">
 											{* NOTE: the input items in the following form are preceded by a 0 in order to make the input naming convention match the

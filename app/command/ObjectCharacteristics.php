@@ -108,6 +108,59 @@ class app_command_ObjectCharacteristics extends app_command_Command
         }
     }
 
+    /**
+     * Ajax save for "simple" field names writes to tbl_object_characteristics_text. If this characteristic
+     * is still defined with attributes and a single text element, the loader only reads element tables —
+     * the saved text never appears. Copy simple-text value into that element for display/edit.
+     *
+     * Only runs when there is exactly one text-type element (safe for typical single-field AWS-style rows).
+     *
+     * @param array  $characteristic
+     * @param string $type           company|post|post_initiative
+     * @param int    $parentId
+     * @return void
+     */
+    protected static function mergeOrphanSimpleTextIntoSingleTextElement(array &$characteristic, $type, $parentId)
+    {
+        if (empty($characteristic['elements']) || ! is_array($characteristic['elements'])) {
+            return;
+        }
+        $textIdx = array();
+        foreach ($characteristic['elements'] as $i => $el) {
+            if (isset($el['data_type']) && $el['data_type'] === 'text') {
+                $textIdx[] = $i;
+            }
+        }
+        if (count($textIdx) !== 1) {
+            return;
+        }
+        $idx = $textIdx[0];
+        $current = isset($characteristic['elements'][$idx]['value']) ? $characteristic['elements'][$idx]['value'] : null;
+        if ($current !== null && $current !== '') {
+            return;
+        }
+        switch ($type) {
+            case 'post':
+                $rows = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByPostId($characteristic['id'], 'text', $parentId));
+                break;
+            case 'post_initiative':
+                $rows = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByPostInitiativeId($characteristic['id'], 'text', $parentId));
+                break;
+            case 'company':
+            default:
+                $rows = self::asArray(app_domain_ObjectCharacteristicHelper::getValueByCompanyId($characteristic['id'], 'text', $parentId));
+                break;
+        }
+        if (count($rows) === 0) {
+            return;
+        }
+        $val = isset($rows[0]['value']) ? $rows[0]['value'] : null;
+        if ($val === null || $val === '') {
+            return;
+        }
+        $characteristic['elements'][$idx]['value'] = $val;
+    }
+
     public function doExecute(app_controller_Request $request)
     {
         $id   = $request->getProperty('id');
@@ -185,6 +238,11 @@ class app_command_ObjectCharacteristics extends app_command_Command
 
 
                     foreach ($characteristic['elements'] as $key => &$element) {
+                        // Legacy data sometimes stores empty element data types.
+                        // Normalize before lookup so helper mappers can return records.
+                        if (!isset($element['data_type']) || $element['data_type'] === '') {
+                            $element['data_type'] = 'text';
+                        }
 
                         if (isset($temp_data_all[$element['id']])) {
                             $element['value']                            = $temp_data_all[$element['id']]['value'];
@@ -202,6 +260,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
 
                     }
 
+                    self::mergeOrphanSimpleTextIntoSingleTextElement($characteristic, 'company', $id);
 
                     self::applySimpleFallbackWhenNoElements($characteristic, 'company', $id);
                 }
@@ -217,6 +276,9 @@ class app_command_ObjectCharacteristics extends app_command_Command
                 } else {
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
                     foreach ($characteristic['elements'] as &$element) {
+                        if (!isset($element['data_type']) || $element['data_type'] === '') {
+                            $element['data_type'] = 'text';
+                        }
                         if ($record = app_domain_ObjectCharacteristicElementHelper::getRecordByPostId($element['id'], $element['data_type'], $id)) {
                             $element['value']                            = $record['value'];
                             $element['object_characteristic_id']         = $record['object_characteristic_id'];
@@ -226,6 +288,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             $element['object_characteristic_id'] = $ocId;
                         }
                     }
+                    self::mergeOrphanSimpleTextIntoSingleTextElement($characteristic, 'post', $id);
                     self::applySimpleFallbackWhenNoElements($characteristic, 'post', $id);
                 }
                 self::normalizeCharacteristicDataTypes($characteristic);
@@ -240,6 +303,9 @@ class app_command_ObjectCharacteristics extends app_command_Command
                 } else {
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
                     foreach ($characteristic['elements'] as &$element) {
+                        if (!isset($element['data_type']) || $element['data_type'] === '') {
+                            $element['data_type'] = 'text';
+                        }
                         if ($record = app_domain_ObjectCharacteristicElementHelper::getRecordByPostInitiativeId($element['id'], $element['data_type'], $id)) {
                             $element['value']                            = $record['value'];
                             $element['object_characteristic_id']         = $record['object_characteristic_id'];
@@ -249,6 +315,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             $element['object_characteristic_id'] = $ocId;
                         }
                     }
+                    self::mergeOrphanSimpleTextIntoSingleTextElement($characteristic, 'post_initiative', $id);
                     self::applySimpleFallbackWhenNoElements($characteristic, 'post_initiative', $id);
                 }
                 self::normalizeCharacteristicDataTypes($characteristic);

@@ -210,6 +210,20 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                 }
 
                 $item_is_simple = ($item[3] == '0' || $item[3] == '' || $item[3] === null);
+                $is_complex_characteristic = $this->isComplexCharacteristicDefinition($db, (int) $item[1]);
+
+                // Some legacy rows render as simple text inputs but are configured as complex characteristics.
+                // In that case, write into element tables (which the screen reads) instead of simple tables.
+                if ($item_is_simple && $is_complex_characteristic && $item[6] == 'text') {
+                    $this->upsertFirstTextElementForComplexCharacteristic(
+                        $db,
+                        (int) $item[1],
+                        $item[7],
+                        $parent_object_type,
+                        (int) $parent_object_id
+                    );
+                    continue;
+                }
 
                 if ($item[6] == 'date') {
                     // Dates always use the simple table regardless of attributes.
@@ -302,6 +316,97 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
             return null;
         }
         return $rowId ? (int) $rowId : null;
+    }
+
+    /**
+     * @param object $db
+     * @param int    $characteristicId
+     * @return bool
+     */
+    private function isComplexCharacteristicDefinition($db, $characteristicId)
+    {
+        if ($characteristicId < 1) {
+            return false;
+        }
+        $sql = 'SELECT attributes, options FROM tbl_characteristics WHERE id = ' . (int) $characteristicId;
+        $row = $db->queryRow($sql, null, MDB2_FETCHMODE_ASSOC);
+        if (MDB2::isError($row) || !is_array($row)) {
+            return false;
+        }
+        return ((int) $row['attributes'] === 1 || (int) $row['options'] === 1);
+    }
+
+    /**
+     * @param int    $characteristicId
+     * @param string $parentObjectType
+     * @param int    $parentObjectId
+     * @return int
+     */
+    private function getObjectCharacteristicIdForParent($characteristicId, $parentObjectType, $parentObjectId)
+    {
+        switch ($parentObjectType) {
+            case 'app_domain_Post':
+                return (int) app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostIdAndCharacteristicId($parentObjectId, $characteristicId);
+            case 'app_domain_PostInitiative':
+                return (int) app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostInitiativeIdAndCharacteristicId($parentObjectId, $characteristicId);
+            case 'app_domain_Company':
+            default:
+                return (int) app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByCompanyIdAndCharacteristicId($parentObjectId, $characteristicId);
+        }
+    }
+
+    /**
+     * Ensures simple text submits for complex characteristics persist to the element table the UI reads.
+     *
+     * @param object $db
+     * @param int    $characteristicId
+     * @param string $value
+     * @param string $parentObjectType
+     * @param int    $parentObjectId
+     * @return void
+     */
+    private function upsertFirstTextElementForComplexCharacteristic($db, $characteristicId, $value, $parentObjectType, $parentObjectId)
+    {
+        $objectCharacteristicId = $this->getObjectCharacteristicIdForParent($characteristicId, $parentObjectType, $parentObjectId);
+        if ($objectCharacteristicId < 1) {
+            $obj = app_domain_ObjectCharacteristicHelper::factory(null, null);
+            $obj->setParentObjectId($parentObjectId);
+            $obj->setParentObjectType($parentObjectType);
+            $obj->setCharacteristicId($characteristicId);
+            $obj->commit();
+            $objectCharacteristicId = (int) $obj->getId();
+        }
+        if ($objectCharacteristicId < 1) {
+            return;
+        }
+
+        $elementId = $db->queryOne(
+            'SELECT id FROM tbl_characteristic_elements WHERE characteristic_id = ' . (int) $characteristicId .
+            " AND (data_type = 'text' OR data_type = '' OR data_type IS NULL) ORDER BY sort, id LIMIT 1"
+        );
+        if (MDB2::isError($elementId)) {
+            return;
+        }
+        $elementId = (int) $elementId;
+        if ($elementId < 1) {
+            return;
+        }
+
+        $existingId = (int) $db->queryOne(
+            'SELECT id FROM tbl_object_characteristic_elements_text WHERE object_characteristic_id = ' . $objectCharacteristicId .
+            ' AND characteristic_element_id = ' . $elementId . ' ORDER BY id DESC LIMIT 1'
+        );
+        $valueSql = $db->quote($value, 'text');
+        if ($existingId > 0) {
+            $query = 'UPDATE tbl_object_characteristic_elements_text SET value = ' . $valueSql . ' WHERE id = ' . $existingId;
+        } else {
+            $query = 'INSERT INTO tbl_object_characteristic_elements_text (id, object_characteristic_id, characteristic_element_id, value) ' .
+                'VALUES (NULL, ' . $objectCharacteristicId . ', ' . $elementId . ', ' . $valueSql . ')';
+        }
+        $res = $db->exec($query);
+        if (MDB2::isError($res)) {
+            throw new app_base_MDB2Exception($res);
+        }
     }
 
     /**

@@ -21,7 +21,7 @@
 			</tr>
 			{/foreach}	
 
-		{elseif $characteristic.attributes && $characteristic.options}
+		{elseif $characteristic.options}
 
 			{if $characteristic.multiple_select}
 				{foreach name=element_loop from=$characteristic.elements item=element}
@@ -67,7 +67,7 @@
 				{/foreach}	
 			{/if}
 
-		{elseif !$characteristic.attributes || $characteristic.options}
+		{elseif !$characteristic.attributes && !$characteristic.options}
 
 			<tr style="height: 15px">
 				<td>3
