@@ -197,10 +197,9 @@ function validate()
 		case '10':
 		case '11':
 		case '12':
+			break;
 
-		default:
-
-        case '15':
+		case '15':
             var client_id = $F('client_id');
             if (isEmpty(client_id) || client_id < 1)
             {
@@ -208,6 +207,9 @@ function validate()
                 msg_error += msg_error_count + ". Client must be selected\n";
             }
             break;
+
+		default:
+			break;
 	}
 
 	if (msg_error != "")
