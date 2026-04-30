@@ -681,6 +681,20 @@ function formatYear(str)
  */
 function launchReport(source)
 {
+	function dismissLoaders() {
+		if (typeof hideLoader === 'function') { hideLoader(); }
+		try {
+			if (top && typeof top.responderFadeOut === 'function') { top.responderFadeOut(); }
+		} catch (e) {}
+		try {
+			var w = window;
+			while (w.parent && w.parent !== w) {
+				w = w.parent;
+				if (typeof w.hideLoader === 'function') { w.hideLoader(); }
+			}
+		} catch (e) {}
+	}
+
 	var winName = 'reportWin_' + (new Date()).getTime();
 	reportWindow = window.open('', winName, "width=720,height=600,resizable=yes,toolbar=no,scrollbars=yes");
 	reportWindow.document.write('<html><head><title>Generating Report</title></head><body style="font-family:Arial,sans-serif;text-align:center;padding-top:120px;color:#444;"><p style="font-size:15px;font-weight:bold;">Generating report, please wait...</p><p><img src="{/literal}{$APP_URL}{literal}app/view/images/ajax_loader.gif" alt="" width="32" height="32" /></p></body></html>');
@@ -726,6 +740,7 @@ function launchReport(source)
 	document.body.appendChild(form);
 	form.submit();
 	document.body.removeChild(form);
+	dismissLoaders();
 
 	reportWindow.focus();
 	if (window.event) window.event.cancelBubble = true;
@@ -741,6 +756,7 @@ function launchReport(source)
 		if (document.cookie.indexOf('fileDownload=' + dlToken) >= 0) {
 			clearInterval(pollInterval);
 			document.cookie = 'fileDownload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+			dismissLoaders();
 			// Show a brief success message so the user sees the download happened
 			try {
 				if (reportWindow && !reportWindow.closed) {
@@ -757,6 +773,7 @@ function launchReport(source)
 		}
 		if (pollCount > 240) { // stop after 2 minutes
 			clearInterval(pollInterval);
+			dismissLoaders();
 		}
 	}, 500);
 }
