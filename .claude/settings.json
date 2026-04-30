@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -v \"__construct\\\\|//\")"
+      "Bash(grep -v \"__construct\\\\|//\")",
+      "Read(//c/Users/Admin/AppData/Local/Temp/fz3temp-2/**)"
     ]
   }
 }

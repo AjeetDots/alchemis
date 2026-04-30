@@ -28,8 +28,13 @@ class app_command_Report9 extends app_command_Command
 
         $report_name = 'Sales Team Performance Against KPI Targets';
         $xls = $this->exportXLS($date_from, $date_to);
-        // Clear all output buffers (ob_start in index.php) so the binary XLS
-        // response is not mixed with any previously buffered HTML content.
+
+        // Tell the opener window the download is ready so it can close the popup.
+        $token = isset($_POST['downloadToken']) ? preg_replace('/[^a-zA-Z0-9_]/', '', $_POST['downloadToken']) : '';
+        if ($token) {
+            setcookie('fileDownload', $token, ['expires' => time() + 60, 'path' => '/', 'samesite' => 'Strict']);
+        }
+
         while (ob_get_level() > 0) {
             ob_end_clean();
         }

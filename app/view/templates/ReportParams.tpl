@@ -695,6 +695,14 @@ function launchReport(source)
 	form.method = 'post';
 	form.target = winName;
 
+	// Unique token so we know when the file download response has been received
+	var dlToken = 'dl_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+	var tokenInput = document.createElement('input');
+	tokenInput.type  = 'hidden';
+	tokenInput.name  = 'downloadToken';
+	tokenInput.value = dlToken;
+	form.appendChild(tokenInput);
+
 	if (queryString) {
 		queryString.split('&').forEach(function(pair) {
 			var idx = pair.indexOf('=');
@@ -721,6 +729,36 @@ function launchReport(source)
 
 	reportWindow.focus();
 	if (window.event) window.event.cancelBubble = true;
+
+	// Clear any stale download cookie from a previous request
+	document.cookie = 'fileDownload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+	// Poll for the cookie that the server sets when the file response is ready.
+	// Give the server time to process first (start checking after 1 second).
+	var pollCount = 0;
+	var pollInterval = setInterval(function() {
+		pollCount++;
+		if (document.cookie.indexOf('fileDownload=' + dlToken) >= 0) {
+			clearInterval(pollInterval);
+			document.cookie = 'fileDownload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+			// Show a brief success message so the user sees the download happened
+			try {
+				if (reportWindow && !reportWindow.closed) {
+					reportWindow.document.body.innerHTML = '<div style="font-family:Arial,sans-serif;text-align:center;padding-top:100px;color:#444;">' +
+						'<p style="font-size:22px;color:#27ae60;margin-bottom:8px;">&#10003;</p>' +
+						'<p style="font-size:15px;font-weight:bold;">Download complete!</p>' +
+						'<p style="font-size:12px;color:#888;">Check your Downloads folder. This window will close shortly.</p>' +
+						'</div>';
+				}
+			} catch(e) {}
+			setTimeout(function() {
+				if (reportWindow && !reportWindow.closed) { reportWindow.close(); }
+			}, 2500);
+		}
+		if (pollCount > 240) { // stop after 2 minutes
+			clearInterval(pollInterval);
+		}
+	}, 500);
 }
 
 function selectDefaultNbmExclusions(obj)
