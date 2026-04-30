@@ -25,15 +25,17 @@ class app_command_ActionsFrame extends app_command_Command
 		$user = $session->getSessionUser();
 		$request->setObject('user_id', $user['id']);
 		
-		// Find client associated with current user
-		if ($items = app_domain_Client::findByUserId($user['id'])) {
+		// Load full active client list for Client Calendar dropdown.
+		// Previous logic only showed clients linked to the current NBM.
+		if ($items = app_domain_Client::findAllActive()) {
+			$items = $items->toRawArray();
 			$selected_client = 0;
 			$options = array();
 			$options[0] = '-- select --';
 			foreach ($items as $item) {
-				$options[$item['client_id']] = @C_String::htmlDisplay($item['client_name']);
-				if ($client_id == $item['client_id']) {
-					$selected_client = $item['client_id'];
+				$options[$item['id']] = @C_String::htmlDisplay($item['name']);
+				if ($client_id == $item['id']) {
+					$selected_client = $item['id'];
 				}
 			}
 			$request->setObject('client_options', $options);
