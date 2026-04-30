@@ -33,16 +33,23 @@ class app_command_AjaxRegion extends app_command_AjaxCommand
 				$this->request->results = $this->getPostcodeResults($results);
 				break;
 			case 'delete_region':
-				$regions = app_domain_Region::find(isset($this->request->item_id) ? $this->request->item_id : null);
-				$region = $regions->current();
+				$region_id = isset($this->request->item_id) ? $this->request->item_id : null;
+				$region = app_domain_Region::find($region_id);
 				if ($region) {
-					$region->markDeleted();
-					$region->commit();
+					$campaign_link_count = app_domain_Region::findCampaignLinkCount($region->getId());
+					if ($campaign_link_count > 0) {
+						array_push(
+							$this->response->warnings,
+							'Cannot delete region "' . $region->getName() . '" because it is assigned to ' . $campaign_link_count . ' campaign(s).'
+						);
+					} else {
+						$region->markDeleted();
+						$region->commit();
+					}
 				}
 				break;
 			case 'delete_region_postcode':
-				$regions = app_domain_Region::find(isset($this->request->region_id) ? $this->request->region_id : null);
-				$region = $regions->current();
+				$region = app_domain_Region::find(isset($this->request->region_id) ? $this->request->region_id : null);
 				if ($region) {
 					$region->deletePostcode(isset($this->request->postcode_id) ? $this->request->postcode_id : null);
 				}

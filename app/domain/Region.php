@@ -173,6 +173,17 @@ class app_domain_Region extends app_domain_DomainObject
 		$finder = self::getFinder(__CLASS__);
 		return $finder->findPostcodesStartWith($search);
 	}
+
+	/**
+	 * Returns how many campaigns are linked to this region.
+	 * @param integer $id
+	 * @return integer
+	 */
+	public static function findCampaignLinkCount($id)
+	{
+		$finder = self::getFinder(__CLASS__);
+		return $finder->findCampaignLinkCount($id);
+	}
 	
 }
 

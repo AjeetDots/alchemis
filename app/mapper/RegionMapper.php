@@ -116,9 +116,24 @@ class app_mapper_RegionMapper extends app_mapper_Mapper implements app_domain_Re
 	{
 		$query = 'DELETE FROM tbl_lkp_regions WHERE id = ?';
 		$types = array('integer');
-		$stmt = self::$DB->prepare($query, $types);
+		$stmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
 		$data = array($object->getId());
 		$this->doStatement($stmt, $data);
+	}
+
+	/**
+	 * Return the number of campaign links for a region.
+	 * @param integer $region_id
+	 * @return integer
+	 */
+	public function findCampaignLinkCount($region_id)
+	{
+		$query = 'SELECT count(*) FROM tbl_campaign_regions WHERE region_id = ?';
+		$types = array('integer');
+		$stmt = self::$DB->prepare($query, $types);
+		$result = $this->doStatement($stmt, array($region_id));
+		$row = $result->fetchRow();
+		return isset($row[0]) ? (int) $row[0] : 0;
 	}
 	
 	/** 

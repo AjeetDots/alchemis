@@ -168,7 +168,7 @@ function deleteRow(item_id)
 								<td style="text-align: center; vertical-align: middle">
 									<a id="viewBtn_{$region->getId()}" title="Go to postcodes" href="#" onclick="javascript:editRegionPostcodes({$region->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/world_go.png" alt="Region postcodes" title="Go to region postcodes" /></a>&nbsp;
 									<a id="editBtn_{$region->getId()}" title="Edit" href="#" onclick="javascript:editRegion({$region->getId()});return false;"><img src="{$APP_URL}app/view/images/icons/world_edit.png" alt="Edit" title="Edit" /></a>&nbsp;
-									<a id="deleteBtn_{$region->getId()}" title="Delete" href="#" onclick="javascript:deleteRegion({$region->getId()}, '{$region->getName()}');return false;"><img src="{$APP_URL}app/view/images/icons/world_delete.png" alt="Delete" title="Delete" /></a>&nbsp;
+									<a id="deleteBtn_{$region->getId()}" title="Delete" href="#" onclick="javascript:deleteRegion({$region->getId()}, '{$region->getName()|escape:'javascript'}');return false;"><img src="{$APP_URL}app/view/images/icons/world_delete.png" alt="Delete" title="Delete" /></a>&nbsp;
 								</td>
 							</tr>
 							{/foreach}
