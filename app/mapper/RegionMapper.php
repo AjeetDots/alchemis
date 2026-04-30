@@ -143,6 +143,18 @@ class app_mapper_RegionMapper extends app_mapper_Mapper implements app_domain_Re
 	 */
 	public function addPostcode($region_id, $postcode_id)
 	{
+		$query = 'SELECT id FROM tbl_lkp_region_postcodes WHERE region_id = ? AND postcode_id = ?';
+		$types = array('integer', 'integer');
+		$stmt = self::$DB->prepare($query, $types);
+		$data = array($region_id, $postcode_id);
+		$result = $this->doStatement($stmt, $data);
+		$row = $result->fetchRow(MDB2_FETCHMODE_ASSOC);
+		if (is_array($row) && isset($row['id']))
+		{
+			// Already linked to this region, nothing to do.
+			return true;
+		}
+
 		$query = 'INSERT INTO tbl_lkp_region_postcodes (region_id, postcode_id) VALUES ' .
 				'(?, ?)';
 				
@@ -153,6 +165,37 @@ class app_mapper_RegionMapper extends app_mapper_Mapper implements app_domain_Re
 		$this->doStatement($stmt, $data);	
 		
 		return true;
+	}
+
+	/**
+	 * Ensures a postcode exists and returns its id.
+	 * @param string $postcode
+	 * @return integer
+	 */
+	public function ensurePostcode($postcode)
+	{
+		$postcode = strtoupper(trim($postcode));
+		if ($postcode === '')
+		{
+			throw new Exception('Unspecified postcode');
+		}
+
+		$query = 'SELECT id FROM tbl_lkp_postcodes WHERE postcode = ?';
+		$types = array('text');
+		$stmt = self::$DB->prepare($query, $types);
+		$result = $this->doStatement($stmt, array($postcode));
+		$row = $result->fetchRow(MDB2_FETCHMODE_ASSOC);
+		if (is_array($row) && isset($row['id']) && is_numeric($row['id']))
+		{
+			return (int) $row['id'];
+		}
+
+		$postcode_id = self::$DB->nextID('tbl_lkp_postcodes');
+		$query = 'INSERT INTO tbl_lkp_postcodes (id, postcode) VALUES (?, ?)';
+		$types = array('integer', 'text');
+		$stmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
+		$this->doStatement($stmt, array($postcode_id, $postcode));
+		return (int) $postcode_id;
 	}
 	
 	/** 
@@ -212,7 +255,7 @@ class app_mapper_RegionMapper extends app_mapper_Mapper implements app_domain_Re
 		
 		$query = 	'select lkp_p.id as postcode_id, lkp_p.postcode from tbl_lkp_region_postcodes lkp_rp ' .
 					'join tbl_lkp_postcodes lkp_p on lkp_rp.postcode_id = lkp_p.id	' .
-					'where region_id = :id'; 
+					'where region_id = :id order by lkp_p.postcode'; 
 		$stmt = self::$DB->prepare($query);
 		$result = $this->doStatement($stmt, $values);
 		$coll = new app_mapper_RegionCollection($result, $this);
