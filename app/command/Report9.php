@@ -28,6 +28,11 @@ class app_command_Report9 extends app_command_Command
 
         $report_name = 'Sales Team Performance Against KPI Targets';
         $xls = $this->exportXLS($date_from, $date_to);
+        // Clear all output buffers (ob_start in index.php) so the binary XLS
+        // response is not mixed with any previously buffered HTML content.
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         $xls->send($report_name . '.xls');
         $xls->close();
         exit();

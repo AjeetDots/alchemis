@@ -67,6 +67,11 @@ class Spreadsheet_Excel_Writer_Validator
     */
     var $_parser;
 
+    function __construct(&$parser)
+    {
+        $this->Spreadsheet_Excel_Writer_Validator($parser);
+    }
+
     function Spreadsheet_Excel_Writer_Validator(&$parser)
     {
         $this->_parser       = $parser;
