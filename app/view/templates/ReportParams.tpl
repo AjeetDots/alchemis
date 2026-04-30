@@ -675,14 +675,50 @@ function formatYear(str)
 
 /**
  * Launches a pop-up window in which to display the report.
+ * Keeps cmd in the URL query string (for routing) and POSTs all other
+ * parameters so nbm_exclusions lists never cause a URL-too-long error.
  * @param string the report to be loaded in the pop-up window
  */
 function launchReport(source)
 {
-	reportWindow = window.open('', "", "width=720,height=600,resizable=yes,toolbar=no,scrollbars=yes");
+	var winName = 'reportWin_' + (new Date()).getTime();
+	reportWindow = window.open('', winName, "width=720,height=600,resizable=yes,toolbar=no,scrollbars=yes");
 	reportWindow.document.write('<html><head><title>Generating Report</title></head><body style="font-family:Arial,sans-serif;text-align:center;padding-top:120px;color:#444;"><p style="font-size:15px;font-weight:bold;">Generating report, please wait...</p><p><img src="{/literal}{$APP_URL}{literal}app/view/images/ajax_loader.gif" alt="" width="32" height="32" /></p></body></html>');
 	reportWindow.document.close();
-	reportWindow.location.href = source;
+
+	var parts = source.split('?');
+	var baseUrl = parts[0];
+	var queryString = parts.length > 1 ? parts[1] : '';
+
+	var urlQuery = '';
+	var form = document.createElement('form');
+	form.method = 'post';
+	form.target = winName;
+
+	if (queryString) {
+		queryString.split('&').forEach(function(pair) {
+			var idx = pair.indexOf('=');
+			var name  = idx >= 0 ? pair.substring(0, idx) : pair;
+			var value = idx >= 0 ? pair.substring(idx + 1) : '';
+			if (name === 'cmd') {
+				// Keep cmd in the URL so the PHP controller can route via $_GET
+				urlQuery = pair;
+			} else {
+				var input = document.createElement('input');
+				input.type  = 'hidden';
+				input.name  = decodeURIComponent(name);
+				input.value = decodeURIComponent(value.replace(/\+/g, ' '));
+				form.appendChild(input);
+			}
+		});
+	}
+
+	form.action = baseUrl + (urlQuery ? '?' + urlQuery : '');
+
+	document.body.appendChild(form);
+	form.submit();
+	document.body.removeChild(form);
+
 	reportWindow.focus();
 	if (window.event) window.event.cancelBubble = true;
 }

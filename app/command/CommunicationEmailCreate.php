@@ -199,6 +199,9 @@ class app_command_CommunicationEmailCreate extends app_command_ManipulationComma
 		$post = app_domain_Post::findByPostInitiativeId($post_initiative_id);
 		$request->setObject('post', $post);
 
+		$contact = $post ? $post->getContact() : null;
+		$request->setObject('contact', $contact);
+
 		$campaign_id = app_domain_Campaign::findCampaignIdByInitiativeId($post_initiative->getInitiativeId());
 		
 		$session = Auth_Session::singleton();

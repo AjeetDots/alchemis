@@ -311,8 +311,8 @@ class app_domain_Event extends app_domain_DomainObject
 	 */
 	public static function countByUserIdYearMonth($user_id, $year_month)
 	{
-		$year  = substr($year_month, 0, 4);
-		$month = substr($year_month, 4, 2);
+		$year  = (int) substr($year_month, 0, 4);
+		$month = (int) substr($year_month, 4, 2);
 		$start = date('Y-m-d', mktime(0, 0, 0, $month, 1, $year));
 		$end   = date('Y-m-d', mktime(0, 0, 0, $month+1, 0, $year));
 		return self::countByUserIdAndDates($user_id, $start, $end);
