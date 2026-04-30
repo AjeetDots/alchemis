@@ -30,9 +30,10 @@ class app_command_Report9 extends app_command_Command
         $xls = $this->exportXLS($date_from, $date_to);
 
         // Tell the opener window the download is ready so it can close the popup.
+        // Use legacy-safe setcookie signature for older PHP versions.
         $token = isset($_POST['downloadToken']) ? preg_replace('/[^a-zA-Z0-9_]/', '', $_POST['downloadToken']) : '';
         if ($token) {
-            setcookie('fileDownload', $token, ['expires' => time() + 60, 'path' => '/', 'samesite' => 'Strict']);
+            setcookie('fileDownload', $token, time() + 60, '/');
         }
 
         while (ob_get_level() > 0) {
