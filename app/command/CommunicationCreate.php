@@ -361,14 +361,20 @@ class app_command_CommunicationCreate extends app_command_ManipulationCommand
             $post_initiative->setDataSourceId($request->getProperty('data_source_id'));
             $data_source = app_model_DataSource::where('id', $request->getProperty('data_source_id'))->first();
             $post_initiative_model = app_model_PostInitiative::where('id', $post_initiative->getId())->first();
-            $current_tag = $post_initiative_model->tags()->wherePivot('data_source', true)->first();
-
-            if ($current_tag) {
-                $current_tag->value = $data_source->description;
-                $current_tag->save();
-            } else {
-                $tag = new app_model_Tag(['value' => $data_source->description, 'category_id' => 3]);
-                $post_initiative_model->tags()->save($tag, ['data_source' => true]);
+            if (!$post_initiative_model && $request->getProperty('post_initiative_id')) {
+                $post_initiative_model = app_model_PostInitiative::where('id', $request->getProperty('post_initiative_id'))->first();
+            }
+            if ($post_initiative_model && $data_source) {
+                $current_tags = $post_initiative_model->tags()->wherePivot('data_source', true)->get();
+                if ($current_tags && $current_tags->count() > 0) {
+                    foreach ($current_tags as $current_tag) {
+                        $current_tag->value = $data_source->description;
+                        $current_tag->save();
+                    }
+                } else {
+                    $tag = new app_model_Tag(['value' => $data_source->description, 'category_id' => 3]);
+                    $post_initiative_model->tags()->save($tag, ['data_source' => true]);
+                }
             }
         }
 

@@ -118,15 +118,15 @@
     <tr>
 			<th style="vertical-align: top">Data Source</th>
 			<td>
-				{if $post && $post->getDataSource()}
-					{$post->getDataSource()}
-					{if $post->getDataSourceChangedDate()}
-						({$post->getDataSourceChangedDate()|date_format:"%d %B %Y at %H:%M"})
-					{/if}
-				{elseif $post_initiative && $post_initiative->getDataSource()}
+				{if $post_initiative && $post_initiative->getDataSource()}
 					{$post_initiative->getDataSource()}
 					{if $post_initiative->getDataSourceChangedDate()}
 						({$post_initiative->getDataSourceChangedDate()|date_format:"%d %B %Y at %H:%M"})
+					{/if}
+				{elseif $post && $post->getDataSource()}
+					{$post->getDataSource()}
+					{if $post->getDataSourceChangedDate()}
+						({$post->getDataSourceChangedDate()|date_format:"%d %B %Y at %H:%M"})
 					{/if}
 				{/if}
 			</td>
