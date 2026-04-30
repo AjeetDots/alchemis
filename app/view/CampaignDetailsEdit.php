@@ -19,6 +19,7 @@ class app_view_CampaignDetailsEdit extends app_view_ManipulationView
 	{
 		// Init
 		$this->smarty->assign('id', $this->request->getProperty('id'));
+		$this->smarty->assign('client_id', $this->request->getProperty('client_id'));
 		$this->smarty->assign('campaign', $this->request->getObject('campaign'));
 		
 		$this->smarty->assign('campaign_type_options', $this->request->getObject('campaign_type_options'));

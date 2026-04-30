@@ -4,7 +4,7 @@
 
 	<p>Campaign details are being refreshed.</p>
 	<script language="JavaScript" type="text/javascript">
-		iframeLocation(parent.ifr_campaign_details, 'index.php?cmd=CampaignDetails&id={$id}');
+		iframeLocation(parent.ifr_campaign_details, 'index.php?cmd=CampaignDetails&id={$client_id}');
 	</script>
 
 {else}

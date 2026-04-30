@@ -88,6 +88,7 @@ class app_command_CampaignDetailsEdit extends app_command_ManipulationCommand
 		}
 						
 		$campaign->commit();
+		$request->setProperty('client_id', $campaign->getClientId());
 		
 		return true;
 	}
@@ -104,6 +105,7 @@ class app_command_CampaignDetailsEdit extends app_command_ManipulationCommand
 		$campaign_id = $request->getProperty('id');
 		$campaign = app_domain_Campaign::find($campaign_id);
 		$request->setObject('campaign', $campaign);
+		$request->setProperty('client_id', $campaign->getClientId());
 		
 		// get lookup options
 		if ($items = app_domain_Campaign::lookupCampaignTypeOptions());
