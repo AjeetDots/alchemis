@@ -745,14 +745,14 @@ page_isloaded = false;
 
 					<td style="text-align: center; background-color: #F3F3F3" nowrap="nowrap">
 
-						<a style="cursor: pointer" id="detailsBtn_{$result.id}" title="Go to details for this record" onclick="javascript: showCompany({$result.id}, {$result.post_id}, {$result.initiative_id}, {$result.post_initiative_id});return false;"><img src="{$APP_URL}app/view/images/icons/database_table.png" alt="Details" title="Details" /></a>&nbsp;
+						<a style="cursor: pointer" id="detailsBtn_{$result.id}" title="Go to details for this record" onclick="javascript: showCompany({$result.id}, {$result.post_id}, '{$result.initiative_id|escape:'javascript'}', '{$result.post_initiative_id|escape:'javascript'}');return false;"><img src="{$APP_URL}app/view/images/icons/database_table.png" alt="Details" title="Details" /></a>&nbsp;
 
 						{if $result.first_name == '' || $result.surname == ''}
 							<a style="cursor: pointer" id="nonEffectivesBtn_{$result.id}" title="Log non-effective call not available as post has no contact details. Add contact details before calling"><img src="{$APP_URL}app/view/images/icons/status_offline.png" /></a>
 							<a style="cursor: pointer" id="EffectivesBtn_{$result.id}" title="Log effective call not available as post has no contact details. Add contact details before calling"><img src="{$APP_URL}app/view/images/icons/status_offline.png" /></a>
 						{else}					
-							<a style="cursor: pointer" id="nonEffectivesBtn_{$result.id}" title="Log a non-effective call for this post" onclick="javascript:logNonEffective('{$result.post_id}',' {$result.post_initiative_id}');return false;"><img src="{$APP_URL}app/view/images/icons/status_offline.png" /></a>
-							<a style="cursor: pointer" id="EffectivesBtn_{$result.id}" title="Log an effective call for this post" onclick="javascript:logCommunication({$result.id}, {$result.post_id}, {$result.post_initiative_id}, 8);return false;"><img src="{$APP_URL}app/view/images/icons/status_offline.png" /></a>
+							<a style="cursor: pointer" id="nonEffectivesBtn_{$result.id}" title="Log a non-effective call for this post" onclick="javascript:logNonEffective('{$result.post_id}', '{$result.post_initiative_id|escape:'javascript'}');return false;"><img src="{$APP_URL}app/view/images/icons/status_offline.png" /></a>
+							<a style="cursor: pointer" id="EffectivesBtn_{$result.id}" title="Log an effective call for this post" onclick="javascript:logCommunication({$result.id}, {$result.post_id}, '{$result.post_initiative_id|escape:'javascript'}', 8);return false;"><img src="{$APP_URL}app/view/images/icons/status_offline.png" /></a>
 						{/if}
 					</td>
 
