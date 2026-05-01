@@ -306,7 +306,8 @@ iframeLocation(			parent.information, src);
 
 iframeLocation(		top.frames["iframe_7"], "index.php?cmd=WorkspaceFilter&id=" + company_id + "&post_id=" + post_id + "&initiative_id=" + initiative_id);
 
-		top.loadTab(7,"");
+		// forceLoad: responderFadeIn() sets top._isLoading; loadTab otherwise returns without switching tabs
+		top.loadTab(7,"", true);
 
 		
 

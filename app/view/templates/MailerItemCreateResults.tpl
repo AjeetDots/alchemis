@@ -9,7 +9,7 @@ function showCompany(company_id)
 // iframeLocation(top.frames["iframe_5"], "index.php?cmd=WorkspaceSearch&id=" + company_id);
 //	top.loadTab(5,"");
 iframeLocation(	top.frames["iframe_7"], "index.php?cmd=WorkspaceFilter&id=" + company_id);
-	top.loadTab(7,"");
+	top.loadTab(7,"", true);
 }
 		
 function selectAll()

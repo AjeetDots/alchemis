@@ -11551,3 +11551,16 @@ May 01 10:36:53  [info] 5.856 AjaxDashboard
 May 01 10:46:50  [info] 2.127 AjaxDashboard
 May 01 10:56:51  [info] 2.221 AjaxDashboard
 May 01 11:06:52  [info] 2.063 AjaxDashboard
+May 01 11:13:25  [info] 6.915 FilterList
+May 01 11:13:32  [info] 6.01 AjaxFilterBuilder
+May 01 11:13:39  [info] 6.654 AjaxFilterBuilder
+May 01 11:14:12  [info] 5.735 FilterResults
+May 01 11:14:57  [info] 17.219 WorkspaceFilter
+May 01 11:15:04  [info] 5.612 WorkspaceNotes
+May 01 11:15:35  [info] 31.83 ObjectCharacteristics
+May 01 11:15:42  [info] 5.556 CampaignCharacteristics
+May 01 11:16:53  [info] 2.02 AjaxDashboard
+May 01 11:17:27  [info] 18.307 WorkspaceFilter
+May 01 11:17:33  [info] 5.528 WorkspaceNotes
+May 01 11:18:03  [info] 29.907 ObjectCharacteristics
+May 01 11:18:09  [info] 5.402 CampaignCharacteristics

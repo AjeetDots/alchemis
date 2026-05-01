@@ -310,7 +310,7 @@ iframeLocation(				parent.information, src);
 
 iframeLocation(			top.frames["iframe_7"], "index.php?cmd=WorkspaceFilter&id=" + company_id + "&post_id=" + post_id + "&initiative_id=" + top.$F("initiative_list") + "&filter_id=" + $F("filter_id"));
 
-			top.loadTab(7,"");
+			top.loadTab(7,"", true);
 
 			colln.goToPostId(post_id);
 
@@ -342,7 +342,7 @@ iframeLocation(			top.frames["iframe_7"], "index.php?cmd=WorkspaceFilter&id=" + 
 
 iframeLocation(			top.frames["iframe_7"], "index.php?cmd=WorkspaceFilter&id=" + company_id + "&post_id=" + post_id + "&initiative_id=" + top.$F("initiative_list") + "&filter_id=" + $F("filter_id"));
 
-			top.loadTab(7,"");
+			top.loadTab(7,"", true);
 
 			highlightSelectedRow(company_id, post_id);
 
