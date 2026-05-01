@@ -104,14 +104,15 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 	}
 
 	/**
-	 * Constructs main filter builder results.
+	 * Constructs main filter builder results (rows persisted in tbl_filter_results).
+	 * Do not AND-filter on tbl_posts.data_owner_id here: a LEFT JOIN yields NULL for deleted
+	 * or missing posts, and "NULL = client_id" excludes every row — empty UI while counts stay non-zero.
+	 * Ownership was enforced when the filter was built into tbl_filter_results.
+	 *
 	 * @return raw array of app_mapper_FilterBuilderCollection -
 	 */
 	public function getFilterBuilderResults($filter_id, $results_format)
 	{
-        $session = Auth_Session::singleton();
-        $user = $session->getSessionUser();
-
 		switch ($results_format)
 		{
 			case 'Company':
@@ -136,9 +137,6 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN tbl_posts p on fr.post_id = p.id ' .
 							'LEFT JOIN vw_contacts con on p.id = con.post_id ' .
                             'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
-                            (!empty($user['client_id']) 
-                                ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
-                                : 'AND p.data_owner_id IS NULL ') .
 							'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
 							'p.job_title, con.surname, con.first_name';
 				break;
@@ -162,9 +160,6 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN tbl_communications com on pi.last_effective_communication_id = com.id ' .
 							'LEFT JOIN tbl_post_initiative_notes pin ON pin.id = com.note_id ' .
                             'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
-                            (!empty($user['client_id']) 
-                                ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
-                                : 'AND p.data_owner_id IS NULL ') .
 							'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
 							'p.job_title, con.surname, con.first_name';
 				break;
@@ -181,9 +176,6 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN tbl_object_characteristics_date ocd on c.id = ocd.company_id AND ocd.characteristic_id = 13 ' .
 							'LEFT JOIN tbl_object_characteristics_date ocd_1 on p.id = ocd_1.post_id AND ocd_1.characteristic_id = 13 ' .
                             'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
-                            (!empty($user['client_id']) 
-                                ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
-                                : 'AND p.data_owner_id IS NULL ') .
 							'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
 							'p.job_title, con.surname, con.first_name';
 				break;
@@ -210,9 +202,6 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
                             'LEFT JOIN tbl_rbac_users u on m.created_by = u.id ' .
                             'LEFT JOIN tbl_rbac_users u1 on m.modified_by = u1.id ' .
                             'WHERE fr.filter_id = ' . self::$DB->quote($filter_id, 'integer') . ' ' .
-                            (!empty($user['client_id']) 
-                                ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
-                                : 'AND p.data_owner_id IS NULL ') .
                             'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
                             'p.job_title, con.surname, con.first_name';
                 break;
@@ -256,12 +245,7 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 	 */
 	private function buildFilterExportQuery($filter_id, $results_format)
 	{
-        $session = Auth_Session::singleton();
-        $user = $session->getSessionUser();
         $fid = self::$DB->quote($filter_id, 'integer');
-        $ownerClause = !empty($user['client_id'])
-            ? 'AND p.data_owner_id = ' . self::$DB->quote($user['client_id'], 'integer') . ' '
-            : 'AND p.data_owner_id IS NULL ';
 
 		switch ($results_format)
 		{
@@ -295,7 +279,7 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN vw_contacts con on p.id = con.post_id ' .
 							'LEFT JOIN tbl_lkp_counties AS lkp_cty ON lkp_cty.id = s.county_id ' .
 							'LEFT JOIN tbl_lkp_countries AS lkp_ctry ON lkp_ctry.id = s.country_id ' .
-                            'WHERE fr.filter_id = ' . $fid . ' ' . $ownerClause .
+                            'WHERE fr.filter_id = ' . $fid . ' ' .
 							'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
 							'p.job_title, con.surname, con.first_name';
 			case 'Client initiative':
@@ -324,7 +308,7 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 							'LEFT JOIN tbl_post_initiative_notes pin ON pin.id = com.note_id ' .
 							'LEFT JOIN tbl_lkp_counties AS lkp_cty ON lkp_cty.id = s.county_id ' .
 							'LEFT JOIN tbl_lkp_countries AS lkp_ctry ON lkp_ctry.id = s.country_id ' .
-                            'WHERE fr.filter_id = ' . $fid . ' ' . $ownerClause .
+                            'WHERE fr.filter_id = ' . $fid . ' ' .
 							'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
 							'p.job_title, con.surname, con.first_name';
 			case 'Meeting':
@@ -358,7 +342,7 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
                             'LEFT JOIN tbl_lkp_lead_source AS lkp_ls ON lkp_ls.id = pi.lead_source_id ' .
                             'LEFT JOIN tbl_rbac_users u on m.created_by = u.id ' .
                             'LEFT JOIN tbl_rbac_users u1 on m.modified_by = u1.id ' .
-                            'WHERE fr.filter_id = ' . $fid . ' ' . $ownerClause .
+                            'WHERE fr.filter_id = ' . $fid . ' ' .
                             'order by c.name, propensity_max desc, propensity_avg desc, propensity_min desc, propensity_sum desc, p.propensity desc, ' .
                             'p.job_title, con.surname, con.first_name';
 			default:

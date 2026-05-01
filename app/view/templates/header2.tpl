@@ -89,6 +89,13 @@ function init()
 			}
 		}
 	} catch (e) {}
+	// Filter Results (cmd=FilterResults) loads inside iframe_8: once the page has rendered,
+	// force the shell to select the Filter Results tab (handles slow loads / timing races).
+	try {
+		if (window.frameElement && window.frameElement.id === 'iframe_8' && typeof top.loadTab === 'function') {
+			top.loadTab(8, '', true);
+		}
+	} catch (e2) {}
 }
 {/literal}
 </script>

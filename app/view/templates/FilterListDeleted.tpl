@@ -82,10 +82,10 @@ function loadFilter(filter_id, action)
 			// do nothing
 		}
 	}
-	top.responderFadeIn();
 	var href = "index.php?cmd=FilterResults&id=" + filter_id + "&action=" + action;
 	iframeLocation(top.frames["iframe_8"], href);
 	top.loadTab(8,"");
+	top.responderFadeIn();
 	setActiveRow(filter_id);
 	$("iframe1").hide();
 }

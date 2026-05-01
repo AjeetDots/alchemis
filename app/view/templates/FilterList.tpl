@@ -108,10 +108,12 @@ function loadFilter(filter_id, action)
 		top.iframe_8.colln.clear();
 	}
 	lockFilterActions();
-	top.responderFadeIn();
 	var href = "index.php?cmd=FilterResults&id=" + filter_id + "&action=" + action;
 	iframeLocation(top.frames["iframe_8"], href);
+	// loadTab must run before responderFadeIn: loadTab() no-ops while _isLoading is true,
+	// which would leave the user on Filter List while results load in a hidden iframe.
 	top.loadTab(8,"");
+	top.responderFadeIn();
 	setActiveRow(filter_id);
 	$("iframe1").hide();
 }
