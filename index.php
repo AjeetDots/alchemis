@@ -136,7 +136,9 @@ session_start();
 // was not yet loaded at deserialise time, PHP marks them as __PHP_Incomplete_Class.
 // Calling any method on such an object causes a fatal error. Destroy the session
 // and send the user back to the login page with a clear explanation.
-if (strpos(serialize($_SESSION), '__PHP_Incomplete_Class') !== false) {
+// Skip serialize() when the session is empty — it is costly on large logged-in sessions
+// and unnecessary for first visits.
+if (!empty($_SESSION) && strpos(serialize($_SESSION), '__PHP_Incomplete_Class') !== false) {
     session_unset();
     session_destroy();
     setcookie(session_name(), '', ['expires' => time() - 3600, 'path' => '/', 'secure' => true, 'httponly' => true, 'samesite' => 'Lax']);

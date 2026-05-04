@@ -11,6 +11,8 @@ services:
       - "8080:80"
     volumes:
       - .:/var/www/html
+      # Reduces OPcache stat storm on bind-mounted code (notably faster on Docker Desktop + Windows).
+      - ./docker/php-local-performance.ini:/usr/local/etc/php/conf.d/zz-local-performance.ini:ro
     env_file:
       - .env
     environment:
