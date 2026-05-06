@@ -25,7 +25,11 @@ class app_view_FilterList extends app_view_ManipulationView
 		$this->smarty->assign('filters_personal', $this->request->getObject('filters_personal'));
 		$this->smarty->assign('filters_personal_count', $this->request->getProperty('filters_personal_count'));
 
-		// Campaign and Global counts only — rows are lazy-loaded via AJAX
+		// Campaign and Global collections (server-rendered fallback)
+		$this->smarty->assign('filters_campaign', $this->request->getObject('filters_campaign'));
+		$this->smarty->assign('filters_global', $this->request->getObject('filters_global'));
+
+		// Counts
 		$this->smarty->assign('filters_campaign_count', $this->request->getProperty('filters_campaign_count'));
 		$this->smarty->assign('filters_global_count', $this->request->getProperty('filters_global_count'));
 				

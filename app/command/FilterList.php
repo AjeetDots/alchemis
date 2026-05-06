@@ -43,15 +43,16 @@ class app_command_FilterList extends app_command_Command
 		$request->setObject('filters_personal', $filters_personal);
 		$request->setProperty('filters_personal_count', count($filters_personal->toRawArray()));
 
-		// Campaign and Global: potentially thousands of rows — use fast COUNT queries only.
-		// Full data is lazy-loaded via AJAX when the accordion section is expanded.
-		$request->setProperty('filters_campaign_count', app_domain_Filter::countCampaignFiltersByUserId($user['id']));
-		$request->setProperty('filters_global_count', app_domain_Filter::countGlobalFilters());
+		// Campaign and Global: render initial rows server-side so UI does not depend on JS header-click loaders.
+		$filters_campaign = app_domain_Filter::findCampaignFiltersByUserId($user['id']);
+		$request->setObject('filters_campaign', $filters_campaign);
+		$request->setProperty('filters_campaign_count', count($filters_campaign->toRawArray()));
 
-		if ($this->session_user->hasPermission('permission_admin_users'))
-		{
-			$request->setProperty('can_export',true);
-		}
+		$filters_global = app_domain_Filter::findGlobalFilters();
+		$request->setObject('filters_global', $filters_global);
+		$request->setProperty('filters_global_count', count($filters_global->toRawArray()));
+
+		$request->setProperty('can_export', $this->session_user->hasPermission('permission_admin_users'));
 	}
 	
 }

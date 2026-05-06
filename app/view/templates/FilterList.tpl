@@ -169,7 +169,14 @@ function AjaxFilterBuilder(data)
 				break;
 			case "get_filter_rows_html":
 				var tbody = document.getElementById("tbody_filter_type_" + t.type_id);
-				if (tbody) { tbody.innerHTML = t.filter_rows_html; }
+				var html = t.filter_rows_html || "";
+				if (tbody) { tbody.innerHTML = html; }
+				var hasRows = (/<tr/i).test(html) && html.indexOf('Click header to load filters') === -1;
+				filterRowsLoaded[t.type_id] = hasRows;
+				filterRowsLoading[t.type_id] = false;
+				if (!hasRows && tbody) {
+					tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999;padding:8px;">Unable to load right now. Click header to retry.</td></tr>';
+				}
 				break;
 			default:
 				alert("No cmd_action specified");
@@ -179,12 +186,18 @@ function AjaxFilterBuilder(data)
 }
 
 var filterRowsLoaded = {};
+var filterRowsLoading = {};
 function loadFilterRowsOnce(typeId)
 {
-	if (filterRowsLoaded[typeId]) { return; }
-	filterRowsLoaded[typeId] = true;
+	if (filterRowsLoaded[typeId] || filterRowsLoading[typeId]) { return; }
+	filterRowsLoading[typeId] = true;
 	var params = { type_id: typeId };
-	getAjaxData("AjaxFilterBuilder", "", "get_filter_rows_html", params, "Loading...");
+	getAjaxData("AjaxFilterBuilder", "", "get_filter_rows_html", params, "Loading...", false, function() {
+		filterRowsLoading[typeId] = false;
+		if (!filterRowsLoaded[typeId]) {
+			filterRowsLoaded[typeId] = false;
+		}
+	});
 }
 
 // Campaign/Global rows are loaded on-demand when each section is opened.
@@ -339,7 +352,13 @@ function exportFilter(filter_id, format, file_format)
 											</tr>
 										</thead>
 										<tbody id="tbody_filter_type_2">
-										<tr><td colspan="8" style="text-align:center;color:#999;padding:8px;">Click header to load filters...</td></tr>
+										{if isset($filters_campaign)}
+											{include file="html_FilterListLines.tpl" filters=$filters_campaign}
+										{elseif $filters_campaign_count|default:0 > 0}
+											<tr><td colspan="8" style="text-align:center;color:#999;padding:8px;">Click header to load filters...</td></tr>
+										{else}
+											<tr><td colspan="8" style="text-align:center;color:#999;padding:8px;">No campaign filters found.</td></tr>
+										{/if}
 									</tbody>
 									</table>
 								</div>
@@ -369,7 +388,13 @@ function exportFilter(filter_id, format, file_format)
 											</tr>
 										</thead>
 										<tbody id="tbody_filter_type_3">
-										<tr><td colspan="7" style="text-align:center;color:#999;padding:8px;">Click header to load filters...</td></tr>
+										{if isset($filters_global)}
+											{include file="html_FilterListLines.tpl" filters=$filters_global}
+										{elseif $filters_global_count|default:0 > 0}
+											<tr><td colspan="7" style="text-align:center;color:#999;padding:8px;">Click header to load filters...</td></tr>
+										{else}
+											<tr><td colspan="7" style="text-align:center;color:#999;padding:8px;">No global filters found.</td></tr>
+										{/if}
 									</tbody>
 									</table>
 								</div>
@@ -377,6 +402,9 @@ function exportFilter(filter_id, format, file_format)
 						</div>	
 						<script language="JavaScript" type="text/javascript">
 							init_moofx();
+							// Preload large sections so UI does not depend on header-click handlers only.
+							loadFilterRowsOnce(2);
+							loadFilterRowsOnce(3);
 						</script>	
 					</td>
 				</tr>

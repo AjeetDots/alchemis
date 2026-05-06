@@ -127,7 +127,7 @@
 </script>
 
 <p><strong>{$search_results|@count}</strong> result{if $search_results|@count != 1}s{/if} for <strong>{$object_type}</strong> which <strong>{$search_type_friendly}</strong> the text <strong>{$search_param}</strong></p>
-{if $search_results_truncated}
+{if $search_results_truncated|default:false}
 <p class="highlight_negative">Showing first {$search_results_limit} results for performance. Please refine the search to narrow results.</p>
 {/if}
 

@@ -9,6 +9,7 @@ services:
     container_name: legacy_php_app
     ports:
       - "8080:80"
+      - "8087:80"
     volumes:
       - .:/var/www/html
       # Reduces OPcache stat storm on bind-mounted code (notably faster on Docker Desktop + Windows).

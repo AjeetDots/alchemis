@@ -196,7 +196,12 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 			// needs domain objects, not plain arrays from toRawArray()
 			$smarty->assign('filters', $filters);
 
-				$this->request->filter_rows_html = $smarty->fetch('html_FilterListLines.tpl');
+				$this->request->filter_rows_html = '';
+				try {
+					$this->request->filter_rows_html = $smarty->fetch('html_FilterListLines.tpl');
+				} catch (Throwable $e) {
+					$this->request->warning = 'Unable to load filter rows right now. Please click the header again.';
+				}
 				$this->request->type_id = $type_id;
 				break;
 
