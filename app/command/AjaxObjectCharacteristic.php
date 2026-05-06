@@ -194,13 +194,28 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
             // object_characteristic_id (non-zero). For simple characteristics it is "0".
             $is_simple = ($field_data[0][3] == '0' || $field_data[0][3] == '' || $field_data[0][3] === null);
 
-            // Reset all boolean element values to 0 only for complex multi-element characteristics.
-            if ($field_data[0][6] == 'boolean' && !$is_simple) {
-                $elements_table = "tbl_object_characteristic_elements_boolean";
-                $query = "UPDATE `".$elements_table."` SET `value` = '0' WHERE `object_characteristic_id` = ".$field_data[0][3];
-                $res = $db->exec($query);
-                if (MDB2::isError($res)) {
-                    throw new app_base_MDB2Exception($res);
+            // Reset all boolean element values to 0 for complex multi-element characteristics.
+            if ($field_data[0][6] == 'boolean') {
+                $firstCharacteristicId = (int) $field_data[0][1];
+                $firstIsComplex = $this->isComplexCharacteristicDefinition($db, $firstCharacteristicId);
+                $firstHasElements = $this->hasAnyCharacteristicElements($db, $firstCharacteristicId);
+                if ($firstIsComplex && $firstHasElements) {
+                    $resetObjectCharacteristicId = (int) $field_data[0][3];
+                    if ($resetObjectCharacteristicId < 1) {
+                        $resetObjectCharacteristicId = $this->ensureObjectCharacteristicIdForParent(
+                            $firstCharacteristicId,
+                            $parent_object_type,
+                            (int) $parent_object_id
+                        );
+                    }
+                    if ($resetObjectCharacteristicId > 0) {
+                        $elements_table = "tbl_object_characteristic_elements_boolean";
+                        $query = "UPDATE `".$elements_table."` SET `value` = '0' WHERE `object_characteristic_id` = ".$resetObjectCharacteristicId;
+                        $res = $db->exec($query);
+                        if (MDB2::isError($res)) {
+                            throw new app_base_MDB2Exception($res);
+                        }
+                    }
                 }
             }
 
@@ -213,20 +228,31 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                 $is_complex_characteristic = $this->isComplexCharacteristicDefinition($db, (int) $item[1]);
                 $has_complex_elements = $this->hasAnyCharacteristicElements($db, (int) $item[1]);
 
-                // Some legacy rows render as simple text inputs but are configured as complex characteristics.
-                // In that case, write into element tables (which the screen reads) instead of simple tables.
-                if ($item_is_simple && $is_complex_characteristic && $has_complex_elements && $item[6] == 'text') {
-                    $this->upsertFirstTextElementForComplexCharacteristic(
-                        $db,
+                // Some legacy forms post object_characteristic_id as 0/empty even for complex characteristics.
+                // Resolve/create the parent object_characteristic row so values are written to element tables.
+                if ($item_is_simple && $is_complex_characteristic && $has_complex_elements) {
+                    $resolvedObjectCharacteristicId = $this->ensureObjectCharacteristicIdForParent(
                         (int) $item[1],
-                        $item[7],
                         $parent_object_type,
                         (int) $parent_object_id
                     );
-                    continue;
+                    if ($resolvedObjectCharacteristicId > 0) {
+                        $item[3] = $resolvedObjectCharacteristicId;
+                        $item_is_simple = false;
+                    }
                 }
 
-                if ($item[6] == 'date') {
+                $is_complex_submit = (!$item_is_simple && $is_complex_characteristic && $has_complex_elements);
+
+                if ($is_complex_submit) {
+                    // Complex characteristics with elements use tbl_object_characteristic_elements_{type}.
+                    $elements_table = "tbl_object_characteristic_elements_" . $item[6];
+                    if (!empty($item[5]) && $item[5] != '0') {
+                        $query = "UPDATE `".$elements_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$item[5];
+                    } else {
+                        $query = "INSERT INTO `".$elements_table."` (`id`, `object_characteristic_id`, `characteristic_element_id`, `value`) VALUES(null, '".$item[3]."', '".$item[2]."', '".$item[7]."') ON DUPLICATE KEY UPDATE `value` = '".$item[7]."'";
+                    }
+                } elseif ($item[6] == 'date') {
                     // Dates always use the simple table regardless of attributes.
                     $date_table = "tbl_object_characteristics_date";
                     if (!empty($item[4]) && $item[4] != '0') {
@@ -236,7 +262,16 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                         if ($existingId) {
                             $query = "UPDATE `".$date_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$existingId;
                         } else {
-                            $query = "INSERT INTO `".$date_table."` (`id`, `characteristic_id`, `company_id`, `value`) VALUES(null, '".$item[1]."', '".$parent_object_id."', '".$item[7]."')";
+                            switch ($parent_object_type) {
+                                case 'app_domain_Post':
+                                    $query = "INSERT INTO `".$date_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', NULL, '".$parent_object_id."', NULL, '".$item[7]."')";
+                                    break;
+                                case 'app_domain_PostInitiative':
+                                    $query = "INSERT INTO `".$date_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', NULL, NULL, '".$parent_object_id."', '".$item[7]."')";
+                                    break;
+                                default: // app_domain_Company
+                                    $query = "INSERT INTO `".$date_table."` (`id`, `characteristic_id`, `company_id`, `post_id`, `post_initiative_id`, `value`) VALUES(null, '".$item[1]."', '".$parent_object_id."', NULL, NULL, '".$item[7]."')";
+                            }
                         }
                     }
                 } elseif ($item_is_simple) {
@@ -263,13 +298,9 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                         }
                     }
                 } else {
-                    // Complex characteristics with elements use tbl_object_characteristic_elements_{type}.
+                    // Fallback for legacy complex submit shapes.
                     $elements_table = "tbl_object_characteristic_elements_" . $item[6];
-                    if (!empty($item[5]) && $item[5] != '0') {
-                        $query = "UPDATE `".$elements_table."` SET `value` = '".$item[7]."' WHERE `id` = ".$item[5];
-                    } else {
-                        $query = "INSERT INTO `".$elements_table."` (`id`, `object_characteristic_id`, `characteristic_element_id`, `value`) VALUES(null, '".$item[3]."', '".$item[2]."', '".$item[7]."') ON DUPLICATE KEY UPDATE `value` = '".$item[7]."'";
-                    }
+                    $query = "INSERT INTO `".$elements_table."` (`id`, `object_characteristic_id`, `characteristic_element_id`, `value`) VALUES(null, '".$item[3]."', '".$item[2]."', '".$item[7]."') ON DUPLICATE KEY UPDATE `value` = '".$item[7]."'";
                 }
 
                 $res = $db->exec($query);
@@ -372,6 +403,29 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
             default:
                 return (int) app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByCompanyIdAndCharacteristicId($parentObjectId, $characteristicId);
         }
+    }
+
+    /**
+     * Returns existing object_characteristic id for parent/characteristic or creates it if missing.
+     *
+     * @param int    $characteristicId
+     * @param string $parentObjectType
+     * @param int    $parentObjectId
+     * @return int
+     */
+    private function ensureObjectCharacteristicIdForParent($characteristicId, $parentObjectType, $parentObjectId)
+    {
+        $objectCharacteristicId = $this->getObjectCharacteristicIdForParent($characteristicId, $parentObjectType, $parentObjectId);
+        if ($objectCharacteristicId > 0) {
+            return (int) $objectCharacteristicId;
+        }
+
+        $obj = app_domain_ObjectCharacteristicHelper::factory(null, null);
+        $obj->setParentObjectId($parentObjectId);
+        $obj->setParentObjectType($parentObjectType);
+        $obj->setCharacteristicId($characteristicId);
+        $obj->commit();
+        return (int) $obj->getId();
     }
 
     /**

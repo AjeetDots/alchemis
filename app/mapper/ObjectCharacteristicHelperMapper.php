@@ -72,7 +72,8 @@ class app_mapper_ObjectCharacteristicHelperMapper
 		
 		// Construct query
 		$query = 'SELECT id FROM ' . $table_name . ' WHERE characteristic_id = ' . self::$DB->quote($characteristic_id, 'integer') . ' ' .
-				'AND ' . $parent_id_field . ' = ' . self::$DB->quote($parent_object_id, 'integer');
+				'AND ' . $parent_id_field . ' = ' . self::$DB->quote($parent_object_id, 'integer') . ' ' .
+				'ORDER BY id DESC LIMIT 1';
 		
 		
 		$result = self::$DB->queryOne($query);
