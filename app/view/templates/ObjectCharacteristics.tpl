@@ -4,13 +4,63 @@
 {literal}
 
 // Associates a given characteristic with this object.
+function getFieldValue(fieldId)
+{
+	if (typeof $F === 'function')
+	{
+		try
+		{
+			return $F(fieldId);
+		}
+		catch (e) {}
+	}
+	var el = document.getElementById(fieldId);
+	return el ? el.value : '';
+}
+
+function resolveParentObjectType()
+{
+	var parentType = getFieldValue('parent_object_type');
+	if (parentType)
+	{
+		return parentType;
+	}
+
+	var shortType = getFieldValue('characteristic_type');
+	switch (shortType)
+	{
+		case 'company':
+			return 'app_domain_Company';
+		case 'post':
+			return 'app_domain_Post';
+		case 'post_initiative':
+			return 'app_domain_PostInitiative';
+		default:
+			return '';
+	}
+}
+
 function addCharacteristic(id)
 {
 //	alert('addCharacteristic(' + id + ')');
+	if (!id)
+	{
+		alert('Please select a characteristic to add.');
+		return;
+	}
+
+	var parentObjectType = resolveParentObjectType();
+	var parentObjectId = getFieldValue('parent_object_id');
+	if (!parentObjectType || !parentObjectId)
+	{
+		alert('Unable to determine target object for this characteristic.');
+		return;
+	}
+
 	var ill_params = new Object;
 	ill_params.characteristic_id  = id;
-	ill_params.parent_object_type = $F('parent_object_type');
-	ill_params.parent_object_id   = $F('parent_object_id');
+	ill_params.parent_object_type = parentObjectType;
+	ill_params.parent_object_id   = parentObjectId;
 	getAjaxData('AjaxObjectCharacteristic', '', 'add_object_characteristic', ill_params, 'Adding...')
 }
 
@@ -24,8 +74,8 @@ function deleteCharacteristic(id)
 	var ill_params = new Object;
 	ill_params.item_id            = id;
 	ill_params.characteristic_id  = id;
-	ill_params.parent_object_type = $F('parent_object_type');
-	ill_params.parent_object_id   = $F('parent_object_id');
+	ill_params.parent_object_type = resolveParentObjectType();
+	ill_params.parent_object_id   = getFieldValue('parent_object_id');
 	getAjaxData('AjaxObjectCharacteristic', '', 'delete_object_characteristic', ill_params, 'Adding...')
 }
 
@@ -263,8 +313,8 @@ function saveCharacteristic(characteristic_id, form_type)
 
 	ill_params.item_id                          = characteristic_id;
 	ill_params.form_data                        = t;
-	ill_params.parent_object_type       		= $F('parent_object_type');
-	ill_params.parent_object_id              	= $F('parent_object_id');
+	ill_params.parent_object_type       		= resolveParentObjectType();
+	ill_params.parent_object_id              	= getFieldValue('parent_object_id');
 
 /*
 
@@ -379,7 +429,7 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 									<td style="vertical-align: top; width: 70%">
 										<input type="button" id="add_characteristic" name="add_characteristic"
 											   value="Add"
-											   onclick="javascript:addCharacteristic($F('characteristic_id'));"/>
+											   onclick="javascript:addCharacteristic((this.form && this.form.characteristic_id) ? this.form.characteristic_id.value : getFieldValue('characteristic_id'));"/>
 										<input type="button" id="cancel_characteristic" name="cancel_characteristic"
 											   value="Cancel"
 											   onclick="javascript:$('form_new_characteristic').reset(); $('div_new_characteristic').hide();"/>

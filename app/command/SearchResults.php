@@ -31,6 +31,15 @@ class app_command_SearchResults extends app_command_Command
 		if ($page < 1) { $page = 1; }
 		$page_size = 500;
 		$offset = ($page - 1) * $page_size;
+
+		// Always initialize template variables to avoid PHP 8 undefined-key warnings
+		$request->setObject('search_results', array());
+		$request->setObject('search_results_truncated', false);
+		$request->setObject('search_results_limit', $this->search_results_limit);
+		$request->setObject('search_type', $search_type);
+		$request->setObject('search_param', $search_param);
+		$request->setObject('page', $page);
+		$request->setObject('page_size', $page_size);
 		
 		if (!is_null($search_type) && !is_null($search_param))
 		{
@@ -295,7 +304,7 @@ class app_command_SearchResults extends app_command_Command
 
 		$posts_map = array();
 		$post_query = 'SELECT id, company_id, job_title, full_name, telephone_1, propensity ' .
-					  'FROM vw_posts WHERE company_id IN (' . $id_list . ') ORDER BY company_id, job_title';
+					  'FROM vw_posts_contacts WHERE company_id IN (' . $id_list . ') ORDER BY company_id, job_title';
 		$post_rows = $db->queryAll($post_query, null, MDB2_FETCHMODE_ASSOC);
 		if (is_array($post_rows))
 		{

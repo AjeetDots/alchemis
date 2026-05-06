@@ -109,6 +109,26 @@ class app_command_ObjectCharacteristics extends app_command_Command
     }
 
     /**
+     * Ensure template-consumed runtime keys exist for each characteristic element.
+     * Prevents PHP 8 undefined-key warnings in ObjectCharacteristics.tpl.
+     *
+     * @param array $element
+     * @return void
+     */
+    protected static function normalizeElementRuntimeFields(array &$element)
+    {
+        if (!array_key_exists('value', $element) || $element['value'] === null) {
+            $element['value'] = '';
+        }
+        if (!isset($element['object_characteristic_id']) || $element['object_characteristic_id'] === null || $element['object_characteristic_id'] === '') {
+            $element['object_characteristic_id'] = 0;
+        }
+        if (!isset($element['object_characteristic_element_id']) || $element['object_characteristic_element_id'] === null || $element['object_characteristic_element_id'] === '') {
+            $element['object_characteristic_element_id'] = 0;
+        }
+    }
+
+    /**
      * Ajax save for "simple" field names writes to tbl_object_characteristics_text. If this characteristic
      * is still defined with attributes and a single text element, the loader only reads element tables —
      * the saved text never appears. Copy simple-text value into that element for display/edit.
@@ -260,6 +280,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             }
                             $element['object_characteristic_id'] = $fallbackObjectCharacteristicId;
                         }
+                        self::normalizeElementRuntimeFields($element);
 
                     }
 
@@ -293,6 +314,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             }
                             $element['object_characteristic_id'] = $fallbackObjectCharacteristicId;
                         }
+                        self::normalizeElementRuntimeFields($element);
                     }
                     self::mergeOrphanSimpleTextIntoSingleTextElement($characteristic, 'post', $id);
                     self::applySimpleFallbackWhenNoElements($characteristic, 'post', $id);
@@ -323,6 +345,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             }
                             $element['object_characteristic_id'] = $fallbackObjectCharacteristicId;
                         }
+                        self::normalizeElementRuntimeFields($element);
                     }
                     self::mergeOrphanSimpleTextIntoSingleTextElement($characteristic, 'post_initiative', $id);
                     self::applySimpleFallbackWhenNoElements($characteristic, 'post_initiative', $id);

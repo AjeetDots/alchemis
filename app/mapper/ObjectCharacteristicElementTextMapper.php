@@ -31,7 +31,9 @@ class app_mapper_ObjectCharacteristicElementTextMapper extends app_mapper_Object
 		// Select value for company
 		$query = 'SELECT e.* FROM tbl_object_characteristic_elements_text AS e ' .
 					'INNER JOIN tbl_object_characteristics AS c ON e.object_characteristic_id = c.id ' .
+					'INNER JOIN tbl_characteristic_elements AS ce ON ce.id = e.characteristic_element_id ' .
 					'WHERE e.characteristic_element_id = ? AND c.company_id = ? ' .
+					'AND c.id = (SELECT MAX(oc.id) FROM tbl_object_characteristics AS oc WHERE oc.characteristic_id = ce.characteristic_id AND oc.company_id = c.company_id) ' .
 					'ORDER BY e.id DESC LIMIT 1';
 		$types = array('integer', 'integer');
 		$this->select_company_value_stmt = self::$DB->prepare($query, $types);
@@ -39,7 +41,9 @@ class app_mapper_ObjectCharacteristicElementTextMapper extends app_mapper_Object
 		// Select value for post
 		$query = 'SELECT e.* FROM tbl_object_characteristic_elements_text AS e ' .
 					'INNER JOIN tbl_object_characteristics AS c ON e.object_characteristic_id = c.id ' .
+					'INNER JOIN tbl_characteristic_elements AS ce ON ce.id = e.characteristic_element_id ' .
 					'WHERE e.characteristic_element_id = ? AND c.post_id = ? ' .
+					'AND c.id = (SELECT MAX(oc.id) FROM tbl_object_characteristics AS oc WHERE oc.characteristic_id = ce.characteristic_id AND oc.post_id = c.post_id) ' .
 					'ORDER BY e.id DESC LIMIT 1';
 		$types = array('integer', 'integer');
 		$this->select_post_value_stmt = self::$DB->prepare($query, $types);
@@ -47,7 +51,9 @@ class app_mapper_ObjectCharacteristicElementTextMapper extends app_mapper_Object
 		// Select value for post initiative
 		$query = 'SELECT e.* FROM tbl_object_characteristic_elements_text AS e ' .
 					'INNER JOIN tbl_object_characteristics AS c ON e.object_characteristic_id = c.id ' .
+					'INNER JOIN tbl_characteristic_elements AS ce ON ce.id = e.characteristic_element_id ' .
 					'WHERE e.characteristic_element_id = ? AND c.post_initiative_id = ? ' .
+					'AND c.id = (SELECT MAX(oc.id) FROM tbl_object_characteristics AS oc WHERE oc.characteristic_id = ce.characteristic_id AND oc.post_initiative_id = c.post_initiative_id) ' .
 					'ORDER BY e.id DESC LIMIT 1';
 		$types = array('integer', 'integer');
 		$this->select_post_initiative_value_stmt = self::$DB->prepare($query, $types);
