@@ -1322,6 +1322,13 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 		foreach ($line_items as $item)
 		{
 			$line_count++;
+			// Reset per-line placeholders to avoid carrying values from previous loop iterations.
+			$table_alias = '';
+			$join = '';
+			$field_name = '';
+			$data_type = '';
+			$where_temp = '';
+			$where_additional = '';
 //			echo '<pre>';
 //			print_r($item);
 //			echo '</pre>';
@@ -1771,7 +1778,23 @@ class app_domain_FilterBuilder extends app_domain_DomainObject
 
 					default:
 						// standard field name
-						$field_spec = $spec_array[$item['table_name']][strtolower($item['field_name'])];
+						$table_name_key = strtolower(trim((string) $item['table_name']));
+						$field_name_key = strtolower(trim((string) $item['field_name']));
+
+						// Backward compatibility: legacy saved filters can use "communication"
+						// where current field specs are stored under "post initiative".
+						if ($table_name_key === 'communication')
+						{
+							$table_name_key = 'post initiative';
+						}
+
+						if (!isset($spec_array[$table_name_key]) || !isset($spec_array[$table_name_key][$field_name_key]))
+						{
+							// Skip invalid/legacy criteria silently so report generation can continue.
+							continue 2;
+						}
+
+						$field_spec = $spec_array[$table_name_key][$field_name_key];
 						$table_alias = $field_spec['sql_alias'];
 						$join = $field_spec['sql_join'];
 						$field_name = $field_spec['sql_field'];

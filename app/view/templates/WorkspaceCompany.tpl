@@ -32,15 +32,17 @@
 		<td colspan="2">
 			<span style="float: right;" id="company_count"></span>
 			<ul class="parent-companies">
-				{foreach name="parents" from=$parent_companies item=parent_company}
-					<li style="padding-left:{$smarty.foreach.parents.index}0px">
-						<img id="img_edit_parent_company_name_{$parent_company.id}" src="{$APP_URL}app/view/images/icons/building_edit.png" style="cursor:pointer; vertical-align:middle" title="Edit parent company name" />
-						<span id="edit_parent_company_name_{$parent_company.id}">{$parent_company.name}</span>
-						<script type="text/javascript">
-							new Ajax.InPlaceEditor('edit_parent_company_name_{$parent_company.id}', '', {literal}{{/literal}externalControl: 'img_edit_parent_company_name_{$parent_company.id}', ill_cmd: 'ParentCompany', ill_cmd_action: 'updateName', ill_item_id: {$parent_company.id}{literal}, ill_field: 'name'}{/literal});
-						</script>
-					</li>
-				{/foreach}
+				{if isset($parent_companies)}
+					{foreach name="parents" from=$parent_companies item=parent_company}
+						<li style="padding-left:{$smarty.foreach.parents.index}0px">
+							<img id="img_edit_parent_company_name_{$parent_company.id}" src="{$APP_URL}app/view/images/icons/building_edit.png" style="cursor:pointer; vertical-align:middle" title="Edit parent company name" />
+							<span id="edit_parent_company_name_{$parent_company.id}">{$parent_company.name}</span>
+							<script type="text/javascript">
+								new Ajax.InPlaceEditor('edit_parent_company_name_{$parent_company.id}', '', {literal}{{/literal}externalControl: 'img_edit_parent_company_name_{$parent_company.id}', ill_cmd: 'ParentCompany', ill_cmd_action: 'updateName', ill_item_id: {$parent_company.id}{literal}, ill_field: 'name'}{/literal});
+							</script>
+						</li>
+					{/foreach}
+				{/if}
 			</ul>
 		</td>
 	</tr>
@@ -64,12 +66,16 @@
 		<a href="#" onclick="javascript:setCompanyTelephoneTps({$company->getId()});">
 			<span id="sp_telephone_tps">[Make {if $company->getTelephoneTps()}Non {/if}TPS]</span>
 		</a>*}
-		{foreach from=$companyTelephoneTpsStatus item=item key=index}
-			<a rel="company" onclick="javascript:checkTPS('{$item.number|replace:' ':''}',this);" rel="{$item.number|replace:' ':''}" href="javascript:void(0);" title="TPS: {$item.status|ucwords} {if $item.updated_at} On {$item.updated_at|date_format:"%d/%b/%Y, %H:%M"} {/if}" style="{$item.style}">{$item.number}</a> <small>(TPS: {$item.status|ucwords} {if $item.updated_at} On {$item.updated_at|date_format:"%d/%b/%Y, %H:%M"} {/if})</small>
-			{*&nbsp;&nbsp;&nbsp;
-			<a href="voispeed:{$item.number|replace:' ':''}" title="TPS: {$item.status|ucwords} {if $item.updated_at} On {$item.updated_at|date_format:"%d/%b/%Y, %H:%M"} {/if}" style="{$item.style}">[Dial]</a>*}
-			<br />
-		{/foreach}
+		{if isset($companyTelephoneTpsStatus) && $companyTelephoneTpsStatus|@count gt 0}
+			{foreach from=$companyTelephoneTpsStatus item=item key=index}
+				<a rel="company" onclick="javascript:checkTPS('{$item.number|replace:' ':''}',this);" rel="{$item.number|replace:' ':''}" href="javascript:void(0);" title="TPS: {$item.status|ucwords} {if $item.updated_at} On {$item.updated_at|date_format:"%d/%b/%Y, %H:%M"} {/if}" style="{$item.style}">{$item.number}</a> <small>(TPS: {$item.status|ucwords} {if $item.updated_at} On {$item.updated_at|date_format:"%d/%b/%Y, %H:%M"} {/if})</small>
+				{*&nbsp;&nbsp;&nbsp;
+				<a href="voispeed:{$item.number|replace:' ':''}" title="TPS: {$item.status|ucwords} {if $item.updated_at} On {$item.updated_at|date_format:"%d/%b/%Y, %H:%M"} {/if}" style="{$item.style}">[Dial]</a>*}
+				<br />
+			{/foreach}
+		{elseif $company->getTelephone()}
+			{$company->getTelephone()}
+		{/if}
 		<br />
 		<span id="edit_company_telephone" style="display:none;">{$company->getTelephone()}</span>
 		{*
@@ -119,7 +125,7 @@
 	<tr>
 		<td colspan="2">
 			{if $company_posts_job_title}
-				<input type="hidden" name="post_list_by_post" id="post_list_by_post" value="{$post->getId()}" />
+				<input type="hidden" name="post_list_by_post" id="post_list_by_post" value="{if $post}{$post->getId()}{/if}" />
 				<a href="#" id="popup_posts_link"></a>
 				
 				<div id="popup_posts" class="popup" style="display: none; height: 250px; width: 800px; overflow-x: hidden; overflow-y: auto">
@@ -135,7 +141,7 @@
 					</thead>
 			    	<tbody>
 				 	{foreach name="result_loop" from=$company_posts_job_title item=result}
-				 		<tr id="tr_post_{$result.id}" {if $post->getId() == $result.id}class="current"{/if} >
+				 		<tr id="tr_post_{$result.id}" {if $post && $post->getId() == $result.id}class="current"{/if} >
 				 			<td><a href="#" class="popup_closebox" onclick="javascript:highlightSelectedPost({$result.id});loadPost({$result.id}, null, null);return false;">{$result.job_title}<a/></td>
 				 			<td>{$result.first_name}&nbsp;{$result.surname}</td>
 				 			<td>{$result.telephone_1}</td>
@@ -152,7 +158,7 @@
 			  		var var_popup_posts = new Popup('popup_posts','popup_posts_link',{literal}{position:'20,240',trigger:'click',duration:'0.25',show_delay:'100'}{/literal});
 			  		// set the page level var 'last_post_class_change_id' equal to the selected post - otherwise when another post
 					//is selected from the 'popup_posts' div, the style of the original row is not reset to ''
-					last_post_class_change_id = {$post->getId()};
+					last_post_class_change_id = {if $post}{$post->getId()}{else}null{/if};
 			    </script>
 			{else}
 				<!--Need to create a hidden text box to act as a dummy container for the non-existent post

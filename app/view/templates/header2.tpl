@@ -106,6 +106,11 @@ function init()
 
 <script type="text/javascript">
 {literal}
+	try {
+		if (top && typeof top.responderFadeOut === 'function') {
+			top.responderFadeOut();
+		}
+	} catch (e0) {}
 	if (typeof hideLoader === 'function') { hideLoader(); }
 	try {
 		var w = window;

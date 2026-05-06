@@ -36,6 +36,11 @@ abstract class app_command_AjaxCommand
 	 */
 	function __construct($request = null)
 	{
+		// Ajax handlers must return clean JSON payloads; suppress direct warning/deprecation output.
+		@ini_set('display_errors', '0');
+		@ini_set('html_errors', '0');
+		error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+
 		// Create the response object to hold the data structure types to be 
 		// passed back to the calling client.
 		$this->response = new ajaxResponse();

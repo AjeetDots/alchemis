@@ -17,6 +17,7 @@ class app_command_WorkspaceCompany extends app_command_Command
 		// Get company
 		$company = app_domain_Company::find($company_id);
 		$request->setObject('company', $company);
+		$request->setProperty('company_telephone_tps_status', array());
 		
 		// Get post_id
 		$post_id = $request->getProperty('post_id');
@@ -40,8 +41,6 @@ class app_command_WorkspaceCompany extends app_command_Command
 		// Get clients contacted for this post
 		if (is_null($post_id) || $post_id == '' || $post_id == null || $post_id == 'null')
 		{
-			
-			echo 'count($company_posts_job_title) = ' . count($company_posts_job_title);
 			if (count($company_posts_job_title) > 0)
 			{
 				$post_id = $company_posts_job_title[0]['id'];

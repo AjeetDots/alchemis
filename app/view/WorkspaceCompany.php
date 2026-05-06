@@ -20,6 +20,10 @@ class app_view_WorkspaceCompany extends app_view_View
 		$this->smarty->assign('company', $this->request->getObject('company'));
 		$this->smarty->assign('company_posts_job_title', $this->request->getObject('company_posts_job_title'));
 		$this->smarty->assign('company_posts_first_name', $this->request->getObject('company_posts_first_name'));
+		$this->smarty->assign('companyTelephoneTpsStatus', (array) $this->request->getProperty('company_telephone_tps_status'));
+		$company = $this->request->getObject('company');
+		$parent_companies = is_object($company) ? $company->parents() : array();
+		$this->smarty->assign('parent_companies', $parent_companies);
 		
 		$this->smarty->assign('post', $this->request->getObject('post'));
 //		$this->smarty->assign('post_id', $this->request->getObject('post_id'));

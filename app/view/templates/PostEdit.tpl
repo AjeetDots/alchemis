@@ -63,11 +63,11 @@
 	
 	function clearContactDetails()
 	{
-		$("title").value = "";
-		$("first_name").value = "";
-		$("surname").value = "";
-		$("contact_telephone_mobile").value = "";
-		$("email").value = "";
+		$("app_domain_Contact_title").value = "";
+		$("app_domain_Contact_first_name").value = "";
+		$("app_domain_Contact_surname").value = "";
+		$("app_domain_Contact_telephone_mobile").value = "";
+		$("app_domain_Contact_email").value = "";
 	}
 	
 	{/literal}
@@ -113,9 +113,9 @@
           <tr>
 						<td>Data Source</td>
 						<td>
-              <select type="text" name="app_domain_Post_data_source_id" id="app_domain_Post_data_source_id" style="width:200px" />
+              <select type="text" name="app_domain_Post_data_source_id" id="app_domain_Post_data_source_id" style="width:200px">
                 {html_options options=$post_data_source_options selected=$post->getDataSourceId()}
-              </select
+              </select>
 					</tr>
 					
 					<tr>

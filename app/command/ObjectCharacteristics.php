@@ -237,6 +237,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
 
 
 
+                    $fallbackObjectCharacteristicId = null;
                     foreach ($characteristic['elements'] as $key => &$element) {
                         // Legacy data sometimes stores empty element data types.
                         // Normalize before lookup so helper mappers can return records.
@@ -254,8 +255,10 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             $element['object_characteristic_id']         = $record['object_characteristic_id'];
                             $element['object_characteristic_element_id'] = $record['id'];
                         } else {
-                            $record = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByCompanyIdAndCharacteristicId($id, $characteristic['id']);
-                            $element['object_characteristic_id'] = $record;
+                            if ($fallbackObjectCharacteristicId === null) {
+                                $fallbackObjectCharacteristicId = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByCompanyIdAndCharacteristicId($id, $characteristic['id']);
+                            }
+                            $element['object_characteristic_id'] = $fallbackObjectCharacteristicId;
                         }
 
                     }
@@ -275,6 +278,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
                     self::populateSimpleCharacteristicValue($characteristic, 'post', $id);
                 } else {
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
+                    $fallbackObjectCharacteristicId = null;
                     foreach ($characteristic['elements'] as &$element) {
                         if (!isset($element['data_type']) || $element['data_type'] === '') {
                             $element['data_type'] = 'text';
@@ -284,8 +288,10 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             $element['object_characteristic_id']         = $record['object_characteristic_id'];
                             $element['object_characteristic_element_id'] = $record['id'];
                         } else {
-                            $ocId = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostIdAndCharacteristicId($id, $characteristic['id']);
-                            $element['object_characteristic_id'] = $ocId;
+                            if ($fallbackObjectCharacteristicId === null) {
+                                $fallbackObjectCharacteristicId = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostIdAndCharacteristicId($id, $characteristic['id']);
+                            }
+                            $element['object_characteristic_id'] = $fallbackObjectCharacteristicId;
                         }
                     }
                     self::mergeOrphanSimpleTextIntoSingleTextElement($characteristic, 'post', $id);
@@ -302,6 +308,7 @@ class app_command_ObjectCharacteristics extends app_command_Command
                     self::populateSimpleCharacteristicValue($characteristic, 'post_initiative', $id);
                 } else {
                     $characteristic['elements'] = app_domain_CharacteristicElement::findByCharacteristicId($characteristic['id'])->toRawArray();
+                    $fallbackObjectCharacteristicId = null;
                     foreach ($characteristic['elements'] as &$element) {
                         if (!isset($element['data_type']) || $element['data_type'] === '') {
                             $element['data_type'] = 'text';
@@ -311,8 +318,10 @@ class app_command_ObjectCharacteristics extends app_command_Command
                             $element['object_characteristic_id']         = $record['object_characteristic_id'];
                             $element['object_characteristic_element_id'] = $record['id'];
                         } else {
-                            $ocId = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostInitiativeIdAndCharacteristicId($id, $characteristic['id']);
-                            $element['object_characteristic_id'] = $ocId;
+                            if ($fallbackObjectCharacteristicId === null) {
+                                $fallbackObjectCharacteristicId = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostInitiativeIdAndCharacteristicId($id, $characteristic['id']);
+                            }
+                            $element['object_characteristic_id'] = $fallbackObjectCharacteristicId;
                         }
                     }
                     self::mergeOrphanSimpleTextIntoSingleTextElement($characteristic, 'post_initiative', $id);

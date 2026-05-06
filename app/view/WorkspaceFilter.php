@@ -31,6 +31,7 @@ class app_view_WorkspaceFilter extends app_view_View
 			$this->smarty->assign('post', $this->request->getObject('post'));
 			$this->smarty->assign('contact_id', $this->request->getObject('contact_id'));
 			$this->smarty->assign('contact', $this->request->getObject('contact'));
+			$this->smarty->assign('companyTelephoneTpsStatus', (array) $this->request->getProperty('company_telephone_tps_status'));
 			
 			// workspace company screen vars
 			$this->smarty->assign('company_note_count', $this->request->getProperty('company_note_count'));
@@ -39,7 +40,7 @@ class app_view_WorkspaceFilter extends app_view_View
 			$this->smarty->assign('company_do_not_call', $this->request->getProperty('company_do_not_call'));
 			$company_id = $this->request->getObject('company_id');
 			$company = app_model_Company::find($company_id);
-			$parent_companies = $company->parents();
+			$parent_companies = is_object($company) ? $company->parents() : array();
 			$this->smarty->assign('parent_companies', $parent_companies);
 			
 			

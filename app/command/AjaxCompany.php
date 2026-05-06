@@ -19,6 +19,12 @@ require_once('app/mapper/PostInitiativeMapper.php');
  */
 class app_command_AjaxCompany extends app_command_AjaxCommand
 {
+	protected $company_id;
+	protected $company;
+	protected $initiative_id;
+	protected $note_id;
+	protected $note;
+
 	/**
 	 * Excute the command.
 	 */
@@ -203,7 +209,10 @@ class app_command_AjaxCompany extends app_command_AjaxCommand
 		// new object. Useful to return the new id
 		if ($this->request->item_id == null)
 		{
-			$this->request->item_id = $this->company->getId();
+			if (is_object($this->company))
+			{
+				$this->request->item_id = $this->company->getId();
+			}
 		}
 		
 		array_push($this->response->data, $this->request);
@@ -231,6 +240,7 @@ class app_command_AjaxCompany extends app_command_AjaxCommand
 	protected function getCompanyDetail()
 	{
 		$return_data = new stdClass();
+		$post = null;
 		
 		// Get note count
 		$company_note_count = app_domain_CompanyNote::findCountByCompanyId($this->company_id);
