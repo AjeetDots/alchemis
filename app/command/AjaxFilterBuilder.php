@@ -42,32 +42,6 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 	 */
 	public function execute()
 	{
-		// Debug log (runtime evidence) - written as NDJSON for this debug session.
-		// #region agent log: AjaxFilterBuilder request observed
-		try {
-			$logPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'debug-651a1a.log';
-			$cmdAction = isset($this->request->cmd_action) ? $this->request->cmd_action : null;
-			$itemId = isset($this->request->item_id) ? $this->request->item_id : null;
-			$groupLevel = isset($this->request->group_level) ? $this->request->group_level : null;
-			$fieldType = isset($this->request->field_type) ? $this->request->field_type : null;
-			$line = json_encode([
-				'sessionId' => '651a1a',
-				'runId' => 'before_debug',
-				'hypothesisId' => 'H_ENDPOINT_HIT',
-				'location' => 'app/command/AjaxFilterBuilder.php:execute',
-				'message' => 'AjaxFilterBuilder execute() entered',
-				'data' => [
-					'cmd_action' => $cmdAction,
-					'item_id' => $itemId,
-					'group_level' => $groupLevel,
-					'field_type' => $fieldType
-				],
-				'timestamp' => (int) (microtime(true) * 1000)
-			], JSON_UNESCAPED_SLASHES);
-			@file_put_contents($logPath, $line . PHP_EOL, FILE_APPEND | LOCK_EX);
-		} catch (_e) {}
-		// #endregion
-
 		$this->filter_builder = new app_domain_FilterBuilder();
 
 		// item_id is not present for all actions (e.g. get_filter_rows_html only sends type_id)
@@ -106,29 +80,37 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 				$this->request->filter_list = $this->makeFilterList($this->request->client_id);
 				break;
 			case 'get_filter_statistics':
-				// Allow up to 5 minutes for large filter statistics rebuild
-				set_time_limit(300);
-				$this->filter = app_domain_Filter::find($filter_id);
-				$filter_lines_include = app_domain_Filter::findFilterLinesByFilterIdAndDirection($filter_id, 'include');
-				$filter_lines_exclude = app_domain_Filter::findFilterLinesByFilterIdAndDirection($filter_id, 'exclude');
-				$results_format = $this->filter->getResultsFormat();
-				$this->filter_builder->makeSQLData($filter_id, $filter_lines_include, 'include');
-				$this->filter_builder->makeSQLData($filter_id, $filter_lines_exclude, 'exclude');
+				try
+				{
+					// Allow up to 5 minutes for large filter statistics rebuild
+					set_time_limit(300);
+					$this->filter = app_domain_Filter::find($filter_id);
+					$filter_lines_include = app_domain_Filter::findFilterLinesByFilterIdAndDirection($filter_id, 'include');
+					$filter_lines_exclude = app_domain_Filter::findFilterLinesByFilterIdAndDirection($filter_id, 'exclude');
+					$results_format = $this->filter->getResultsFormat();
+					$this->filter_builder->makeSQLData($filter_id, $filter_lines_include, 'include');
+					$this->filter_builder->makeSQLData($filter_id, $filter_lines_exclude, 'exclude');
 
-				$t = $this->filter_builder->makeMainSQL($filter_id, false, true);
+					$t = $this->filter_builder->makeMainSQL($filter_id, false, true);
 
-				app_domain_ObjectWatcher::remove($this->filter);
+					app_domain_ObjectWatcher::remove($this->filter);
+					$this->filter = app_domain_Filter::find($filter_id);
+				}
+				catch (Throwable $e)
+				{
+					// Keep existing stats so frontend remains usable even when refresh fails.
+					$this->filter = app_domain_Filter::find($filter_id);
+					$this->request->warning = 'Statistics refresh failed; showing last saved values.';
+				}
 
-				$this->filter = app_domain_Filter::find($filter_id);
-
-				$this->request->company_count = $this->filter->getCompanyCount();
-				$this->request->post_count = $this->filter->getPostCount();
+				$this->request->company_count = $this->filter ? $this->filter->getCompanyCount() : 0;
+				$this->request->post_count = $this->filter ? $this->filter->getPostCount() : 0;
 
 				// following three lines return name, results type and campaign name (optional) of the filter so these can be updated at the same time as the filter
 				// statistics if required.
-				$this->request->name = $this->filter->getName();
-				$this->request->results_format = $this->filter->getResultsFormat();
-				$this->request->campaign = $this->filter->getCampaignName();
+				$this->request->name = $this->filter ? $this->filter->getName() : '';
+				$this->request->results_format = $this->filter ? $this->filter->getResultsFormat() : '';
+				$this->request->campaign = $this->filter ? $this->filter->getCampaignName() : '';
 
 				break;
 			case 'save_filter':

@@ -86,11 +86,19 @@ if ($isDevelopment) {
     error_reporting(E_ERROR);
 }
 
-// Graph commands output binary PNG; prevent any PHP notice/warning from corrupting the image
-$graphCmd = isset($_GET['cmd']) ? $_GET['cmd'] : '';
-if ($graphCmd === 'DashboardGraph1' || $graphCmd === 'DashboardGraph2') {
+// Commands that stream binary/files (PNG/PDF/XLS) must never print warnings/notices,
+// otherwise browsers show "Failed to load PDF"/corrupt output in index.php?cmd=...
+$cmd = isset($_GET['cmd']) ? (string) $_GET['cmd'] : '';
+$isBinaryOutputCmd = (
+    $cmd === 'DashboardGraph1' ||
+    $cmd === 'DashboardGraph2' ||
+    strpos($cmd, 'ReportGraph') === 0 ||
+    preg_match('/^Report[0-9_]+$/', $cmd)
+);
+if ($isBinaryOutputCmd) {
     ini_set('display_errors', 0);
     ini_set('display_startup_errors', 0);
+    ini_set('html_errors', 0);
 }
 
 /*

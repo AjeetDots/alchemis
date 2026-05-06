@@ -17,6 +17,9 @@ require_once('app/mapper/SearchMapper.php');
  */
 class app_command_SearchResults extends app_command_Command
 {
+	protected $search_results_truncated = false;
+	protected $search_results_limit = 300;
+
 	public function doExecute(app_controller_Request $request)
 	{
 		// Get request parameters
@@ -226,6 +229,8 @@ class app_command_SearchResults extends app_command_Command
 			if (isset($total_results)) {
 				$request->setObject('total_pages', ceil($total_results / $page_size));
 			}
+			$request->setObject('search_results_truncated', $this->search_results_truncated);
+			$request->setObject('search_results_limit', $this->search_results_limit);
 		}
 		
 		return self::statuses('CMD_OK');
@@ -237,31 +242,81 @@ class app_command_SearchResults extends app_command_Command
 	 */
 	protected function getExtraCompanyInfo(&$companies)
 	{
+		if (!is_array($companies) || count($companies) == 0)
+		{
+			return;
+		}
+
+		if (count($companies) > $this->search_results_limit)
+		{
+			$companies = array_slice($companies, 0, $this->search_results_limit);
+			$this->search_results_truncated = true;
+		}
+
+		$company_ids = array();
+		foreach ($companies as $company)
+		{
+			if (isset($company['id']))
+			{
+				$company_ids[] = (int) $company['id'];
+			}
+		}
+		$company_ids = array_values(array_unique($company_ids));
+		if (count($company_ids) == 0)
+		{
+			return;
+		}
+
+		$db = app_controller_ApplicationHelper::instance()->DB();
+		$id_list = implode(',', $company_ids);
+
+		$site_map = array();
+		$site_query = 'SELECT s.company_id, s.address_1, s.address_2, s.town, s.city, s.postcode ' .
+					  'FROM vw_sites s ' .
+					  'INNER JOIN (' .
+					  '  SELECT company_id, MIN(id) AS id FROM vw_sites ' .
+					  '  WHERE company_id IN (' . $id_list . ') GROUP BY company_id' .
+					  ') first_site ON first_site.id = s.id';
+		$site_rows = $db->queryAll($site_query, null, MDB2_FETCHMODE_ASSOC);
+		if (is_array($site_rows))
+		{
+			foreach ($site_rows as $site)
+			{
+				$address = array(
+					'address_1' => isset($site['address_1']) ? $site['address_1'] : '',
+					'address_2' => isset($site['address_2']) ? $site['address_2'] : '',
+					'town'      => isset($site['town']) ? $site['town'] : '',
+					'city'      => isset($site['city']) ? $site['city'] : '',
+					'postcode'  => isset($site['postcode']) ? $site['postcode'] : ''
+				);
+				$site_map[(int) $site['company_id']] = app_domain_Site::formatAddress($address, 'paragraph');
+			}
+		}
+
+		$posts_map = array();
+		$post_query = 'SELECT id, company_id, job_title, full_name, telephone_1, propensity ' .
+					  'FROM vw_posts WHERE company_id IN (' . $id_list . ') ORDER BY company_id, job_title';
+		$post_rows = $db->queryAll($post_query, null, MDB2_FETCHMODE_ASSOC);
+		if (is_array($post_rows))
+		{
+			foreach ($post_rows as $post)
+			{
+				$cid = (int) $post['company_id'];
+				if (!isset($posts_map[$cid]))
+				{
+					$posts_map[$cid] = array();
+				}
+				$posts_map[$cid][] = $post;
+			}
+		}
+
 		foreach ($companies as &$company)
 		{
-			// Site
-			$finder = new app_mapper_SiteMapper();
-			$sites_collection = $finder->findByCompanyId($company['id']);
-			$sites = $sites_collection->toRawArray();
-			if (isset($sites[0]))
-			{
-				$address = array(	'address_1' => $sites[0]['address_1'],
-									'address_2' => $sites[0]['address_2'],
-									'town'      => $sites[0]['town'],
-									'city'      => $sites[0]['city'],
-									'postcode'  => $sites[0]['postcode']);
-				$company['site_address'] = app_domain_Site::formatAddress($address, 'paragraph');
-			}
-			else
-			{
-				$company['site_address'] = '';
-			}
-
-			// Posts
-			$finder = new app_mapper_PostMapper();
-			$posts_collection = $finder->findByCompanyId($company['id']);
-			$company['posts'] = $posts_collection->toRawArray();
+			$cid = (int) $company['id'];
+			$company['site_address'] = isset($site_map[$cid]) ? $site_map[$cid] : '';
+			$company['posts'] = isset($posts_map[$cid]) ? $posts_map[$cid] : array();
 		}
+		unset($company);
 	}
 	
 	/**
@@ -270,6 +325,16 @@ class app_command_SearchResults extends app_command_Command
 	 */
 	protected function getExtraContactInfo(&$contacts)
 	{
+		if (!is_array($contacts) || count($contacts) == 0)
+		{
+			return;
+		}
+		if (count($contacts) > $this->search_results_limit)
+		{
+			$contacts = array_slice($contacts, 0, $this->search_results_limit);
+			$this->search_results_truncated = true;
+		}
+
 		foreach ($contacts as &$contact)
 		{
 			$address = array(	'address_1' => $contact['address_1'],
@@ -279,6 +344,7 @@ class app_command_SearchResults extends app_command_Command
 								'postcode'  => $contact['postcode']);
 			$contact['site_address'] = app_domain_Site::formatAddress($address, 'paragraph');
 		}
+		unset($contact);
 	}
 
 }
