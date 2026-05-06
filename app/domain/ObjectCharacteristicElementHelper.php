@@ -94,6 +94,9 @@ class app_domain_ObjectCharacteristicElementHelper
 	public static function getRecordByCompanyId($element_id, $element_type, $company_id)
 	{
 		switch ($element_type) {
+			case 'boolean':
+				$finder = new app_mapper_ObjectCharacteristicElementBooleanMapper();
+				break;
 			case 'date':
 				$finder = new app_mapper_ObjectCharacteristicElementDateMapper();
 				break;
@@ -111,6 +114,9 @@ class app_domain_ObjectCharacteristicElementHelper
 	public static function getRecordByPostId($element_id, $element_type, $post_id)
 	{
 		switch ($element_type) {
+			case 'boolean':
+				$finder = new app_mapper_ObjectCharacteristicElementBooleanMapper();
+				break;
 			case 'date':
 				$finder = new app_mapper_ObjectCharacteristicElementDateMapper();
 				break;
@@ -128,6 +134,9 @@ class app_domain_ObjectCharacteristicElementHelper
 	public static function getRecordByPostInitiativeId($element_id, $element_type, $post_initiative_id)
 	{
 		switch ($element_type) {
+			case 'boolean':
+				$finder = new app_mapper_ObjectCharacteristicElementBooleanMapper();
+				break;
 			case 'date':
 				$finder = new app_mapper_ObjectCharacteristicElementDateMapper();
 				break;

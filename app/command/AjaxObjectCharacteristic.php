@@ -308,6 +308,25 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                     throw new app_base_MDB2Exception($res);
                 }
             }
+        } else {
+            // Checkbox-only characteristics submit no fields when everything is unchecked.
+            // Persist that intent by resetting all boolean element values to 0.
+            $characteristicId = (int) $characteristic->getId();
+            if ($characteristicId > 0 && $this->hasOnlyBooleanElements($db, $characteristicId)) {
+                $resetObjectCharacteristicId = $this->ensureObjectCharacteristicIdForParent(
+                    $characteristicId,
+                    $parent_object_type,
+                    (int) $parent_object_id
+                );
+                if ($resetObjectCharacteristicId > 0) {
+                    $elements_table = "tbl_object_characteristic_elements_boolean";
+                    $query = "UPDATE `".$elements_table."` SET `value` = '0' WHERE `object_characteristic_id` = ".$resetObjectCharacteristicId;
+                    $res = $db->exec($query);
+                    if (MDB2::isError($res)) {
+                        throw new app_base_MDB2Exception($res);
+                    }
+                }
+            }
         }
         return;
         die;
@@ -384,6 +403,32 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
             return false;
         }
         return ((int) $id > 0);
+    }
+
+    /**
+     * @param object $db
+     * @param int    $characteristicId
+     * @return bool
+     */
+    private function hasOnlyBooleanElements($db, $characteristicId)
+    {
+        if ($characteristicId < 1) {
+            return false;
+        }
+        $countAll = (int) $db->queryOne(
+            'SELECT COUNT(*) FROM tbl_characteristic_elements WHERE characteristic_id = ' . (int) $characteristicId
+        );
+        if (MDB2::isError($countAll) || $countAll < 1) {
+            return false;
+        }
+        $countNonBoolean = (int) $db->queryOne(
+            "SELECT COUNT(*) FROM tbl_characteristic_elements WHERE characteristic_id = " . (int) $characteristicId .
+            " AND (data_type IS NULL OR data_type = '' OR data_type <> 'boolean')"
+        );
+        if (MDB2::isError($countNonBoolean)) {
+            return false;
+        }
+        return ($countNonBoolean === 0);
     }
 
     /**

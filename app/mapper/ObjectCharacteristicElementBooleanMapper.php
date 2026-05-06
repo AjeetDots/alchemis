@@ -13,7 +13,7 @@ require_once('app/mapper/ObjectCharacteristicElementMapper.php');
 /**
  * @package Alchemis
  */
-class app_mapper_ObjectCharacteristicElementBooleanMapper
+class app_mapper_ObjectCharacteristicElementBooleanMapper extends app_mapper_ObjectCharacteristicElementMapper implements app_domain_ObjectCharacteristicElementBooleanFinder
 {
 	protected function init()
 	{
