@@ -1,6 +1,6 @@
 body
 {
-	background-color: #FFF;
+	background: #f2f5fa;
 	color: #333;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
@@ -29,18 +29,28 @@ form
 
 .button
 {
-	border: solid 1px #7F7F7F;
-	background: #ccc5b8;
-	color: #7F7F7F;
+	border: 1px solid #0f4f86;
+	background: #1f79c5;
+	color: #fff;
 	font-weight: bold;
 	font-size: 11px;
-	padding: 4px 6px;
+	padding: 5px 10px;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.button:hover
+{
+	background: #175f9b;
 }
 
 .login
 {
-	background: #EDEDED;
-	border: 1px solid #7F7F7F;
+	background: #ffffff;
+	border: 1px solid #cfd8e3;
+	border-radius: 5px;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 	margin-top: 6em;
 	margin-left: auto;
 	margin-right: auto;
@@ -89,9 +99,9 @@ form
 
 .form-block
 {
-/*	background-color: #999;*/
-	background-color: #036;
-	border: 1px solid #7F7F7F;
+	background-color: #0c4f85;
+	border: 1px solid #0a3e69;
+	border-radius: 4px;
 	padding: 15px 10px 10px 10px;
 }
 
@@ -104,8 +114,7 @@ form
 
 span.logintitle
 {
-/*	color: #999;*/
-	color: #036;
+	color: #0c4f85;
 	font-size: 24px;
 	display: block;
 	margin-bottom: 3px;
@@ -127,9 +136,12 @@ span.logintitle
 
 .inputbox
 {
-	border: 1px solid #7F7F7F;
+	border: 1px solid #a8b8cb;
+	border-radius: 3px;
 	width: 200px;
 	margin: 0 0 1em 0;
+	padding: 4px 5px;
+	box-sizing: border-box;
 }
 
 .clr

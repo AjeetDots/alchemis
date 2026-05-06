@@ -471,8 +471,19 @@ class app_report_Report6 extends FPDF
 	 */
 	protected static function array_field_average($array, $field)
 	{
-		$sum = self::array_field_sum($array, $field);
-		return number_format($sum / count($array));
+		$count = count($array);
+		if ($count === 0)
+		{
+			return number_format(0);
+		}
+
+		$sum = 0;
+		foreach ($array as $row)
+		{
+			$sum += $row[$field];
+		}
+
+		return number_format($sum / $count);
 	}
 
 }

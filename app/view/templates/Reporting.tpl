@@ -113,7 +113,7 @@ iframeLocation(		ifr_summary_reports, 'index.php?cmd=CampaignReportSummaries&cam
 						<a id="viewBtn_5" title="Run Report" href="#" onclick="javascript:runReport(5); return false;"><img src="{$APP_URL}app/view/images/icons/report_go.png" alt="Run Report" title="Run Report" /></a>
 					</td>
 					<td style="text-align: center; vertical-align: middle">
-						<a title="Run Report" href="http://212.48.87.174/birt-viewer/frameset?__report=/var/www/html/alchemis/app/birt/reports/Report5_ActivityReport.rptdesign&amp;uid={$md5_user_id}" target="_blank"><img src="{$APP_URL}app/view/images/icons/book_go.png" alt="Run Report" title="Run Report" /></a>
+						<a title="Run Report" href="/birt-viewer/frameset?__report=/var/www/html/alchemis/app/birt/reports/Report5_ActivityReport.rptdesign&amp;uid={$md5_user_id}" target="_blank"><img src="{$APP_URL}app/view/images/icons/book_go.png" alt="Run Report" title="Run Report" /></a>
 					</td>
 				</tr>
 				<tr id="rpt_6">

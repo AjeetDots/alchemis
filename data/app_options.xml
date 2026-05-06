@@ -18,7 +18,7 @@
 			<version>2.0.2</version>
 			<locale>en-GB</locale>
 			<!-- compile_check picks up .tpl edits via mtime; force_compile on every request was extremely slow on Docker (especially Windows bind mounts). Clear templates_c if a template change is not reflected. -->
-			<smarty_compile_check>true</smarty_compile_check>
+			<smarty_compile_check>false</smarty_compile_check>
 			<smarty_force_compile>false</smarty_force_compile>
 		</development>
 

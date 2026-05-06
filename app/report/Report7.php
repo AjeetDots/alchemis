@@ -1827,7 +1827,7 @@ class app_report_Report7 extends FPDF
 
 
 
-		if ($return[0]['call_effective_count'] == null || $return[0]['call_count'] == null)
+		if ($return[0]['call_effective_count'] == null || $return[0]['call_effective_count'] == 0 || $return[0]['call_count'] == null)
 		{
 			$return[0]['calls_per_effective'] = 0;
 		}
@@ -1848,7 +1848,7 @@ class app_report_Report7 extends FPDF
 			$return[0]['calls_reqd_to_deliver_ave_monthly_target'] = $return[0]['effs_reqd_to_deliver_ave_monthly_target'] * $return[0]['calls_per_effective'] * $numberOfMonths;
 		}
 
-		if ($return[0]['call_effective_count'] == null || $return[0]['call_ote_count'] == null)
+		if ($return[0]['call_effective_count'] == null || $return[0]['call_effective_count'] == 0 || $return[0]['call_ote_count'] == null)
 		{
 			$return[0]['call_ote_rate'] = 0;
 		}

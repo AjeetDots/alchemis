@@ -173,7 +173,7 @@ class app_command_ReportGraph8_1 extends app_command_Command
 		$scale = SCALE_ADDALLSTART0;
 		$num = $data1y[0] + $data2y[0];
 		if ($num <= 10) {
-			$scale = SCALE_NORMAL0;
+			$scale = SCALE_NORMAL;
 			$Test->VMin = 0;
 			$Test->VMax = 10;
 			$Test->Divisions = 5;

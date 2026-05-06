@@ -9,7 +9,7 @@
 		<meta name="robots" content="noindex,nofollow" />
 		<meta name="keywords" content="alchemis" />
 		<meta name="description" content="{$APP_NAME} - industry leading prospect relationship management software" />
-		<link href="{$APP_URL}app/view/styles/login.css" rel="stylesheet" type="text/css">
+		<link href="{$APP_URL}app/view/styles/login.css?v={$APP_VERSION|default:'1'}" rel="stylesheet" type="text/css">
 
 		<script language="JavaScript" type="text/javascript">
 		</script>
@@ -37,7 +37,7 @@
 							<div><input name="username" type="text" class="inputbox" size="15" value="{$username|escape}" /></div>
 							<div class="inputlabel">Password</div>
 							<div><input name="password" type="password" class="inputbox" size="15" value="" /></div>
-							<div align="left"><input type="submit" name="go" class="button" value="Login" /></div>
+							<div align="left"><input type="submit" name="go" class="button" value="Login" style="cursor: pointer;" /></div>
 						</div>
 					</form>
 

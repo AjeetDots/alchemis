@@ -8,6 +8,8 @@
  * @version   SVN: $Id$
  */
 
+require_once('app/base/Registry.php');
+
 if (!defined('BIRT_VIEWER'))
 {
 	define('BIRT_VIEWER', 'http://'. $_SERVER['SERVER_NAME'] . ':8080/birt-viewer');
@@ -42,14 +44,14 @@ class app_birt_BirtHelper
 	{
 		require_once('Smarty/Smarty.class.php');
 		$smarty = new Smarty();
-		$smarty->compile_check = true;
 		$smarty->template_dir  = BIRT_TEMPLATE_DIR;
 		$smarty->compile_dir   = BIRT_COMPILE_DIR;
+		$smarty->compile_check = (bool) app_base_ApplicationRegistry::getItem('smarty_compile_check');
 		
 		// Caching
 //		$smarty->cache_dir = SMARTY_CACHE_DIR;
 //		$smarty->caching = true;
-		$smarty->force_compile = true;
+		$smarty->force_compile = (bool) app_base_ApplicationRegistry::getItem('smarty_force_compile');
 		
 		// Debugging
 //		$smarty->debugging = true;

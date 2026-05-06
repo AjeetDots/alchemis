@@ -67,7 +67,7 @@ if (file_exists($envFile)) {
 $env = $_SERVER['ALCHEMIS_ENV'] ?? 'aws';
 $_SERVER['ALCHEMIS_ENV'] = $env;
 
-$isDevelopment = ($env === 'development');
+$isDevelopment = ($env === 'aws');
 
 if ($isDevelopment) {
 

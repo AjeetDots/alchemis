@@ -95,6 +95,8 @@
  define("SCALE_ADDALL",2);
  define("SCALE_START0",3);
  define("SCALE_ADDALLSTART0",4);
+// Backward compatibility for legacy code typo/alias.
+if (!defined("SCALE_NORMAL0")) define("SCALE_NORMAL0", SCALE_NORMAL);
  define("PIE_PERCENTAGE", 1);
  define("PIE_LABELS",2);
  define("PIE_NOLABEL",3);
