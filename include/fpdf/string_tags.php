@@ -26,6 +26,13 @@ var $iTagMaxElem;
 	/**
     	Constructor
 	*/
+	function __construct($p_tagmax = 2){
+		$this->string_tags($p_tagmax);
+	}
+
+	/**
+	 * Legacy constructor kept for backward compatibility with older runtimes.
+	 */
 	function string_tags($p_tagmax = 2){
 		$this->aTAGS = array();
 		$this->aHREF = array();
