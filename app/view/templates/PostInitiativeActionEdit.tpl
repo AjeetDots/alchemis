@@ -186,9 +186,9 @@ function submitform(pressbutton)
 			(for {$initiative_name})
 			<br />
 			<br />*}
-			<legend>{if $action_id}Edit{else}Add{/if} action for {$post->getJobTitle()}</legend>
+			<legend>{if $action_id}Edit{else}Add{/if} action for {if $post}{$post->getJobTitle()}{else}Unknown post{/if}</legend>
 			<br />
-			<strong>Post holder: {if $post->getContactName()}{$post->getContactName()}{else}Unknown{/if}</strong>
+			<strong>Post holder: {if $post && $post->getContactName()}{$post->getContactName()}{else}Unknown{/if}</strong>
 			<br /><br />
 			<strong>Client: {$initiative_name}</strong>
 			<br /><br />

@@ -24,6 +24,8 @@ class app_command_PostInitiativeActionEdit extends app_command_ManipulationComma
 {
 	public function doExecute(app_controller_Request $request)
 	{
+		$this->hydratePostInitiativeIdFromAction($request);
+
 		$task = $request->getProperty('task');
 		if ($task == 'save')
 		{
@@ -56,6 +58,52 @@ class app_command_PostInitiativeActionEdit extends app_command_ManipulationComma
 			}
 			$this->init($request);
 			return self::statuses('CMD_OK');
+		}
+	}
+
+	/**
+	 * Ensures post_initiative_id exists when editing by deriving it from action_id.
+	 * Some edit/save flows submit action_id without the hidden post_initiative_id field.
+	 *
+	 * @param app_controller_Request $request
+	 * @return void
+	 */
+	protected function hydratePostInitiativeIdFromAction(app_controller_Request $request)
+	{
+		if (!empty($request->getProperty('post_initiative_id')))
+		{
+			return;
+		}
+
+		$action_id = $request->getProperty('action_id');
+		if (empty($action_id))
+		{
+			// Some flows post app_domain_Action_id rather than action_id.
+			$action_id = $request->getProperty('app_domain_Action_id');
+		}
+		if (empty($action_id))
+		{
+			return;
+		}
+
+		$action = null;
+
+		// In communication flow, actions can be stored in session before persistence.
+		if ($request->getProperty('referrer_type') == 'communication'
+			&& isset($_SESSION['auth_session']['communication']['post_initiative_actions'][$action_id])
+			&& is_object($_SESSION['auth_session']['communication']['post_initiative_actions'][$action_id]))
+		{
+			$action = $_SESSION['auth_session']['communication']['post_initiative_actions'][$action_id];
+		}
+
+		if (!is_object($action))
+		{
+			$action = app_domain_Action::find($action_id);
+		}
+
+		if (is_object($action) && !empty($action->getPostInitiativeId()))
+		{
+			$request->setProperty('post_initiative_id', $action->getPostInitiativeId());
 		}
 	}
 
@@ -294,22 +342,30 @@ class app_command_PostInitiativeActionEdit extends app_command_ManipulationComma
 	 */
 	protected function init(app_controller_Request $request, $errors=null)
 	{
+		$this->hydratePostInitiativeIdFromAction($request);
+
 		// Pass thru' fields
 		$request->setProperty('referrer_type', $request->getProperty('referrer_type'));
 		$request->setProperty('post_initiative_id', $request->getProperty('post_initiative_id'));
 
 		$post_initiative_id = $request->getProperty('post_initiative_id');
 		if (empty($post_initiative_id)) {
-			throw new Exception('post_initiative_id is required but was not supplied.');
+			$request->addFeedback('No post initiative id supplied');
+			$request->setObject('post', null);
+			$request->setProperty('initiative_name', 'Unknown initiative');
+		} else {
+			$post_initiative = app_domain_PostInitiative::find($post_initiative_id);
+			if ($post_initiative === null) {
+				$request->addFeedback('Post initiative not found for id: ' . $post_initiative_id);
+				$request->setObject('post', null);
+				$request->setProperty('initiative_name', 'Unknown initiative');
+			} else {
+				$request->setObject('post', $post_initiative->getPost());
+				
+				$initiative_name = $post_initiative->getInitiative()->getClientName() . ': ' . $post_initiative->getInitiative()->getName(); 
+				$request->setProperty('initiative_name', $initiative_name);
+			}
 		}
-		$post_initiative = app_domain_PostInitiative::find($post_initiative_id);
-		if ($post_initiative === null) {
-			throw new Exception('PostInitiative not found for id: ' . $post_initiative_id);
-		}
-		$request->setObject('post', $post_initiative->getPost());
-		
-		$initiative_name = $post_initiative->getInitiative()->getClientName() . ': ' . $post_initiative->getInitiative()->getName(); 
-		$request->setProperty('initiative_name', $initiative_name);		
 		
 		// Set referrer
 		$request->setObject('referrer', $request->getProperty('referrer'));
