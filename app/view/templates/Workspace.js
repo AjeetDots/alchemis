@@ -1,7 +1,72 @@
-
 function popupWindow(target)
 {
 	showPopWin(target, 800, 400, null);
+}
+
+var __alchemisDialHintTimer = null;
+
+/** Clear delayed dial validation (e.g. user cancelled). */
+function alchemisCancelDialHint()
+{
+	if (__alchemisDialHintTimer) {
+		clearTimeout(__alchemisDialHintTimer);
+		__alchemisDialHintTimer = null;
+	}
+	var el = document.getElementById('dial-followup-msg');
+	if (el) {
+		el.style.display = 'none';
+	}
+}
+
+/** Dismissible notice when not in TPS popup (no #dial-followup-msg). */
+function alchemisShowDialGenericHint()
+{
+	var id = 'alchemis-dial-generic-hint';
+	var existing = document.getElementById(id);
+	if (existing && existing.parentNode) {
+		existing.parentNode.removeChild(existing);
+	}
+	var d = document.createElement('div');
+	d.id = id;
+	d.setAttribute('role', 'alert');
+	d.style.cssText = 'position:fixed;left:50%;top:18%;transform:translate(-50%,0);-webkit-transform:translate(-50%,0);max-width:440px;z-index:50000;padding:12px 14px;font-size:12px;line-height:1.35;color:#422;background:#fff8e6;border:2px solid #c9a227;box-shadow:0 3px 12px rgba(0,0,0,.2);font-family:Arial,Helvetica,sans-serif;text-align:left;';
+	d.innerHTML = 'If the dialer did not open, this browser or PC may block the phone link. Install <strong>Voispeed</strong> or ask IT to register the <strong>voispeed:</strong> protocol with Windows. Open Search Workspace from <strong>Home</strong> so the dial link can use the hidden frame. <a href="#" style="white-space:nowrap;font-weight:bold;">Dismiss</a>';
+	var a = d.getElementsByTagName('a')[0];
+	if (a) {
+		a.onclick = function(ev) {
+			if (ev && ev.preventDefault) {
+				ev.preventDefault();
+			}
+			if (d.parentNode) {
+				d.parentNode.removeChild(d);
+			}
+			return false;
+		};
+	}
+	try {
+		window.top.document.body.appendChild(d);
+	} catch (e) {
+		document.body.appendChild(d);
+	}
+}
+
+/** After Dial: if browser/OS did nothing, show validation (in-popup or overlay). */
+function alchemisScheduleDialHint()
+{
+	alchemisCancelDialHint();
+	var el = document.getElementById('dial-followup-msg');
+	if (el) {
+		el.style.display = 'none';
+	}
+	__alchemisDialHintTimer = setTimeout(function() {
+		__alchemisDialHintTimer = null;
+		var m = document.getElementById('dial-followup-msg');
+		if (m) {
+			m.style.display = 'block';
+			return;
+		}
+		alchemisShowDialGenericHint();
+	}, 3000);
 }
 
 function logCommunication(source_tab)
@@ -516,7 +581,20 @@ function AjaxCompany(data)
 				break;
 			case "dial_number_request":
 				var tempHtml = '<p style="text-align: center;padding-top:5px;"><span style="'+t.data[0].style+'">'+t.data[0].number+'</span>' + " "+ t.data[0].tpsStatus+"</p>";
-				tempHtml+= '<p style="text-align: center;"><a href="voispeed:'+t.data[0].number+'" style="'+t.data[0].style+'">[ DIAL ]</a>' + '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:$(\'popup_doCall\').popup.hide();">[ Cancel ]</a>'+"</p>";
+				// Real user click on voispeed: — required for Chrome to invoke the handler.
+				// target="alchemis_voispeed_dial" = hidden iframe on Home.tpl (avoids blank _blank tabs and iframe_5 breaking).
+				var dialNum = String(t.data[0].number != null ? t.data[0].number : '').replace(/\s/g, '').replace(/'/g, '%27');
+				var dialFrameMissing = false;
+				try {
+					dialFrameMissing = !(window.top && window.top.frames && window.top.frames['alchemis_voispeed_dial']);
+				} catch (e) {
+					dialFrameMissing = true;
+				}
+				if (dialFrameMissing) {
+					tempHtml += '<p id="dial-environment-msg" style="margin:6px 10px;padding:8px;font-size:11px;line-height:1.35;color:#700;background:#fdeaea;border:1px solid #c77;">Dial may not work in this tab: open <strong>Search Workspace</strong> from <strong>Home</strong> (main menu), or install the <strong>Voispeed</strong> client so Windows can handle <code>voispeed:</code> links.</p>';
+				}
+				tempHtml += '<p style="text-align: center;"><a href=\'voispeed:' + dialNum + '\' target=\'alchemis_voispeed_dial\' onclick="alchemisScheduleDialHint();" style="'+t.data[0].style+'">[ DIAL ]</a>' + '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:alchemisCancelDialHint();$(\'popup_doCall\').popup.hide();">[ Cancel ]</a></p>';
+				tempHtml += '<p id="dial-followup-msg" style="display:none;margin:8px 10px;padding:8px;font-size:11px;line-height:1.35;color:#553;background:#fff8e6;border:1px solid #d9a441;">If nothing happened, the browser did not open the phone software. Install <strong>Voispeed</strong> or ask IT to enable the <strong>voispeed:</strong> protocol. You can copy the number above and dial manually.</p>';
 				document.getElementById('call-to-dialog').innerHTML = tempHtml;
 				$('popup_doCall').popup.show();
 				break;

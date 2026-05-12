@@ -178,6 +178,8 @@
 					<iframe id="iframe_10" name="iframe_10" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 					<iframe id="iframe_11" name="iframe_11" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
 					<iframe id="iframe_12" name="iframe_12" src="" scrolling="auto" border="0" frameborder="no" style="display: none; height: 1000px; width: 100%; overflow-x: hidden; overflow-y: auto"></iframe>
+					{* Voispeed / custom protocol: links from workspace iframes target this so Chrome does not replace iframe_5 or open an about:blank tab. *}
+					<iframe id="alchemis_voispeed_dial" name="alchemis_voispeed_dial" title="" src="about:blank" style="position:absolute;width:0;height:0;border:0;left:0;top:0;opacity:0;pointer-events:none" aria-hidden="true"></iframe>
 				</div>
 			</div>
 		</div>

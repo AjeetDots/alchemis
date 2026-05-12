@@ -4,7 +4,7 @@
 	No search criteria specified. Please click on the <a href="#" onclick="javascript:parent.loadTab(6, 'Search');">Search</a> tab to perform a search.
 {else}
 	<script type="text/javascript" src="{$APP_URL}app/view/templates/WorkspaceSearch.js"></script>
-	<script type="text/javascript" src="{$APP_URL}app/view/templates/Workspace.js?date=03Sept2021"></script>
+	<script type="text/javascript" src="{$APP_URL}app/view/templates/Workspace.js?date=12May2026e"></script>
 	<table class="adminform" style="width: 100%;">
 		<tr>
 			<td{* width="800px"*} style="vertical-align: top;">

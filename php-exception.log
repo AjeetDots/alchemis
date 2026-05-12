@@ -2131,3 +2131,31 @@ Stack trace:
 #9 /var/www/html/index.php(200): app_controller_Controller::run()
 #10 {main}
 
+[2026-05-12 08:49:26] php_network_getaddresses: getaddrinfo for alchemis-mysql-upgrade.cswhqpuhwywg.eu-west-1.rds.amazonaws.com failed: No address associated with hostname in /var/www/html/include/pear/MDB2/Driver/mysqli.php on line 521
+Stack trace:
+#0 /var/www/html/include/pear/MDB2/Driver/mysqli.php(521): mysqli_real_connect(Object(mysqli), 'alchemis-mysql-...', 'alchemis', Object(SensitiveParameterValue), 'alchemis', '3306', '')
+#1 /var/www/html/include/pear/MDB2/Driver/mysqli.php(567): MDB2_Driver_mysqli->_doConnect('alchemis', 'rYT4maP7')
+#2 /var/www/html/include/pear/MDB2.php(1800): MDB2_Driver_mysqli->connect()
+#3 /var/www/html/include/pear/MDB2.php(2592): MDB2_Driver_Common->getConnection()
+#4 /var/www/html/app/controller/ApplicationHelper.php(224): MDB2_Driver_Common->query('SET NAMES utf8m...')
+#5 /var/www/html/app/mapper/RbacUserMapper.php(28): app_controller_ApplicationHelper->DB()
+#6 /var/www/html/app/domain/HelperFactory.php(30): app_mapper_RbacUserMapper->__construct()
+#7 /var/www/html/app/domain/DomainObject.php(129): app_domain_HelperFactory::getFinder('RbacUser')
+#8 /var/www/html/app/domain/RbacUser.php(434): app_domain_DomainObject::getFinder('app_domain_Rbac...')
+#9 /var/www/html/app/command/Command.php(100): app_domain_RbacUser::find(4585)
+#10 /var/www/html/app/command/Command.php(45): app_command_Command->initSessionUser()
+#11 /var/www/html/app/controller/Controller.php(246): app_command_Command->execute(Object(app_controller_Request))
+#12 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#13 /var/www/html/index.php(208): app_controller_Controller::run()
+#14 {main}
+
+[2026-05-12 08:53:27] Curl error: Connection timed out after 1001 milliseconds in /var/www/html/app/lib/Tps.php on line 127
+Stack trace:
+#0 /var/www/html/app/lib/Tps.php(38): app_lib_Tps::checkNumber('01914131981')
+#1 /var/www/html/app/command/AjaxCompany.php(56): app_lib_Tps::check('01914131981', true)
+#2 /var/www/html/app/controller/Controller.php(336): app_command_AjaxCompany->execute()
+#3 /var/www/html/app/controller/Controller.php(241): app_controller_Controller->handleAjaxRequest(Object(app_controller_Request))
+#4 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#5 /var/www/html/index.php(208): app_controller_Controller::run()
+#6 {main}
+

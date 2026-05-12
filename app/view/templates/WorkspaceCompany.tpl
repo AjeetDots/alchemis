@@ -59,7 +59,7 @@
 		
 		{*<td style="width: 99%; {if $company->getTelephoneTps()}color: red;{/if}"><span id="edit_company_telephone">{$company->getTelephone()}</span>*}{*&nbsp;&nbsp;<a href="#">Dial</a>*}{*}
 		&nbsp;&nbsp;&nbsp;
-		<a href="voispeed:{$company->getTelephone()|replace:' ':''}">
+		<a href="voispeed:{$company->getTelephone()|replace:' ':''}" target="alchemis_voispeed_dial" onclick="alchemisScheduleDialHint();">
 			[Dial]
 		</a>
 		&nbsp;|&nbsp;
