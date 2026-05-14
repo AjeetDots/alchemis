@@ -88,7 +88,7 @@ class app_command_Dashboard extends app_command_Command
 			$meeting_status_id = 18;
 		}
 //		$meetings = app_domain_Meeting::findByStatusId($meeting_status_id);
-//		$request->setObject('meetings', $meetings);
+		$request->setObject('meetings', array());
 //		$request->setObject('meeting_status_id', $meeting_status_id);
 
 		// Meeting status
@@ -128,12 +128,26 @@ class app_command_Dashboard extends app_command_Command
 		$request->setObject('client_selected', $client_id);
 		
 		// Targets
+		$default_targets = array(
+			'meeting_set_target'      => 0,
+			'meeting_attended_target' => 0,
+			'call_target'             => 0,
+			'call_effective_target'   => 0,
+			'conversion'              => 0,
+		);
 		$client_targets = app_domain_Client::findTargetsByClientIdAndYearmonth($client_id, date('Ym'));
-		$request->setObject('client_targets', $client_targets);
-		
+		$request->setObject('client_targets', array_merge($default_targets, $client_targets ?: array()));
+
 		// Actuals
+		$default_actuals = array(
+			'meeting_set_count'       => 0,
+			'meeting_attended_count'  => 0,
+			'call_count'              => 0,
+			'call_effective_count'    => 0,
+			'conversion'              => 0,
+		);
 		$client_actuals = app_domain_Client::findActualsByClientIdAndYearmonth($client_id, date('Ym'));
-		$request->setObject('client_actuals', $client_actuals);
+		$request->setObject('client_actuals', array_merge($default_actuals, $client_actuals ?: array()));
 //		echo '<pre>';
 //		print_r($top_line_stats);
 //		echo '</pre>';

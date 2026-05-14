@@ -15,6 +15,9 @@ require_once('app/mapper/ShadowMapper.php');
  */
 class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements app_domain_PostInitiativeFinder
 {
+	const SQL_POST_CONTACT_COLUMNS = 'p.job_title, p.deleted AS post_deleted, con.full_name ';
+	const SQL_POST_CONTACT_JOIN    = 'LEFT JOIN tbl_contacts AS con ON p.id = con.post_id ';
+
 	/**
 	 * Whether post initiative and shadow tables both support data source columns.
 	 * Null means unknown and will be lazy-evaluated.
@@ -421,7 +424,8 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 		$query = 'SELECT com.id, com.status_id, pi.id as post_initiative_id, lkp_cs.description AS status, old_status, lkp_u.name AS user_name, com.comments, ' .
 				'pin.id as note_id, pin.note, com.communication_date as note_created_at, com.next_communication_date, com.has_attachment, ' .
 				'com.effective, com.decision_maker_type_id, lkp_ct.description as communication_type, p.company_id, cn.user_alias AS user_client_alias, ' .
-				'm.id AS meeting_id, m.date as meeting_date, ir.id AS information_request_id ' .
+				'm.id AS meeting_id, m.date as meeting_date, ir.id AS information_request_id, ' .
+				self::SQL_POST_CONTACT_COLUMNS .
 				'FROM tbl_communications AS com ' .
 				'LEFT JOIN tbl_post_initiative_notes AS pin ON com.note_id = pin.id ' .
 				'LEFT JOIN tbl_post_initiatives AS pi ON pi.id = com.post_initiative_id ' .
@@ -430,6 +434,7 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 				'LEFT JOIN tbl_lkp_communication_types AS lkp_ct ON com.type_id = lkp_ct.id ' .
 				'LEFT JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 				'LEFT JOIN tbl_posts AS p ON pi.post_id = p.id ' .
+				self::SQL_POST_CONTACT_JOIN .
 				'LEFT JOIN tbl_campaign_nbms AS cn ON vw_ci.campaign_id = cn.campaign_id AND com.user_id = cn.user_id ' .
 				'LEFT JOIN tbl_meetings AS m ON com.id = m.communication_id ' .
 				'LEFT JOIN tbl_actions AS ir ON com.id = ir.communication_id and ir.type_id = 2 ' .
@@ -438,13 +443,15 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 				'AND com.id is not null ' .
 				'UNION ' .
 				'SELECT null, null, null, null, null, lkp_u.name AS user_name, null, pin.id as note_id, pin.note, pin.created_at AS note_created_at, ' .
-				'null, null, null, null, null, null, p.company_id, null, null, null ' .
+				'null, null, null, null, null, null, p.company_id, null, null, null, ' .
+				self::SQL_POST_CONTACT_COLUMNS .
 				'FROM tbl_post_initiative_notes AS pin ' .
 				'LEFT JOIN tbl_post_initiatives pi ON pi.id = pin.post_initiative_id ' .
 				'LEFT JOIN tbl_communications AS com ON com.note_id = pin.id ' .
 				'LEFT JOIN tbl_rbac_users AS lkp_u ON pin.created_by = lkp_u.id ' .
 				'LEFT JOIN vw_client_initiatives AS vw_ci ON pi.initiative_id = vw_ci.initiative_id ' .
 				'LEFT JOIN tbl_posts AS p ON pi.post_id = p.id ' .
+				self::SQL_POST_CONTACT_JOIN .
 				'WHERE p.company_id = ' . self::$DB->quote($company_id, 'integer') . ' ' .
 				'AND pi.initiative_id = ' . self::$DB->quote($initiative_id, 'integer') . ' ' .
 				'AND com.note_id is null ' .
@@ -463,7 +470,8 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 		$query = 'SELECT com.id, com.status_id, pi.id as post_initiative_id, lkp_cs.description AS status, old_status, lkp_u.name AS user_name, com.comments, ' .
 				'pin.id as note_id, pin.note, pin.summary, pint.type as post_initiative_note_type, com.communication_date as note_created_at, com.next_communication_date, com.has_attachment, ' .
 				'com.effective, com.decision_maker_type_id, lkp_ct.description as communication_type, p.company_id, cn.user_alias AS user_client_alias, ' .
-				'm.id AS meeting_id, m.date as meeting_date, ir.id AS information_request_id ' .
+				'm.id AS meeting_id, m.date as meeting_date, ir.id AS information_request_id, ' .
+				self::SQL_POST_CONTACT_COLUMNS .
 				'FROM tbl_communications AS com ' .
 				'LEFT JOIN tbl_post_initiative_notes AS pin ON com.note_id = pin.id ' .
 				'LEFT JOIN tbl_lkp_post_initiative_note_types AS pint ON pin.note_type_id = pint.id ' .
@@ -473,6 +481,7 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 				'LEFT JOIN tbl_lkp_communication_types AS lkp_ct ON com.type_id = lkp_ct.id ' .
 				'LEFT JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
 				'LEFT JOIN tbl_posts AS p ON pi.post_id = p.id ' .
+				self::SQL_POST_CONTACT_JOIN .
 				'LEFT JOIN tbl_campaign_nbms AS cn ON i.campaign_id = cn.campaign_id AND com.user_id = cn.user_id ' .
 				'LEFT JOIN tbl_meetings AS m ON com.id = m.communication_id ' .
 				'LEFT JOIN tbl_actions AS ir ON com.id = ir.communication_id and ir.type_id = 2 ' .
@@ -480,7 +489,8 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 				'AND com.id is not null ' .
 				'UNION ' .
 				'SELECT null, null, null, null, null, lkp_u.name AS user_name, null, pin.id as note_id, pin.note, pin.summary, pint.type as post_initiative_note_type, pin.created_at AS note_created_at, ' .
-				'null, null, null, null, null, null, p.company_id, null, null, null ' .
+				'null, null, null, null, null, null, p.company_id, null, null, null, ' .
+				self::SQL_POST_CONTACT_COLUMNS .
 				'FROM tbl_post_initiative_notes AS pin ' .
 				'LEFT JOIN tbl_lkp_post_initiative_note_types AS pint ON pin.note_type_id = pint.id ' .
 				'LEFT JOIN tbl_post_initiatives pi ON pi.id = pin.post_initiative_id ' .
@@ -488,6 +498,7 @@ class app_mapper_PostInitiativeMapper extends app_mapper_ShadowMapper implements
 				'LEFT JOIN tbl_rbac_users AS lkp_u ON pin.created_by = lkp_u.id ' .
 				'LEFT JOIN tbl_initiatives AS i ON pi.initiative_id = i.id ' .
 				'LEFT JOIN tbl_posts AS p ON pi.post_id = p.id ' .
+				self::SQL_POST_CONTACT_JOIN .
 				'WHERE pi.id = ' . self::$DB->quote($id, 'integer') . ' ' .
 				'AND com.note_id is null ' .
 				'ORDER BY note_created_at DESC';

@@ -70,8 +70,7 @@ class app_view_Dashboard extends app_view_View
 		// Today's meetings
 		$todays_meetings = $this->request->getObject('todays_meetings');
 		$this->smarty->assign('todays_meetings', $todays_meetings);
-//		$meetings = $this->request->getObject('meetings');
-//		$this->smarty->assign('meetings', $meetings);
+		$this->smarty->assign('meetings', $this->request->getObject('meetings') ?: array());
 
 		// Meetings of a given status
 		$this->smarty->assign('meeting_statuses',  $this->request->getObject('meeting_statuses'));
