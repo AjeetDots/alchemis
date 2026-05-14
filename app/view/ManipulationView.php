@@ -17,6 +17,12 @@ require_once('app/view/View.php');
  */
 abstract class app_view_ManipulationView extends app_view_View
 {
+	public function execute()
+	{
+		$this->smarty->assign('errors', array());
+		parent::execute();
+	}
+
 	/**
 	 * Handles any validation errors which need to be assigned to smarty.
 	 */

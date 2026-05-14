@@ -35,8 +35,6 @@ class app_view_MessageCreate extends app_view_ManipulationView
 		$this->smarty->assign('success', $this->request->getProperty('success'));
 		$this->smarty->assign('feedback', $this->request->getFeedbackString('</li><li>'));
 		
-		$this->smarty->assign('errors', array());
-
 		// Handle any validation errors
 		if ($this->request->isValidationError())
 		{
