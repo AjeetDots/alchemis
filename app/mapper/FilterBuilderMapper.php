@@ -117,7 +117,7 @@ class app_mapper_FilterBuilderMapper extends app_mapper_Mapper implements app_do
 		{
 			case 'Company':
 			case 'Site':
-				$query = 	'SELECT c.id, pc.name as parent_company, c.name, c.website, c.telephone, c.telephone_tps, s.town, s.postcode, fr.post_count ' .
+				$query = 	'SELECT c.id, pc.name as parent_company, c.name, c.website, c.telephone, c.telephone_tps, s.town, s.postcode, fr.post_count, NULL as post_id ' .
 							'FROM tbl_filter_results fr ' .
 							'LEFT JOIN tbl_companies c on c.id = fr.company_id ' .
 							'LEFT OUTER JOIN tbl_parent_company pc on pc.id = c.parent_company_id ' .

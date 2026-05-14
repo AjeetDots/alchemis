@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(grep -v \"__construct\\\\|//\")",
-      "Read(//c/Users/Admin/AppData/Local/Temp/fz3temp-2/**)"
+      "Read(//c/Users/Admin/AppData/Local/Temp/fz3temp-2/**)",
+      "Bash(rm \"d:/Projects/Alchemis/latest/latest_new_bkp/app/view/templates_c/%%32^32C^32CF3BFA%%FilterResultsCompanies.tpl.php\")"
+    ],
+    "additionalDirectories": [
+      "d:\\Projects\\Alchemis\\latest\\latest_new_bkp\\app\\view\\templates_c"
     ]
   }
 }

@@ -547,7 +547,7 @@ class Utils
 	 * @access public
 	 * @static
 	 */
-	function convertBytes($bytes, $unit, $precision = 0)
+	static function convertBytes($bytes, $unit, $precision = 0)
 	{
 		if (is_null($unit) || empty($unit))
 		{

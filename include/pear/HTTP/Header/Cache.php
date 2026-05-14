@@ -58,9 +58,9 @@ class HTTP_Header_Cache extends HTTP_Header
      * @param   int     $expires 
      * @param   string  $unit
      */
-    function HTTP_Header_Cache($expires = 0, $unit = 'seconds')
+    public function __construct($expires = 0, $unit = 'seconds')
     {
-        parent::HTTP_Header();
+        parent::__construct();
         $this->setHeader('Pragma', 'cache');
         $this->setHeader('Last-Modified', $this->getCacheStart());
         $this->setHeader('Cache-Control', 'private, must-revalidate, max-age=0');
