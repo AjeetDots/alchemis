@@ -89,6 +89,7 @@ class app_command_AjaxPostInitiative extends app_command_AjaxCommand
 				$this->request->information_requests_list = $this->displayInformationRequests($this->request->item_id, $this->request->post_id, $this->request->company_id, $this->request->source_tab);
 				break;
 			case 'delete_last_call':
+				$this->request->cmd_action = 'delete_last_call';
 				$this->request->return_data = $this->deleteLastCall($this->request->post_initiative_id);
 				break;	
 			case 'display_project_refs':
@@ -202,21 +203,30 @@ class app_command_AjaxPostInitiative extends app_command_AjaxCommand
 	protected function deleteLastCall($post_initiative_id)
 	{
 		$result = true;
+		$feedback = '';
 		$do_delete_communication = false;
 		$found_information_request = false;
 		$found_meeting = false;
 		$found_actions = false;
+		$meeting = null;
+		$post_initiative = null;
 		
-		//get max communication id
+		//get max telephone communication id (type 1)
 		$max_communication_id = app_domain_Communication::doFindByPostInitiativeIdAndTypeId($post_initiative_id, 1);
 		if (is_null($max_communication_id))
 		{
 			$result = false;
-			$feedback = 'No communications found';
+			$feedback = 'No telephone communications found';
 		}
 		else
 		{
 			$communication_to_delete = app_domain_Communication::find($max_communication_id);
+			if (!$communication_to_delete) {
+				$result = false;
+				$feedback = 'Communication record could not be loaded';
+			}
+			else
+			{
 			//check that we are able to process this - ie check previous communication wasn't meeting related
 			switch ($communication_to_delete->getStatusId())
 			{
@@ -381,7 +391,15 @@ class app_command_AjaxPostInitiative extends app_command_AjaxCommand
 				// delete the communication
 				$communication_to_delete->markDeleted();
 				$communication_to_delete->commit();
-			}		
+			}
+			}
+		}
+
+		if ($result && !$do_delete_communication) {
+			$result = false;
+			if ($feedback === '') {
+				$feedback = 'The last telephone communication could not be deleted';
+			}
 		}
 	
 		
@@ -389,7 +407,7 @@ class app_command_AjaxPostInitiative extends app_command_AjaxCommand
 		$return_data->result = $result;
 		$return_data->feedback = $feedback;
 		
-		if ($result)
+		if ($result && $post_initiative)
 		{
 			$return_data->post_id = $post_initiative->getPostId();
 			$return_data->initiative_id = $post_initiative->getInitiativeId();

@@ -44,13 +44,6 @@ class app_mapper_ObjectCharacteristicHelperMapper
 		
 		$query = 'SELECT data_type FROM tbl_characteristics WHERE id = ' . self::$DB->quote($characteristic_id, 'integer');
 		$data_type = self::$DB->queryOne($query);
-		
-		// Determine which table we should look in
-		$table_name = 'tbl_object_characteristics';
-//		if (in_array($data_type, array('boolean', 'date', 'text')))
-//		{
-//			$table_name .= '_' . $data_type;
-//		}
 
 		switch ($parent_object_type)
 		{
@@ -69,15 +62,75 @@ class app_mapper_ObjectCharacteristicHelperMapper
 			default:
 				throw new Exception('Unknown parent object type: ' . $parent_object_type);
 		}
-		
-		// Construct query
-		$query = 'SELECT id FROM ' . $table_name . ' WHERE characteristic_id = ' . self::$DB->quote($characteristic_id, 'integer') . ' ' .
+
+		$tables = array('tbl_object_characteristics');
+		if (in_array($data_type, array('boolean', 'date', 'text'), true)) {
+			array_unshift($tables, 'tbl_object_characteristics_' . $data_type);
+		}
+
+		foreach ($tables as $table_name) {
+			$query = 'SELECT id FROM ' . $table_name . ' WHERE characteristic_id = ' . self::$DB->quote($characteristic_id, 'integer') . ' ' .
 				'AND ' . $parent_id_field . ' = ' . self::$DB->quote($parent_object_id, 'integer') . ' ' .
 				'ORDER BY id DESC LIMIT 1';
-		
-		
-		$result = self::$DB->queryOne($query);
-		return $result;
+			$result = self::$DB->queryOne($query);
+			if (!empty($result)) {
+				return $result;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Remove all object-characteristic rows (and element values) for a parent/characteristic pair.
+	 */
+	public function deleteByParentObjectAndCharacteristicId($parent_object_id, $parent_object_type, $characteristic_id)
+	{
+		switch ($parent_object_type)
+		{
+			case 'app_domain_Company':
+				$parent_id_field = 'company_id';
+				break;
+			case 'app_domain_Post':
+				$parent_id_field = 'post_id';
+				break;
+			case 'app_domain_PostInitiative':
+				$parent_id_field = 'post_initiative_id';
+				break;
+			default:
+				throw new Exception('Unknown parent object type: ' . $parent_object_type);
+		}
+
+		$parent_object_id = (int) $parent_object_id;
+		$characteristic_id = (int) $characteristic_id;
+		$parentClause = $parent_id_field . ' = ' . self::$DB->quote($parent_object_id, 'integer');
+		$charClause = 'characteristic_id = ' . self::$DB->quote($characteristic_id, 'integer');
+
+		$baseIds = self::$DB->queryCol(
+			'SELECT id FROM tbl_object_characteristics WHERE ' . $charClause . ' AND ' . $parentClause
+		);
+		if (is_array($baseIds)) {
+			foreach ($baseIds as $ocId) {
+				$ocId = (int) $ocId;
+				if ($ocId < 1) {
+					continue;
+				}
+				foreach (array('boolean', 'text', 'date') as $elementType) {
+					self::$DB->exec(
+						'DELETE FROM tbl_object_characteristic_elements_' . $elementType .
+						' WHERE object_characteristic_id = ' . $ocId
+					);
+				}
+			}
+			self::$DB->exec('DELETE FROM tbl_object_characteristics WHERE ' . $charClause . ' AND ' . $parentClause);
+		}
+
+		foreach (array('boolean', 'text', 'date') as $typedTable) {
+			self::$DB->exec(
+				'DELETE FROM tbl_object_characteristics_' . $typedTable .
+				' WHERE ' . $charClause . ' AND ' . $parentClause
+			);
+		}
 	}
 
 	/**

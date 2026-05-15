@@ -167,6 +167,12 @@ class app_domain_ObjectCharacteristicHelper
 		return $finder->getObjectCharacteristicIdByParentObjectIdAndCharacteristicId($post_initiative_id, 'app_domain_PostInitiative', $characteristic_id);
 	}
 
+	public static function deleteByParentObjectAndCharacteristicId($parent_object_id, $parent_object_type, $characteristic_id)
+	{
+		$finder = new app_mapper_ObjectCharacteristicHelperMapper();
+		$finder->deleteByParentObjectAndCharacteristicId($parent_object_id, $parent_object_type, $characteristic_id);
+	}
+
 }
 
 ?>

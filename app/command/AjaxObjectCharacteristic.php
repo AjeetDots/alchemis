@@ -46,27 +46,24 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
             break;
 
         case 'delete_object_characteristic':
-            $characteristic_id = $this->request->characteristic_id;
-            $characteristic_data_type = app_domain_Characteristic::lookupDataType($characteristic_id);
+            $characteristic_id = (int) $this->request->characteristic_id;
+            $parent_object_id = (int) $this->request->parent_object_id;
+            $parent_object_type = $this->request->parent_object_type;
 
-            switch ($this->request->parent_object_type)
-            {
-            case 'app_domain_Company':
-                $object_characteristic_id = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByCompanyIdAndCharacteristicId($this->request->parent_object_id, $characteristic_id);
-                break;
-
-            case 'app_domain_Post':
-                $object_characteristic_id = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostIdAndCharacteristicId($this->request->parent_object_id, $characteristic_id);
-                break;
-
-            case 'app_domain_PostInitiative':
-                $object_characteristic_id = app_domain_ObjectCharacteristicHelper::getObjectCharacteristicIdByPostInitiativeIdAndCharacteristicId($this->request->parent_object_id, $characteristic_id);
+            if ($characteristic_id < 1 || $parent_object_id < 1 || $parent_object_type === '') {
+                $this->response->warnings[] = 'Unable to delete characteristic: missing parent or characteristic id.';
                 break;
             }
 
-            $object_characteristic = app_domain_ObjectCharacteristicHelper::factory($characteristic_data_type, $object_characteristic_id);
-            $object_characteristic->markDeleted();
-            $object_characteristic->commit();
+            try {
+                app_domain_ObjectCharacteristicHelper::deleteByParentObjectAndCharacteristicId(
+                    $parent_object_id,
+                    $parent_object_type,
+                    $characteristic_id
+                );
+            } catch (Throwable $e) {
+                $this->response->warnings[] = 'Could not delete characteristic.';
+            }
             break;
 
         case 'save_object_characteristic':
