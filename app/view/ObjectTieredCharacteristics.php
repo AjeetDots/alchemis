@@ -44,6 +44,8 @@ class app_view_ObjectTieredCharacteristics extends app_view_View
 		
 		$this->smarty->assign('category_id', $this->request->getObject('category_id'));
 		$this->smarty->assign('category', $this->request->getProperty('category'));
+		$this->smarty->assign('errors', array());
+		$this->smarty->assign('tier', $this->request->getProperty('tier') ?: 1);
 		$this->smarty->display('ObjectTieredCharacteristics.tpl');
 	}
 }
