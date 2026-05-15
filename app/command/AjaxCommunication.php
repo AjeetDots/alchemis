@@ -121,7 +121,7 @@ class app_command_AjaxCommunication extends app_command_AjaxCommand
 					// Instantiate the communication at this point so we can set the last_communication_id in tbl_post_initiative
 					$communication = new app_domain_Communication();
 					$communication->setPostInitiativeId($post_initiative->getId());
-					$communication->setCommunicationDate(date('Y-m-d H:i:s'));
+					$communication->setCommunicationDate(Utils::getTimestamp());
 					$communication->setUserId($_SESSION['auth_session']['user']['id']);
 					$communication->setTypeId(1);
 					$communication->setDirection('out');

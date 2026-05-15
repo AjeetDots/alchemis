@@ -105,7 +105,7 @@ class app_command_CommunicationCreate extends app_command_ManipulationCommand
 		$communication->setUserId($_SESSION['auth_session']['user']['id']);
 		$communication->setLeadSourceId($request->getProperty('lead_source_id'));
 		$communication->setTypeId(1);
-		$communication->setCommunicationDate(date('Y-m-d H:i:s'));
+		$communication->setCommunicationDate(Utils::getTimestamp());
 		$communication->setDirection('out');
 		$communication->setNextActionBy($request->getProperty('next_action_by'));
 

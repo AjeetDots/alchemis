@@ -55,14 +55,19 @@ class Utils
 
 
 	/**
-	 * Returns the current local datetime in the form 'YYYY-MM-DD HH:MM:SS', as required by MySQL.
+	 * Returns the current datetime in UK local time (Europe/London, GMT/BST).
 	 * @return string the current datetime in the form 'YYYY-MM-DD HH:MM:SS'.
 	 * @access public
 	 * @static
 	 */
 	public static function getTimestamp()
 	{
-		return date('Y-m-d H:i:s');
+		$tzName = getenv('ALCHEMIS_TIMEZONE');
+		if ($tzName === false || $tzName === '') {
+			$tzName = $_SERVER['ALCHEMIS_TIMEZONE'] ?? 'Europe/London';
+		}
+		$dt = new DateTime('now', new DateTimeZone($tzName));
+		return $dt->format('Y-m-d H:i:s');
 	}
 
 

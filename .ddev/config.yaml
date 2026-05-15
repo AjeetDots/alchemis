@@ -58,11 +58,9 @@ default_container_timeout: "240"
 
 # webserver_type: nginx-fpm, apache-fpm, or nginx-gunicorn
 
-# timezone: Europe/Berlin
-# This is the timezone used in the containers and by PHP;
-# it can be set to any valid timezone,
-# see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-# For example Europe/Dublin or MST7MDT
+timezone: Europe/London
+# PHP and container clocks use UK local time (GMT/BST).
+# Override app timezone via ALCHEMIS_TIMEZONE in web_environment if needed.
 
 # composer_root: <relative_path>
 # Relative path to the Composer root directory from the project root. This is

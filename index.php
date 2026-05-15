@@ -9,13 +9,8 @@ spl_autoload_register(function ($classname) {
     }
 });
 
-// Ensure a consistent timezone across environments so all date('...')
-// calls (used in dashboard reports, campaign progress and planners)
-// resolve to the same calendar day/month whether running on legacy
-// PHP/MySQL or the upgraded stack. Live is UK-based, so use London.
-if (!ini_get('date.timezone')) {
-    date_default_timezone_set('Europe/London');
-}
+// UK local time (GMT/BST). Always apply so php.ini UTC does not store times 1h behind in summer.
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bootstrap_timezone.php';
 
 // Fix browser blocking scripts so Administration / Campaign View toggles work.
 if (!headers_sent()) {

@@ -307,7 +307,6 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
             }
         } else {
             // Checkbox-only characteristics submit no fields when everything is unchecked.
-            // Persist that intent by resetting all boolean element values to 0.
             $characteristicId = (int) $characteristic->getId();
             if ($characteristicId > 0 && $this->hasOnlyBooleanElements($db, $characteristicId)) {
                 $resetObjectCharacteristicId = $this->ensureObjectCharacteristicIdForParent(
@@ -323,6 +322,11 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                         throw new app_base_MDB2Exception($res);
                     }
                 }
+            } elseif ($characteristicId > 0
+                && !$characteristic->hasAttributes()
+                && !$characteristic->hasOptions()
+                && $characteristic->getDataType() === 'boolean') {
+                $this->resetSimpleBooleanValue($db, $characteristicId, $parent_object_type, (int) $parent_object_id);
             }
         }
         return;
@@ -341,6 +345,29 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
      * @param int $parent_object_id
      * @return int|null existing row id or null
      */
+    private function resetSimpleBooleanValue($db, $characteristicId, $parent_object_type, $parent_object_id)
+    {
+        if ($characteristicId < 1 || $parent_object_id < 1) {
+            return;
+        }
+        $table = 'tbl_object_characteristics_boolean';
+        switch ($parent_object_type) {
+            case 'app_domain_Post':
+                $where = 'characteristic_id = ' . (int) $characteristicId . ' AND post_id = ' . (int) $parent_object_id;
+                break;
+            case 'app_domain_PostInitiative':
+                $where = 'characteristic_id = ' . (int) $characteristicId . ' AND post_initiative_id = ' . (int) $parent_object_id;
+                break;
+            default:
+                $where = 'characteristic_id = ' . (int) $characteristicId . ' AND company_id = ' . (int) $parent_object_id;
+                break;
+        }
+        $res = $db->exec('UPDATE `' . $table . '` SET `value` = 0 WHERE ' . $where);
+        if (MDB2::isError($res)) {
+            throw new app_base_MDB2Exception($res);
+        }
+    }
+
     private function findExistingSimpleValueRowId($db, $simple_table, $item, $parent_object_type, $parent_object_id)
     {
         $charId = (int) $item[1];

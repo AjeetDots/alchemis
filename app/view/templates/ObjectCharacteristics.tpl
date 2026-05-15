@@ -830,16 +830,15 @@ popup would close as soon as the mouse rolled off, rather than when the user cli
 												<tr class="current">
 													<td>
 														{if $characteristic.data_type == 'boolean'}
-															<input type="radio"
+															<input type="hidden"
+																   name="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_boolean"
+																   value="0" />
+															<input type="checkbox"
 																   id="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_boolean"
 																   name="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_boolean"
-																   value="1"{if $characteristic.value == 1} checked="checked"{/if} />
-															Yes
-															<input type="radio"
-																   id="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_boolean"
-																   name="0_{$characteristic.id}_0_0_{$characteristic.object_characteristic_value_id}_0_boolean"
-																   value="0"{if $characteristic.value == 0} checked="checked"{/if} />
-															No
+																   value="1"{if $characteristic.value == 1} checked="checked"{/if}
+																   title="Yes" />
+															<img src="{$ROOT_PATH}app/view/images/icons/tick.png" alt="Yes" title="Tick for yes" style="vertical-align: middle;" />
 														{elseif $characteristic.data_type == 'date'}
 															{html_select_date
 															prefix           = "0_`$characteristic.id`_0_0_`$characteristic.object_characteristic_value_id`_0_date_"
