@@ -259,30 +259,7 @@ class app_mapper_MailerItemMapper extends app_mapper_Mapper implements app_domai
 	 */
 	public function findNotDespatchedByMailerIdForExport($mailer_id)
 	{
-		// NOTE: in following query we use tbl_companies rather than vw_companies since the view excludes deleted companies, 
-		// and we may want to display deleted companies if they were part of the mailer
-		$query = 	'SELECT mi.*, c.id as company_id, c.name as company_name, c.deleted as company_deleted, ' .
-					's.*, lkp_county.name as county, lkp_country.name as country, ' .
-					'p.id as post_id, p.job_title, p.deleted as post_deleted, p.telephone_fax, ' .
-					'con.id as contact_id, con.title, con.first_name, con.surname, con.full_name as contact, con.email ' .
-					'FROM tbl_mailer_items AS mi ' .
-					'LEFT JOIN tbl_post_initiatives pi on mi.post_initiative_id = pi.id ' .
-					'LEFT JOIN tbl_posts p on pi.post_id = p.id ' .
-					'LEFT JOIN vw_contacts con on con.post_id = p.id ' .
-					'LEFT JOIN tbl_companies c on p.company_id = c.id ' .
-					'LEFT JOIN tbl_sites s on c.id = s.company_id ' .
-					'LEFT JOIN tbl_lkp_counties lkp_county on s.county_id = lkp_county.id ' .
-					'LEFT JOIN tbl_lkp_countries lkp_country on s.country_id = lkp_country.id ' .
-					'WHERE mi.mailer_id = ? ' .
-					'AND mi.despatched_date is null';
-		$types = array('integer');
-		$stmt = self::$DB->prepare($query, $types);
-		
-		$values = array($mailer_id);
-		$result = $this->doStatement($stmt, $values);
-		$coll = new app_mapper_MailerCollection($result, $this);
-		return $coll->toRawArrayWithEncodingChange('UTF-8','ISO-8859-1');
-		
+		return $this->findMailerItemsForExport($mailer_id, false);
 	}
 	
 	
@@ -328,30 +305,55 @@ class app_mapper_MailerItemMapper extends app_mapper_Mapper implements app_domai
 	 */
 	public function findDespatchedByMailerIdForExport($mailer_id)
 	{
-		// NOTE: in following query we use tbl_companies rather than vw_companies since the view excludes deleted companies, 
-		// and we may want to display deleted companies if they were part of the mailer
-		$query = 	'SELECT mi.*, c.id as company_id, c.name as company_name, c.deleted as company_deleted, ' .
-					's.*, lkp_county.name as county, lkp_country.name as country, ' .
-					'p.id as post_id, p.job_title, p.deleted as post_deleted, p.telephone_fax, ' .
-					'con.id as contact_id, con.title, con.first_name, con.surname, con.full_name as contact, con.email ' .
-					'FROM tbl_mailer_items AS mi ' .
-					'LEFT JOIN tbl_post_initiatives pi on mi.post_initiative_id = pi.id ' .
-					'LEFT JOIN tbl_posts p on pi.post_id = p.id ' .
-					'LEFT JOIN vw_contacts con on con.post_id = p.id ' .
-					'LEFT JOIN tbl_companies c on p.company_id = c.id ' .
-					'LEFT JOIN tbl_sites s on c.id = s.company_id ' .
-					'LEFT JOIN tbl_lkp_counties lkp_county on s.county_id = lkp_county.id ' .
-					'LEFT JOIN tbl_lkp_countries lkp_country on s.country_id = lkp_country.id ' .
-					'WHERE mi.mailer_id = ? ' .
-					'AND mi.despatched_date is not null';
-		$types = array('integer');
-		$stmt = self::$DB->prepare($query, $types);
-		
-		$values = array($mailer_id);
-		$result = $this->doStatement($stmt, $values);
-		$coll = new app_mapper_MailerCollection($result, $this);
-		return $coll->toRawArrayWithEncodingChange('UTF-8','ISO-8859-1');
+		return $this->findMailerItemsForExport($mailer_id, true);
+	}
+
+	/**
+	 * Load mailer item rows for spreadsheet export (same joins as list view, ISO-8859-1 for Excel writer).
+	 */
+	private function findMailerItemsForExport($mailer_id, $despatched)
+	{
+		$despatchClause = $despatched
+			? 'AND mi.despatched_date is not null'
+			: 'AND mi.despatched_date is null';
+
+		// NOTE: tbl_companies not vw_companies — deleted companies may still belong on the mailer.
+		$query = 'SELECT mi.*, c.id as company_id, c.name as company_name, c.deleted as company_deleted, ' .
+			's.*, lkp_county.name as county, lkp_country.name as country, ' .
+			'p.id as post_id, p.job_title, p.deleted as post_deleted, p.telephone_fax, ' .
+			'con.id as contact_id, con.title, con.first_name, con.surname, con.full_name as contact, con.email ' .
+			'FROM tbl_mailer_items AS mi ' .
+			'LEFT JOIN tbl_post_initiatives pi on mi.post_initiative_id = pi.id ' .
+			'LEFT JOIN tbl_posts p on pi.post_id = p.id ' .
+			'LEFT JOIN vw_contacts con on con.post_id = p.id ' .
+			'LEFT JOIN tbl_companies c on p.company_id = c.id ' .
+			'LEFT JOIN tbl_sites s on c.id = s.company_id ' .
+			'LEFT JOIN tbl_lkp_counties lkp_county on s.county_id = lkp_county.id ' .
+			'LEFT JOIN tbl_lkp_countries lkp_country on s.country_id = lkp_country.id ' .
+			'WHERE mi.mailer_id = ' . self::$DB->quote($mailer_id, 'integer') . ' ' .
+			$despatchClause;
+
+		$rows = self::$DB->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
+		if (!is_array($rows)) {
+			return array();
 		}
+
+		return $this->encodeRowsForSpreadsheetExport($rows);
+	}
+
+	private function encodeRowsForSpreadsheetExport(array $rows)
+	{
+		foreach ($rows as &$row) {
+			foreach ($row as $key => $value) {
+				if (is_string($value)) {
+					$row[$key] = mb_convert_encoding($value, 'ISO-8859-1', 'UTF-8');
+				}
+			}
+		}
+		unset($row);
+
+		return $rows;
+	}
 	
 	
 	

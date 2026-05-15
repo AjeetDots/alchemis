@@ -30,12 +30,11 @@ abstract class app_mapper_Collection implements Iterator, Countable
         $this->result = $result;
         $this->mapper = $mapper;
 
-        $this->total += $result->numRows();
-
         while ($row = $this->result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
             $this->raw[] = $row;
-            $this->result->nextResult();
         }
+
+        $this->total = count($this->raw);
     }
 
     protected function doAdd(app_domain_DomainObject $object): void
@@ -192,7 +191,7 @@ abstract class app_mapper_Collection implements Iterator, Countable
 
                 $value = $row[$column] ?? null;
 
-                if ($value !== null) {
+                if (is_string($value)) {
                     $value = mb_convert_encoding($value, $to_encoding, $from_encoding);
                 }
 
@@ -211,7 +210,6 @@ abstract class app_mapper_Collection implements Iterator, Countable
 
         while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
             $raw[] = $row;
-            $result->nextResult();
         }
 
         return $raw;
