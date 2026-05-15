@@ -432,15 +432,21 @@ class app_command_PostInitiativeActionEdit extends app_command_ManipulationComma
 			}
 			else
 			{
-//				throw new exception('No action id supplied');
-			// Preset a supplied date and reformat if neccessary
 			$date = date('Y-m-d H:i:s');
 			$fields = array();
-			$fields['app_domain_Action_due_date'] = $date;
-			$fields['post_initiative_id'] = $request->getProperty('post_initiative_id');
-			$fields['app_domain_Action_type_id']       		= $request->getProperty('type_id');
+			$fields['action_id']                               = '';
+			$fields['app_domain_Action_subject']               = '';
+			$fields['app_domain_Action_notes']                 = '';
+			$fields['app_domain_Action_due_date']              = $date;
+			$fields['app_domain_Action_reminder_date']         = '';
+			$fields['app_domain_Action_is_completed']          = false;
+			$fields['app_domain_Action_actioned_by_client']    = false;
+			$fields['app_domain_Action_communication_type_id'] = '';
+			$fields['app_domain_Action_resources']             = array();
+			$fields['post_initiative_id']                      = $request->getProperty('post_initiative_id');
+			$fields['app_domain_Action_type_id']               = $request->getProperty('type_id');
 			$request->setObject('fields', $fields);
-			}		
+			}
 		}
 		
 		// Set type options

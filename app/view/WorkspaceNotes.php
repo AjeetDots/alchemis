@@ -22,7 +22,15 @@ class app_view_WorkspaceNotes extends app_view_View
 		$this->smarty->assign('company_id', $this->request->getProperty('company_id'));
 		$this->smarty->assign('initiative_id', $this->request->getProperty('initiative_id'));
 		
-		$this->smarty->assign('notes', $this->request->getObject('notes'));
+		$notes = $this->request->getObject('notes');
+		if (is_array($notes)) {
+			$row_defaults = array('job_title' => null, 'full_name' => null, 'post_deleted' => null);
+			foreach ($notes as &$note) {
+				$note = array_merge($row_defaults, $note);
+			}
+			unset($note);
+		}
+		$this->smarty->assign('notes', $notes);
 		$this->smarty->display('WorkspaceNotes.tpl');
 	}
 }

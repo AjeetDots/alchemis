@@ -123,21 +123,21 @@ class app_command_TeamCreate extends app_command_ManipulationCommand
 	 */
 	protected function init(app_controller_Request $request)
 	{
-//		echo '<pre>';
-//		print_r($request->getProperties());
-//		echo '</pre>';
-		// Get supplied ID if relevant
+		$fields = array(
+			'app_domain_Team_id'   => '',
+			'app_domain_Team_name' => '',
+		);
+
 		$team_id = $request->getProperty('team_id');
-		
 		if ($team_id)
 		{
 			$team = app_domain_Team::find($team_id);
-			$fields = array();
 			$fields['app_domain_Team_id']   = $team->getId();
 			$fields['app_domain_Team_name'] = $team->getName();
-			$request->setObject('fields', $fields);
 		}
-		
+
+		$request->setObject('fields', $fields);
+
 		// Set referrer
 		$request->setObject('referrer', $request->getProperty('referrer'));
 	}
