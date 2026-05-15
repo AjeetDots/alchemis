@@ -42,13 +42,16 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 	 */
 	public function execute()
 	{
-		$this->filter_builder = new app_domain_FilterBuilder();
-
 		// item_id is not present for all actions (e.g. get_filter_rows_html only sends type_id)
 		// Use isset to avoid a PHP warning that would corrupt the JSON response
 		$filter_id = isset($this->request->item_id) ? $this->request->item_id : null;
+		$cmd_action = isset($this->request->cmd_action) ? $this->request->cmd_action : '';
 
-		switch ($this->request->cmd_action)
+		if ($cmd_action !== 'delete_filter' && $cmd_action !== 'delete_filters') {
+			$this->filter_builder = new app_domain_FilterBuilder();
+		}
+
+		switch ($cmd_action)
 		{
 			case 'update_filter_name':
 				$this->filter = app_domain_Filter::find($filter_id);
@@ -206,12 +209,35 @@ class app_command_AjaxFilterBuilder extends app_command_AjaxCommand
 				break;
 
 			case 'delete_filter':
-				if ($filter_id)
-				{
-					$this->filter = app_domain_Filter::find($filter_id);
-					$this->filter->markDeleted();
-					$this->filter->commit();
+				$this->request->cmd_action = 'delete_filter';
+				if ($filter_id) {
+					try {
+						app_domain_Filter::softDeleteById((int) $filter_id);
+						$this->request->item_id = (int) $filter_id;
+					} catch (Throwable $e) {
+						$this->response->warnings[] = 'Could not delete filter ' . (int) $filter_id;
+					}
 				}
+				break;
+
+			case 'delete_filters':
+				$deleted_ids = array();
+				if (!empty($this->request->filter_ids)) {
+					foreach (explode(',', $this->request->filter_ids) as $raw_id) {
+						$id = (int) trim($raw_id);
+						if ($id <= 0) {
+							continue;
+						}
+						try {
+							app_domain_Filter::softDeleteById($id);
+							$deleted_ids[] = $id;
+						} catch (Throwable $e) {
+							$this->response->warnings[] = 'Could not delete filter ' . $id;
+						}
+					}
+				}
+				$this->request->filter_ids = implode(',', $deleted_ids);
+				$this->request->cmd_action = 'delete_filters';
 				break;
 			default:
 				break;

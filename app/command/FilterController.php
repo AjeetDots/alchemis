@@ -29,11 +29,11 @@ class app_command_FilterController extends app_command_BaseCommand
 
   public function restore()
   {
-    $id = $this->request->input->get('id');
-    $filter = app_model_Filter::find($id);
-    $filter->deleted = 0;
-    $filter->save();
-    return Response::redirect(['url' => $this->request->referrer]);
+    $id = (int) $this->request->input->get('id');
+    if ($id > 0) {
+      app_domain_Filter::softRestoreById($id);
+    }
+    return Response::redirect('FilterList');
   }
 
 
@@ -41,17 +41,16 @@ class app_command_FilterController extends app_command_BaseCommand
   {
     $data = $this->request->input->all();
 
-    foreach($data as $key => $val){
-      if(strpos($key, 'filter_') !== false){
-        $id = str_replace('filter_', '', $key);
-        $filter = app_model_Filter::find($id);
-        if(!$filter) continue;
-        $filter->deleted = true;
-        $filter->save();
+    foreach ($data as $key => $val) {
+      if (strpos($key, 'filter_') === 0) {
+        $id = (int) str_replace('filter_', '', $key);
+        if ($id > 0) {
+          app_domain_Filter::softDeleteById($id);
+        }
       }
     }
 
-    return Response::redirect(['url' => $this->request->referrer]);
+    return Response::redirect('FilterList');
   }
 
 }

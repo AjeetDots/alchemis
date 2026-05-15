@@ -61,7 +61,7 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 				'description = :description, type_id = :type_id, campaign_id = :campaign_id,' .
 				'results_format = :results_format, ' .
 				'is_report_source = :is_report_source, report_parameter_description = :report_parameter_description, ' .
-				'created_at = :created_at, created_by = :created_by, updated_at = NOW() ' .
+				'created_at = :created_at, created_by = :created_by, deleted = :deleted, updated_at = NOW() ' .
 				'WHERE id = :id';
 		$updateTypes = array(
 			'id'                          => 'integer',
@@ -74,6 +74,7 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 			'report_parameter_description'=> 'text',
 			'created_at'                  => 'date',
 			'created_by'                  => 'integer',
+			'deleted'                     => 'integer',
 		);
 		$this->updateStmt = self::$DB->prepare($updateQuery, $updateTypes, MDB2_PREPARE_MANIP);
 	}
@@ -101,6 +102,9 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 		$obj->setCreatedBy($array['created_by'] ?? null);
 		$obj->setCreatedByName($array['created_by_name'] ?? null);
 		$obj->setUpdatedAt($array['updated_at'] ?? null);
+		if (array_key_exists('deleted', $array)) {
+			$obj->setDeleted((int) $array['deleted']);
+		}
 		$obj->markClean();
 		return $obj;
 	}
@@ -161,8 +165,31 @@ class app_mapper_FilterMapper extends app_mapper_Mapper implements app_domain_Fi
 		                'is_report_source' => $object->getIsReportSource(),
                         'report_parameter_description' => $object->getReportParameterDescription(),
 						'created_at' => $object->getCreatedAt(),
-						'created_by' => $object->getCreatedBy());
+						'created_by' => $object->getCreatedBy(),
+						'deleted' => (int) $object->getDeleted());
 		$this->doStatement($this->updateStmt, $data);
+	}
+
+	/**
+	 * Soft-delete a filter (sets deleted = 1). Used by Filter List bulk/single delete.
+	 */
+	public function softDeleteById($id)
+	{
+		$query = 'UPDATE tbl_filters SET deleted = 1, updated_at = NOW() WHERE id = ? AND deleted = 0';
+		$types = array('integer');
+		$stmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
+		$this->doStatement($stmt, array((int) $id));
+	}
+
+	/**
+	 * Restore a soft-deleted filter.
+	 */
+	public function softRestoreById($id)
+	{
+		$query = 'UPDATE tbl_filters SET deleted = 0, updated_at = NOW() WHERE id = ?';
+		$types = array('integer');
+		$stmt = self::$DB->prepare($query, $types, MDB2_PREPARE_MANIP);
+		$this->doStatement($stmt, array((int) $id));
 	}
 
 	/**

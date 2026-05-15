@@ -193,6 +193,16 @@ class app_domain_Filter extends app_domain_DomainObject
 		$this->markDirty();
 	}
 
+	public function setDeleted($deleted)
+	{
+		$this->deleted = $deleted ? 1 : 0;
+		$this->markDirty();
+	}
+
+	public function getDeleted()
+	{
+		return $this->deleted;
+	}
 
 	/**
 	 * Get the filter name
@@ -343,6 +353,18 @@ class app_domain_Filter extends app_domain_DomainObject
 
 		$finder = self::getFinder(__CLASS__);
 		return $finder->find($id);
+	}
+
+	public static function softDeleteById($id)
+	{
+		$finder = self::getFinder(__CLASS__);
+		$finder->softDeleteById($id);
+	}
+
+	public static function softRestoreById($id)
+	{
+		$finder = self::getFinder(__CLASS__);
+		$finder->softRestoreById($id);
 	}
 
 	public static function findByName($name)

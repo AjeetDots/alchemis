@@ -14685,3 +14685,7 @@ May 15 10:10:28  [info] 5.105 Calendar
 May 15 10:10:33  [info] 4.538 NbmMonthlyPlannerGraph4
 May 15 10:10:43  [info] 4.592 CalendarDay
 May 15 10:10:49  [info] 5.517 MailerList
+May 15 10:17:48  [info] 9.086 FilterList
+May 15 10:18:19  [info] 5.859 AjaxFilterBuilder
+May 15 10:19:50  [info] 70.022 AjaxFilterBuilder
+May 15 10:19:53  [info] 2.311 AjaxDashboard

@@ -163,6 +163,14 @@ function AjaxFilterBuilder(data)
 			case "delete_filter":
 				deleteRow(t.item_id);
 				break;
+			case "delete_filters":
+				if (t.filter_ids) {
+					var deletedIds = t.filter_ids.split(',');
+					for (var d = 0; d < deletedIds.length; d++) {
+						if (deletedIds[d]) { deleteRow(deletedIds[d]); }
+					}
+				}
+				break;
 			case "get_filter_statistics":
 				$("span_company_count_" + t.item_id).innerHTML = t.company_count;
 				$("span_post_count_" + t.item_id).innerHTML = t.post_count;
@@ -179,7 +187,9 @@ function AjaxFilterBuilder(data)
 				}
 				break;
 			default:
-				alert("No cmd_action specified");
+				if (t.cmd_action) {
+					// Unknown action — ignore so other handlers are not blocked
+				}
 				break;
 		}
 	}
@@ -225,8 +235,52 @@ function deleteFilter(id)
 		var ill_params = new Object;
 		ill_params.item_id = id;
 		ill_params.blank = 0;
-		getAjaxData("AjaxFilterBuilder", "", "delete_filter", ill_params, "Saving...")
+		getAjaxData("AjaxFilterBuilder", "", "delete_filter", ill_params, "Saving...", false, function() {
+			alcClearParentLoading();
+		});
 	}
+}
+
+function alcClearParentLoading()
+{
+	try {
+		if (top._loadTimer) { clearInterval(top._loadTimer); top._loadTimer = null; }
+		top._isLoading = false;
+		top._activeLoads = 0;
+		top._loadStartTime = null;
+		if (typeof top._alcUnlockUI === 'function') { top._alcUnlockUI(); }
+		var n = top.$('notification');
+		if (n) { n.innerHTML = '&nbsp;'; top.Effect.Fade('notification', {duration: 0.5, queue: 'end'}); }
+	} catch (e) {}
+}
+
+function deleteSelectedFilters()
+{
+	if (top._isLoading) {
+		top.showAlcWarning('Please wait \u2014 an action is already running.');
+		return;
+	}
+	var checkboxes = [];
+	$$('input[type=checkbox][name^=filter_]').each(function (cb) {
+		if (cb.checked) { checkboxes.push(cb); }
+	});
+	if (!checkboxes.length) {
+		alert('Please tick at least one filter to delete.');
+		return;
+	}
+	if (!confirm('Delete ' + checkboxes.length + ' selected filter(s)?')) {
+		return;
+	}
+	var ids = [];
+	for (var i = 0; i < checkboxes.length; i++) {
+		var id = checkboxes[i].name.replace(/^filter_/, '');
+		if (id) { ids.push(id); }
+	}
+	$("iframe1").hide();
+	var ill_params = { filter_ids: ids.join(',') };
+	getAjaxData("AjaxFilterBuilder", "", "delete_filters", ill_params, "Deleting...", false, function() {
+		alcClearParentLoading();
+	});
 }
 
 function deleteRow(item_id)
@@ -245,7 +299,6 @@ function exportFilter(filter_id, format, file_format)
 
 {/literal}
 </script>
-<form action="index.php?cmd=FilterController&action=delete" method="POST">
 <table class="adminform">
 	<tr>
 		<td width="50%" valign="top">
@@ -257,7 +310,7 @@ function exportFilter(filter_id, format, file_format)
 						{if $delete_restore_permission}
 							&nbsp;|&nbsp;
 							<a href="index.php?cmd=FilterController&action=deleted" ><img src="{$APP_URL}app/view/images/icons/delete.png" alt="Deleted Filter" title="Deleted Filters" /></a>
-							<input class="btn tiny right" type="submit" value="Delete Selected" title="Delete filter"/>
+							<input class="btn tiny right" type="button" value="Delete Selected" title="Delete selected filters" onclick="deleteSelectedFilters(); return false;"/>
 						{/if}
 					</td>
 				</tr>
@@ -319,7 +372,7 @@ function exportFilter(filter_id, format, file_format)
 													{/if}
 												</td>
 												{if $delete_restore_permission}
-													<td><input class="checkbox" type="checkbox" style="text-align: center" name="filter_{$filter->getId()}"/></td>
+													<td><input class="checkbox" type="checkbox" style="text-align: center" name="filter_{$filter->getId()}" value="1"/></td>
 												{/if}
 											</tr>
 											{/foreach}
@@ -415,7 +468,6 @@ function exportFilter(filter_id, format, file_format)
 		</td>
 	</tr>
 </table>
-</form>
 {/strip}
 
 {include file="footer.tpl"}

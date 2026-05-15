@@ -38,7 +38,7 @@
 	<a id="btn_delete_{$filter->getId()}" title="Delete filter" href="#" onclick="javascript:deleteFilter({$filter->getId()});return false"><img src="{$APP_URL}app/view/images/icons/table_delete.png" alt="Delete" title="Delete this filter" /></a>
 </td>
 {if $delete_restore_permission}
-<td><input class="checkbox" type="checkbox" style="text-align: center" name="filter_{$filter->getId()}"/></td>
+<td><input class="checkbox" type="checkbox" style="text-align: center" name="filter_{$filter->getId()}" value="1"/></td>
 {/if}
 </tr>
 {/foreach}
