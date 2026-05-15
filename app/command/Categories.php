@@ -80,7 +80,8 @@ class app_command_Categories extends app_command_BaseCommand
     $id = $input->get('id');
     $category = app_model_Category::find($id);
     return Response::view('categories.edit', [
-      'category' => $category
+      'category' => $category,
+      'errors'   => [],
     ]);
   }
 
