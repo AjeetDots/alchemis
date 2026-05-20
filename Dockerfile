@@ -27,6 +27,9 @@ WORKDIR /var/www/html
 # Copy project files
 COPY . /var/www/html/
 
+# Install OPcache performance tuning for local bind-mounts (Docker Desktop on Windows)
+COPY docker/php-local-performance.ini /usr/local/etc/php/conf.d/zz-local-performance.ini
+
 # Set permissions (legacy apps often require www-data ownership)
 RUN chown -R www-data:www-data /var/www/html
 

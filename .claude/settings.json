@@ -4,7 +4,14 @@
       "Bash(grep -v \"__construct\\\\|//\")",
       "Read(//c/Users/Admin/AppData/Local/Temp/fz3temp-2/**)",
       "Bash(rm \"d:/Projects/Alchemis/latest/latest_new_bkp/app/view/templates_c/%%32^32C^32CF3BFA%%FilterResultsCompanies.tpl.php\")",
-      "Bash(findstr /S /L \"isValidationError\" app\\\\view\\\\*.php)"
+      "Bash(findstr /S /L \"isValidationError\" app\\\\view\\\\*.php)",
+      "PowerShell(Get-Process -Id 15024 -ErrorAction SilentlyContinue | Select-Object Name, Path, Id; \\(Get-Process -Id 15024 -ErrorAction SilentlyContinue\\).MainModule.FileName 2>&1)",
+      "PowerShell(netstat -ano)",
+      "PowerShell(Stop-Process -Name \"Docker Desktop\" -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(Start-Process \"C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker Desktop.exe\" -ErrorAction SilentlyContinue)",
+      "PowerShell(docker info 2>&1)",
+      "PowerShell(wsl -d docker-desktop -- ls -la /run/desktop/mnt/host/ 2>&1)",
+      "WebFetch(domain:prnt.sc)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\Alchemis\\latest\\latest_new_bkp\\app\\view\\templates_c"
