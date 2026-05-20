@@ -2159,3 +2159,21 @@ Stack trace:
 #5 /var/www/html/index.php(208): app_controller_Controller::run()
 #6 {main}
 
+[2026-05-15 15:10:19] Got timeout reading communication packets in /var/www/html/include/pear/MDB2/Driver/mysqli.php on line 521
+Stack trace:
+#0 /var/www/html/include/pear/MDB2/Driver/mysqli.php(521): mysqli_real_connect(Object(mysqli), 'alchemis-mysql-...', 'alchemis', Object(SensitiveParameterValue), 'alchemis', '3306', '')
+#1 /var/www/html/include/pear/MDB2/Driver/mysqli.php(567): MDB2_Driver_mysqli->_doConnect('alchemis', 'rYT4maP7')
+#2 /var/www/html/include/pear/MDB2.php(1800): MDB2_Driver_mysqli->connect()
+#3 /var/www/html/include/pear/MDB2.php(2592): MDB2_Driver_Common->getConnection()
+#4 /var/www/html/app/controller/ApplicationHelper.php(224): MDB2_Driver_Common->query('SET NAMES utf8m...')
+#5 /var/www/html/app/mapper/PostInitiativeMapper.php(32): app_controller_ApplicationHelper->DB()
+#6 /var/www/html/app/domain/HelperFactory.php(30): app_mapper_PostInitiativeMapper->__construct()
+#7 /var/www/html/app/domain/DomainObject.php(129): app_domain_HelperFactory::getFinder('PostInitiative')
+#8 /var/www/html/app/domain/PostInitiative.php(629): app_domain_DomainObject::getFinder('app_domain_Post...')
+#9 /var/www/html/app/command/AjaxDashboard.php(67): app_domain_PostInitiative::findPriorityCallBacksByUserId(4585, '2026-05-15 14:0...', '2026-05-15 14:1...')
+#10 /var/www/html/app/controller/Controller.php(336): app_command_AjaxDashboard->execute()
+#11 /var/www/html/app/controller/Controller.php(241): app_controller_Controller->handleAjaxRequest(Object(app_controller_Request))
+#12 /var/www/html/app/controller/Controller.php(79): app_controller_Controller->handleRequest()
+#13 /var/www/html/index.php(203): app_controller_Controller::run()
+#14 {main}
+

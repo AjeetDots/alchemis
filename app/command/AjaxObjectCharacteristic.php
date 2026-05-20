@@ -87,6 +87,12 @@ class app_command_AjaxObjectCharacteristic extends app_command_AjaxCommand
                     if (substr($key, 0, 6) != 'ignore') {
                         $temp = array();
                         $temp = explode('_', $key);
+                        // Prototype.js serialize(true) creates an array when a hidden field and a
+                        // checkbox share the same name (e.g. hidden "0" + checked checkbox "1").
+                        // Take the last submitted value so a checked box saves 1, unchecked saves 0.
+                        if (is_array($data_item)) {
+                            $data_item = end($data_item);
+                        }
                         array_push($temp, $data_item);
                         if ($temp[6] == 'date') {
                             // deal with dates

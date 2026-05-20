@@ -305,12 +305,18 @@ class app_command_AjaxPostInitiative extends app_command_AjaxCommand
 			else
 			{
 				$previous_communication = app_domain_Communication::find($previous_communication_id);
-				
+
+				if ($result && !$previous_communication)
+				{
+					$result = false;
+					$feedback = 'Previous communication record could not be loaded';
+				}
+
 				if ($result)
 				{
 					//set post_initiative information equal to that in the previous communication
 					$post_initiative = app_domain_PostInitiative::find($post_initiative_id);
-					$post_initiative->setStatusId($previous_communication->getStatusId()); 
+					$post_initiative->setStatusId($previous_communication->getStatusId());
 					$post_initiative->setComment($previous_communication->getComments());
 					$post_initiative->setLastCommunicationId($previous_communication_id);
 					if ($previous_communication->getIsEffective())
