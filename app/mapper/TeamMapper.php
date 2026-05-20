@@ -144,7 +144,7 @@ class app_mapper_TeamMapper extends app_mapper_Mapper implements app_domain_Mess
 	 */
 	public function getTeamName($team_id)
 	{
-		$sql = 'SELECT name FROM tbl_teams WHERE id = ' . self::$DB->quote($team_id, ' integer');
+		$sql = 'SELECT name FROM tbl_teams WHERE id = ' . self::$DB->quote($team_id, 'integer');
 		return self::$DB->queryOne($sql);
 	}
 
