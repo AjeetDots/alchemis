@@ -195,6 +195,13 @@ class app_controller_Controller implements app_base_Observable
 			echo '<p>Message: ' . $e->getMessage() . '</p>';
 			exit('<p>The system has terminated.</p>');
 		}
+      catch (Exception $e)
+      {
+         $message = htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
+         echo '<hr /><p><strong>' . __CLASS__ . ' [' . __LINE__ . ']:</strong></p>';
+         echo '<p>Unexpected error: ' . $message . '</p>';
+         exit('<p>The system has terminated.</p>');
+      }
 	}
 
 	/**
@@ -262,6 +269,13 @@ class app_controller_Controller implements app_base_Observable
 			echo '<p>Message: ' . $e->getMessage() . '</p>';
 			exit('<p>The system has terminated.</p>');
 		}
+      catch (Exception $e)
+      {
+         $message = htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
+         echo '<hr /><p><strong>' . __CLASS__ . ' [' . __LINE__ . ']:</strong></p>';
+         echo '<p>Unexpected error: ' . $message . '</p>';
+         exit('<p>The system has terminated.</p>');
+      }
 	}
 
 	/**

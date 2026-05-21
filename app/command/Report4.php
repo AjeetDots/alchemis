@@ -44,9 +44,9 @@ class app_command_Report4 extends app_command_Command
 		}
 		
 		// Team ID
-		if ($request->propertyExists('team_id'))
+		if ($request->propertyExists('team_id') && intval($request->getProperty('team_id')) > 0)
 		{
-			$team_id = $request->getProperty('team_id');
+			$team_id = (int)$request->getProperty('team_id');
 		}
 		else
 		{
@@ -54,9 +54,9 @@ class app_command_Report4 extends app_command_Command
 		}
 		
 		// NBM ID
-		if ($request->propertyExists('nbm_id') && $request->getProperty('nbm_id') != 0)
+		if ($request->propertyExists('nbm_id') && intval($request->getProperty('nbm_id')) > 0)
 		{
-			$nbm_id = $request->getProperty('nbm_id');
+			$nbm_id = (int)$request->getProperty('nbm_id');
 		}
 		else
 		{
@@ -84,7 +84,15 @@ class app_command_Report4 extends app_command_Command
 	 */
 	protected function validateParameters($start, $end, $team_id = null, $nbm_id = null)
 	{
-		if ($end < $start)
+		$startTimestamp = strtotime($start);
+		$endTimestamp   = strtotime($end);
+
+		if ($startTimestamp === false || $endTimestamp === false)
+		{
+			throw new Exception('Invalid start/end date format: (start => ' . $start . ', end => ' . $end . ')');
+		}
+
+		if ($endTimestamp < $startTimestamp)
 		{
 			throw new Exception('End date is before start date: (start => ' . $start . ', end => ' . $end . ')');
 		}

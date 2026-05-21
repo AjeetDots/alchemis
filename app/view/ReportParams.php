@@ -44,6 +44,17 @@ class app_view_ReportParams extends app_view_View
 		$date_to = $this->request->getObject('date_to');
 		$this->smarty->assign('date_to', $date_to);
 
+		// Pass any request errors/feedback into the params view
+		$errorString = $this->request->getErrorString('</li><li>');
+		if ($errorString)
+		{
+			$this->smarty->assign('feedback', $errorString);
+		}
+		else
+		{
+			$this->smarty->assign('feedback', $this->request->getFeedbackString('</li><li>'));
+		}
+
 		$this->smarty->display('ReportParams.tpl');
 	}
 }
